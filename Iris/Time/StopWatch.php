@@ -72,7 +72,7 @@ class StopWatch {
     public static function ComputeInterval($timeFrom, $timeTo) {
         $seconds = self::_GetSeconds($timeTo) - self::_GetSeconds($timeFrom);
         $seconds += (self::_GetMicroseconds($timeTo) - self::_GetMicroseconds($timeFrom));
-        return $seconds;
+        return sprintf('%0.4F',$seconds);
     }
 
     /**
@@ -102,9 +102,8 @@ class StopWatch {
     protected function _defaultDisplay($duration, $componentId) {
         $javascriptCode = <<< JS
 <script>
-    exectime = dojo.byId('$componentId');
-    exectime.innerHTML = "Temps d'exécution $duration";
-    dojo.style(exectime,{"backgroundColor":"white","color":"red"});    
+    exectime = document.getElementById('$componentId');
+    exectime.innerHTML = "Execution time : <b>$duration</b>";
 </script>
 
 JS;

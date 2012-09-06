@@ -34,6 +34,7 @@ class control extends \Iris\MVC\_Islet{
     public function indexAction($color){
         $this->__color=$color;
         $this->__reverseColor = \Iris\System\Functions::GetComplementaryColor($color);
+        $this->__rtdColor = '#white';
         //iris_debug('Woooow');
         \Iris\Users\Session::GetInstance();
         $identity = \Iris\Users\Identity::GetInstance();
