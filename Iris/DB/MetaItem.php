@@ -322,7 +322,7 @@ class MetaItem implements \Serializable {
     }
 
     public function get($name, $default = \NULL) {
-        if (isset($name)) {
+        if (isset($this->_properties[$name])) {
             return $this->$name;
         }
         else {

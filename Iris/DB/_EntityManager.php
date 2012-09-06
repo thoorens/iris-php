@@ -44,7 +44,7 @@ abstract class _EntityManager {
      * Mainly for test purpose (permits to place models in other places)
      * @var string 
      */
-    public static $entityPath = 'models';
+    public static $entityPath = '\\models';
 
     /**
      * Instance privilégiée
@@ -100,9 +100,8 @@ abstract class _EntityManager {
             return $EM->_objectRepository[$entityName]['@'];
         }
         else {
-            $entityFullPath = self::$entityPath . '\T' . ucfirst($entityName);
+            $entityFullPath = self::$entityPath . '\\T' . ucfirst($entityName);
             // Caution : auto registering !  
-            $loader = \Iris\Engine\Loader::GetInstance();
             return new $entityFullPath();
         }
     }

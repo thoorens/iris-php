@@ -65,6 +65,12 @@ class AutoEntity extends _Entity {
      * @return AutoEntity 
      */
     public static function EntityBuilder($tableName, $idNames = array('id'), $EM = NULL) {
+        $path = \Iris\DB\_EntityManager::$entityPath;
+        $class = "$path\\T".ucfirst($tableName);
+        $loader = \Iris\Engine\Loader::GetInstance();
+        if($loader->doLoad($class, \FALSE)){
+            return new $class();
+        }
         self::$_NewFlag = TRUE;
         // If no entity manager is specified, tries to use a specific for Autoentities (otherwise, it will take the default one)
         if(is_null($EM) and ! is_null(self::$EntityManager)){

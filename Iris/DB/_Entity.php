@@ -37,6 +37,7 @@ use Iris\Exceptions as ie;
  * @version $Id: $ * 
  */
 abstract class _Entity {
+
     const FIRST = 0;
     const PREVIOUS = 1;
     const NEXT = 2;
@@ -90,14 +91,19 @@ abstract class _Entity {
     protected $_foreignKeyDescriptions = array();
 
     /**
+     * The name of the field serving for description of an concrete object
+     * 
+     * @var string 
+     */
+    protected $_descriptionField = '';
+
+    /**
      * Metadata are stored for performance reasons
      * @var  Metadata
      */
     protected $_metadata = NULL;
-
-    
     protected $_formProperties = array();
-    
+
     /**
      * The last inserted Id (only valid after an insertion
      * with autoincrement)
@@ -163,6 +169,16 @@ abstract class _Entity {
             $idNames = array($idNames);
         }
         $this->_idNames = $idNames;
+    }
+
+    /**
+     * Returns the name of the field serving for the description of a concrete
+     * object
+     * 
+     * @return string 
+     */
+    public function getDescriptionField() {
+        return $this->_descriptionField;
     }
 
     /**
@@ -600,7 +616,7 @@ abstract class _Entity {
         if (is_null($this->_metadata)) {
             $this->_metadata = $this->_readMetadata();
             // add optional form properties
-            foreach($this->_formProperties as $field => $property){
+            foreach ($this->_formProperties as $field => $property) {
                 list($name, $value) = $property;
                 $this->_metadata[$field]->$name = $value;
             }

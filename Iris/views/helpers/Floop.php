@@ -29,16 +29,16 @@ namespace Iris\views\helpers;
  */
 
 /**
- * Loop offers a way to display the items of an array by means of a
- * partial.
+ * FLoop offers a way to display the items of an array by means of a
+ * function.
  * 
  */
-class Loop extends _ViewHelper {
+class Floop extends _ViewHelper {
 
     
     public function help($viewName, $dataSet) {
-        $loop = new \Iris\MVC\Loop($viewName,$dataSet);
-        return $loop->render();
+        $floop = new \Iris\MVC\FunctionLoop($viewName,$dataSet);
+        return $floop->render();
     }
 
 }

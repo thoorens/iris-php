@@ -488,7 +488,7 @@ namespace Iris\Engine {
          * meaning an error processing is starting, reinitializes the library pathes.
          * 
          * @param string $errorPath the error path (in case of error restart)
-         * @return Iris\Engine\Loader 
+         * @return \Iris\Engine\Loader 
          */
         public static function GetInstance($errorPath=\NULL) {
             if (is_null(self::$_Myself)) {

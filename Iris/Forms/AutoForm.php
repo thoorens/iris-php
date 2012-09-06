@@ -42,6 +42,13 @@ class AutoForm extends Elements\Form {
     protected $_formFactory;
     private $_entity;
 
+    private static $_PlausibleDescriptions = array(
+            'Description',
+            'Name',
+            'UserName',
+            'Identity',
+    );
+    
     public function __construct(db\_Entity $entity, $labels = array()) {
         $this->_entity = $entity;
         $this->_name = sprintf("iris_autoform_%d", self::$_Number++);
@@ -100,11 +107,11 @@ class AutoForm extends Elements\Form {
         $element->addTo($this);
         $EM = $this->_entity->getEntityManager();
         $tableName = $foreign->getTargetTable();
+        /* @var $targetTable \Iris\DB\AutoEntity */
         $targetTable = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder($tableName, $foreign->getToKeys(), $EM);
         $idNames = $foreign->getToKeys();
         $idName = $idNames[0];
-        //@todo change it
-        $descField = 'Name';
+        $descField = $this->getDescriptionField($targetTable);
         $targetTable->select($idName);
         $targetTable->select($descField);
         $data = $targetTable->fetchall();
@@ -114,16 +121,62 @@ class AutoForm extends Elements\Form {
         $element->addOptions($data2);
     }
 
+    /**
+     * Gets the label corresponding to a field. It can be one of three:<ul>
+     * <li> a label explicitly defined during instanciation
+     * <li> a label added in entity class
+     * <li> the fied name (by default) </ul>
+     * 
+     * @param \Iris\DB\MetaItem $metaItem
+     * @return string
+     */
     protected function _getLabelText(\Iris\DB\MetaItem $metaItem) {
         $name = $metaItem->getFieldName();
         if (isset($this->_labels[$name])) {
             return $this->_labels[$name];
         }
         else {
-            return $metaItem->get('LABEL',$name);
+            return $metaItem->get('LABEL', $name);
         }
     }
 
+    /**
+     * Add 
+     * @param mixed $items (one description field name or an array of names)
+     */
+    public static function AddPlausibleDescriptions($items){
+        if(is_array($items)){
+            foreach($items as $item ){
+                self::AddPlausibleDescriptions($item);
+            }
+        }
+        else{
+            self::$_PlausibleDescriptions[] = $items;
+        }
+    }
+    
+    /**
+     * Returns the name of the field serving for the description of a concrete
+     * object
+     * 
+     * @return string 
+     */
+    public function getDescriptionField(\Iris\DB\_Entity $targetTable) {
+        if($targetTable->getDescriptionField()!=''){
+            return $targetTable->getDescriptionField();
+        }
+        /* @var $field  \Iris\DB\MetaItem */
+        foreach($targetTable->getMetadata()->getFields() as $field){
+            $fieldName = $field->getFieldName();
+            echo $fieldName;
+            if(array_search($fieldName, self::$_PlausibleDescriptions)!== \FALSE){
+                return $fieldName;
+            }
+        }
+        // by default return the first part of the primary key
+        $ids =$targetTable->getIdNames();
+        return $ids[0];
+    }
 }
 
 ?>

@@ -34,7 +34,7 @@ use Iris\Engine as ie,
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class Loop extends \Iris\MVC\Partial {
+class FunctionLoop extends \Iris\MVC\Partial {
 
     /**
      * Type of view
@@ -43,7 +43,18 @@ class Loop extends \Iris\MVC\Partial {
      */
     protected static $_ViewType = 'loop';
 
+    private $_functionName;
 
+    /**
+     *
+     * @param string $functionName
+     * @param type $data
+     * @param type $key 
+     */
+    public function __construct($functionName, $data, $key =\NULL) {
+        $this->_functionName = $functionName;
+        parent::__construct('_none_', $data, $key);
+    }
 
     /*
      * Returns the name of the directory where to find the script
@@ -59,22 +70,21 @@ class Loop extends \Iris\MVC\Partial {
     public function render($dummy=NULL) {
         ob_start();
         $prop = $this->_properties;
+        $functionName = $this->_functionName;
         // Normal processing for associative array
         if(!is_numeric(key($prop))){
             foreach ($this->_properties as $key => $propertie) {
                 if(!is_array($propertie)){
                     $propertie = $this->_properties;
                 }
-                $partial = new Partial($this->_viewScriptName, $propertie, $key);
-                echo $partial->render();
+                echo $this->$functionName($propertie, $key);
             }
         }
         // non associative arrays may be processed too
         else {
             unset($this->_properties['CURRENTLOOPKEY']);
             foreach ($this->_properties as $propertie) {
-                $partial = new Partial($this->_viewScriptName, array(),$propertie);
-                echo $partial->render();
+                echo $this->$functionName($propertie);
             }
         }
         return ob_get_clean();
