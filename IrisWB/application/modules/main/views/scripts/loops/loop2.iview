@@ -1,0 +1,6 @@
+<li class="loop">
+    {KEY} 
+    <ul>
+        {loop('loops/loop3',$this->ALLDATA)}
+    </ul>
+</li>

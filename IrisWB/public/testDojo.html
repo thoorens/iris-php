@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+	<link rel="stylesheet" href="/js/dijit/themes/claro/claro.css">
+	<style type="text/css">.box { color: white; background-color: #ba2929; width: 200px; height: 50px; padding: 10px; }</style>
+<script src='/js/dojo/dojo.js' data-dojo-config='async: true, parseOnLoad: true'></script><script>require(["dojo/parser", "dijit/Tooltip", "dijit/form/Button"]);</script>
+</head>
+<body class="claro">
+    <div class="box">Example content above button</div>
+<button id="buttonId" data-dojo-type="dijit/form/Button">Longanimity</button>
+<button id="button2" data-dojo-type="dijit/form/Button">Tooltip below</button>
+<div class="box">Example content below button</div>
+<div data-dojo-type="dijit/Tooltip" data-dojo-props="connectId:'buttonId',position:['above']">
+    a <i>disposition</i> to bear injuries patiently : <b>forbearance</b>
+</div>
+<div data-dojo-type="dijit/Tooltip" data-dojo-props="connectId:'button2',position:['below']">
+    a <i>disposition</i> to bear injuries patiently : <b>forbearance</b>
+</div>
+</body>
+</html>

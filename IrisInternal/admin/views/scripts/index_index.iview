@@ -1,0 +1,22 @@
+<? switch($language): 
+    case 'FR':?>
+<h1>Administration</h1>
+<p>Le module interne d'administration permet de gérer un certain nombre de paramètres
+    de l'application en cours de développement
+</p>
+<ul>
+    <li>simuler le comportement du site pour un utilisateur précis ou le membre d'un groupe</li>
+    <li>visualiser et modifier les droits</li>
+    <li>faciliter la création d'un module, d'un contrôleur ou d'une action</li>
+    <li>éditer les fichiers de paramétrage</li>
+</ul>
+<p>
+    Ces fonctionnalités seront étendues dans les prochaines versions du framework.
+</p>
+        <?break;?>
+
+
+<?endswitch?>
+<p style="color:red;font-size: 0.7em;text-align: center">
+    This is an alpha version of the internal admin module (only available in french).
+</p>

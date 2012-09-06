@@ -1,0 +1,20 @@
+<style>
+    p {margin:0}
+</style>
+<h1>Orders</h1>
+<ul>
+    <? foreach ($orders as $order): ?>
+    <li>
+        <h3>Order #<?= $order['InvNum'] ?></h3>
+        <p><?= $order['Date']?></p>
+        <p>
+            <?= $order['Description']?>
+        </p>
+        <ul>
+            <? foreach($order['Events'] as $Event): ?>
+            <li> <?= $Event?> </li>
+            <? endforeach ?>
+        </ul>
+    </li>
+<? endforeach ?>
+</ul>

@@ -1,0 +1,9 @@
+<div>
+    <div id="page">
+        {welcome(2)}
+        <p>
+            {_('Now you can begin to conceive your own web site...',TRUE)}
+        </p>
+    </div>
+
+</div>

@@ -1,0 +1,4 @@
+<div id="testLayout"{wbColors(P_GREEN)}>
+    <h4>Dummy</h4>{tooltip->render('testLayout',$this->welcome(2))}
+
+</div>

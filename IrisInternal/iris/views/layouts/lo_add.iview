@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        {title()->head()}
+        <!-- add your meta tags here -->
+        {headMeta()}
+        <link href="/!documents/file/resource/css/iris.css" rel="stylesheet" type="text/css" />
+        <link href="/!documents/file/resource/css/iris31.css" rel="stylesheet" type="text/css" />
+        <link href="/!documents/file/resource/css/irisColor.css" rel="stylesheet" type="text/css" />
+        {dojo_head()}
+    </head>
+    <body {dojo_Body()}>
+        <div class="page_margins">
+            <div class="page">
+                <div id="header">
+                    {ILO_logo()}
+                </div><!--header-->
+                <div id="nav">
+                    <!-- skiplink anchor: navigation -->
+                    <a id="navigation" name="navigation"></a>
+                    <div class="hlist">
+                        <!-- main navigation: horizontal list -->
+                        <!--?=$this->menu()?-->
+                    </div><!--hlist-->
+                </div><!--nav-->
+                <div id="main">
+                    <div id="col1">
+                        <div id="col1_content" class="clearfix">
+                            {islet('add_col1')}
+                        </div>
+                    </div><!--col1-->
+                    <div id="col3">
+                        <div id="col3_content" class="couleur,clearfix">
+                            {mainView()}
+                        </div>
+                        <!-- IE Column Clearing -->
+                        <div id="ie_clearing"> &#160; </div>
+                    </div><!--col3-->
+                </div><!--main-->
+                <!-- begin: #footer -->
+                <div id="footer">
+                    {ILO_goInternal('main')}
+                </div><!--footer-->
+
+            </div><!--page-->
+        </div><!--page_margins-->
+        {logDisplay()}
+    </body>
+</html>

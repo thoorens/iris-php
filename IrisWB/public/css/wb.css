@@ -1,0 +1,115 @@
+/*
+One True Layout
+An idea by Alex Robinson quotted by Eric Meyer
+*/
+
+html{
+    font-family:sans-serif
+}
+
+h1, h2, h3, h4, h5, h6, th{
+    text-shadow: #AAA 0.1em 0.1em 0.2em;
+}
+
+
+#Title{
+    text-align:center
+}
+
+div {
+    /*outline: 1px dashed red;*/
+}
+
+div#main{
+    width :1020px;
+    margin: 0 auto;
+    background-color: white;
+
+}
+.column{
+    min-height:520px;
+    float:left;
+    padding: 0 20px;
+    margin: 0 20 px;
+}
+.one{
+    width : 200px;
+    background-color:#f0fff0;
+    font-style:italic;
+    font-family:serif;
+    font-size:0.9em
+}
+.two{
+    width:500px;
+    background-color:#f0f8ff
+}
+.three{
+    width:200px;
+    background-color:#fff0f0;
+    font-style:italic;
+    font-family:serif;
+    font-size:0.9em
+}
+
+#foot{
+    clear:both;
+    text-align: center;
+    background-color:#444;
+    color: #ffe;
+    box-shadow: 5px 5px 5px #888;
+     border-radius: 5px;
+}
+
+#iris_admintoolbar{
+       background-color:#148;
+       text-align: center;
+       box-shadow: 5px 5px 5px #888;
+     border-radius: 5px;
+}
+
+.partial{
+    border: outset black 2px;
+    background-color: #484;
+    color: #fff0f0;
+}
+p.errorTest{
+    background-color: #FDD;
+}
+
+p.errorTrue{
+   background-color: red; 
+   color:white;
+}
+
+.smallcolumn3{
+padding-left:10px;
+width:155px;
+float: left
+}
+
+.oldscreen{
+border : double 2px #FFF;
+color: #5F5;
+background: black;
+margin:10px;
+padding: 5px;
+text-align:center;
+font-weight: bold;
+font-type:courier;
+}
+
+
+
+li.loop{
+border: black solid 2px;
+margin-left:-30px;
+width:110px;
+padding-left : 15px;
+margin-bottom:5px;
+background-color:#ccccff;
+list-style-type: none;
+}
+
+
+
+

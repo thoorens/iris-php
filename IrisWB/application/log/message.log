@@ -1,0 +1,21 @@
+DEBUG   : Searching view _main.iview
+DEBUG   : Testing /srv/IrisWB/application/modules/main/views/layouts/lo_main.iview
+DEBUG   : Found lo_main.iview
+DEBUG   : Searching view _toolbar.iview
+DEBUG   : Testing /srv/IrisWB/library/Iris_internal/admin/views/scripts/control_toolbar.iview
+DEBUG   : Found control_toolbar.iview
+DEBUG   : Searching view third.iview
+DEBUG   : Testing /srv/IrisWB/application/modules/main/views/scripts/commons/third.iview
+DEBUG   : Found third.iview
+DEBUG   : Searching view pmain.iview
+DEBUG   : Testing /srv/IrisWB/application/modules/main/views/scripts/common/pmain.iview
+DEBUG   : Testing /srv/IrisWB/library/Iris/views/scripts/common/pmain.iview
+DEBUG   : Unable to find pmain.iview
+DEBUG   : Searching view _error.iview
+DEBUG   : Testing /srv/IrisWB/application/modules/main/views/layouts/lo_error.iview
+DEBUG   : Testing /srv/IrisWB/library/Iris/views/layouts/lo_error.iview
+DEBUG   : Found lo_error.iview
+DEBUG   : Searching view _index.iview
+DEBUG   : Testing /srv/IrisWB/application/modules/main/views/scripts/ERROR_index.iview
+DEBUG   : Testing /srv/IrisWB/library/Iris/views/scripts/ERROR_index.iview
+DEBUG   : Found ERROR_index.iview

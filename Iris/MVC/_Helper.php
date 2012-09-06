@@ -1,0 +1,176 @@
+<?php
+
+namespace Iris\MVC;
+
+use \Iris\Engine as IEN;
+
+/*
+ * This file is part of IRIS-PHP.
+ *
+ * IRIS-PHP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * IRIS-PHP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @copyright 2012 Jacques THOORENS
+ */
+
+/**
+ * An abstract helper is the superclass for controller helpers
+ * and view helpers
+ * 
+ * @author Jacques THOORENS (irisphp@thoorens.net)
+ * @see http://irisphp.org
+ * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id: $ * 
+ */
+abstract class _Helper implements \Iris\Translation\iTranslatable {//*/
+    //PHP 5.4 use \Iris\Translation\tTranslatable;
+
+
+
+    /**
+     *
+     * @var AbstractActionHelper; 
+     */
+
+    protected static $_Instances = array();
+
+    /**
+     *
+     * @var boolean
+     */
+    protected static $_Singleton = FALSE;
+
+    /**
+     * This abstract function is required, but its signature may vary from
+     * implementation, so we can't define it
+     */
+    //public abstract function help();
+
+    /**
+     * Call to the help method of an helper (this method must be overriden
+     * according to the different types of helpers)
+     * 
+     * @param string $functionName Class name of helper
+     * @param array $arguments arguments for help method
+     * @param mixed $view the view possibly containing the helper (not used for controller helpers)
+     * @return mixed 
+     */
+    public static function HelperCall($functionName, $arguments, $caller) {
+        throw new \Iris\Exceptions\NotSupportedException("Function HelperCall need to be overridden");
+    }
+
+    /**
+     * The private construct may be completed in subclasses through
+     * additions made in init()
+     */
+    protected function __construct() {
+        $this->_init();
+    }
+
+    /**
+     * Permits to modify the constructor behavior
+     */
+    protected function _init() {
+        
+    }
+
+    /**
+     *
+     * @param string $functionName
+     * @param array $arguments
+     * @param string $helperType
+     * @return \Iris\MVC\_Helper 
+     */
+    protected static function GetObject($functionName, $arguments, $helperType) {
+        list($library, $class) = explode('_', $functionName . '_');
+        if ($library == $functionName) {
+            $library = 'Iris';
+            $class = $functionName;
+        }
+        $className = ucfirst($class);
+        $library = ucfirst($library);
+        // Prepare loader to use correct stack
+        IEN\Loader::PushStackType($helperType);
+        switch ($helperType) {
+            case IEN\Loader::VIEW_HELPER:
+                $Object = "\\$library\\views\\helpers\\" . $className;
+                break;
+            case IEN\Loader::CONTROLLER_HELPER:
+                $Object = "\\$library\\controllers\\helpers\\" . $className;
+                break;
+
+            default:
+                break;
+        }
+        $object = $Object::GetInstance();
+        // restore stack
+        IEN\Loader::PopStackType();
+        return $object;
+    }
+
+    /**
+     *
+     * @return _Helper 
+     */
+    public static function GetInstance() {
+        // late binding class name
+        $className = get_called_class();
+        if (!static::$_Singleton) {
+            // Pas singleton : nouvelle instance
+            $instance = new $className();
+        }
+        else {
+            // singleton : gets existing instance or creates one
+            if (!isset(self::$_Instances[$className])) {
+                self::$_Instances[$className] = new $className();
+            }
+            $instance = self::$_Instances[$className];
+        }
+        return $instance;
+    }
+
+    /* Beginning of trait code */
+
+    /**
+     * Translates a message
+     * 
+     * @param string $message
+     * @param boolean $system
+     * @return string 
+     */
+    public function _($message, $system=\FALSE) {
+        if ($system) {
+            $translator = \Iris\Translation\SystemTranslator::GetInstance();
+            return $translator->translate($message);
+        }
+        $translator = $this->getTranslator();
+        return $translator->translate($message);
+    }
+
+    /**
+     *
+     * @staticvar \Iris\Translation\_Translator $translator
+     * @return \Iris\Translation\_Translator
+     */
+    public function getTranslator() {
+        static $translator = NULL;
+        if (is_null($translator)) {
+            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
+        }
+        return $translator;
+    }
+
+    /* end of trait code */
+}
+
+?>

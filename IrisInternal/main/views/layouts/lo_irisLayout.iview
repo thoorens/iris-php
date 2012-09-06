@@ -1,0 +1,40 @@
+<?php ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        {title()->head()}
+        <!-- add your meta tags here -->
+        {headMeta()}
+        <link href="/iris_aspect/css/iris.css" rel="stylesheet" type="text/css" />
+        <link href="/iris_aspect/css/irisColor.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div class="page_margins">            
+            <div class="page">
+                <div id="header">
+                    {logo()}
+                </div><!--header-->
+                <div id="nav">
+                    <!-- skiplink anchor: navigation -->
+                    <a id="navigation" name="navigation"></a>
+                    <div class="hlist">
+                        <!-- main navigation: horizontal list -->
+                        <!--?=$this->menu()?-->
+                    </div><!--hlist-->
+                </div><!--nav-->
+                <div id="main">
+                    {mainView()}
+                </div><!--main-->
+                <!-- begin: #footer -->
+                <div id="footer">
+                    <div class="links">
+                        
+                    </div>
+                </div><!--footer-->
+
+            </div><!--page-->
+        </div><!--page_margins-->
+        {logDisplay()}
+    </body>
+</html>

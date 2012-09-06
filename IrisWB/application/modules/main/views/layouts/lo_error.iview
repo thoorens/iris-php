@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="/css/wb.css">
+        <link href="/!documents/file/resource/css/errorColor.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="/css/wberror.css">
+        {title()->render(TRUE)}
+        {autoResource()}
+    </head>
+    <body {dojo_body()}{bodyOnload()}>
+        <div id="main">
+            {ILO_adminToolBar()}
+            <div id="container">
+                <div id='Title'>
+                    <h1>{wbTitle}</h1>
+                </div><!-- Title -->
+                <div class="column one">
+                    <h2>Col1</h2>
+
+
+                </div><!-- 1 -->
+                <div class="column two">
+                    {mainView()}
+                </div><!-- 2 -->
+
+            </div><!-- container -->
+            <div id="foot">
+                {wbFooter('modules/main/views/scripts/lo_error.iview')}
+            </div><!--foot-->
+    </body>
+</html>

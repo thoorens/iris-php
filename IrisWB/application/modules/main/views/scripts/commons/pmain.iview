@@ -1,0 +1,4 @@
+<div class="partial">
+    <h4>Partial</h4>
+    {wbScriptNames($name,'Partial')}
+</div>

@@ -1,0 +1,5 @@
+<div>
+    <!-- call partialvar with test variable -->
+    {partial('partialvar',array('test'=>'Hello'))}
+
+</div>

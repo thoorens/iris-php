@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        {title()->render(TRUE)}
+        <link type="text/css" rel="stylesheet" href="/!documents/file/resource/css/irisShadow.css" >
+    </head>
+    <body>
+        <div id="main">
+            {ILO_adminToolBar()}
+            <div id="{logoName}"></div>    
+            <div id="title">
+                {Title}
+            </div><!-- title -->
+            <div id="container">
+                <div id="content_panel">
+                    <br/>
+                    {mainView()}
+                </div><!--content_panel-->
+
+            </div><!--container-->
+            <div id="foot">
+                <br/>
+            {ILO_goInternal($this->buttons)}
+        </div><!--foot-->
+            <div id="shadow">
+            </div><!--shadow-->
+        </div><!--main-->
+    </body>
+</html>

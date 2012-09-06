@@ -1,0 +1,5 @@
+<h1>ACL display</h1>
+<fieldset title="To relog a dummy user having a specific role" name="Test">
+    <legend>Choose the role to test</legend>
+    {form}
+</fieldset>

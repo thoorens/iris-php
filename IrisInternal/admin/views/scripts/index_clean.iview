@@ -1,0 +1,4 @@
+<pre>
+<?= $this->message?>
+<? print_r($this->message)?>
+</pre>

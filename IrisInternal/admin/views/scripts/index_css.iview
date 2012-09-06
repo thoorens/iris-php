@@ -1,0 +1,39 @@
+<section id="article18">
+    <ul>
+        <li><a class="menuLien" href="">xHTML</a>
+            <div>
+
+                <h5>xHTML</h5>
+                <p>L’Hypertext Markup Language, généralement abrégé HTML, est le format de données conçu pour représenter les pages web. C’est un langage de balisage qui permet d’écrire de l’hypertexte, d’où son nom.</p>
+
+                <p class="lien"><a href="http://fr.wikipedia.org/wiki/Hypertext_Markup_Language">HTML sur Wikipédia</a></p>
+
+            </div>
+        </li>
+        <li><a class="menuLien" href="">CSS</a><div><h5>CSS</h5>
+                <p>CSS (Cascading Style Sheets&nbsp;: feuilles de style en cascade) est un langage informatique qui sert à décrire la présentation des documents HTML et XML.</p>
+
+                <p class="lien"><a href="http://fr.wikipedia.org/wiki/Feuilles_de_style_en_cascade">CSS sur Wikipédia</a></p>
+
+            </div></li>
+        <li><a class="menuLien" href="">PHP</a><div><h5>PHP</h5>
+                <p>PHP (sigle de PHP&nbsp;: Hypertext Preprocessor) est un langage de scripts libre principalement utilisé pour produire des pages Web dynamiques via un serveur HTTP.</p>
+
+                <p class="lien"><a href="http://fr.wikipedia.org/wiki/PHP">PHP sur Wikipédia</a></p>
+
+            </div></li>
+        <li><a class="menuLien" href="">Javascript</a><div><h5>Javascript</h5>
+
+                <p>JavaScript est un langage de programmation de scripts principalement utilisé dans les pages web interactives mais aussi coté serveur.</p>
+
+                <p class="lien"><a href="http://fr.wikipedia.org/wiki/Javascript">Javascript sur Wikipédia</a></p>
+
+            </div></li>
+        <li><a class="menuLien" href="">AJAX</a><div><h5>AJAX</h5>
+                <p>Ajax est la combinaison de technologies telles que Javascript, CSS, XML, le DOM et le XMLHttpRequest dans le but de réaliser des applications Web riches (Rich Internet Application&nbsp;: RIA).</p>
+
+                <p class="lien"><a href="http://fr.wikipedia.org/wiki/Asynchronous_JavaScript_and_XML">AJAX sur Wikipédia</a></p>
+
+            </div></li>
+    </ul>
+</section>

@@ -1,0 +1,15 @@
+SetEnv REGISTER_GLOBALS OFF
+SetEnv ZEND_OPTIMIZER 1
+SetEnv MAGIC_QUOTES 0FF
+SetEnv PHP_VER 5_TEST
+
+
+RewriteEngine On
+
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]

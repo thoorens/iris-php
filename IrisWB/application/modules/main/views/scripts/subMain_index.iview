@@ -1,0 +1,9 @@
+<div id="sv1" {wbColors()}>{tooltip->render('sv1',$this->welcome(2))}
+    <h3 >Sub1</h3>
+    <p>
+    Some text here
+    </p>
+    <p>
+        {result}
+    </p>
+</div>

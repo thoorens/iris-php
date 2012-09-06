@@ -1,0 +1,20 @@
+<div>
+    <h1>Table of tests</h1>
+    <ul>
+        <? foreach ($this->sequence as $key => $value):
+            if (!is_array($value)): ?>
+        <li><a href="<?= $key ?>"><?= $value ?></a></li>  
+            <? else: ?>
+        <li><b>
+                        <? $label = 'lbl_' . md5($key); ?>
+                {dojo_mask()->buttonMask($key,$label)}
+            </b><ul {dojo_mask()->attributes()}>
+        <? foreach ($value as $key2 => $value2): ?>
+                <li><a href="<?= $key2 ?>"><?= $value2 ?></a></li>
+        <? endforeach ?>    
+            </ul>
+        </li>
+    <? endif;
+endforeach; ?>
+    </ul>
+</div>

@@ -1,0 +1,9 @@
+<div>
+    <ul>
+        <li>Variable 1 : <?= $var1?></li>
+        <li>Variable 2 : <?= $this->var2?></li>
+        <li>Variable 3 : {var3}</li>
+        <li>Variable 4 : <?= $var4?></li>
+    </ul>
+
+</div>

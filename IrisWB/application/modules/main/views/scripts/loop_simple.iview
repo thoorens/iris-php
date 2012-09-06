@@ -1,0 +1,5 @@
+{wbExplain($this)}
+<h4>Numbers</h4>
+<div>
+    {loop('loops/loop',$array)}
+</div>

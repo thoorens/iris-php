@@ -1,0 +1,10 @@
+<div id="title2" {wbColors()}>
+    {tooltip->render('title2',$this->welcome(2))}
+    <h3>Islet 1</h3>
+    <p>
+        {text}
+    </p>
+    <p>
+        {result}
+    </p>
+</div>

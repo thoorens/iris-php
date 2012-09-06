@@ -1,0 +1,16 @@
+<!--A tool bar for administration during development-->
+<style>
+    #iris_admintoolbar{
+       font-size :0.8em;
+       background-color:<?=$color?>;
+       text-align: left;
+       color: <?=$reverseColor?>;
+    }
+</style>
+<div id="iris_admintoolbar";
+     text-align: center;">
+     <span id="iris_RTD"></span>
+    {ILO_goInternal('reset',TRUE)}
+    {ILO_goInternal('admin',TRUE)}
+    User : <b>{userName} - </b>(<i>{group}</i>)
+</div>

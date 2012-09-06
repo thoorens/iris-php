@@ -1,0 +1,9 @@
+ <div id="mainpage" {wbColors()}>
+    <p class="main">
+        {wbExplain($this)}
+        {partial('colorlevels')}
+    </p>
+    
+</div>
+
+ 

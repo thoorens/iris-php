@@ -1,0 +1,45 @@
+/*
+    iris_aspect/css/iris_color.css
+    color scheme for internal modules
+*/
+body {
+    background: #ffffb8 /* url(images/yellow_v.png)repeat-x top left fixed*/;
+    /*background: -moz-linear-gradient(top,#fffe87,#fffeb5);*/
+    background: linear-gradient(top,#fffe87,#fffeb5);
+}
+
+.page_margins {
+    background-color: #ffe;
+}
+#main{
+    color : #444;
+
+}
+
+#footer {
+    color:#888;
+    background-color: #ddd;
+}
+
+
+
+#header {
+    background-color:#C7C68A;
+}
+
+
+
+div#header{
+    background-color:#C7C68A
+}
+
+h1, h2, h3, h4, h5, h6{
+    color:#008800;
+}
+
+.testlayout{
+    color : red;
+}
+.testview{
+    color : #44C;
+}

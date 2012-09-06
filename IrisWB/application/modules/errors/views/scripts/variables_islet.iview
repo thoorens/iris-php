@@ -1,0 +1,6 @@
+<div>
+    
+    {islet('islMain',array('Some text'))}
+    
+
+</div>

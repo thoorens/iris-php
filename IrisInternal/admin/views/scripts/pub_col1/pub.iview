@@ -1,0 +1,4 @@
+<?php
+echo $this->image($image1, $alt1, $comment1,'/iris_aspect/images');
+?>
+ 

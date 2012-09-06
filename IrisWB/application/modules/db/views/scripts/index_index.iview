@@ -1,0 +1,7 @@
+<div>
+    <ul>
+        <? foreach($tables as $table=>$element):?>
+        <li> Table <?=$table?>: <?=$element?> rows </li>
+        <? endforeach ?>
+    </ul>
+</div>

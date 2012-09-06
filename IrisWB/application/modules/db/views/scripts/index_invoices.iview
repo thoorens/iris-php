@@ -1,0 +1,15 @@
+<h1>List of invoices</h1>
+<div>
+    <? foreach ($invoices as $inv): ?>
+    <p>
+        <b>Invoice</b> #: <?= $inv['id']?><br/> 
+        <b>Date:</b><?= $inv['Date']?><br/> 
+        <b>Customer's name:</b> <?= $inv['CustName']?>
+        <ul>
+        <? foreach($inv['Orders'] as $order):?>
+            <li><?=$order['Qty']?> <?=$order['Description']?> (<?= $order['UP']?>€)</li>
+        <? endforeach ?>
+        </ul>    
+    </p> 
+    <? endforeach ?>
+</div>

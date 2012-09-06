@@ -1,0 +1,14 @@
+<h1>{title}</h1>
+<p>
+    Vous n'avez pas le droit d'accéder à cette page. Vous pourriez envisager l'une
+    des solutions suivantes:
+</p>
+<ul>
+    <li>demander à l'administrateur de modifier votre profil</li>
+    <li>vérifier l'URL que vous avez encodée ou modifiée</li>
+    <li>naviguer sur ce site en utilisant les liens et les boutons</li>
+</ul>
+    
+<p>
+    {button('Retour à la page d\'accueil','/')}
+</p>

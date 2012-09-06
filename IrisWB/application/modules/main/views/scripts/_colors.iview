@@ -1,0 +1,37 @@
+<h4>Color mapping</h4>
+<div {wbColors('WHITE')}>
+    <table border="3">
+        <tr>
+            <td {wbColors('GRAY1')}>main windows</td>
+            <td> ---- </td>
+        </tr>
+        <tr>
+            <th colspan="3">
+                Subcontrollers
+            </th>
+        </tr>
+        <tr>
+            <td {wbColors('GREEN1')}>in same module</td>
+            <td {wbColors('GREEN2')}>in another module</td>
+            <td {wbColors('GREEN3')}>in an internal module</td>
+        </tr>
+        <tr>
+            <td {wbColors('RED1')}>in same module by default</td>
+            <td {wbColors('RED2')}>in main module by default</td>
+        </tr>
+        <tr>
+            <th colspan="3">
+                Islets
+            </th>
+        </tr>
+        <tr>
+            <td {wbColors('BLUE1')}>Islet in same module</td>
+            <td {wbColors('BLUE2')}>Islet in another module</td>
+            <td {wbColors('BLUE3')}>Islet in an internal module</td>
+        </tr>
+        <tr>
+            <td {wbColors('YELLOW1')}>in same module by default</td>
+            <td {wbColors('YELLOW2')}>in main module by default</td>
+        </tr>
+    </table>
+</div>

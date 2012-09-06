@@ -1,0 +1,37 @@
+<?php
+
+?>
+<style>
+    .mask{
+        display:none;
+    }
+</style>
+<table id="adm">
+    <? foreach ($this->modules as $mod => $controllers): ?>
+        <tr class="adm_module">
+            <td >
+                MODULE : 
+                <?= $mask->button($mod) ?>
+            </td>
+        </tr>
+        <tr class="adm_moddet mask" id="<?= $mod ?>_details">
+            <td>
+                <table>
+                    <? foreach ($controllers as $cont => $details): ?>
+                        <tr class="adm_controller">
+                            <td>
+                                CONTROLLER :
+                                <?= $mask->button($cont, $mod . "_" . $cont . "_d") ?>
+                            </td>
+                        </tr>
+                        <tr class="adm_contdet mask" id="<?= $mod . "_" . $cont . "_d" ?>">
+                            <td>
+                                <?= $details ?>
+                            </td>
+                        </tr>
+                    <? endforeach ?>
+                </table>
+            </td>
+        </tr>
+    <? endforeach ?>
+</table>

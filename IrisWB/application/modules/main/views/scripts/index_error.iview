@@ -1,0 +1,10 @@
+<div>
+    <div id="page">
+        {welcome(80)}
+        <h1>Work bench error</h1>
+        <p>
+            <b>Description of error:</b>{message}
+        </p>
+    </div>
+
+</div>

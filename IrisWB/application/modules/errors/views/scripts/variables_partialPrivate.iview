@@ -1,0 +1,9 @@
+<div>
+    <ul>
+        <li>Variable 1 : <?= $var1?></li>
+        <li>Variable 2 : <?= $this->var2?></li>
+    </ul>
+    <? // a variable is passed to the partial ?>
+    {partial('partialPrivate',array('var1'=>$var1))}
+    
+</div>

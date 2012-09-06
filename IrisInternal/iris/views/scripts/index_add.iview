@@ -1,0 +1,52 @@
+<?php
+$det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
+//$det2 = $this->dojo_details()->setAspectClass('dojoIrisMask2');
+?>
+<h1>
+    Présentation du framework IRIS-PHP
+</h1>
+<p>
+    Ce site est réalisé à l'aide du nouveau framework IRIS-PHP, encore en cours de développement. Dans l'état actuel,
+    il dispose déjà d'un module exécutable reprenant les principales fonctionnalités d'un site simple, avec
+    base de données mySQL ou SQLite.
+</p>
+
+<ul>
+    <?php
+    foreach ($features as $feature):
+        echo "<li>" . $det->details($feature->Title, $feature->Details) . "</li>\n";
+    endforeach;
+    $det->connectEvent('onclick');
+    ?>
+</ul>
+<p>
+    La version 1.0 du framework est prévue pour la fin du premier semestre de 2012. Le projet sera 
+    sous licence GPL 3.0. Les caractéristiques suivantes seront ajoutées dans le framework.
+</p>
+<ul>
+    <?php
+    foreach ($plans as $plan) :
+        echo "<li>" . $det->details($plan->Title, $plan->Details) . "</li>\n";
+    endforeach;
+    ?>
+</ul>
+<p>
+    Trois sites en cours de création seront disponibles pour les futurs utilisateurs du framework:
+</p>
+<ul>
+    <li><a href="http://irisphp.org">http://irisphp.org</a> contiendra la documentation en anglais sur
+        l'API du framework
+    </li>
+    <li>
+        <a href="http://www.irisphp.net">http://www.irisphp.net</a> reprendra un mode d'emploi en français avec de nombreux 
+        exemples ainsi qu'une version complète du framework à télécharger.
+    </li>
+    <li>
+        <a href="http://irisphp.org">http://irisphp.org</a> offrira des tutoriels montrant
+        les principales utilisations du framework.
+    </li>
+</ul>
+<?php
+echo $det->connectEvent('onclick');
+
+

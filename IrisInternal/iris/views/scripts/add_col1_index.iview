@@ -1,0 +1,4 @@
+<?php
+echo $this->image($image1, NULL, $comment1,'/!documents/file/resource/logos');
+?>
+ 

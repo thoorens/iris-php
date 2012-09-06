@@ -1,0 +1,17 @@
+<h1>Role switcher</h1>
+<fieldset title="To relog a dummy user having a specific role" name="Test">
+    <legend>Choose the role to test</legend>
+<? if (!is_null($form1)): ?>
+    {form1}
+    <?else:?>
+    No ACL or session defined. 
+    <?endif?>
+</fieldset>
+<fieldset title="To relog a dummy user having a specific id" name="Test">
+    <legend>Choose the user to test</legend>
+    <?if(!is_null($form2)):?>
+    {form2}
+    <?else:?>
+    No systemUserEntity defined
+    <?endif?>
+</fieldset>

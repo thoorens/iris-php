@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        {title()->head()}
+        <link href="/!documents/file/resource/css/iris.css" rel="stylesheet" type="text/css" />
+        <link href="/!documents/file/resource/css/irisColor.css" rel="stylesheet" type="text/css" />
+        <link href="/!documents/file/resource/css/errorColor.css" rel="stylesheet" type="text/css" />
+        <link href="/images/site.ico" rel="shortcut icon" />
+        <!--?= $this->headLink() ?-->
+        <!--?= $this->headStyle() ?-->
+        <!--?= $this->headScript() ?-->
+        <!--?= $this->headJS() ?-->
+    </head>
+    <body>
+        <div class="page_margins">
+            <div class="page">
+                <div id="header">
+                    {ILO_logo('Title80')}
+                </div><!--header-->
+                <div id="main">
+                    {mainView()}
+                </div><!--main-->
+                <div id="footer">
+                    <div>
+                        {ILO_goInternal('main')}
+                    </div>
+                </div><!--footer-->
+
+            </div><!--page-->
+        </div><!--page_margins-->
+        {logDisplay()}
+    </body>
+</html>

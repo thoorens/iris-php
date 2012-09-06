@@ -1,0 +1,30 @@
+<?php
+//@todo : force english in icons
+$this->icons = $this->crudIcon();
+$this->icons
+        // controller definition
+        ->setController('/db/crud')
+        // action suffix (e.g. insert_media)
+        ->setActionName('invoice')
+        // précision du genre de l'entité (M, F ou M' F' pour les élisions)
+        // et de son intitulé
+        ->setEntity("N'_invoice")
+        // champ de l'intitulé servant à décrire l'objet affecté
+        ->setDescField('')
+        // champ constituant la clé primaire
+        ->setIdField('id');
+?>
+<h1>Invoice management</h1>
+
+{icons->create()} Add an invoice
+<h2>Invoice list</h2>
+
+<ul>
+<?foreach($this->invoices as $invoice):
+    $this->icons->setData($invoice)
+    ?>
+    <li>{icons->update()} {icons->delete()}<?= $invoice->Date?> 
+            <?= $invoice->_at_customer_id->Name ?></li>
+<?endforeach?>
+</ul>
+{button('Customers management','/db/crud/customers')}

@@ -1,0 +1,10 @@
+<div>
+    <div id="page">
+        {wbExplain($this)}
+        {wbScriptNames($required)}
+        <br/>
+        {partial($reqPartial,array('name'=>$reqPartial))}
+        <br/>
+    </div>
+
+</div>

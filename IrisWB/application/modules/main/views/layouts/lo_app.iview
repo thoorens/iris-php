@@ -1,0 +1,36 @@
+<?php
+$layout = __FILE__;
+?>
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="/css/wb.css">
+        {title()->render(TRUE)}
+        {dojo_head()}
+    </head>
+    <body {dojo_body()}{bodyOnload()}{wbColors('ORANGE4')}>
+        <div id="main">
+            {ILO_adminToolBar()}
+            <div id="container">
+                <div id='Title'>
+                    <h1>{Title}</h1>
+                </div><!-- Title -->
+                <div class="column one">
+                    <h2>Column 1</h2>
+                    {loremIpsum(5)}
+
+                </div><!-- 1 -->
+                <div class="column two">
+                    {mainView()}
+                </div><!-- 2 -->
+                <div class="column three ">
+                    <h2>Column 3</h2>
+                    {loremIpsum(5,FALSE)}
+                </div><!-- 3 -->
+            </div><!-- container -->
+            <div id="foot">
+                {wbFooter('modules/main/views/scripts/lo_app.iview')}
+            </div><!--foot-->
+    </body>
+</html>

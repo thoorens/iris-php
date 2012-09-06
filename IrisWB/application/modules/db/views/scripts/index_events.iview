@@ -1,0 +1,9 @@
+<style>
+    p{margin:0}
+</style>
+<?foreach($events as $event):?>
+<h4><?= $event['Moment'].':'.$event['Description']?> </h4>
+<p>For order of <?=$event['Order']['Qty'].' '.$event['Order']['Product']?> </p>    
+<p>In invoice <?= $event['Order']['Invoice']?></p>
+    
+<? endforeach ?>    
