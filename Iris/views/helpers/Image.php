@@ -42,7 +42,7 @@ class Image extends _ViewHelper {
      * @param string $class class name for CSS
      * @return string 
      */
-    public function help($file,$alt='Image',$title=NULL,$dir="/images",$class='p_left'){
+    public function help($file,$alt='Image',$title=NULL,$dir=\NULL,$class=''){
         //if(file)
         if(is_null($alt)){
             $alt = "Image $file";
@@ -50,7 +50,7 @@ class Image extends _ViewHelper {
         if(is_null($title)){
             $title = $alt;
         }
-        if($dir==''){
+        if(is_null($dir) or $dir==''){
             $dir='/images';
         }
         if($class!=''){
