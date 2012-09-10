@@ -46,9 +46,11 @@ abstract class _Subcontroller extends _Islet {
      * Il will also serve as a parameter to the SubView helper in the layout.
      * 
      * @param int $num 
+     * @return self (fluent interface)
      */
     public function register($num) {
         self::$_MainController->subcontrollers[$num] = $this;
+        return $this;
     }
 
 }

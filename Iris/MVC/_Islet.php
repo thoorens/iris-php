@@ -97,9 +97,24 @@ abstract class _Islet extends _BaseController {
      * to be executed in the subcontroller.
      * 
      * @param array $parameters 
+     * @return static (fluent interface)
      */
     public function setParameters($parameters) {
         $this->_parameters = $parameters;
+        return $this;
     }
+    
+    /**
+     * Adds a parameters to themethod which is going 
+     * to be executed in the subcontroller.
+     * 
+     * @param mixed $parameter
+     * @return static (fluent interface)
+     */
+    public function addParameter($parameter) {
+        $this->_parameters[] = $parameter;
+        return $this;
+    }
+    
 
 }
