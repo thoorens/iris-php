@@ -158,7 +158,7 @@ class Manager {
 
     protected function _getMime($fileName) {
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
-        if (-isset($this->_mimeTypes[$ext])) {
+        if (isset($this->_mimeTypes[$ext])) {
             return $this->_mimeTypes[$ext];
         }
         else {
