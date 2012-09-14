@@ -26,7 +26,10 @@ namespace CLI;
  *
  * @author Jacques THOORENS (jacques@thoorens.net)
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
- * @version $Id: $abstract class _Process {
+ * @version $Id: $
+ */ 
+ abstract class _Process {
+ 
 
     /**
      *

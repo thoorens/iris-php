@@ -27,7 +27,9 @@ namespace CLI {
      *
      * @author Jacques THOORENS (jacques@thoorens.net)
      * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
- * @version $Id: $    class Project extends _Process {
+     * @version $Id: $    
+     */
+    class Project extends _Process {
 
         /**
          * Permits to display some usefull informations about the current project 
@@ -35,14 +37,14 @@ namespace CLI {
         protected function _show($option) {
 
             switch ($option) {
-                // Recreates the file for Apache
+// Recreates the file for Apache
                 case 'virtual':
                     $projectConfig = $this->_analyser->loadDefaultProject();
                     require_once Analyser::GetIrisSystemDir() . '/CLI/Code.php';
                     $coder = new Code($this->_analyser);
                     $coder->makeVirtualParameter(TRUE);
                     break;
-                // Show all parameters for the default project
+// Show all parameters for the default project
                 case 'status':
                     $projectConfig = $this->_analyser->loadDefaultProject();
                     echo "-------------------------------------------------------------\n";
@@ -123,7 +125,7 @@ namespace CLI {
             $this->_os->setSimulate($simulating);
             $projectDir = $this->_analyser->getProjectDir();
             $projectName = $this->_analyser->getProjectName();
-            // Creates a folder for the project (if it doesn't exist)
+// Creates a folder for the project (if it doesn't exist)
             if (file_exists($projectDir) and file_exists("$projectDir/.$projectName.irisproject")) {
                 throw new \Iris\Exceptions\CLIException("The project '$projectName' already exists. Choose another name.\n");
             }
@@ -132,9 +134,9 @@ namespace CLI {
                 $this->_os->mkDir($projectDir);
             }
             echo "Testing $projectDir/.$projectName.irisproject\n";
-            // Create the project file
+// Create the project file
             $this->_os->touch("$projectDir/.$projectName.irisproject");
-            // Creates the three parts of the project + a file for Apache 
+// Creates the three parts of the project + a file for Apache 
             require_once Analyser::GetIrisSystemDir() . '/CLI/Code.php';
             $coder = new Code($this->_analyser);
             $coder->_os = $this->_os;
@@ -142,7 +144,7 @@ namespace CLI {
             $coder->makeApplication($projectDir);
             $this->_makeLibrary($projectDir);
             $coder->makeVirtualParameter();
-            // add a new config to the configs
+// add a new config to the configs
             if (!$simulating) {
                 $analyser = $this->_analyser;
                 $module = $analyser->getModuleName();
@@ -227,8 +229,8 @@ namespace CLI {
          * module does not exist.
          */
         protected function _generate() {
-            // if no default project, next line throws an exception
-            //$this->_analyser->loadDefaultProject(FALSE);
+// if no default project, next line throws an exception
+//$this->_analyser->loadDefaultProject(FALSE);
             $moduleName = $this->_analyser->getModuleName();
             $controllerName = $this->_analyser->getControllerName();
             $actionName = $this->_analyser->getActionName();
@@ -278,7 +280,7 @@ namespace CLI {
          * @param int $level Indentation level (for display only)
          * @param boolean $simulating If TRUE only display the file to be deleted
          */
-        public static function EmptyDir($dir, $level=0, $simulating=TRUE) {
+        public static function EmptyDir($dir, $level = 0, $simulating = TRUE) {
             $os = \Iris\OS\_OS::GetOSInstance();
             $os->setSimulate($simulating);
             $os->tabLevel = $level;
@@ -295,7 +297,7 @@ namespace CLI {
                 }
                 $handle = opendir($dir);
                 while ($elem = readdir($handle)) {
-                    //ce while vide tous les repertoire et sous rep
+//ce while vide tous les repertoire et sous rep
                     if (is_dir($dir . '/' . $elem) && substr($elem, -2, 2) !== '..' && substr(
                                     $elem, -1, 1) !== '.') { //si c'est un repertoire
                         self::EmptyDir($dir . '/' . $elem, $level, $simulating);
