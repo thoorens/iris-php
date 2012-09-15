@@ -24,7 +24,9 @@
  *
  * @author Jacques THOORENS (jacques@thoorens.net)
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
- * @version $Id: $define('IRISVERSION', '0.9 - beta');
+ * @version $Id: $
+ */
+define('IRISVERSION', '0.9 - beta');
 define('CLI', 'CLI');
 define('BADINI', "Your param file does not seem to be a valid one. Please check your configuration according to the manual instructions.\n");
 $cli = CLI;
