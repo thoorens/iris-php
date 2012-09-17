@@ -91,30 +91,30 @@ abstract class _Helper implements \Iris\Translation\iTranslatable {//*/
      * @param string $helperType
      * @return \Iris\MVC\_Helper 
      */
-    protected static function GetObject($functionName, $arguments, $helperType) {
-        list($library, $class) = explode('_', $functionName . '_');
-        if ($library == $functionName) {
-            $library = 'Iris';
-            $class = $functionName;
+    protected static function GetObject($functionName, $helperType) {
+        list($prefixe, $class) = explode('_', $functionName . '_');
+        if ($prefixe != $functionName) {
+            $library = ucfirst($prefixe);
+            $className = ucfirst($class);
         }
-        $className = ucfirst($class);
-        $library = ucfirst($library);
-        // Prepare loader to use correct stack
-        IEN\Loader::PushStackType($helperType);
+        else {
+            $library = 'Iris';
+            $className = ucfirst($functionName);
+        }
+        $loader = IEN\Loader::GetInstance();
         switch ($helperType) {
             case IEN\Loader::VIEW_HELPER:
-                $Object = "\\$library\\views\\helpers\\" . $className;
+                $object = "$library\\views\\helpers\\" . $className;
                 break;
             case IEN\Loader::CONTROLLER_HELPER:
-                $Object = "\\$library\\controllers\\helpers\\" . $className;
+                $object = "$library\\controllers\\helpers\\" . $className;
                 break;
 
             default:
                 break;
         }
-        $object = $Object::GetInstance();
-        // restore stack
-        IEN\Loader::PopStackType();
+        $loader->loadHelper($object, $helperType);
+        $object = $object::GetInstance();
         return $object;
     }
 
@@ -148,7 +148,7 @@ abstract class _Helper implements \Iris\Translation\iTranslatable {//*/
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\FALSE) {
+    public function _($message, $system = \FALSE) {
         if ($system) {
             $translator = \Iris\Translation\SystemTranslator::GetInstance();
             return $translator->translate($message);

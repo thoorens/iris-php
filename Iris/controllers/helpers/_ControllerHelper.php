@@ -50,7 +50,7 @@ abstract class _ControllerHelper extends \Iris\MVC\_Helper {//*/
      * @return type 
      */
     public static function HelperCall($functionName,$arguments, $controller) {
-        $object = parent::GetObject($functionName, $arguments, \Iris\Engine\Loader::CONTROLLER_HELPER);
+        $object = parent::GetObject($functionName, \Iris\Engine\Loader::CONTROLLER_HELPER);
         $object->_controller = $controller;
         return call_user_func_array(array($object, 'help'), $arguments);
     }

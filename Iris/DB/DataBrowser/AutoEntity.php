@@ -68,7 +68,7 @@ class AutoEntity extends _Entity {
         $path = \Iris\DB\_EntityManager::$entityPath;
         $class = "$path\\T".ucfirst($tableName);
         $loader = \Iris\Engine\Loader::GetInstance();
-        if($loader->doLoad($class, \FALSE)){
+        if($loader->loadClass($class, \FALSE)){
             return new $class();
         }
         self::$_NewFlag = TRUE;

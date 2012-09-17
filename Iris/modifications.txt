@@ -1,0 +1,44 @@
+Modification of loader mechanism
+================================
+
+#       modified:   CLI/Files/public/Bootstrap.php
+Two examples modified in init
+
+#       modified:   Iris/DB/DataBrowser/AutoEntity.php
+Replacement of Loader::doLoad by Loader::loadClass
+
+#       modified:   Iris/Documents/Manager.php
+No relation to the rest: a typo at line 161
+
+#       modified:   Iris/Engine/Bootstrap.php
+An unused var $path at line 137 (thanks to NB 7.2)
+
+#       modified:   Iris/Engine/Dispatcher.php
+Introduction of a response counter
+
+#       modified:   Iris/Engine/Loader.php
+class core_Loader deeply modified
+
+#       modified:   Iris/Engine/Program.php
+Renaming of prepend to setApplicationName
+No more stack reset for Loader
+
+#       modified:   Iris/Engine/Response.php
+response ID added
+makeController changed
+
+#       modified:   Iris/Engine/Router.php
+responser counter added
+changes in route evaluation 
+
+#       modified:   Iris/Log.php
+<p> -> <div> in debug messages
+
+#       modified:   Iris/MVC/_Helper.php
+GetObject completely rewritten
+
+#       modified:   Iris/controllers/helpers/_ControllerHelper.php
+GetObject has no more $arguments parameter
+
+#       modified:   Iris/views/helpers/_ViewHelper.php
+GetObject has no more $arguments parameter

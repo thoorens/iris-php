@@ -50,8 +50,10 @@ class Bootstrap extends core_Bootstrap {
     
     // You add here any call to  initialising routines
     public function init() {
-        // for instance add a library
+        // for instance add a extension library
         //\Iris\Engine\Loader::GetInstance()->insertAltPath('MyIris');
+        // or add a transapplication library
+        //\Iris\Engine\Loader::GetInstance()->setTransapplicationName('Trans');
     }
 
     // You can add her some debbuging tools and parameters

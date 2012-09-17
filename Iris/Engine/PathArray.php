@@ -1,7 +1,5 @@
 <?php
 
-
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -26,9 +24,62 @@
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 
+namespace Iris\Engine;
+
 /**
- * The PathArray class is defined in Loader.php file for consistency reasons
+ * A PathArrayh is an ArrayObject with special methods
  * 
- * The PathArray is an Object array with special methods
- * 
+ *
  */
+class PathArray extends \ArrayObject {
+
+    /**
+     * Add an element to the beginning of the array
+     * 
+     * @param string $element
+     */
+    public function prepend($element) {
+        $old = $this->getArrayCopy();
+        array_unshift($old, $element);
+        $this->exchangeArray($old);
+    }
+
+    /**
+     * Delete an element from the end of the array
+     * 
+     * @return string
+     */
+    public function pop() {
+        $old = $this->getArrayCopy();
+        $last = array_pop($old);
+        $this->exchangeArray($old);
+        return $last;
+    }
+
+    /**
+     * Insert an element before the last two ones in the array
+     * 
+     * @param string $element
+     */
+    public function insertSecondLast($element) {
+        $last = $this->pop();
+        $last0 = $this->pop();
+        $this->append($element);
+        $this->append($last0);
+        $this->append($last);
+    }
+
+    /**
+     * Insert an element after the first present in the array
+     * 
+     * @param string $element
+     */
+    public function insertSecond($element) {
+        $old = $this->getArrayCopy();
+        $first = array_shift($old);
+        array_unshift($old, $element);
+        array_unshift($old, $first);
+        $this->exchangeArray($old);
+    }
+
+}

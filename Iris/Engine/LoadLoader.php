@@ -41,14 +41,12 @@
  * @version $Id: $ * 
  * =========================================================================
  */
-
-namespace Iris\Engine;
-
-class Loader extends _coreLoader {
-
-    public static function Test() {
-        echo 'Loader active';
-    }
-
-}
-
+define('IRIS_ENGINE_DIR', IRIS_ROOT_PATH.'/'.IRIS_LIBRARY.'/Iris/Engine/');
+require_once IRIS_ENGINE_DIR . 'coreFunctions.php';
+include_once IRIS_ENGINE_DIR . '/tSingleton.php';
+include_once IRIS_ENGINE_DIR . '/Debug.php';
+include_once IRIS_ENGINE_DIR . '/PathArray.php';
+include_once IRIS_ENGINE_DIR . '/Mode.php';
+include_once IRIS_ENGINE_DIR . '/_coreLoader.php';
+$customDir = IRIS_ENGINE_DIR;
+include_once $customDir . '/Loader.php';

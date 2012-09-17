@@ -33,13 +33,6 @@ namespace Iris\Engine;
 class Router {
 
     /**
-     * The program name (correspond to the directory containing it
-     * 
-     * @var string
-     */
-    private $_programName;
-
-    /**
      * If true, indicates the internal status of the module. False by default
      * 
      * @var boolean
@@ -115,11 +108,10 @@ class Router {
     private function __construct($error=NULL) {
         $this->_previous = self::$_Myself;
         //// set program name
-        $this->_programName = \Iris\Engine\Program::$ProgramName;
-        $slices = $this->_getURLSlices($error);
-        $slices = $this->_seekModules($slices, $modules);
+        $slices0 = $this->_getURLSlices($error);
+        list($slices,$modules) = $this->_seekModules($slices0);
         $this->seekOtherComponents($slices);
-        $this->prepareLoader($error, $modules);
+        \Iris\Engine\Loader::GetInstance()->pathToHelpers($modules);
     }
 
     /**
@@ -146,7 +138,7 @@ class Router {
      * @param type $slices
      * @return array 
      */
-    private function _seekModules(&$slices, &$modules) {
+    private function _seekModules($slices) {
         $rootdir = IRIS_PROGRAM_PATH;
         // test for internal module 
         if (strlen($slices[0]) and $slices[0][0] == '!') {
@@ -170,11 +162,17 @@ class Router {
                     $this->_moduleName = 'main';
                 }
             }
-            $modulePath = $this->_programName . '/modules/' . $this->_moduleName;
-            $mainPath = $this->_programName . '/modules/main';
+            $modulePath = '/modules/' . $this->_moduleName;
+            $mainPath = '/modules/main';
         }
-        $modules = array($modulePath, $mainPath);
-        return $slices;
+        if($modulePath == $mainPath){
+            $modules = array($mainPath);
+        }
+        else{
+            $modules = array($modulePath, $mainPath);
+        }
+            
+        return array($slices,$modules);
     }
 
     /**
@@ -185,16 +183,15 @@ class Router {
      * @todo clean the loader when it executes a second time
      */
     public function prepareLoader($error, $modules) {
-        list($modulePath, $mainPath) = $modules;
         $loader = \Iris\Engine\Loader::GetInstance($error);
         // in modules, search helpers in main if not found
         // unnecessary to search main twice
-        if ($this->_moduleName != 'main') {
-            $loader->prependPath($mainPath, \Iris\Engine\Loader::CONTROLLER_HELPER);
-            $loader->prependPath($mainPath, \Iris\Engine\Loader::VIEW_HELPER);
+        $i = 0;
+        if (count($modules)==2) {
+            $loader->pathToHelpers($modules[0]);
+            $i++;
         }
-        $loader->prependPath($modulePath, \Iris\Engine\Loader::CONTROLLER_HELPER);
-        $loader->prependPath($modulePath, \Iris\Engine\Loader::VIEW_HELPER);
+        $loader->pathToHelpers($modules[$i]);
     }
 
     public function seekOtherComponents($URIchunks) {
@@ -228,7 +225,7 @@ class Router {
      * 
      * @return Response 
      */
-    public function makeResponse() {
+    public function makeResponse($responseNumber) {
         $response = new Response($this->_controllerName, $this->_actionName,
                         $this->_moduleName, $this->_parameters, $this->_internal);
         // the router makes the main response

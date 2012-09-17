@@ -2,7 +2,6 @@
 
 namespace Iris\Engine;
 
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -62,7 +61,6 @@ class Response {
      */
     private $_parameters;
 
-
     /**
      * The controller maked by makeController
      * 
@@ -102,12 +100,8 @@ class Response {
      * Accessor to module name
      * 
      * @return string
-     * @todo supprimer la gestion des tableaux
      */
     public function getModuleName() {
-//        if (is_array($this->_moduleName)) {
-//            return $this->_moduleName[0];
-//        }
         return $this->_moduleName;
     }
 
@@ -158,7 +152,7 @@ class Response {
      * Creates a controller and initialise its action name
      * from the URL 
      * @return _Controller
-     * @throw \Iris\Exceptions\ResponseException
+     * @throw \Iris\Exceptions\ResponseException (indirectly)
      */
     public function makeController() {
         if (is_array($this->_moduleName)) {
@@ -172,31 +166,31 @@ class Response {
 
         list($controllerClass, $actionName) = $this->getRoute($module1);
         $loader = Loader::GetInstance();
-        $loadingError = \FALSE;
-        if ($loader->doLoad($controllerClass, FALSE)) {
+        if ($loader->loadClass($controllerClass, FALSE)) {
             $this->_moduleName = $module1;
         }
         elseif (is_null($module2)) {
-            $loadingError = \TRUE;
+            $this->_noControllerFound($controllerClass);
         }
         else {
             list($controllerClass, $actionName) = $this->getRoute($module2);
             //$controllerClass = "modules\\" . $controllerClass;
-            if ($loader->doLoad($controllerClass, FALSE)) {
+            if ($loader->loadClass($controllerClass, FALSE)) {
                 $this->_moduleName = $module2;
             }
             else {
-                $loadingError = \TRUE;
+                $this->_noControllerFound($controllerClass);
             }
-        }
-        if ($loadingError) {
-            $exception = new \Iris\Exceptions\ResponseException("$controllerClass : this controler was not found");
-            $exception->setComment('controllerError');
-            throw $exception;
         }
         $controller = new $controllerClass($this, $actionName);
         $this->makedController = $controller;
         return $controller;
+    }
+
+    private function _noControllerFound($controllerClass) {
+        $exception = new \Iris\Exceptions\ResponseException("$controllerClass : this controler was not found");
+        $exception->setComment('controllerError');
+        throw $exception;
     }
 
     /**
@@ -214,7 +208,6 @@ class Response {
         $route[1] = $this->getActionName();
         return $route;
     }
-
 
     /**
      * Returns the main Response object
@@ -244,7 +237,7 @@ class Response {
      * @param string $actionName
      * @return Response 
      */
-    public static function GetOtherInstance($controllerName, $actionName, $moduleName=NULL) {
+    public static function GetOtherInstance($controllerName, $actionName, $moduleName = NULL) {
         // if no module, take the main/!main module  
         if (is_null($moduleName)) {
             $main = self::$_DefaultInstance;

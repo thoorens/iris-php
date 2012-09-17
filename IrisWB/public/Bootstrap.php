@@ -68,6 +68,7 @@ class Bootstrap extends core_Bootstrap {
     public function init() {
         // for instance add a library
         //\Iris\Engine\Loader::GetInstance()->insertAltPath('MyIris');
+        \Iris\Engine\Loader::GetInstance()->setTransapplicationName('Trans');
     }
 
     // You can add her some debbuging tools and parameters

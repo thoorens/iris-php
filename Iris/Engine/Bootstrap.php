@@ -42,7 +42,7 @@ abstract class core_Bootstrap {
      * 
      * @var string 
      */
-    protected $_standardLoaderPath = 'Iris/Engine/Loader.php';
+    protected $_standardLoaderPath = 'Iris/Engine/LoadLoader.php';
 
     /**
      * An ordered array of config files to be read automaticaly (instead
@@ -68,9 +68,10 @@ abstract class core_Bootstrap {
     public static $IniMode = 1; //\Iris\SysConfig\_Parser::COPY_INHERITED_VALUES;
 
     public function __construct() {
-        include IRIS_LIBRARY . '/' . $this->_standardLoaderPath;
+        include IRIS_LIBRARY . '/' . $this->_standardLoaderPath;  
         $this->init();
         $this->debug();
+        $this->log();
     }
 
     /**
@@ -78,9 +79,24 @@ abstract class core_Bootstrap {
      * to modify $_standardLoaderPath or add custom libraries
      */
     public function init() {
-        
+      
     }
 
+    /**
+     * This method is meant to be overridden with instructions for debugging purpose.
+     * It is sometimes easier to create an application/config/00_debug.php file.
+     */
+    public function debug() {
+        
+    }
+    /**
+     * This method defines a standard parameter setting for the log file.
+     * 
+     */
+    public function log() {
+       ini_set('log_error','on');
+       ini_set('error_log',IRIS_ROOT_PATH.'/log/error.log');
+    }
     /**
      * Create a new application and read config files
      * 
@@ -134,7 +150,6 @@ abstract class core_Bootstrap {
      * @param array $filess 
      */
     private function _readConfig($programName) {
-        $path = IRIS_ROOT_PATH . '/' . $programName . '/config/';
         sort($this->_configToRead);
         foreach ($this->_configToRead as $file) {
             $filePath = $file;
@@ -188,16 +203,10 @@ abstract class core_Bootstrap {
         return $text;
     }
 
-    /**
-     * This method is meant to be overridden with instructions for debugging purpose.
-     * It is sometimes easier to create an application/config/00_debug.php file.
-     */
-    public function debug() {
-        
-    }
+    
 
     /**
-     * Add a file to the list of files to process a start time.
+     * Add a file to the list of files to process at start time.
      * @param string $fileName 
      */
     public function addConfigFile($fileName) {

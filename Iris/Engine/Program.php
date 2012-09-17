@@ -39,7 +39,7 @@ class Program {
      * 
      * @var string
      */
-    public static $ProgramName;
+    public static $ProgramName ='NONE';
 
     /**
      *
@@ -57,10 +57,7 @@ class Program {
         $this->stopWatch = new \Iris\Time\StopWatch(NULL, TRUE);
         self::$ProgramName = $programName;
         self::AutosetSiteMode();
-        $loader = Loader::GetInstance();
-        // recherche dans l'application
-        $loader->prependPath($programName);
-        //$loader->prependPath("$programName/modules");
+        Loader::GetInstance()->setApplicationName($programName);
     }
 
     /**
@@ -86,7 +83,7 @@ class Program {
             if (!$exception instanceof \Iris\Exceptions\RedirectException) {
                 $this->_errorInformation($exception);
                 // Clean all message in production only
-                while (ob_get_level()) {// AND \Iris\Engine\Mode::IsProduction()) {
+                while (\FALSE and ob_get_level()) {// AND \Iris\Engine\Mode::IsProduction()) {
                     ob_end_clean();
                 }
                 // in case of error in error trapping, simple error box
@@ -97,7 +94,6 @@ class Program {
                     \Iris\MVC\Layout::GetInstance()->setViewScriptName(\NULL);
                     Memory::Set('Exception', $exception);
                     Memory::Set('Log', \Iris\Log::GetInstance());
-                    Loader::GetInstance()->resetStack();
                     //Memory::SystemTrace();
                     $this->run('/ERROR');
                 }

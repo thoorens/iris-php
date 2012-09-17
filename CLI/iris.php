@@ -129,7 +129,7 @@ $pathIris = str_replace('"', '', trim($value));
 // load some classes (with dependences)
 $classes = array(
     $cli . '/Analyser', $cli . '/_Process',
-    'Iris/Engine/Memory', 'Iris/Log', 'Iris/Exceptions/_Exception', 'Iris/Exceptions/CLIException',
+    'Iris/Engine/tSingleton','Iris/Engine/Memory', 'Iris/Log', 'Iris/Exceptions/_Exception', 'Iris/Exceptions/CLIException',
     'Iris/SysConfig/_Parser', 'Iris/SysConfig/ConfigIterator', 'Iris/SysConfig/Config', 'Iris/SysConfig/IniParser',
     'Iris/OS/_OS', 'Iris/OS/Unix', 'Iris/OS/Windows',
     'Iris/Exceptions/NotSupportedException',

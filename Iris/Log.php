@@ -81,9 +81,9 @@ class LogItem {
     /**
      * Prepare a message (with html tags and styles if necessary)
      * @param int $position : position of the log
-     * @return string 
+     * @return string/NULL 
      */
-    public function render($position=Log::POS_PAGE) {
+    public function render($position = Log::POS_PAGE) {
         if ($position == Log::POS_FILE) {
             switch ($this->_severity) {
                 case Log::SEV_INFO:
@@ -103,16 +103,18 @@ class LogItem {
                     break;
             }
             $text .= " $this->_message\n";
+            $fileName = IRIS_PROGRAM_PATH . '/log/message.log';
+            file_put_contents($fileName, $text, FILE_APPEND);
         }
         else {
             $style = self::$_Style[$this->_severity];
-            $text = "<p class=\"$style\">";
+            $text = "<div class=\"$style\">";
             if (!\is_null($this->_title)) {
                 $text .= "<strong>$this->_title:</strong><hr>";
             }
-            $text .= $this->_message . "</p>";
+            $text .= $this->_message . "</div>";
+            return $text;
         }
-        return $text;
     }
 
 }
@@ -121,17 +123,20 @@ class LogItem {
  * C L A S S   L O G
  * =========================================================================/
 
-  /**
+/**
  * Manages messages during development. You can choose the position and 
- * severity of the message.
+ * severity of the message. The class doesn't use the trait tSingleton, 
+ * because the static method recuperate has to modify the static var _Instance.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ * @version $Id: $ 
+ */
 
 class Log {
     // Position
+
     const POS_NONE = 0; // no display
     const POS_PAGE = 1; // in the page (precise position depends on layout)
     const POS_AUTO = 2; // display at once (only for dirty debbugging purpose)
@@ -142,7 +147,6 @@ class Log {
     const SEV_WARNING = 3;
     const SEV_PANIC = 4;
 
-
     protected static $Debug_Mode = 0;   // DEBUG_NONE
 
     /**
@@ -150,7 +154,7 @@ class Log {
      * @var \Iris\Log a singleton 
      */
     private static $_Instance = NULL;
-
+    
     /**
      *
      * @var int position of the display 
@@ -186,19 +190,20 @@ class Log {
         }
         return self::$_Instance;
     }
+    
 
     /**
      * Save all content of log to Memory
      */
     public static function Save() {
-        \Iris\Engine\Memory::Set('Log', self::$_Instance);
+        \Iris\Engine\Memory::Set('Log', self::GetInstance());
     }
 
     public static function Recuperate() {
         $memory = \Iris\Engine\Memory::GetInstance();
         if (isset($memory->Log)) {
             self::$_Instance = $memory->Log;
-            $instance = self::$_Instance;
+            $instance = self::GetInstance();
             if ($instance->getPosition() == self::POS_AUTO) {
                 foreach ($instance->_items as $item) {
                     echo $item->render();
@@ -220,7 +225,7 @@ class Log {
      * @param LogItem $item 
      */
     private function insert($item) {
-        if ($this->_position & Log::POS_AUTO) {
+        if ($this->_position & (self::POS_AUTO | self::POS_FILE)) {
             echo $item->render();
         }
         // for later processingr
@@ -235,7 +240,7 @@ class Log {
      * @param string $title : facultative title (only used in AUTO state)
      * @param int $severity : severity of the message 
      */
-    public static function Debug($message, $level=\Iris\Engine\Debug::NONE, $title= NULL, $severity=Log::SEV_DEBUG) {
+    public static function Debug($message, $level = \Iris\Engine\Debug::NONE, $title = NULL, $severity = Log::SEV_DEBUG) {
         //echo "DEBUG :$message<br>"; 
         $show = \Iris\Log::$Debug_Mode & $level;
         if ($show) {

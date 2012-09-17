@@ -72,7 +72,7 @@ abstract class _ViewHelper extends \Iris\MVC\_Helper {//*/
             if (!is_array($arguments)) {
                 $arguments = array($arguments);
             }
-            $object = self::GetObject($functionName, $arguments, \Iris\Engine\Loader::VIEW_HELPER);
+            $object = self::GetObject($functionName, \Iris\Engine\Loader::VIEW_HELPER);
             $object->setView($view);
         }
         catch (\Exception $ex) {

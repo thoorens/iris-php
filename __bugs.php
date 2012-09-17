@@ -1,8 +1,11 @@
 <?php
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-namespace IrisInternal\iris\controllers;
+namespace Iris;
 
-use \Iris\Engine\Memory as Memory;
 /*
  * This file is part of IRIS-PHP.
  *
@@ -22,17 +25,12 @@ use \Iris\Engine\Memory as Memory;
  * @copyright 2012 Jacques THOORENS
  */
 
+
 /**
- * 
- */
-class add_col1 extends \Iris\MVC\_Islet {
+ * Bug 1209-01 : Some files have been dammaged during un untag operation just before incorporation in Git.
+ * Files affected are in CLI package only:
+ * - iris.php
+ *  
+ */    
 
-    public function indexAction() {
 
-        $this->__image1 =  'logoV.jpg';
-        $this->__comment1 =  'Iris-PHP logo';
-    }
-
-    
-
-}

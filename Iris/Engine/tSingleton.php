@@ -1,22 +1,6 @@
 <?php
 
-/* =========================================================================
- * This file contains 3 functions
- * 
- *      - __autoload
- *      - iris_assert
- *      - iris_debug
- * 
- * 1 trait
- *      - tSingleton
- * 
- * and 4 classes:
- * 
- *      - Debug
- *      - Mode
- *      - PathArray
- *      - Loader
- * 
+/*
  * This file is part of IRIS-PHP.
  *
  * IRIS-PHP is free software: you can redistribute it and/or modify
@@ -38,17 +22,37 @@
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ * 
- * =========================================================================
+ * @version $Id: $ */
+
+/**
+ * The Mode class is defined in Loader.php file for consistency reasons
+ * 
+ * The mode class permits to know which type of site is running. 
+ * 
  */
 
 namespace Iris\Engine;
 
-class Loader extends _coreLoader {
+/**
+ * A singleton has only on instance and must have a non public constructor
+ * 
+ */
+trait tSingleton {
 
-    public static function Test() {
-        echo 'Loader active';
+    /**
+     * Returns the unique instance or creates it if necessary.
+     * 
+     * @staticvar \static $Instance Serves to store the unique instance
+     * @return \static
+     */
+    public static function GetInstance() {
+        static $Instance = \NULL;
+        if (is_null($Instance)) {
+            $Instance = new static();
+        }
+        return $Instance;
     }
 
 }
 
+?>
