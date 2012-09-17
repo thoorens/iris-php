@@ -2,7 +2,7 @@
 
 namespace IrisInternal\iris\controllers;
 
-use \Iris\Engine\Memory as Memory;
+
 /*
  * This file is part of IRIS-PHP.
  *
