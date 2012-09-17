@@ -248,41 +248,41 @@ abstract class _coreLoader {
             }
             // search in internal module
             foreach ($libraryList as $library) {
-                $viewFile[] = sprintf(self::INTERNAL, $library, $module, $controllerDirectory, $scriptName);
+                $viewFiles[] = sprintf(self::INTERNAL, $library, $module, $controllerDirectory, $scriptName);
             }
             // search in internal main if necessary
             if ($module != 'main') {
                 foreach ($libraryList as $library) {
-                    $viewFile[] = sprintf(self::INTERNALMAIN, $library, $controllerDirectory, $scriptName);
+                    $viewFiles[] = sprintf(self::INTERNALMAIN, $library, $controllerDirectory, $scriptName);
                 }
             }
         }
         else {
             // search in module
-            $viewFile[] = sprintf(self::MODULE, $program, $module, $controllerDirectory, $scriptName);
+            $viewFiles[] = sprintf(self::MODULE, $program, $module, $controllerDirectory, $scriptName);
             $this->_transapplicationName == '' or
-                    $viewFile[] = sprintf(self::MODULE, $this->_transapplicationName, $module, $controllerDirectory, $scriptName);
+                    $viewFiles[] = sprintf(self::MODULE, $this->_transapplicationName, $module, $controllerDirectory, $scriptName);
             // next in main module if necessary
             if ($module != 'main') {
-                $viewFile[] = sprintf(self::MAIN, $program, $controllerDirectory, $scriptName);
+                $viewFiles[] = sprintf(self::MAIN, $program, $controllerDirectory, $scriptName);
                 $this->_transapplicationName == '' or
-                        $viewFile[] = sprintf(self::MAIN, $this->_transapplicationName, $module, $controllerDirectory, $scriptName);
+                        $viewFiles[] = sprintf(self::MAIN, $this->_transapplicationName, $controllerDirectory, $scriptName);
             }
         }
         // next in library
         foreach ($libraryList as $library) {
-            $viewFile[] = sprintf(self::LIBRARY, $library . '/modules/main', $controllerDirectory, $scriptName);
+            $viewFiles[] = sprintf(self::LIBRARY, $library . '/modules/main', $controllerDirectory, $scriptName);
         }
-        $viewFile[] = sprintf(self::LIBRARY, $this->library . '/Iris/modules/main', $controllerDirectory, $scriptName);
+        $viewFiles[] = sprintf(self::LIBRARY, $this->library . '/Iris/modules/main', $controllerDirectory, $scriptName);
         $found = FALSE;
         $index = 0;
         $this->_loadDebug("Searching view ", $scriptName, \Iris\Engine\Debug::VIEW);
-        while ($index < count($viewFile)) {
-            $pathToViewFile = IRIS_ROOT_PATH . '/' . $viewFile[$index];
+        while ($index < count($viewFiles)) {
+            $pathToViewFile = IRIS_ROOT_PATH . '/' . $viewFiles[$index];
             $this->_loadDebug("Testing $pathToViewFile", "", \Iris\Engine\Debug::VIEW);
             if (file_exists($pathToViewFile)) {
                 $this->_loadDebug("Found ", $pathToViewFile, \Iris\Engine\Debug::VIEW);
-                $foundClass = $viewFile[$index];
+                $foundClass = $viewFiles[$index];
                 $found = TRUE;
                 break;
             }
@@ -292,7 +292,8 @@ abstract class _coreLoader {
         if (!$found) {
             $viewFile = basename($scriptName);
             $this->_loadDebug("Unable to find ", "$viewFile", \Iris\Engine\Debug::VIEW);
-            throw new IX\LoaderException("$controllerDirectory$viewFile" . " : not existing in context");
+            $context = implode(' - ', $viewFiles);
+            throw new IX\LoaderException("$controllerDirectory$viewFile" . " : not existing in $context");
         }
         return $foundClass;
     }
