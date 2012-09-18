@@ -30,8 +30,7 @@ namespace Iris\views\helpers;
  * @version $Id: $ * 
  */
 class Image extends _ViewHelper {
-    
-   
+
     /**
      * Creates an image tag with alt and title
      * 
@@ -40,27 +39,26 @@ class Image extends _ViewHelper {
      * @param string $title Title attribute (tooltip)
      * @param string $dir image directory (by default images)
      * @param string $class class name for CSS
+     * @param string $attributes optional attributes or javascript
      * @return string 
      */
-    public function help($file,$alt='Image',$title=NULL,$dir=\NULL,$class=''){
+    public function help($file, $alt = 'Image', $title = NULL, $dir = \NULL, $class = '', $attributes = '') {
         //if(file)
-        if(is_null($alt)){
+        if (is_null($alt)) {
             $alt = "Image $file";
         }
-        if(is_null($title)){
+        if (is_null($title)) {
             $title = $alt;
         }
-        if(is_null($dir) or $dir==''){
-            $dir='/images';
+        if (is_null($dir) or $dir == '') {
+            $dir = '/images';
         }
-        if($class!=''){
-            $class = 'class="'.$class.'"';
+        if ($class != '') {
+            $class = 'class="' . $class . '"';
         }
-        return sprintf('<img src="%s" title="%s" alt="%s" %s/>'."\n",
-                $dir."/".$file,$title,$alt,$class);
-        
+        return sprintf('<img src="%s" title="%s" alt="%s" %s %s/>' . "\n", 
+                $dir . "/" . $file, $title, $alt, $class, $attributes);
     }
-    
-}
 
+}
 

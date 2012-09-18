@@ -32,16 +32,16 @@ namespace Iris\views\helpers;
  *
  */
 class Icon extends _ViewHelper {
-   
+
     protected static $_Singleton = TRUE;
-    protected $_baseDir = '/icones/';
+    protected $_baseDir = 'icones/';
     protected $_javaScript = FALSE;
 
-    public function help(){
+    public function help() {
         return $this;
     }
-    
-   /**
+
+    /**
      * Création d'un lien-icone
      * 
      * @param string $ref
@@ -51,12 +51,23 @@ class Icon extends _ViewHelper {
      * @param string $iconText
      * @return type 
      */
-    public function link($ref, $iconName, $help, $desc=null, $iconText='',$class=\NULL) {
+    public function link($ref, $iconName, $help, $desc = null, $iconText = '', $class = \NULL) {
         $desc = is_null($desc) ? $iconName : $desc;
         $icon = $this->_view->image($this->_baseDir . $iconName, $desc, $help, '', $class) . $iconText;
         return '<a href="' . $ref . '">' . $icon . '</a>';
     }
-   
+
+    public function link2($ref, $iconNames, $help, $desc = null, $iconText = '', $class = \NULL) {
+        list($icon1, $icon2) = explode('|',$iconNames);
+        $desc = is_null($desc) ? $icon1 : $desc;
+        $path1 = "/images/".$this->_baseDir.$icon1;
+        $path2 = "/images/".$this->_baseDir.$icon2;
+        $attributes = "onmouseover = \"this.src='$path2'\" ";
+        $attributes .= "onmouseout=\"this.src='$path1'\" ";
+        $icon = $this->_view->image($this->_baseDir . $icon1, $desc, $help, '', $class, $attributes) . $iconText;
+        return '<a href="' . $ref . '">' . $icon . '</a>';
+    }
+
     /**
      * Création d'un lien-icone avec du javascript
      * 
@@ -67,10 +78,10 @@ class Icon extends _ViewHelper {
      * @param string $iconText
      * @return type 
      */
-    public function jsLink($ref, $iconName, $help, $desc=null, $iconText='') {
+    public function jsLink($ref, $iconName, $help, $desc = null, $iconText = '') {
+        
     }
-    
-    
+
     /**
      * accesseur en écriture pour le répertoire de base des icônes
      * 
@@ -80,16 +91,16 @@ class Icon extends _ViewHelper {
         $this->_baseDir = $baseDir;
     }
 
-    
-    private function _setJS(){
-        if($this->_javaScript){
+    private function _setJS() {
+        if ($this->_javaScript) {
             return;
         }
-        $this->_view->javascriptLoader('jsLink',<<<JS
+        $this->_view->javascriptLoader('jsLink', <<<JS
 
 JS
-);
+        );
     }
+
 }
 
 ?>
