@@ -111,7 +111,7 @@ class Partial extends View {
             $this->_properties = $data->_properties;
         }
         // otherwise, data must be an array
-        if (is_array($data)) {
+        elseif (is_array($data)) {
             $this->_properties = $data;
         }
         else {
