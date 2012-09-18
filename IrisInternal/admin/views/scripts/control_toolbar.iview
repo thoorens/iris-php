@@ -7,7 +7,7 @@
         color: <?= $reverseColor ?>;
     }
     span#iris_RTD{
-        color: #white;
+        color: white;
     }
 </style>
 <div id="iris_admintoolbar">
