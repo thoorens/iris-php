@@ -41,7 +41,6 @@ class layout extends _main{
         $this->_setLayout('testlayout');
         // loads subcontrollers required by layout
         $this->getSubcontroller('subMain','index')->register(1);
-        $this->subcontrollers[1]->setParameters(array($number));
         $this->getSubcontroller('subTestLayout','index','testLayout')->register(2);
         $this->getSubcontroller('subDemo','index','!workbench')->register(3);
         $tooltip =  $this->_view->dojo_toolTip();
