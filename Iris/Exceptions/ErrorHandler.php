@@ -69,6 +69,24 @@ class ErrorHandler implements \Iris\Design\iSingleton {
     }
 
     /**
+     * This methods normally wipes out all text before renewing a complete
+     * error cycle: always in production mode and unless a KEEP=1 has
+     * been provided in URL during development
+     */
+    public static function WipeAllText() {
+        if (\Iris\Engine\Mode::IsProduction()) {
+            $wipe = TRUE;
+        }
+        else {
+            $keep = \Iris\Engine\Superglobal::GetGet('KEEP', 0);
+            $wipe = !$keep;
+        }
+        while (ob_get_level() AND $wipe) {
+            ob_end_clean();
+        }
+    }
+
+    /**
      * 
      * @param type $no
      * @param type $mes

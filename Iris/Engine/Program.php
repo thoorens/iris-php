@@ -82,10 +82,8 @@ class Program {
             // RedirectException is a way to escape from the initial run method end
             if (!$exception instanceof \Iris\Exceptions\RedirectException) {
                 $this->_errorInformation($exception);
-                // Clean all message in production only
-                while (ob_get_level()) {// AND \Iris\Engine\Mode::IsProduction()) {
-                    ob_end_clean();
-                }
+                // Clean all message in 
+                \Iris\Exceptions\ErrorHandler::WipeAllText();
                 // in case of error in error trapping, simple error box
                 if (!is_null($errorURI)) {
                     \Iris\Engine\Debug::Kill($this->_errorBox($exception->__toString(), 'Fatal error'));
