@@ -1,8 +1,7 @@
 <?php
 
-namespace Iris\MVC;
+namespace Iris\DB\DataBrowser;
 
-use Iris\Exceptions as ex;
 
 /*
  * This file is part of IRIS-PHP.

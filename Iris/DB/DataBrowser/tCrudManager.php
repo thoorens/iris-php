@@ -1,6 +1,8 @@
 <?php
 
-namespace models\crud;
+
+
+namespace Iris\DB\DataBrowser;
 
 /*
  * This file is part of IRIS-PHP.
@@ -19,34 +21,35 @@ namespace models\crud;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
- *
- * 
  */
 
 /**
- * 
- * Test of basic crud operations on invoices
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Invoice extends \Iris\DB\DataBrowser\_Crud {
- 
-    protected $_formProperties = array(
-        'customer_id' => array('LABEL','Customer:'),
-    );
+
+trait tCrudManager{
     
-    public function __construct($param = NULL) {
-        parent::__construct($param);
-        $dbType = \Iris\Users\Session::GetInstance()->getValue('dbType', 'sqlite');
-        $entity = \Iris\DB\DataBrowser\AutoEntity::entityBuilder('invoices', array('id'),
-                \models\_invoiceManager::getEM($dbType));
-        $this->setEntity($entity);
-        $this->setActions("erreur", "invoices");
-   
+    protected $_viewScriptName = 'editall';
+    
+    public function __callAction($actionName, $parameters) {
+        
+        $this->_layout($actionName);
+        \Iris\DB\DataBrowser\_Crud::DispatchAction($this, $actionName, $parameters);
+        $this->setViewScriptName($this->_viewScriptName);
     }
-
-
     
+    private function _layout($actionName){
+        
+    }
+    
+     public function errorAction($num) {
+        die("There is an error $num");
+    }
 }
+
+
+
+

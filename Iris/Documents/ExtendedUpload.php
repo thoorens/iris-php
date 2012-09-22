@@ -22,7 +22,7 @@ namespace Iris\Documents;
  */
 
 /**
- * A subclass of \Iris\MVC\Upload which permits to add informations
+ * A subclass of \Iris\DB\DataBrowser\Upload which permits to add informations
  * such as upload date, user id, file name, folder name, availability
  * and ACL
  * 
@@ -30,7 +30,7 @@ namespace Iris\Documents;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ExtendedUpload extends \Iris\MVC\Upload {
+class ExtendedUpload extends \Iris\DB\DataBrowser\Upload {
     const TO = 0;
     const FROM = 1;
 
@@ -124,8 +124,8 @@ class ExtendedUpload extends \Iris\MVC\Upload {
     }
 
     /**
-     * Skip the overridden method in \Iris\MVC\Upload (which throws an exception)
-     * and use \Iris\MVC\_Crud's (Netbeans believes it is static. It is not.)
+     * Skip the overridden method in \Iris\DB\DataBrowser\Upload (which throws an exception)
+     * and use \Iris\DB\DataBrowser\_Crud's (Netbeans believes it is static. It is not.)
      * Thank you for the trick Jean-François
      * @see http://blog.lepine.pro/php/objet-acceder-au-grand-parent-en-php
      * 
@@ -133,12 +133,12 @@ class ExtendedUpload extends \Iris\MVC\Upload {
      * @return type 
      */
     public function delete($idValues) {
-        return \Iris\MVC\_Crud::delete($idValues);
+        return \Iris\DB\DataBrowser\_Crud::delete($idValues);
     }
 
     /**
-     * Skip the overridden method in \Iris\MVC\Upload (which throws an exception)
-     * and use \Iris\MVC\_Crud's (Netbeans believes it is static. It is not.)
+     * Skip the overridden method in \Iris\DB\DataBrowser\Upload (which throws an exception)
+     * and use \Iris\DB\DataBrowser\_Crud's (Netbeans believes it is static. It is not.)
      * Thank you for the trick Jean-François
      * @see http://blog.lepine.pro/php/objet-acceder-au-grand-parent-en-php
      * 
@@ -146,7 +146,7 @@ class ExtendedUpload extends \Iris\MVC\Upload {
      * @return type 
      */
     public function update($idValues) {
-        return \Iris\MVC\_Crud::update($idValues);
+        return \Iris\DB\DataBrowser\_Crud::update($idValues);
     }
 
     /**
@@ -219,7 +219,7 @@ class ExtendedUpload extends \Iris\MVC\Upload {
         $newDoc->{$this->_DepositDate} = $date->__toString();
         $fileElement = $this->_form->getComponent($this->_sharedData['field']);
         // here we only need the base directory (not the category): return to Upload Method
-        $newDoc->{$this->_Folder} = \Iris\MVC\Upload::_getFileDir($fileElement) . '/';
+        $newDoc->{$this->_Folder} = \Iris\DB\DataBrowser\Upload::_getFileDir($fileElement) . '/';
         $newDoc->save();
         return;
     }

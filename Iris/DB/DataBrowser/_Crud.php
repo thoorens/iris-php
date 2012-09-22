@@ -1,8 +1,5 @@
 <?php
-
-namespace Iris\MVC;
-
-use Iris\Exceptions as ex;
+namespace Iris\DB\DataBrowser;
 use Iris\DB\_Entity;
 
 /*

@@ -30,7 +30,7 @@ class _dbCrud extends \modules\_application {
         $this->__title = ucfirst($entity) . " management";
 //        }
 
-        \Iris\MVC\_Crud::dispatchAction($this, $actionName, $parameters);
+        \Iris\DB\DataBrowser\_Crud::dispatchAction($this, $actionName, $parameters);
         $this->setViewScriptName('editall');
     }
 

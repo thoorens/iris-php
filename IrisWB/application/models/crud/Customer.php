@@ -31,7 +31,7 @@ namespace models\crud;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Customer extends \Iris\MVC\_Crud {
+class Customer extends \Iris\DB\DataBrowser\_Crud {
  
     
     public function __construct($param = NULL) {

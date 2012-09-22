@@ -1,6 +1,5 @@
 <?php
-
-namespace Iris\MVC;
+namespace Iris\DB\DataBrowser;
 
 /*
  * This file is part of IRIS-PHP.
@@ -29,7 +28,7 @@ namespace Iris\MVC;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-use Iris\Exceptions as ex;
+
 
 abstract class _Login extends _Crud {
     const LOGIN = 5;
