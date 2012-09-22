@@ -186,23 +186,6 @@ abstract class core_Bootstrap {
         }
     }
 
-    /**
-     * Error box with title and message, for error debugging purpose
-     * Should not be used in a production environment. This box is used
-     * when an error occurs in error processing for an cry of despair.
-     * 
-     * @param string $message : error description
-     * @param string $title : box title
-     * @return string 
-     */
-    private function _errorBox($message, $title="Unkown class") {
-        $text = '<div style="background-color:#979; color:#FFFFFF; margin:10px; padding:5px\">';
-        $text .= "&nbsp;<strong>ERROR : $title</strong><hr>";
-        $text .= '<pre style="background-color:#DDD;color:#008;margin:10px;font-size:0.8em;">';
-        $text .= $message . '</pre><p style="margin-top:-15px">&nbsp;</p></div>';
-        return $text;
-    }
-
     
 
     /**
