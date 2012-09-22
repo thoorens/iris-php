@@ -47,17 +47,16 @@ class layout extends _testLayout{
         // has 3 subcontrollers and 3 islets
         $this->_setLayout('testlayout2');
         // loads subcontrollers required by layout
-        $this->getSubcontroller('subMain','index')->register(1);
-        $this->getSubcontroller('subMask','index')->register(4);
-        $this->subcontrollers[1]->setParameters(array($number));
-        $this->getSubcontroller('subTestLayout','index','testLayout')->register(2);
-        $this->getSubcontroller('subDemo','index','!workbench')->register(3);
+        $this->registerSubcontroller(1,'subMain','index');
+        $this->registerSubcontroller(4,'subMask','index');
+        $this->registerSubcontroller(2,'subTestLayout','index','testLayout');
+        $this->registerSubcontroller(3,'subDemo','index','!workbench');
         $tooltip =  $this->_view->dojo_toolTip();
         
-        $this->subcontrollers[1]->setParameters(array($number));
-        $this->subcontrollers[2]->setParameters(array($number));
-        $this->subcontrollers[3]->setParameters(array($number));
-        $this->subcontrollers[4]->setParameters(array($number));
+        $this->getSubcontroller(1)->setParameters(array($number));
+        $this->getSubcontroller(2)->setParameters(array($number));
+        $this->getSubcontroller(3)->setParameters(array($number));
+        $this->getSubcontroller(4)->setParameters(array($number));
         $this->__tooltip = $tooltip;
         $this->toView('tooltip', $tooltip, 2);
         $this->toView('tooltip', $tooltip, 3);

@@ -217,14 +217,14 @@ abstract class _coreLoader {
      * Views have a more complex way to load and deserve a special method
      * to make the searching
      * 
-     * @param type $scriptName
-     * @param type $controllerDirectory
-     * @param type $response
+     * @param type $scriptName The specified script name (or empty string)
+     * @param type $controllerDirectory The controller directory
+     * @param Response $response The used response (main or secondary for subcontrollers)
      * @return type 
      */
     public function loadView($scriptName, $controllerDirectory, $response) {
-        if (is_null($response)) {
-            $response = Response::GetDefaultInstance();
+        if($scriptName == ''){
+            $scriptName = $response->getActionName();
         }
         // add extension if necessary
         if (strpos($scriptName, '.') === FALSE) {

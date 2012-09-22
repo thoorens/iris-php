@@ -48,10 +48,12 @@ abstract class _Subcontroller extends _Islet {
      * @param int $num 
      * @return self (fluent interface)
      */
-    public function register($num) {
-        self::$_MainController->subcontrollers[$num] = $this;
-        return $this;
-    }
+//    public function register($num) {
+//        self::$_MainController->subcontrollers[$num] = $this;
+//        return $this;
+//    }
+   
+
 
 }
 

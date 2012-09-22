@@ -60,7 +60,7 @@ abstract class _Islet extends _BaseController {
      * @param \Iris\Engine\Response $response 
      * PHP 5.4 ready
      */
-    public final function __construct($response, $actionName='index') {
+    public function __construct($response, $actionName='index') {
         parent::__construct($response, $actionName);
         $this->_testDirectCall();
         // additional setup at module and controller level

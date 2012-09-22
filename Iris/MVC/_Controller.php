@@ -38,7 +38,7 @@ class _Controller extends _BaseController {
      * The list of subcontroller 
      * @var array(_Subcontroller) 
      */
-    public $subcontrollers = array();
+    private $_wrappers = array();
 
     public function __construct(\Iris\Engine\Response $response, $actionName = 'index') {
         parent::__construct($response, $actionName);
@@ -52,7 +52,7 @@ class _Controller extends _BaseController {
         $this->_applicationInit();
         $this->_moduleInit();
         $this->_init();
-        
+
 // if problem no return
         $this->_verifyAcl();
     }
@@ -75,7 +75,7 @@ class _Controller extends _BaseController {
         $this->_view->setResponse($this->_response);
         $layout = \Iris\MVC\Layout::GetInstance();
         $layoutName = $layout->getViewScriptName();
-// Complex treatment with layout and possibly subviews
+        // Complex treatment with layout and possibly subviews
         if (!is_null($layoutName)) {
             try {
                 $layout->setResponse($this->_response);
@@ -102,8 +102,17 @@ class _Controller extends _BaseController {
         }
     }
 
+    /**
+     * Each planned subcontroller is instanciated and passed through its 
+     * normal route : predispatch, executeAction, dispatch and postdispatch.
+     * The rendering is stored in the subview area of the layout
+     *  
+     * @param type $layout
+     */
     private function _renderSubviews($layout) {
-        foreach ($this->subcontrollers as $num => $subcontroller) {
+        /* @var $wrapper SubcontrollerWrapper */
+        foreach ($this->_wrappers as $num => $wrapper) {
+            $subcontroller = $wrapper->makeSubcontroller();
             $subcontroller->predispatch();
             $subcontroller->excecuteAction();
             $rendering = $subcontroller->dispatch(\FALSE);
@@ -113,33 +122,37 @@ class _Controller extends _BaseController {
     }
 
     /**
-     * Do the verification of ACL.
+     * Do the verification of ACL. In case of deny, reroute to a specified
+     * URL (in $_noAclRoute)
      */
     protected function _verifyAcl() {
-// always happy
+        // always happy
         $acl = \Iris\Users\Acl::GetInstance();
         $resource = '/' . $this->getModuleName() . '/' . $this->getControllerName();
         if (!$acl->hasPrivilege($resource, $this->getActionName())) {
             $this->reroute($this->_noAclRoute, TRUE);
-// no return
+            // no return
         }
     }
 
     /**
-     * Instanciates a subcontroller knowing its name (action and module names are
-     * 'index' and 'main' by default if not otherwise defined)
-     *   
+     * 
+     * @param int $number
      * @param string $controllerName 
-     * @param type $actionName
-     * @param type $module
+     * @param string $actionName
+     * @param string $module
      * @return _SubController
      */
-    public function getSubcontroller($controllerName, $actionName='index', $moduleName=NULL) {
-        if (strpos($controllerName, '/') !== FALSE) {
-            list($moduleName, $controllerName) = explode('/', $controllerName);
+    public function registerSubcontroller($number, $controllerName, $actionName = 'index', $moduleName = '') {
+        if (!isset($this->_wrappers[$number])) {
+            $subcontroller = new SubcontrollerWrapper($this, $number);
+            $this->_wrappers[$number] = $subcontroller;
         }
-        $response = \Iris\Engine\Response::GetOtherInstance($controllerName, $actionName, $moduleName);
-        return $response->makeController();
+        else {
+            $subcontroller = $this->_wrappers[$number];
+        }
+        $subcontroller->setModContAct("$moduleName/$controllerName/$actionName");
+        return $subcontroller;
     }
 
     /**
@@ -155,13 +168,26 @@ class _Controller extends _BaseController {
             $this->_view->__set($name, $values);
         }
         else {
-            $this->subcontrollers[$number]->_toView1($name, $values);
+            $this->getSubcontroller($number)->_toView1($name, $values);
         }
     }
 
-    public function setActiveMenu($uri, $menuName='#def#') {
+    public function setActiveMenu($uri, $menuName = '#def#') {
         $menus = \Iris\Structure\MenuCollection::GetInstance();
         $menus->getMenu($menuName)->setDefaultItem($uri);
+    }
+
+    /**
+     * 
+     * @param int $number
+     * @return _Subcontroller
+     * @throws \Iris\Exceptions\ControllerException
+     */
+    public function getSubcontroller($number) {
+        if (!isset($this->_wrappers[$number])) {
+            throw new \Iris\Exceptions\ControllerException("Subcontroller $number is not defined");
+        }
+        return $this->_wrappers[$number];
     }
 
 }

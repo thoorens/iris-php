@@ -64,7 +64,7 @@ class View implements \Iris\Translation\iTranslatable {
      * 
      * @var string 
      */
-    protected $_viewScriptName = 'index';
+    protected $_viewScriptName = '';
 
     /**
      *
@@ -80,9 +80,7 @@ class View implements \Iris\Translation\iTranslatable {
         $this->_viewScriptName = $name;
     }
 
-    
-
-        /**
+    /**
      *
      * @param type $name
      * @param type $value 
@@ -107,22 +105,26 @@ class View implements \Iris\Translation\iTranslatable {
      * Evaluates the (implicit or explicit) view script
      * and renders it as html string
      *  
-     * @param string $scriptName
+     * @param string $forcedScriptName (usually NULL)
      * @return string 
      */
-    public function render($scriptName=NULL) {
+    public function render($forcedScriptName = NULL) {
+//        iris_debug("scriptName : ".$scriptName,\FALSE);
+//        iris_debug('URL:'.$this->_response,\FALSE);
+//        iris_debug('viewScriptName:'.$this->_viewScriptName,\FALSE);
         if (strpos($this->_viewScriptName, '/')) {
-            $scriptName = $this->_viewScriptName;
+            $forcedScriptName = $this->_viewScriptName;
         }
         // File generators and loaders have no view part, stop them and no time measurement.
-        if ($scriptName == '__NO_RENDER__' or $this->_viewScriptName == '__NO_RENDER__') {
+        if ($forcedScriptName == '__NO_RENDER__' or $this->_viewScriptName == '__NO_RENDER__') {
             \Iris\Time\StopWatch::DisableRTDDisplay();
             die(''); // stop process - file is complete
         }
-        $template = $this->_getTemplate($scriptName, $scriptFileName);
+        // there is a template to render
+        $template = $this->_getTemplate($forcedScriptName);
         $phtml = $this->_renderTemplate($template);
         ob_start();
-        $this->_eval($phtml, $scriptFileName);
+        $this->_eval($phtml);
         $page = ob_get_clean();
         return $page;
     }
@@ -156,7 +158,7 @@ class View implements \Iris\Translation\iTranslatable {
      * @param type $phtml
      * @param type $scriptFileName The name of the script (for 
      */
-    private function _eval($phtml, $scriptFileName) {
+    private function _eval($phtml) {
         foreach ($this->_properties as $name => $value) {
             ${$name} = $value;
         }
@@ -180,7 +182,7 @@ class View implements \Iris\Translation\iTranslatable {
             catch (\Iris\Exceptions\ErrorException $exception) {
                 $errMessage = $exception->getMessage();
                 $viewType = static::$_ViewType;
-                $file = str_replace(IRIS_ROOT_PATH, '', $scriptFileName);
+                $file = self::$_LastUsedScript;
                 $trace = $exception->getTrace();
                 // take the line number from the trace containing eval()'d error
                 foreach ($trace as $traceItem) {
@@ -202,27 +204,27 @@ class View implements \Iris\Translation\iTranslatable {
     /**
      * Get a template content. In view, by reading a file found by the loader
      * 
-     * @param type $scriptName
-     * @param string $scriptFileName
-     * @return type 
+     * @param type $forcedScriptName
+     * @return string 
      */
-    protected function _getTemplate($scriptName, &$scriptFileName) {
+    protected function _getTemplate($forcedScriptName) {
         $loader = ie\Loader::GetInstance();
         $viewType = static::$_ViewType;
         try {
-            if (is_null($scriptName)) {
-                $viewFile = $loader->loadView($this->_viewScriptName, $this->_viewDirectory(), $this->_response);
+            // the case where a scriptName has been explicitely required (renderNow)
+            if (!is_null($forcedScriptName)) {
+                $viewFile = $loader->loadView($forcedScriptName, "scripts", $this->_response);
             }
             else {
-                $viewFile = $loader->loadView($scriptName, "scripts", $this->_response);
+                $viewFile = $loader->loadView($this->_viewScriptName, $this->_viewDirectory(), $this->_response);
             }
         }
         catch (\Iris\Exceptions\LoaderException $l_ex) {
             throw new \Iris\Exceptions\LoaderException("Problem with $viewType " .
                     $l_ex->getMessage(), NULL, $l_ex);
         }
+        static::$_LastUsedScript = $viewFile; // for debugging purpose
         $scriptFileName = IRIS_ROOT_PATH . '/' . $viewFile;
-        static::$_LastUsedScript = $scriptFileName; // for debugging purpose
         $file = file($scriptFileName);
         return $file;
     }
@@ -234,8 +236,8 @@ class View implements \Iris\Translation\iTranslatable {
      * @return String 
      */
     protected function _viewDirectory() {
-        $controller = $this->_response->getControllerName();
-        $controller = str_replace("\\", "/", $controller);
+        $controllerName = $this->_response->getControllerName();
+        $controller = str_replace("\\", "/", $controllerName);
         return "scripts/$controller";
     }
 
@@ -291,7 +293,7 @@ class View implements \Iris\Translation\iTranslatable {
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\FALSE) {
+    public function _($message, $system = \FALSE) {
         if ($system) {
             $translator = \Iris\Translation\SystemTranslator::GetInstance();
             return $translator->translate($message);

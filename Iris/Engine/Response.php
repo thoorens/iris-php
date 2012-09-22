@@ -164,7 +164,7 @@ class Response {
             $module2 = NULL;
         }
 
-        list($controllerClass, $actionName) = $this->getRoute($module1);
+        list($controllerClass, $actionName) = $this->_getRoute($module1);
         $loader = Loader::GetInstance();
         if ($loader->loadClass($controllerClass, FALSE)) {
             $this->_moduleName = $module1;
@@ -173,7 +173,7 @@ class Response {
             $this->_noControllerFound($controllerClass);
         }
         else {
-            list($controllerClass, $actionName) = $this->getRoute($module2);
+            list($controllerClass, $actionName) = $this->_getRoute($module2);
             //$controllerClass = "modules\\" . $controllerClass;
             if ($loader->loadClass($controllerClass, FALSE)) {
                 $this->_moduleName = $module2;
@@ -194,21 +194,30 @@ class Response {
     }
 
     /**
-     * Makes the path for the controller using 
-     * @param int $moduleNumber
+     * Makes the path for the controller using a module name 
+     * 
+     * @param string $moduleName
      * @return array(string,string) controller and action names 
      */
-    public function getRoute($module) {
+    private function _getRoute($moduleName) {
         if ($this->_internal) {
-            $route[0] = "IrisInternal\\$module\\controllers\\" . $this->getControllerName();
+            $route[0] = "IrisInternal\\$moduleName\\controllers\\" . $this->getControllerName();
         }
         else {
-            $route[0] = "modules\\$module\\controllers\\" . $this->getControllerName();
+            $route[0] = "modules\\$moduleName\\controllers\\" . $this->getControllerName();
         }
         $route[1] = $this->getActionName();
         return $route;
     }
 
+    public function __toString() {
+         $url[] = $this->isInternal() ? '!' : '';
+        $url[] = $this->getModuleName();
+        $url[] = $this->getControllerName();
+        $url[] = $this->getActionName();
+        return implode('/',$url);
+    }
+    
     /**
      * Returns the main Response object
      * 
@@ -238,8 +247,8 @@ class Response {
      * @return Response 
      */
     public static function GetOtherInstance($controllerName, $actionName, $moduleName = NULL) {
-        // if no module, take the main/!main module  
-        if (is_null($moduleName)) {
+        // if no module, take the main/!main module 
+        if (is_null($moduleName) or $moduleName=='') {
             $main = self::$_DefaultInstance;
             $internal = $main->_internal;
             if ($internal) {

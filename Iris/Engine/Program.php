@@ -163,7 +163,8 @@ class Program {
 
     /**
      * Error box with title and message, for error debugging purpose
-     * Should not be used in a production environment
+     * Should not be used in a production environment. This box is used
+     * when an error occurs in error processing for an cry of despair.
      * 
      * @param string $message : error description
      * @param string $title : box title

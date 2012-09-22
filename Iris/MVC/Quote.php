@@ -22,7 +22,7 @@ namespace Iris\MVC;
  */
 
 /**
- * A "Quote" is a view whose text is not in a standard
+ * A "Quote" is a partial view whose text is not in a standard
  * file of type .iview. It can be generated or found in a database.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -47,7 +47,7 @@ class Quote extends Partial {
      * The text template to be returned
      * @var string
      */
-    private $_textTemplate = '';
+    private $_textTemplate = array();
 
     /**
      * View error mechanism uses the script name. There is none here.
@@ -56,29 +56,33 @@ class Quote extends Partial {
      */
     protected static $_LastUsedScript = 'Quoted string';
 
+    /**
+     * The constructor associates a template and the data to be inserted into it
+     * 
+     * @param type $text The text template to be displayed
+     * @param mixed $data The data to be put in the template
+     */
     public function __construct($text,$data) {
         $this->_transmit($data);
-        $this->setTextTemplate($text);
+        $this->addTextTemplate($text);
     }
 
     /**
-     * Modifies the texte template
+     * Add a line to the text template
      * 
      * @param string $text 
      */
-    public function setTextTemplate($text) {
-        $this->_textTemplate = $text;
+    public function addTextTemplate($text) {
+        $this->_textTemplate[] = $text;
     }
 
     /**
-     * Get the text template
+     * Get the text template as a long string
      * 
      * @param type $scriptName will be always NULL
-     * @param string $scriptFileName (set to '==Generated template==')
      * @return string
      */
-    protected function _getTemplate($scriptName, &$scriptFileName) {
-        $scriptFileName = '==Generated template==';
+    protected function _getTemplate($scriptName) {
         return explode("\n", $this->_textTemplate);
     }
 
