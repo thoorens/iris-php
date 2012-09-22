@@ -30,7 +30,7 @@ namespace Iris\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * @todo : verify the utility of this and suppress it in all layouts
  */
-class Browser extends _ViewHelperr {
+class Browser extends _ViewHelper {
 
     const UPDATE = 1;
     const DELETE = 2;
