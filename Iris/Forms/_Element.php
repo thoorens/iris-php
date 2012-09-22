@@ -84,6 +84,14 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     protected $_name = NULL;
 
     /**
+     * Some elements share a common name (radio box)
+     * 
+     * @var string
+     */
+    protected $_commonName = '';
+    
+
+        /**
      *
      * @var mixed
      */
@@ -334,7 +342,14 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
             return '';
         }
         else {
-            return " name=\"$name\" id=\"$name\" ";
+            if($this->_commonName != ''){
+                $id = $name;
+                $name = $this->_commonName;
+            }
+            else{
+                $id = $name;
+            }
+            return " name=\"$name\" id=\"$id\" ";
         }
     }
 
@@ -478,6 +493,10 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * Getter and setter
      */
 
+    public function setCommonName($commonName) {
+        $this->_commonName = $commonName;
+    }
+    
     public function canDisable() {
         return $this->_canDisable;
     }

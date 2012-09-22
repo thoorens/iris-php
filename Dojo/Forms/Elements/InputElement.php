@@ -43,7 +43,7 @@ class InputElement extends \Iris\Forms\Elements\InputElement {
         'date' => 'DateTextBox',
         'time' => 'TimeTextBox',
         'password' => 'TextBox',
-        'radio' => 'CheckBox',
+        'radio' => 'RadioBox',
         'checkbox' => 'CheckBox',
         'currency' => 'CurrencyTextBox',
     );

@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\Forms\Elements;
 
 use Iris\Forms as ifo;
@@ -32,14 +30,16 @@ use Iris\Forms as ifo;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class RadioGroup extends _ElementGroup implements iAidedValue{
+class RadioGroup extends _ElementGroup implements iAidedValue {
 
     protected $_perLine = 4;
-    protected $_itemType = 'Radio';
+    protected $_itemType = 'RadioButton';
 
     protected function _dispatchValues() {
-        foreach ($this->_subComponents as $key=>$radio) {
-            if ($radio->getName() == $key) {
+        $value = $this->getValue();
+        /* @var $radio \Iris\Forms\Elements\RadioButton */
+        foreach ($this->_subComponents as $key => $radio) {
+            if ($value == $key) {
                 $radio->setValue('1');
             }
             else {
@@ -48,11 +48,23 @@ class RadioGroup extends _ElementGroup implements iAidedValue{
         }
     }
 
-    public function compileValue(&$data) {
-        
+    protected function addOption($key, $value, $dummy = \FALSE) {
+        return parent::_addOption($key, $value, \TRUE);
     }
 
-    
+    public function addOptions($pairs, $valuesAsKeys = FALSE, $dummy = \FALSE) {
+        return parent::addOptions($pairs, $valuesAsKeys, \TRUE);
+    }
+
+    public function compileValue(&$data) {
+        $value = FALSE;
+        if (isset($data[$this->getName()])) {
+            $value = TRUE;
+        }
+        $this->setValue($value);
+        return $value;
+    }
+
 }
 
 ?>

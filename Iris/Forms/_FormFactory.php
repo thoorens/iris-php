@@ -135,8 +135,8 @@ abstract class _FormFactory {
     }
 
     public function createSelect($name, $options = array()) {
-        $class = $this->getClass('\\Elements\\SelectElement');
-        $class = new $class($name, 'Select', $this, $options);
+        $className = $this->getClass('\\Elements\\SelectElement');
+        $class = new $className($name, 'Select', $this, $options);
         return $class;
     }
 
