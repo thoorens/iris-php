@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\DB\DataBrowser;
 
 /*
@@ -29,27 +27,46 @@ namespace Iris\DB\DataBrowser;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
+trait tCrudManager {
 
-trait tCrudManager{
-    
-    protected $_viewScriptName = 'editall';
-    
-    public function __callAction($actionName, $parameters) {
-        
-        $this->_layout($actionName);
-        \Iris\DB\DataBrowser\_Crud::DispatchAction($this, $actionName, $parameters);
-        $this->setViewScriptName($this->_viewScriptName);
+    /**
+     * By default, the script is common to all action and is named 'editall'. 
+     * It can be set to another name or set to NULL. In that case, each script
+     * takes the action name (update, delete, create, read).
+     * 
+     * The simple way to change it consists in a single line in _init() method
+     *      $this->_commonViewScript = 'whatyouwant";
+     * or
+     *       $this->_commonViewScript = \NULL;
+     * 
+     * @var string
+     */
+    protected $_commonViewScript = 'editall';
+
+    /**
+     * 
+     * @param string $actionName
+     * @param type $parameters
+     */
+    public final function __callAction($actionName, $parameters) {
+        $shortAction = preg_replace('/(.*)\_.*Action/', '$1', $actionName);
+        $this->_changeViewScript($shortAction);
+        \Iris\DB\DataBrowser\_Crud::DispatchAction($this, $actionName, $parameters, $this->_commonViewScript);
+        $this->_customize($shortAction);
     }
-    
-    private function _layout($actionName){
+
+    private final function _changeViewScript($actionName) {
+        if (is_null($this->_commonViewScript)) {
+            $this->_commonViewScript = $actionName;
+        }
+    }
+
+    private function _customize($actionName){
         
     }
-    
-     public function errorAction($num) {
+    public function errorAction($num) {
         die("There is an error $num");
     }
+
 }
-
-
-
 

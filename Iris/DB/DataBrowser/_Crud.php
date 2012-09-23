@@ -603,6 +603,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * @param string $scriptName the optional name of a script used by all operation
      */
     public static function DispatchAction($controller, $actionName, $parameters, $scriptName = NULL) {
+        //die('sn:'.$scriptName);
         $id = count($parameters) > 0 ? $parameters[0] : NULL;
         // the action name is for instance update_bookAction => update, bookAction
         list($action, $crudName) = explode('_', $actionName);
