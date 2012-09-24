@@ -7,11 +7,11 @@
     No ACL or session defined. 
     <?endif?>
 </fieldset>
-<fieldset title="To relog a dummy user having a specific id" name="Test">
+<fieldset title="To relog a real user taken from the list of defined users">
     <legend>Choose the user to test</legend>
     <?if(!is_null($form2)):?>
     {form2}
     <?else:?>
-    No systemUserEntity defined
+    Define <tt>\Iris\Users\TUsers::$systemUserEntity</tt> to enable this feature.
     <?endif?>
 </fieldset>
