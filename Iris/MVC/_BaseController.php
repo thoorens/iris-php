@@ -321,6 +321,7 @@ class _BaseController {
         $this->_response->setParameters($actionPara);
         $this->excecuteAction();
         $this->dispatch();
+        $this->postDispatch();
         throw new \Iris\Exceptions\RedirectException('First');
     }
 
