@@ -36,32 +36,27 @@ class RadioGroup extends _ElementGroup implements iAidedValue {
     protected $_itemType = 'RadioButton';
 
     protected function _dispatchValues() {
-        $value = $this->getValue();
+        $value = $this->_value;
         /* @var $radio \Iris\Forms\Elements\RadioButton */
         foreach ($this->_subComponents as $key => $radio) {
             if ($value == $key) {
-                $radio->setValue('1');
+                $radio->checked = 'checked';
             }
-            else {
-                $radio->setValue('0');
-            }
+            $radio->setValue($key);
         }
     }
 
-    protected function addOption($key, $value, $dummy = \FALSE) {
-        return parent::_addOption($key, $value, \TRUE);
-    }
-
-    public function addOptions($pairs, $valuesAsKeys = FALSE, $dummy = \FALSE) {
-        return parent::addOptions($pairs, $valuesAsKeys, \TRUE);
+    protected function _addOption($key, $value) {
+        $innerElement = parent::_addOption($key, $value);
+        $innerElement->setCommonName($this->getName());
+        return $innerElement;
     }
 
     public function compileValue(&$data) {
-        $value = FALSE;
+        $value = \NULL;
         if (isset($data[$this->getName()])) {
-            $value = TRUE;
+            $value = $data[$this->getName()];
         }
-        $this->setValue($value);
         return $value;
     }
 

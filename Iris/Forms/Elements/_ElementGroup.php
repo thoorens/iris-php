@@ -62,8 +62,8 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements \Iris\Trans
         $this->_dispatchValues();
         $html = '';
         $line = 1;
-        foreach ($this->_subComponents as $key => $option) {
-            $html .= $option->baseRender($key);
+        foreach ($this->_subComponents as $key => $component) {
+            $html .= $component->baseRender($key);
             if ($line++ == $this->_perLine) {
                 $html .= '<br/>';
                 $line = 1;
@@ -87,7 +87,7 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements \Iris\Trans
      * @return _ElementGroup 
      * @throw FormException
      */
-    public function addOptions($pairs, $valuesAsKeys = FALSE, $withCommonName = \FALSE) {
+    public function addOptions($pairs, $valuesAsKeys = FALSE) {
         if (is_null($this->_container)) {
             throw new \Iris\Exceptions\FormException(
                     $this->_('addOption need the object to be registred before (with addTo()).',FALSE));
@@ -96,7 +96,7 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements \Iris\Trans
             $pairs = array_combine($pairs, $pairs);
         }
         foreach ($pairs as $key => $value) {
-            $this->_addOption($key, $value, $withCommonName);
+            $this->_addOption($key, $value);
         }
 
         return $this;
@@ -106,17 +106,13 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements \Iris\Trans
      *
      * @param type $key
      * @param type $value
-     * @param boolean $withCommonName If true, adds the key to the name 
      * @return Element
      */
-    protected function _addOption($key, $value, $withCommonName = \FALSE) {
+    protected function _addOption($key, $value) {
         $createMethod = "create" . $this->_itemType;
         $innerElement = $this->_formFactory->$createMethod($this->_name.$key)
                 ->setValue($value)
                 ->setLabel($value);
-        if($withCommonName){
-            $innerElement->setCommonName($this->getName());
-        }
         $innerElement->_container = $this;
         //$this->_container->registerElement($innerElement);
         $this->_subComponents[$key] = $innerElement;

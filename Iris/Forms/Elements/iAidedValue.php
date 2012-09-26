@@ -32,6 +32,10 @@ namespace Iris\Forms\Elements;
  * @version $Id: $ */
 interface iAidedValue{
 
+    /**
+     * Gets the global value from the values of the compoments 
+     * @param type $data
+     */
     public function compileValue(&$data);
 
     

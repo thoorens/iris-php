@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\Forms\Elements;
 
 use Iris\Forms as ifo;
@@ -34,12 +32,45 @@ use Iris\Forms as ifo;
  * @version $Id: $ */
 class RadioButton extends \Iris\Forms\_Element {
 
+    protected $_contantValue = \NULL;
+
+    /**
+     * Radio box share a common name
+     * 
+     * @var string
+     */
+    protected $_commonName = '';
+
     public function __construct($name, $options = array()) {
         parent::__construct($name, 'input', $options);
         $this->_subtype = 'radio';
         $this->setLabel($name);
         $this->_labelPosition = self::AFTER + self::INNER;
         $this->_checkable = TRUE;
+    }
+
+    public function baseRender($key = \NULL) {
+        $this->_value = $key;
+        return parent::baseRender($key);
+    }
+
+    protected function _renderName() {
+        $id = $this->getName();
+        $name = $this->_commonName;
+        return " name=\"$name\" id=\"$id\" ";
+    }
+
+    /**
+     * The radio button value is relative to its group
+     * 
+     * @return int
+     */
+    public function getValue() {
+        return parent::getValue();
+    }
+
+    public function setCommonName($commonName) {
+        $this->_commonName = $commonName;
     }
 
 }

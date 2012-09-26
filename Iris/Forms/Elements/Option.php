@@ -37,14 +37,12 @@ class Option extends \Iris\Forms\_Element {
     protected $_checked ='';
     
     public function __construct($name, $options = array()) {
-        //parent::__construct($name, 'option', $options);
         $this->_subtype = 'option';
         $this->setLabel($name);
         $this->_labelPosition = self::NONE;
     }
 
     public function baseRender($key=\NULL) {
-        $defValue = $this->_container->getValue();
         $html = "\t\t" . '<option value="' . $key . '"' . $this->_checked . '>' . $this->getValue() . '</option>' . "\n";
         return $html;
     }

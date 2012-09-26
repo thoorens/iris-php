@@ -84,14 +84,6 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     protected $_name = NULL;
 
     /**
-     * Some elements share a common name (radio box)
-     * 
-     * @var string
-     */
-    protected $_commonName = '';
-    
-
-        /**
      *
      * @var mixed
      */
@@ -148,7 +140,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * @param string $type type of the widget
      * @param array $options options for special elements 
      */
-    public function __construct($name, $type, $options=array()) {
+    public function __construct($name, $type, $options = array()) {
         $this->_type = $type;
         $this->_labelPosition = self::BEFORE;
         $this->setName($name);
@@ -206,7 +198,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     public function __set($name, $value) {
         $name = lcfirst($name);
         $this->_attributes[$name] = $value;
-        return $this;                         
+        return $this;
     }
 
     /**
@@ -238,7 +230,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * 
      * @return string
      */
-    function render($layout=\NULL) {
+    function render($layout = \NULL) {
         if ($this->_subtype == 'hidden') {
             $text = $this->baseRender();
         }
@@ -265,7 +257,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         return $text;
     }
 
-    public function baseRender($dummy=\NULL) {
+    public function baseRender($dummy = \NULL) {
         $text = '';
         $text .= $this->_innerLabel(self::BEFORE);
         $text .= "\t<$this->_type";
@@ -342,14 +334,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
             return '';
         }
         else {
-            if($this->_commonName != ''){
-                $id = $name;
-                $name = $this->_commonName;
-            }
-            else{
-                $id = $name;
-            }
-            return " name=\"$name\" id=\"$id\" ";
+            return " name=\"$name\" id=\"$name\" ";
         }
     }
 
@@ -375,10 +360,10 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     /**
-     * Returns the html for a label (if no label provided, uses field name)
-     * 
+     * Renders a label (or nothing) according to the position
      * @param int $position
-     * @return string 
+     * @param boolean $inner
+     * @return string
      */
     protected function _renderLabel($position, $inner) {
         // Treating inner labels
@@ -398,6 +383,13 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         }
     }
 
+    /**
+     * Returns the html for a label (if no label provided, uses field name)
+     * A "for" attribute is added for simple elements.
+     * 
+     * @param int $position
+     * @return string 
+     */
     protected function _prepareLabel($position) {
         $name = $this->getName();
         $label = $this->getLabel();
@@ -406,7 +398,13 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         }
         $text = '';
         if ($position & $this->_labelPosition) {
-            $text .= "\t<label for=\"$name\">";
+            $text .= "\t<label";
+            if ($this instanceof Elements\_ElementGroup) {
+                $text .= ">";
+            }
+            else {
+                $text .=" for=\"$name\">";
+            }
             $text .= "$label</label>\n";
         }
         return $text;
@@ -493,10 +491,6 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * Getter and setter
      */
 
-    public function setCommonName($commonName) {
-        $this->_commonName = $commonName;
-    }
-    
     public function canDisable() {
         return $this->_canDisable;
     }
@@ -533,7 +527,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * getter for the label
      * @return string 
      */
-    public function getLabel($num=0) {
+    public function getLabel($num = 0) {
         if (is_array($this->_label)) {
             return $this->_label[$num];
         }
@@ -591,7 +585,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\FALSE) {
+    public function _($message, $system = \FALSE) {
         if ($system) {
             $translator = \Iris\Translation\SystemTranslator::GetInstance();
             return $translator->translate($message);

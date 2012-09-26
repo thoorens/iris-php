@@ -178,7 +178,7 @@ abstract class _FormFactory {
      */
     public function createRadioGroup($name, $options = array()) {
         $class = $this->getClass('\\Elements\\RadioGroup');
-        $group = new $class($name, 'RadioGroup', $this, $options);
+        $group = new $class($name, 'div', $this, $options);
         return $group;
     }
 
