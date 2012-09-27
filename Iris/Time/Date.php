@@ -30,7 +30,7 @@ use Iris\Exceptions as ie;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Date implements \Iris\Translation\iTranslatable {
+class Date implements \Iris\Translation\iTranslatable, \Serializable {
     //PHP 5.4 use \Iris\Translation\tTranslatable;
 
     const JAPAN = 1;
@@ -136,7 +136,7 @@ class Date implements \Iris\Translation\iTranslatable {
      * @return type 
      * @see recognized formats : http://php.net/manual/fr/function.date.php 
      */
-    public function toString($format) {
+    public function toString($format='C') {
         $string = '';
         foreach (str_split($format) as $char) {
             switch ($char) {
@@ -182,6 +182,15 @@ class Date implements \Iris\Translation\iTranslatable {
         return $this;
     }
 
+    public function addWeek($week){
+        $this->addDay(7*$week);
+        return $this;
+    }
+    
+    public function subWeek($week){
+        $this->addDay(-7*$week);
+        return $this;
+    }
     public function addMonth($month) {
         $this->_addInterval($month, 'P%dM');
         return $this;
@@ -306,6 +315,16 @@ class Date implements \Iris\Translation\iTranslatable {
             $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
         }
         return $translator;
+    }
+
+       
+    public function serialize() {
+        return $this->toString();
+    }
+
+    public function unserialize($serialized) {
+        list($year, $month, $day) = explode('-', $serialized);
+        $this->_date->setDate($year, $month, $day);
     }
 
     /* end of trait code */
