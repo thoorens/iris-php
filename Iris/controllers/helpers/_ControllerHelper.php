@@ -61,10 +61,8 @@ abstract class _ControllerHelper extends \Iris\MVC\_Helper {//*/
      * @param string $name
      * @param array $arguments
      * @return mixed 
-     * @todo test or delete
      */
     public function __call($name, $arguments) {
-        throw new \Iris\Exceptions\InternalException('This feature has not been tested anymore');
         return call_user_func_array(array($this->_controller, $name), $arguments);
     }
 
@@ -76,7 +74,6 @@ abstract class _ControllerHelper extends \Iris\MVC\_Helper {//*/
      * @todo test or delete
      */
     public function __get($name) {
-        throw new \Iris\Exceptions\InternalException('This feature has not been tested anymore');
         return $this->_controller->$name;
     }
 
@@ -88,7 +85,6 @@ abstract class _ControllerHelper extends \Iris\MVC\_Helper {//*/
      * @todo test or delete
      */
     public function __set($name, $value) {
-        throw new \Iris\Exceptions\InternalException('This feature has not been tested anymore');
         $this->_controller->$name = $value;
     }
 
