@@ -57,14 +57,14 @@ div#main{
     background-color:#444;
     color: #ffe;
     box-shadow: 5px 5px 5px #888;
-     border-radius: 5px;
+    border-radius: 5px;
 }
 
 #iris_admintoolbar{
-       background-color:#148;
-       text-align: center;
-       box-shadow: 5px 5px 5px #888;
-     border-radius: 5px;
+    background-color:#148;
+    text-align: center;
+    box-shadow: 5px 5px 5px #888;
+    border-radius: 5px;
 }
 
 .partial{
@@ -77,39 +77,61 @@ p.errorTest{
 }
 
 p.errorTrue{
-   background-color: red; 
-   color:white;
+    background-color: red; 
+    color:white;
 }
 
 .smallcolumn3{
-padding-left:10px;
-width:155px;
-float: left
+    padding-left:10px;
+    width:155px;
+    float: left
 }
 
 .oldscreen{
-border : double 2px #FFF;
-color: #5F5;
-background: black;
-margin:10px;
-padding: 5px;
-text-align:center;
-font-weight: bold;
-font-type:courier;
+    border : double 2px #FFF;
+    color: #5F5;
+    background: black;
+    margin:10px;
+    padding: 5px;
+    text-align:center;
+    font-weight: bold;
+    font-type:courier;
 }
 
 
 
 li.loop{
-border: black solid 2px;
-margin-left:-30px;
-width:110px;
-padding-left : 15px;
-margin-bottom:5px;
-background-color:#ccccff;
-list-style-type: none;
+    border: black solid 2px;
+    margin-left:-30px;
+    width:110px;
+    padding-left : 15px;
+    margin-bottom:5px;
+    background-color:#ccccff;
+    list-style-type: none;
 }
 
-
+table.show {
+    border-width: 3px;
+    border-spacing: 1px;
+    border-style: solid;
+    border-color: #008;
+    border-collapse: separate;
+    background-color: white;
+    width:100%;
+}
+table.show th {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray;
+    background-color: white;
+}
+table.show td {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray;
+    background-color: white;
+}
 
 

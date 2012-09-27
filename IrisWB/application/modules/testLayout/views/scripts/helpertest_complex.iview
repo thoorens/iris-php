@@ -1,0 +1,9 @@
+<h1>{title}</h1>
+<table class="show">
+<? foreach($words as $n => $word):?>
+<tr>
+    <td><?=$n?></td>
+    <td><?=$word?></td>
+</tr>
+<?endforeach?>
+</table>

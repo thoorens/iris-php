@@ -1,0 +1,9 @@
+<h1>Spanish ordinals</h1>
+<table class="show">
+<? foreach($numbers as $n => $number):?>
+<tr>
+    <td><?=$n?></td>
+    <td><?=$number?></td>
+</tr>
+<?endforeach?>
+</table>
