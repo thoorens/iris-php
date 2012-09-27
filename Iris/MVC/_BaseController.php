@@ -82,13 +82,13 @@ class _BaseController {
      * @var _Controller
      */
     protected static $_MainController = NULL;
-
+    
     /**
      * 
      * @param \Iris\Engine\Response $response 
      * PHP 5.4 ready
      */
-    public function __construct(\Iris\Engine\Response $response, $actionName='index') {
+    public function __construct(\Iris\Engine\Response $response, $actionName = 'index') {
         $this->_response = $response;
         $this->_view = new View();
         $this->setViewScriptName($actionName);
@@ -152,6 +152,7 @@ class _BaseController {
         // if problem no return
         //$this->_verifyAcl();
         $action = $this->_response->getActionName();
+        $this->_view->setResponse($this->_response);
         $actionName = $action . 'Action';
         $methodes = get_class_methods(get_class($this));
         // caution : in subcontrollers, the parameters are provided by the
@@ -196,13 +197,14 @@ class _BaseController {
     }
 
     /**
-     * The view is converted to string (and echoed if requested).
+     * The view is converted to string (and echoed if requested). This method
+     * is used only in case of no layout or by islets and subcontrollers
      * 
      * @param boolean $echoing if false, produce a string and return it
      * @return string (in case of not echoing) 
      */
-    public function dispatch($echoing=\TRUE) {
-        $this->_view->setResponse($this->_response);
+    public function dispatch($echoing = \TRUE) {
+        //$this->_view->setResponse($this->_response);
         if ($echoing) {
             echo $this->_view->render();
         }
@@ -220,7 +222,7 @@ class _BaseController {
      * @param boolean $echoing
      * @return mixed 
      */
-    public function renderNow($scriptName, $echoing=TRUE) {
+    public function renderNow($scriptName, $echoing = TRUE) {
         $rendering = $this->_view->render($scriptName);
         if ($echoing) {
             echo $rendering;
@@ -228,6 +230,11 @@ class _BaseController {
         else {
             return $rendering;
         }
+    }
+
+    public function preRender($scriptName) {
+        //$this->_prerendering .= $this->renderNow($scriptName, \FALSE);
+        $this->_view->addPrerending($this->renderNow($scriptName, \FALSE));
     }
 
     /**
@@ -325,7 +332,7 @@ class _BaseController {
         throw new \Iris\Exceptions\RedirectException('First');
     }
 
-    public function reroute($URI, $sameServer=TRUE) {
+    public function reroute($URI, $sameServer = TRUE) {
         // if parameters have been put in array
         if (is_array($URI)) {
             list($URI, $sameServer) = $URI;
@@ -364,7 +371,7 @@ class _BaseController {
      * @param int $number the view number (0 is mainview, other refers to a subcontroller view) 
      * @return mixed (for fluent interface)
      */
-    public function toView($name, $values, $number=0) {
+    public function toView($name, $values, $number = 0) {
         if (is_null($name)) {
             foreach ($values as $key => $value) {
                 $this->toView($key, $value, $number);
@@ -382,7 +389,7 @@ class _BaseController {
      * @param mixed $value the variable value
      * @param int $number the view number (ONLY TAKEN INTO ACCOUNT IN TRUE _CONTROLLER) 
      */
-    protected function _toView1($name, $value, $number=0) {
+    protected function _toView1($name, $value, $number = 0) {
         $this->_view->$name = $value;
     }
 
@@ -394,7 +401,7 @@ class _BaseController {
      * @param int $number the view number (0 is mainview, other refers to a subcontroller view) 
      * @return mixed (for fluent interface)
      */
-    public function __($name, $value, $number=0) {
+    public function __($name, $value, $number = 0) {
         return $this->toView($name, $value, $number);
     }
 
@@ -430,7 +437,7 @@ class _BaseController {
      * @param string $name
      * @param mixed $default 
      */
-    protected function _fromMemory($name, $default=NULL) {
+    protected function _fromMemory($name, $default = NULL) {
         return \Iris\Engine\Memory::Get($name, $default);
     }
 

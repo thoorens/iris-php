@@ -76,6 +76,8 @@ class View implements \Iris\Translation\iTranslatable {
 //        return $this->_viewScriptName;
 //    }
 
+    protected $_prerending = '';
+    
     public function setViewScriptName($name) {
         $this->_viewScriptName = $name;
     }
@@ -101,6 +103,10 @@ class View implements \Iris\Translation\iTranslatable {
         return $this->_properties[$name];
     }
 
+    public function addPrerending($text){
+        $this->_prerending .= $text;
+    }
+    
     /**
      * Evaluates the (implicit or explicit) view script
      * and renders it as html string
@@ -124,6 +130,7 @@ class View implements \Iris\Translation\iTranslatable {
         $template = $this->_getTemplate($forcedScriptName);
         $phtml = $this->_renderTemplate($template);
         ob_start();
+        echo $this->_prerending;
         $this->_eval($phtml);
         $page = ob_get_clean();
         return $page;
