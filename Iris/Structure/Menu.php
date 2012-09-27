@@ -49,7 +49,7 @@ class Menu {
      * @param string $name The menu name
      * @param \Iris\SysConfig\Config $data The data to initialise the menu
      */
-    public function __construct($name, $data=NULL) {
+    public function __construct($name, $data = NULL) {
         $this->_name = $name;
         if ($data instanceof \Iris\SysConfig\Config) {
             $this->_addData($data);
@@ -83,7 +83,8 @@ class Menu {
             $field = ucfirst($field);
             $method = "set$field";
             $base->_items[$id]->$method($value);
-        } else {
+        }
+        else {
             array_shift($keys);
             $this->_addData1($base->_items[$id], $keys, $value);
         }
@@ -107,10 +108,20 @@ class Menu {
     public function addItem($item) {
         if ($item instanceof MenuItem) {
             $this->_items[$item->getUri()] = $item;
-        } elseif (is_string($item)) {
+        }
+        elseif (is_string($item)) {
             $newItem = new MenuItem($item);
             $this->_items[$newItem->getUri()] = $newItem;
         }
+    }
+
+    public function getSubmenu($name) {
+        $submenu = $this->getItem($name);
+        $menu = new Menu($name);
+        foreach ($submenu->_items as $item) {
+            $menu->addItem($item);
+        }
+        return $menu;
     }
 
 //    /**
@@ -145,8 +156,8 @@ class Menu {
 //        return $data;
 //    }
 
-    public function asArray(){
-        foreach($this->_items as $item){
+    public function asArray() {
+        foreach ($this->_items as $item) {
             if ($this->_defaultUri == $item->getUri()) {
                 $item->setDefault();
             }
@@ -154,7 +165,7 @@ class Menu {
         }
         return $data;
     }
-    
+
     /**
      * Memorize the default menu by its uri (module/controller/action)
      * for later processing
@@ -163,6 +174,20 @@ class Menu {
      */
     public function setDefaultItem($uri) {
         $this->_defaultUri = $uri;
+    }
+
+    /**
+     * Returns a menu item by its name
+     * 
+     * @param string $name
+     * @return \Iris\Structure\MenuItem
+     * @throws \Iris\Exceptions\MenuException
+     */
+    public function getItem($name) {
+        if (!isset($this->_items[$name])) {
+            throw new \Iris\Exceptions\MenuException("No menu item like $name in " . $this->getName());
+        }
+        return $this->_items[$name];
     }
 
 }
