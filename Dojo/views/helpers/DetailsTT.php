@@ -31,7 +31,6 @@ namespace Dojo\views\helpers;
  */
 class DetailsTT extends Details {
 
-    protected static $_NotAfterHead = \TRUE;
     private $_toolTip;
 
     protected function _init() {

@@ -35,12 +35,7 @@ namespace iris\views\helpers;
 
 class BodyOnload extends \Iris\views\helpers\_ViewHelper{
     
-    /**
-     * Indicates that this helper can't be used in islet nor partial
-     * 
-     * @var boolean
-     */
-    protected static $_NotAfterHead = \TRUE;
+    
     
     public function help(){
         

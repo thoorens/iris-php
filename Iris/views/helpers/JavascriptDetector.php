@@ -38,12 +38,6 @@ namespace Iris\views\helpers;
  */
 class JavascriptDetector extends _ViewHelper {
 
-    /**
-     * Indicates that this helper can't be used in islet nor partial
-     * 
-     * @var boolean
-     */
-    protected static $_NotAfterHead = \TRUE;
     protected static $_Singleton = TRUE;
 
     public function help($command='/!iris/reset/jsTest') {

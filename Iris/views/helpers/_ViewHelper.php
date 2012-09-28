@@ -38,7 +38,7 @@ abstract class _ViewHelper extends \Iris\MVC\_Helper {//*/
     const TYP_HELP = '?';
     const TYP_RENDER = '!';
 
-    protected static $_NotAfterHead = \FALSE;
+    
     
     /**
      * The private construct may be completed in subclasses through
@@ -83,12 +83,6 @@ abstract class _ViewHelper extends \Iris\MVC\_Helper {//*/
             $errorMessage .= "<br/> in file <b>$file</b> line <b>$line</b>";
             $exception = new \Iris\Exceptions\HelperException("Error while executing view helper $helperName: $errorMessage ");
             throw $exception;
-        }
-        if (static::$_NotAfterHead) {
-            if ($this->_view instanceof \Iris\MVC\Islet or $this->_view instanceof \Iris\MVC\Partial) {
-                throw new \Iris\Exceptions\HelperException(
-                        "This helper can't be used after the <head> part of the page has been sended.");
-            }
         }
         return call_user_func_array(array($object, 'help'), $arguments);
     }

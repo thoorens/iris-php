@@ -33,12 +33,7 @@ namespace Iris\views\helpers;
  */
 final class Title extends _ViewHelper {
 
-    /**
-     * Indicates that this helper can't be used in islet nor partial
-     * 
-     * @var boolean
-     */
-    protected static $_NotAfterHead = \TRUE;
+    
     protected static $_Singleton = TRUE;
     private $_mainTitle = "IRIS-PHP application";
     private $_subTitle = NULL;
