@@ -37,15 +37,32 @@ class Date implements \Iris\Translation\iTranslatable, \Serializable {
     const USA = 2;
     const EUROPE = 3;
 
+    /**
+     * By default, works in JAPAN mode (2012-12-01)
+     * 
+     * @var int 
+     */
     protected static $_Mode = self::JAPAN;
+    /**
+     * A 13 element array for month lengths, item 0 is unused
+     * 
+     * @var array(int)
+     */
     protected static $_MonthLength = array(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
     /**
-     *
+     * Internal representation of date
+     * 
      * @var \Date 
      */
     protected $_date = NULL;
 
+    /**
+     * 
+     * @param type $date
+     * @param \DateTimeZone $timeZone
+     * @todo change default Time Zone
+     */
     public function __construct($date=NULL, $timeZone=NULL) {
         if(is_null($timeZone)){
             $timeZone = new \DateTimeZone('Europe/Brussels');
@@ -71,7 +88,7 @@ class Date implements \Iris\Translation\iTranslatable, \Serializable {
         $countNumbers = count($numbers);
         // one must provide 2 or 3 numbers
         if ($countNumbers < 2 or $countNumbers > 3) {
-            return;
+            return; 
         }
         // European dates have reverse day month order
         if (self::$_Mode == self::EUROPE) {
