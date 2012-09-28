@@ -44,7 +44,6 @@ class Mask extends _DojoHelper {
 
     protected function _init() {
         $this->_manager->addRequisite('dijit.form.ToggleButton');
-        $this->_requiredDone = TRUE;
     }
 
     public function buttonMask($text, $label=NULL) {

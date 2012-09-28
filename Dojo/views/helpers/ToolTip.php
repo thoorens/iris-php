@@ -46,7 +46,6 @@ class ToolTip extends _DojoHelper {
 
     protected function _init() {
         $this->_manager->addRequisite("dijit/Tooltip");
-        $this->_requiredDone = TRUE;
     }
 
     public function render($connectId=NULL,$text = NULL) {

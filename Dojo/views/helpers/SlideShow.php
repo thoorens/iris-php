@@ -48,7 +48,6 @@ class SlideShow extends _DojoHelper {
         $this->_manager->addStyle("$source/dojox/image/resources/image.css");
         $this->_manager->addRequisite("dojox.image.SlideShow");
         $this->_manager->addRequisite("dojo.data.ItemFileReadStore");
-        $this->_requiredDone = TRUE;
         $this->setAltImage('IrisImage.jpg','Image not available',NULL,'/iris_aspect/images');
     }
 
