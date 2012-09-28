@@ -9,6 +9,7 @@
     <tr>{showDate('D j M y')}<td/></tr>
     <tr>{showDate('N')}<td/>in week 1-7</tr>
     <tr>{showDate('w')}<td/>in week 0-6</tr>
+    <tr>{showDate('W/52')}<td/>week in year</tr>
     <tr>{showDate('j/t')}<td/>month length</tr>
     <tr>{showDate('z/365')}<td/>day in year</tr>
 </table>
