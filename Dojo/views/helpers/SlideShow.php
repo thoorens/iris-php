@@ -32,7 +32,6 @@ namespace Dojo\views\helpers;
 class SlideShow extends _DojoHelper {
 
     protected static $_Singleton = TRUE;
-    protected $_requiredDone = FALSE;
     protected $_interval = 4;
     protected $_width = 300;
     protected $_height = 300;
@@ -41,14 +40,10 @@ class SlideShow extends _DojoHelper {
     protected $_AltImage = array();
 
     public function help() {
-        if (!$this->_requiredDone) {
-            $this->doRequire();
-        }
-
         return $this;
     }
 
-    public function doRequire() {
+    protected function _init() {
         $source = $this->_manager->getSource();
         $this->_manager->addStyle("$source/dojox/image/resources/image.css");
         $this->_manager->addRequisite("dojox.image.SlideShow");

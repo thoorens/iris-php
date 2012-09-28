@@ -35,18 +35,14 @@ namespace Dojo\views\helpers;
 class Mask extends _DojoHelper {
 
     protected static $_Singleton = TRUE;
-    protected $_requiredDone = FALSE;
     
     private $_label;
 
     public function help() {
-        if (!$this->_requiredDone) {
-            $this->doRequire();
-        }
         return $this;
     }
 
-    public function doRequire() {
+    protected function _init() {
         $this->_manager->addRequisite('dijit.form.ToggleButton');
         $this->_requiredDone = TRUE;
     }

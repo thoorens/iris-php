@@ -38,7 +38,7 @@ abstract class _DojoHelper extends \Iris\views\helpers\_ViewHelper{
      */
     protected $_manager;
     
-    protected function _init(){
+    protected function _subclassInit() {
         $this->_manager = \Dojo\Manager::GetInstance();
         $this->_manager->setActive();
     }

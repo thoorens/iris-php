@@ -34,7 +34,6 @@ namespace Dojo\views\helpers;
 class ToolTip extends _DojoHelper {
 
     protected static $_Singleton = TRUE;
-    protected $_requiredDone = FALSE;
     protected $_connectId;
     protected $_position='above';
     protected $_showDelay = 400;
@@ -42,14 +41,10 @@ class ToolTip extends _DojoHelper {
     private $_class=NULL;
 
     public function help() {
-        if (!$this->_requiredDone) {
-            $this->doRequire();
-        }
-
         return $this;
     }
 
-    public function doRequire() {
+    protected function _init() {
         $this->_manager->addRequisite("dijit/Tooltip");
         $this->_requiredDone = TRUE;
     }
