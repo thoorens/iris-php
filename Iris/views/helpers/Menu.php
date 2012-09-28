@@ -34,9 +34,24 @@ use \Iris\Structure as is;
  */
 class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
 
-    
     protected static $_ActiveClass = 'active';
     
+    protected static $_MainTag = 'ul';
+    
+    /**
+     * Permits to add a same id to all URI of the menu
+     * 
+     * @var string
+     */
+    protected $_specialId = '';
+
+    /**
+     * Redundant but important : Menu are not singleton (so _specialId is
+     * limited to a menu).
+     * 
+     * @var boolean
+     */
+    protected static $_Singleton = FALSE;
     /**
      * Get a complete menu (identified by its name) from
      * an initialized menu collection and render it
@@ -45,18 +60,23 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
      * @param string $name the menu name in the collection
      * @return string
      */
-    public function help($name = '#def#') {
-        if($name == "") return;
+    public function help($name = '#def#', $recursive = \FALSE) {
+        if ($name == \NULL)
+            return $this;
         $menu = is\MenuCollection::GetInstance()->getMenu($name);
         $data = $menu->asArray();
         \Iris\Log::Debug("ACL ------------------------------------------------", \Iris\Engine\Debug::ACL);
-        return $this->_render($data);
+        return $this->_render($data, $recursive);
     }
 
-    public function setActiveClass($class){
-        self::$_ActiveClass = $class;
+    public function render($name = '#def#', $recursive = \FALSE){
+        return $this->help($name, $recursive);
     }
     
+    public function setActiveClass($class) {
+        self::$_ActiveClass = $class;
+    }
+
     /**
      * A recursive HTML rendering of a hierarchical menu
      * as an array
@@ -64,40 +84,47 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
      * @param array $data
      * @return string 
      */
-    private function _render(array $data) {
+    protected function _render(array $data, $recursive) {
         $items = array();
         $acl = \Iris\Users\Acl::GetInstance();
-        $active = self::$_ActiveClass;
         foreach ($data as $item) {
             if ($item['visible'] and $this->_testPrivilege($acl, $item)) {
-
-                $uri = $this->_simplifyUri($item['uri']);
-                $label = $this->_($item['label']);
-                $title = $this->_($item['title']);
-                $class = $item['default'] ? "class=\"$active\"" : '';
-                $submenu = '';
-                if (isset($item['submenu'])) {
-                    $submenu = $this->_render($item['submenu']);
-                }
-                if ($item['uri'] != '') {
-                    $text = "<li $class><a href=\"$uri\" title=\"$title\" $class>$label</a></li>";
-                    $text .= $submenu;
-                }
-                else {
-                    $text = "<li $class><span title=\"$title\" $class>$label</span>";
-                    $text .= $submenu."</li>";
-                }
-                $items[] = $text;
+                $items[] = $this->_renderItem($item, $recursive);
             }
         }
         if (count($items)) {
-            return "<ul>\n" .
+            $tag = self::$_MainTag;
+            return "<$tag>\n" .
                     implode("\n", $items)
-                    . "\n</ul>\n";
+                    . "\n</$tag>\n";
         }
         else {
             return '';
         }
+    }
+
+    protected function _renderItem($item, $recursive) {
+        $active = self::$_ActiveClass;
+        $uri = $this->_simplifyUri($item['uri']);
+        if($this->_specialId!=''){
+            $uri .= '/'.$this->_specialId;
+        }
+        $label = $this->_($item['label']);
+        $title = $this->_($item['title']);
+        $class = $item['default'] ? "class=\"$active\"" : '';
+        $submenu = '';
+        if (isset($item['submenu']) and $recursive) {
+            $submenu = $this->_render($item['submenu']);
+        }
+        if ($item['uri'] != '') {
+            $text = "<li $class><a href=\"$uri\" title=\"$title\" $class>$label</a></li>";
+            $text .= $submenu;
+        }
+        else {
+            $text = "<li $class><span title=\"$title\" $class>$label</span>";
+            $text .= $submenu . "</li>";
+        }
+        return $text;
     }
 
     /**
@@ -106,10 +133,11 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
      *
      * @return string 
      */
-    private function _simplifyUri($olduri) {
+    protected function _simplifyUri($oldURI) {
         // treat only relative addresses
-        if (strpos($olduri, 'http://') !== 0) {
-            $uri = explode('/', $olduri);
+        $newURI = $oldURI;
+        if (strpos($oldURI, 'http://') !== 0) {
+            $uri = explode('/', $oldURI);
             if (count($uri) == 4) {
                 // suppress initial blank
                 array_shift($uri);
@@ -125,12 +153,20 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
                 if ($uri[count($uri) - 1] == 'index') {
                     array_pop($uri);
                 }
-                return '/' . implode('/', $uri);
+                $newURI ='/' . implode('/', $uri);
             }
         }
-        return $olduri;
+        if($this->_specialId!=''){
+            $newURI .= '/'.$this->_specialId;
+        }
+        return $newURI;
     }
 
+    public function setSpecialId($id){
+        $this->_specialId = $id;
+        return $this;
+    }
+    
     /**
      *
      * @param type $acl
@@ -155,15 +191,16 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
             return FALSE;
         }
     }
+
     /* Beginning of trait code */
-    
+
     /**
      * Translates a message
      * @param string $message
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\FALSE) {
+    public function _($message, $system = \FALSE) {
         if ($system) {
             $translator = \Iris\Translation\SystemTranslator::GetInstance();
             return $translator->translate($message);
@@ -184,9 +221,7 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
         }
         return $translator;
     }
-    
-    /* end of trait code */
-    
 
+    /* end of trait code */
 }
 
