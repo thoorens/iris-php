@@ -31,25 +31,28 @@ namespace iris\views\helpers;
  */
 class Error extends \Iris\views\helpers\_ViewHelper implements \Iris\Subhelpers\iRenderer {
 
-    private $_subhelper;
-    protected static$_Singleton = TRUE;
+    use \Iris\Subhelpers\tSubhelperLink;
 
-    /**
-     * 
-     */
-    protected function _init() {
-        $this->_subhelper = \Iris\Subhelpers\ErrorDisplay::GetInstance($this);
-    }
-
-    /**
-     * Returns the instance to get its pseudo variable (using __get) or it
-     * methods
-     * 
-     * @return Error
-     */
-    public function help() {
-        return $this->_subhelper;
-    }
+    protected $_subhelperName = '\Iris\Subhelpers\ErrorDisplay';    
+//    private $_subhelper;
+//    protected static $_Singleton = TRUE;
+//
+//    /**
+//     * 
+//     */
+//    protected function _init() {
+//        $this->_subhelper = \Iris\Subhelpers\ErrorDisplay::GetInstance($this);
+//    }
+//
+//    /**
+//     * Returns the instance to get its pseudo variable (using __get) or it
+//     * methods
+//     * 
+//     * @return Error
+//     */
+//    public function help() {
+//        return $this->_subhelper;
+//    }
 
     /**
      * Similar to getParameters from the subhelper, but transform the array
@@ -108,8 +111,8 @@ RENDER;
             $html .= sprintf("<p>%2d [%s]- %s / %s / %s </p>\n", $index, $trace['Type'], $trace['MODULE'], $trace['CONTROLLER'], $trace['ACTION']);
         endforeach;
         $html .= "</div>\n";
-        return $html; 
-}
+        return $html;
+    }
 
 }
 

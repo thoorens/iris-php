@@ -38,18 +38,11 @@ namespace Iris\views\helpers;
  * @version $Id: $ * @todo : TRANSLATE COMMENTS
  */
 class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
-
-    protected static $_Singleton = TRUE;
+use \Iris\Subhelpers\tSubhelperLink;
+    
+    
     protected $_baseDir = '/images/icones';
-
-    /**
-     * Accesseur pour les fonctions d'icone
-     * 
-     * @return \\Iris\Subhelpers\Crud 
-     */
-    public function help() {
-        return \Iris\Subhelpers\Crud::GetInstance($this);
-    }
+    protected $_subhelperName ='\Iris\Subhelpers\Crud'; 
 
     /**
      *
