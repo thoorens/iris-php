@@ -114,7 +114,7 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
         $class = $item['default'] ? "class=\"$active\"" : '';
         $submenu = '';
         if (isset($item['submenu']) and $recursive) {
-            $submenu = $this->_render($item['submenu']);
+            $submenu = $this->_render($item['submenu'], $recursive);
         }
         if ($item['uri'] != '') {
             $text = "<li $class><a href=\"$uri\" title=\"$title\" $class>$label</a></li>";
