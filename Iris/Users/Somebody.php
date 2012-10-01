@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\Users;
 
 /*
@@ -34,17 +32,19 @@ namespace Iris\Users;
 class Somebody implements iUser {
 
     protected static $_DefaultName = 'somebody';
+    protected static $_DefaultRole = 'browse';
     private $_name;
     private $_emailAddress = 'info@irisphp.org';
     public $_role = 'browse';
-    protected $_id=0;
+    protected $_id = 0;
 
     /**
      *
      * @param string $serialized 
      */
-    public function __construct($serialized=NULL) {
+    public function __construct($serialized = NULL) {
         $this->_name = self::$_DefaultName;
+        $this->_role = self::$_DefaultRole;
         if (!is_null($serialized)) {
             $data = explode('&', $serialized);
             $this->_name = $data[0];
@@ -58,18 +58,14 @@ class Somebody implements iUser {
         return $this->_emailAddress;
     }
 
-    
     public function getName() {
         return $this->_name;
     }
 
-    
-    
     public function getRole() {
         return $this->_role;
     }
 
-    
     /**
      *
      * @param string $role
@@ -77,8 +73,8 @@ class Somebody implements iUser {
      * @return boolean
      * @todo Gérer l'héritage
      */
-    public function hasRole($role,$strict = TRUE) {
-        return $role==$this->role;
+    public function hasRole($role, $strict = TRUE) {
+        return $role == $this->role;
     }
 
     public static function SetDefaultName($name) {
@@ -89,13 +85,21 @@ class Somebody implements iUser {
         return self::$_DefaultName;
     }
 
+    public static function SetDefaultRole($name) {
+        self::$_DefaultRole = $name;
+    }
+
+    public static function GetDefaultRole() {
+        return self::$_DefaultRole;
+    }
+
     public function __get($propName) {
-        return "$propName of ".$this->getName();
+        return "$propName of " . $this->getName();
     }
 
     public function getId() {
         return $this->_id;
     }
-}
 
+}
 

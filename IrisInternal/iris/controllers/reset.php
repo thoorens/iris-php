@@ -43,7 +43,7 @@ class reset extends \IrisInternal\main\controllers\_SecureInternal {
      * Destroy the session and start a new one by calling the site root
      */
     public function indexAction() {
-        if ($this->_isSessionActive()) {
+        if (\Iris\Users\Session::IsSessionActive()) {
             session_destroy();
         }
         header('location:/');
@@ -59,16 +59,13 @@ class reset extends \IrisInternal\main\controllers\_SecureInternal {
      * @see view helper JavascriptDetector
      */
     public function jsTestAction() {
-        if (!$this->_isSessionActive()) {
+        if (!\Iris\Users\Session::IsSessionActive()) {
             session_start();
         }
         $_SESSION['iris_nojavascript'] = TRUE;
         header('location:/');
     }
 
-    private function _isSessionActive() {
-        $id = session_id();
-        return strlen($id) > 0;
-    }
+    
 
 }

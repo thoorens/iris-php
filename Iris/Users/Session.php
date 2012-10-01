@@ -101,6 +101,11 @@ final class Session implements \Iris\Design\iSingleton{
         return !($session->getValue('iris_nojavascript', FALSE));
     }
     
+    
+    public static function IsSessionActive() {
+        $id = session_id();
+        return strlen($id) > 0;
+    }
 }
 
 ?>

@@ -74,6 +74,16 @@ class Acl implements \Iris\Design\iSingleton {
             Role::Init($paramAcl['roles']);
             // Using the effective user role
             $activeRoleName = Identity::GetInstance()->getRole();
+            if (!isset($paramAcl[$activeRoleName])) {
+                $user = Identity::GetInstance()->getName();
+//                if (Session::IsSessionActive()) {
+//                    session_destroy();
+//                }
+                $identity = Identity::GetInstance();
+                $identity->setRole(Somebody::GetDefaultRole());
+                $identity->sessionSave();
+                throw new \Iris\Exceptions\InternalException("Internal error : role $activeRoleName not defined for user $user.");
+            }
             // Add the privileges for his role
             $this->_addPrivileges($paramAcl, $activeRoleName);
             // Add his ancestor privileges
