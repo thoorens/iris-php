@@ -31,6 +31,8 @@ namespace Iris\Subhelpers;
  * @version $Id: $ */
 class ErrorDisplay extends \Iris\Subhelpers\_Subhelper {
 
+    protected static $_Instance = NULL;
+    
     private $_title = "Fake title";
     private $_message = "Fake error message";
     private $_module = 'Fake module';

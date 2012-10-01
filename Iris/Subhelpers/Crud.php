@@ -38,6 +38,7 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
     const ID = 1;
     const PARAM = 2;
 
+    protected static $_Instance = NULL;
 
     const ICON_SYSTEM_DIR = '/!documents/file/resource/images/icons';
 

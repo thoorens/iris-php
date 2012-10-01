@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\Subhelpers;
 
 /*
@@ -35,17 +33,15 @@ namespace Iris\Subhelpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
-
     //PHP 5.4 use \Iris\Translation\tTranslatable;
-    
+
     /**
      *
      * @var \Iris\Subhelpers\iRenderer
      */
     protected $_renderer = NULL;
     
-    private static $_Instance = NULL;
-    
+
     /**
      * Gives the instance a formal aspect using the renderer provided 
      * or a default renderer.
@@ -54,9 +50,9 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
      * @param type $arg2
      * @return type 
      */
-    public final function render($arg1=\NULL,$arg2=\NULL){
+    public final function render($arg1 = \NULL, $arg2 = \NULL) {
         $renderer = $this->_renderer;
-        if(is_null($renderer)){
+        if (is_null($renderer)) {
             $renderer = $this->_provideRenderer();
         }
         return $renderer->render($this->prepare($arg1), $arg2);
@@ -66,42 +62,46 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
      * This method must provide a default renderer
      * @return \Iris\Subhelpers\iRenderer 
      */
-    protected abstract function _provideRenderer(); 
-    
+    protected abstract function _provideRenderer();
+
     /**
      * @return array
      */
-    public function prepare($arg1){
-        return array($arg1);
+    public function prepare($arg1) {
+        if (!is_array($arg1)) {
+            return array($arg1);
+        }
+        else {
+            return $arg1;
+        }
     }
-    
+
     /**
      * Returns the unique instance of the class and optionally gives it
      * a renderer
      * 
      * @param \Iris\Subhelpers\iRenderer $renderer
-     * @return self 
+     * @return static 
      */
     public static function GetInstance($renderer = NULL) {
-        if(is_null(self::$_Instance) or ! self::$_Instance instanceof static){
-            self::$_Instance = new static();
+        if (is_null(static::$_Instance) or !static::$_Instance instanceof static) {
+            static::$_Instance = new static();
         }
-        if(!is_null($renderer)){
-            self::$_Instance->_renderer = $renderer;
+        if (!is_null($renderer)) {
+            static::$_Instance->_renderer = $renderer;
         }
-        return self::$_Instance;
-        
+        return static::$_Instance;
     }
-    
+
     /* Beginning of trait code */
-    
+
     /**
      * Translates a message
      * @param string $message
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\FALSE) {
+    public function _($message, $system = \FALSE) {
         if ($system) {
             $translator = \Iris\Translation\SystemTranslator::GetInstance();
             return $translator->translate($message);
@@ -122,10 +122,8 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
         }
         return $translator;
     }
-    
+
     /* end of trait code */
-    
-    
 }
 
 ?>
