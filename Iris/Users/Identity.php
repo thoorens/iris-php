@@ -110,7 +110,7 @@ class Identity implements iUser, \Serializable {
         $this->sessionSave();
     }
 
-    protected static function SetTImeOut($duration, $prodDuration=NULL) {
+    public static function SetTImeOut($duration, $prodDuration=NULL) {
         if (!is_null($duration)) {
             self::$_Timeout = $duration;
         }
