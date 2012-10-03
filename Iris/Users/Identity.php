@@ -112,7 +112,7 @@ class Identity implements iUser, \Serializable {
 
     protected static function SetTImeOut($duration, $prodDuration=NULL) {
         if (!is_null($duration)) {
-            self::$_Timeout;
+            self::$_Timeout = $duration;
         }
         if (!is_null($prodDuration)) {
             self::$_ProductionTimeout = $prodDuration;
