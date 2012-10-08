@@ -23,8 +23,8 @@ namespace Dojo\views\helpers;
  */
 
 /**
- * This helper adds a class to <body> so that Dojo could
- * use the good CSS. 
+ * This helper will provides mechanisms to display or modify a text 
+ * using Dojo. For now, only fadein is implemented.
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
