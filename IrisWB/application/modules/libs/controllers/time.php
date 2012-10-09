@@ -12,20 +12,18 @@ namespace modules\libs\controllers;
  */
 class time extends _libs {
 
-    public function indexAction() {
-        // these parameters are only for demonstration purpose
-        $this->__(NULL, array(
-            'Title' => '<h1>libs - times - date</h1> ',
-            'buttons' => 1+4,
-            'logoName' => 'mainLogo'));
+    public function timeAction($time = '14:56:27') {
+        $time = new \Iris\Time\Time($time);
+        $this->__time = $time;
     }
 
-    public function dateAction() {
-        $date = new \Iris\Time\Date('2012-04-08');
+    public function dateAction($date = '2012-01-08') {
+        $date = new \Iris\Time\Date($date);
         $this->__date = $date;
     }
+
     public function stopwatchAction() {
         // these parameters are only for demonstration purpose
-        
     }
+
 }

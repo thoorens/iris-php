@@ -36,14 +36,14 @@ namespace Iris\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class ShowDate extends \Iris\views\helpers\_ViewHelper {
+class ShowTime extends \Iris\views\helpers\_ViewHelper {
 
-    private static $_Date;
+    private static $_Time;
 
     
     
     protected function _init() {
-        $this->_date = new \Iris\Time\Date();
+        $this->_date = new \Iris\Time\Time();
     }
 
     /**
@@ -57,7 +57,7 @@ class ShowDate extends \Iris\views\helpers\_ViewHelper {
             return $this;
         }
         if(is_null($date)){
-            $date = self::$_Date;
+            $date = self::$_Time;
         }
         if($format=="#DEF#"){
             $formatedDate = $date->__toString();
@@ -77,7 +77,7 @@ FIN;
     }
 
     public function setDate($date) {
-        self::$_Date = $date;
+        self::$_Time = $date;
     }
 
 }

@@ -1,0 +1,3 @@
+<div>
+    {month->render()}
+</div>

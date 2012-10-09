@@ -14,36 +14,51 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
 <ul>
     <?php
     foreach ($features as $feature):
-        echo "<li>" . $det->details($feature->Title, $feature->Details) . "</li>\n";
+    echo "<li>" . $det->details($feature->Title, $feature->Details) . "</li>\n";
     endforeach;
     $det->connectEvent('onclick');
     ?>
 </ul>
 <p>
-    La version 1.0 du framework est prévue pour la fin du premier semestre de 2012. Le projet sera 
+    La version 1.0 du framework est prévue pour la fin de l'année 2012. Le projet sera 
     sous licence GPL 3.0. Les caractéristiques suivantes seront ajoutées dans le framework.
 </p>
 <ul>
     <?php
     foreach ($plans as $plan) :
-        echo "<li>" . $det->details($plan->Title, $plan->Details) . "</li>\n";
+    echo "<li>" . $det->details($plan->Title, $plan->Details) . "</li>\n";
     endforeach;
     ?>
 </ul>
 <p>
-    Trois sites en cours de création seront disponibles pour les futurs utilisateurs du framework:
+    Deux sites en cours de création sont disponibles pour les futurs utilisateurs du framework:
 </p>
 <ul>
-    <li><a href="http://irisphp.org">http://irisphp.org</a> contiendra la documentation en anglais sur
-        l'API du framework
+    <li>
+        <a href="http://irisphp.org">http://irisphp.org</a> constitue le site dédié au framework, qui contiendra une
+        rapide présentation (réalisée à l'aide du framework) et différentes ressources
+        <ul>
+            <li><a href="http://irisphp.org/api/html">la documentation en anglais sur
+                l'API du framework (elle est réalisée à l'aide de Doxygen)</a> 
+            </li>
+            <li>
+                <a href="http://www.irisphp.org/wiki">le mode d'emploi en français avec de nombreux 
+                exemples.</a> 
+            </li>
+            <li>
+                prochainement des tutoriels d'installation et d'utilisation du framework
+            </li>
+            <li>
+                <a href="http://www.irisphp.org/download">la possibilité de télécharger la dernière version du framework </a>
+            </li>
+        </ul>
     </li>
     <li>
-        <a href="http://www.irisphp.net">http://www.irisphp.net</a> reprendra un mode d'emploi en français avec de nombreux 
-        exemples ainsi qu'une version complète du framework à télécharger.
-    </li>
-    <li>
-        <a href="http://irisphp.org">http://irisphp.org</a> offrira des tutoriels montrant
-        les principales utilisations du framework.
+        <a href="https://github.com/thoorens/iris-php">https://github.com/thoorens/iris-php</a> est un dépôt GIT contenant
+        les sources complètes du projet. Il sera régulièrement mis à jour et bénéficiera de toutes les fonctionnalités
+        du gestionnaire de version (historique, branching et possibilité de fork). Dans l'état actuel, les modifications seront
+        réservées à l'auteur, mais les utilisateurs enthousiastes peuvent créer un fork personnel pour expérimenter leurs changements.
+        Ces changements pourraient être intégrés par la suite au projet principal.
     </li>
 </ul>
 <?php

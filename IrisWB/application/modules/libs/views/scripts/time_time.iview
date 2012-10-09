@@ -1,0 +1,6 @@
+<h1>Time formats</h1>
+{showTime(\NULL)->setDate($this->time)}
+<table class="show">
+    <tr>{showTime('#DEF#')}<td/>default</tr>
+    
+</table>

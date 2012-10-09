@@ -1,0 +1,3 @@
+<div>
+    {week->render()}
+</div>
