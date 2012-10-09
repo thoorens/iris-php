@@ -45,7 +45,7 @@ PROJECT_BRIEF          = "A PHP framework with namespaces and administration too
 # exceed 55 pixels and the maximum width should not exceed 200 pixels. 
 # Doxygen will copy the logo to the output directory.
 
-PROJECT_LOGO           = /home/jacques/Images/Sites/Iris/Logos_Iris/Logo80.jpg
+PROJECT_LOGO           = /mylibs/iris_git/library/ILO/logos/Iris8wiki.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
