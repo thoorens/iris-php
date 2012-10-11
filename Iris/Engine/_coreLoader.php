@@ -241,6 +241,12 @@ abstract class _coreLoader {
         $program = \Iris\Engine\Program::$ProgramName;
         $libraryList = $this->_extensionLibraries; // may be 0 element
         $libraryList[] = $this->library;
+        // partials or views may be in system libraries
+        if(strpos($scriptName,'#')){
+            list($library,$scriptName) = explode('#',$scriptName);
+            $library = $this->library.'/'.substr($library,1);
+            $viewFiles[] = sprintf('%s/views/%s%s',$library,$controllerDirectory,$scriptName);
+        }
         // views beginning with ! are to take from IrisInternal (notably layouts)
         if ($response->isInternal() or $scriptName[1] == '!') {
             if ($scriptName[1] == '!') {
