@@ -39,7 +39,7 @@ use Iris\Forms\Validators as iv;
  */
 abstract class _ElementGroup extends \Iris\Forms\_Element implements \Iris\Translation\iTranslatable, iAidedValue {
     
-    //PHP 5.4 use \Iris\Translation\tTranslatable;
+    use \Iris\Translation\tSystemTranslatable;
 
     protected static $_NeedRegister = FALSE;
     protected $_subComponents = array();
@@ -159,37 +159,5 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements \Iris\Trans
     }
 
     
-    /* Beginning of trait code */
-    
-    /**
-     * Translates a message
-     * @param string $message
-     * @param boolean $system
-     * @return string 
-     */
-    public function _($message, $system=\FALSE) {
-        if ($system) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
-        return $translator->translate($message);
-    }
-
-    /**
-     *
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
-    
-    /* end of trait code */
 }
 
-?>

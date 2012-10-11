@@ -36,7 +36,7 @@ namespace Iris\Forms\Validators;
  */
 abstract class _Validator implements \Iris\Translation\iTranslatable {
 
-    //PHP 5.4 use \Dojo\Translation\tTranslatable;
+    use \Dojo\Translation\tSystemTranslatable;
     
     /**
      *
@@ -80,38 +80,7 @@ abstract class _Validator implements \Iris\Translation\iTranslatable {
         $this->_element = $element;
     }
     
-    /* Beginning of trait */
-
-    /**
-     * Translates a message
-     * @param string $message
-     * @param boolean $system
-     * @return string 
-     */
-    public function _($message, $system=\FALSE) {
-        if ($system) {
-            $translator = \Dojo\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
-        return $translator->translate($message);
-    }
-
-    /**
-     * Gets the current non systeme translator
-     * 
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
     
-    /* end of trait */
     
 }
 

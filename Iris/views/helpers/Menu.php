@@ -32,7 +32,7 @@ use \Iris\Structure as is;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * @todo definir un subhelper
  */
-class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
+class Menu extends _ViewHelper{
 
     protected static $_ActiveClass = 'active';
     
@@ -192,36 +192,5 @@ class Menu extends _ViewHelper implements \Iris\Translation\iTranslatable {
         }
     }
 
-    /* Beginning of trait code */
-
-    /**
-     * Translates a message
-     * @param string $message
-     * @param boolean $system
-     * @return string 
-     */
-    public function _($message, $system = \FALSE) {
-        if ($system) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
-        return $translator->translate($message);
-    }
-
-    /**
-     *
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
-
-    /* end of trait code */
 }
 

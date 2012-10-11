@@ -32,7 +32,7 @@ require_once 'library/Iris/Exceptions/PHPException.php';
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class core_ERROR extends \Iris\MVC\_Controller implements \Iris\Translation\iTranslatable {
-
+    use \Iris\Translation\tSystemTranslatable;
     /**
      *
      * @var \Iris\Subhelpers\ErrorDisplay
@@ -72,38 +72,7 @@ class core_ERROR extends \Iris\MVC\_Controller implements \Iris\Translation\iTra
         }
     }
 
-    /* Beginning of trait code */
-
-    /**
-     * Translates a message
-     * @param string $message
-     * @param boolean $system
-     * @return string 
-     */
-    public function _($message, $system=\TRUE) {
-        if ($system) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
-        return $translator->translate($message);
-    }
-
-    /**
-     *
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
-
-    /* end of trait code */
-
+    
 
 //        $errorMessage = 'No message';
 //        $exception = \Iris\Exceptions\_Exception::GetLastException();

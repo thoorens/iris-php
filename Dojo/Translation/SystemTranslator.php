@@ -37,10 +37,10 @@ class SystemTranslator extends \Iris\Translation\SystemTranslator {
     );
 
     public static function GetInstance() {
-        if (static::$_dojoInstance == NULL) {
-            static::$_dojoInstance = new static();
+        if (static::$_DojoInstance == NULL) {
+            static::$_DojoInstance = new static();
         }
-        return static::$_dojoInstance;
+        return static::$_DojoInstance;
     }
 
     private function __construct() {

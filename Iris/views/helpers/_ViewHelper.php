@@ -31,12 +31,10 @@ namespace Iris\views\helpers;
 /**
  * A view helper is a kind of method each view can use
  */
-abstract class _ViewHelper extends \Iris\MVC\_Helper {//*/
+abstract class _ViewHelper extends \Iris\MVC\_Helper {
+
 // Par défaut les aides de vue ne sont pas des singletons
 // protected static $_Singleton = FALSE;
-    const TYP_INSTANCE = '@';
-    const TYP_HELP = '?';
-    const TYP_RENDER = '!';
 
     
     

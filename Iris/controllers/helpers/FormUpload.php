@@ -30,7 +30,7 @@ namespace Iris\controllers\helpers;
  * @version $Id: $ */
 class FormUpload extends _ControllerHelper implements \Iris\Translation\iTranslatable {
 
-    //PHP 5.4 use \Iris\Translation\tTranslatable;
+    use \Iris\Translation\tSystemTranslatable;
     
     /**
      *
@@ -58,37 +58,7 @@ class FormUpload extends _ControllerHelper implements \Iris\Translation\iTransla
         return $form;
     }
 
-    /* Beginning of trait code */
     
-    /**
-     * Translates a message
-     * @param string $message
-     * @param boolean $system
-     * @return string 
-     */
-    public function _($message, $system=\FALSE) {
-        if ($system) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
-        return $translator->translate($message);
-    }
-
-    /**
-     *
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
-    
-    /* end of trait code */
 
 }
 

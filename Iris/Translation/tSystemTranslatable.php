@@ -25,18 +25,17 @@ namespace Iris\Translation;
 
 /**
  * Trait to provide a standard implementation of methods required by
- * interface iTranslatable. It exists another trait named tSystemTranslatable
- * which makes the same job but has a different default value for the second
- * parameter of _ method. 
+ * interface iTranslatable. It is an exact copy of the tTranslatable trait,
+ * except for the default value of the second parameter of the _ method.
+ * The copy has been done for performance reason.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
+ * This file is PHP 5.4 only
  */
-
-trait tTranslatable {
-    
+trait tSystemTranslatable {
     
     /**
      * Translates a message
@@ -44,7 +43,7 @@ trait tTranslatable {
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\FALSE) {
+    public function _($message, $system=\TRUE) {
         if ($system) {
             $translator = \Iris\Translation\SystemTranslator::GetInstance();
             return $translator->translate($message);
@@ -65,4 +64,8 @@ trait tTranslatable {
         }
         return $translator;
     }
+    
+    
 }
+
+?>

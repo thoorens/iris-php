@@ -32,7 +32,7 @@ use \Iris\Engine\Memory as Memory;
  * @version $Id: $ */
 class admin_col1 extends \IrisInternal\main\controllers\_SecureIslet implements \Iris\Translation\iTranslatable {
 
-    //PHP 5.4 use \Iris\Translation\tTranslatable;
+    use \Iris\Translation\tSystemTranslatable;
     
     public function indexAction() {
 
@@ -51,38 +51,6 @@ class admin_col1 extends \IrisInternal\main\controllers\_SecureIslet implements 
         //$this->render('pub');
     }
 
-    /* Beginning of trait code */
-    
-    /**
-     * Translates a message
-     * @param string $message
-     * @param boolean $system
-     * @return string 
-     */
-    public function _($message, $system=\FALSE) {
-        if ($system) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
-        return $translator->translate($message);
-    }
-
-    /**
-     *
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
-    
-    /* end of trait code */
-    
     
 
 }
