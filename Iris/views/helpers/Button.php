@@ -24,16 +24,22 @@ class Button extends _ViewHelper {
     public static $NoLink = array('!!!!NONE!!!!', '', '');
     
     public function help($message=NULL, $url='/', $tooltip='', $class='norm') {
+        // an accessor to helper instance
+        if (is_null($message)) {
+            return $this;
+        }
+        else{
+            return $this->render($message, $url, $tooltip, $class);
+        }
+    }
+    
+    public function render($message, $url='/', $tooltip='', $class='norm'){
         // group all three first parameters in one array, second parameters is class
         if(is_array($message)){
             $url = $message[1];
             $tooltip = $message[2];
             $message = $message[0];
             $class = $url=='/' ? 'norm' : $class;
-        }
-        // an accessor to helper instance
-        if (is_null($message)) {
-            return $this;
         }
         // a way to have no button
         if($message == self::$NoLink[0]){
