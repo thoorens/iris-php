@@ -32,7 +32,10 @@ namespace Iris\views\helpers;
 /**
  * An easy way load css files or script fragment. Each fragment/file receives
  * a index name so it won't loaded twice.
- *
+ * Two way to use it:<ul>
+ * <li> ->styleLoader('/css/mystyle.css');
+ * <li> ->styleLoader('test',"#test {background-color:white}");
+ * </ul>
  */
 class StyleLoader extends _LoaderHelper {
 

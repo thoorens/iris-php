@@ -30,6 +30,10 @@ namespace Iris\views\helpers;
 /**
  * An easy way load javascrit files or script fragment. Each fragment/file receives
  * a index name so it won't loaded twice.
+ * Two way to use it:<ul>
+ * <li> ->javascriptLoader('/js/myscript.js');
+ * <li> ->javascriptLoader('test',"SyntaxHighlighter.all()");
+ * </ul>
  * 
  */
 class JavascriptLoader extends _LoaderHelper {
