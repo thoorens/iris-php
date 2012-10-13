@@ -203,6 +203,10 @@ class Response {
         if ($this->_internal) {
             $route[0] = "IrisInternal\\$moduleName\\controllers\\" . $this->getControllerName();
         }
+        elseif($moduleName[0]=='#'){
+            $internalLibrary = substr($moduleName, 1);
+            $route[0] = "$internalLibrary\\controllers\\" . $this->getControllerName();
+        }
         else {
             $route[0] = "modules\\$moduleName\\controllers\\" . $this->getControllerName();
         }
