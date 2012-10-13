@@ -34,40 +34,71 @@ namespace Iris\views\helpers;
  */
 class LoremIpsum extends _ViewHelper {
 
-    private $_list;
+    /**
+     * The array containing the gibberish sentences
+     * 
+     * @var array(string) 
+     */
+    private $_sentenceArray;
+    
+    /**
+     *
+     * @var int the number of gibberish sentences
+     */
+    private $_sentenceNumber;
 
+    /**
+     * Explodes the text of _getSentences method in an array
+     */
     protected function _init() {
-        $this->_list = explode("\n", $this->_getText());
+        $this->_sentenceArray = explode("\n", $this->_getSentences());
+        $this->_sentenceNumber = count($this->_sentenceArray);
     }
 
-    public function help($items, $lorem=TRUE, $paragraph=FALSE) {
+    /**
+     * 
+     * @param int $items (number of sentences or paragraphs)
+     * @param boolean $lorem if true, the first sentence is the traditional one
+     * @param boolean $paragraph if true, counts the paragraphs instead of sentences
+     * @return string
+     */
+    public function help($items, $lorem = TRUE, $paragraph = FALSE) {
         $text = '';
-        $max = count($this->_list);
         if ($lorem) {
-            $text = $this->_list[0];
+            $text = $this->_sentenceArray[0];
             $items--;
         }
         if ($paragraph) {
             for ($p = 0; $p < $items; $p++) {
                 $lines = rand(2, 6);
-                $text .= $this->_paragraph($lines,$max)."<br/>\n";
+                $text .= $this->_paragraph($lines) . "<br/>\n";
             }
         }
         else {
-            $text .= $this->_paragraph($items,$max);
+            $text .= $this->_paragraph($items);
         }
         return $text;
     }
 
-    private function _paragraph($items,$max) {
+    /**
+     * Generates a paragraph
+     * 
+     * @param int $items the number of sentences in the paragraphe
+     * @return string
+     */
+    private function _paragraph($items) {
         $text = '';
         for ($i = 0; $i < $items; $i++) {
-            $text .= $this->_list[rand(1, $max - 1)] . " \n";
+            $text .= $this->_sentenceArray[rand(1, $this->_sentenceNumber - 1)] . " \n";
         }
         return $text;
     }
 
-    private function _getText() {
+    /**
+     * Contents a long string with 100 gibberish sentences separated by CR
+     * @return string
+     */
+    private function _getSentences() {
         return <<<END
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Morbi volutpat risus a arcu mollis rhoncus.
@@ -184,4 +215,5 @@ END;
     }
 
 }
+
 ?>
