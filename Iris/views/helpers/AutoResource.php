@@ -68,7 +68,8 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
         }
         $loaders .= "\t<!-- LOADERS end -->\n";
         $text = str_replace(self::LOADERMARK,$loaders,$text);
-        
+        $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
+        $text = str_replace('</body>',$starter."\n</body>",$text);
     }
 
 }
