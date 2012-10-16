@@ -35,7 +35,7 @@ use Iris\Engine as ie,
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class View implements \Iris\Translation\iTranslatable {
+class View {
     
     use \Iris\Translation\tTranslatable;
 
@@ -129,10 +129,10 @@ class View implements \Iris\Translation\iTranslatable {
         }
         // there is a template to render
         $template = $this->_getTemplate($forcedScriptName);
-        $phtml = $this->_renderTemplate($template);
+        $iviewFile = $this->_renderTemplate($template);
         ob_start();
         echo $this->_prerending;
-        $this->_eval($phtml);
+        $this->_eval($iviewFile);
         $page = ob_get_clean();
         return $page;
     }
@@ -145,16 +145,21 @@ class View implements \Iris\Translation\iTranslatable {
      * @return string 
      */
     private function _renderTemplate($template) {
-        $inStyle = FALSE;
+        $inStyle = $inScript = FALSE;
         foreach ($template as &$line) {
             if (strpos($line, '<style') !== FALSE) {
                 $inStyle = TRUE;
+            }if (strpos($line, '<script') !== FALSE) {
+                $inScript = TRUE;
             }
-            if (!$inStyle) {
+            if (!$inStyle and !$inScript) {
                 $line = preg_replace("/({)(.*?)(})/i", '<?= $this->$2?>', $line);
             }
             if (strpos($line, '</style>') !== FALSE) {
                 $inStyle = FALSE;
+            }
+            if (strpos($line, '</script>') !== FALSE) {
+                $inScript = FALSE;
             }
         }
         return implode("", $template);
