@@ -16,6 +16,9 @@ class Quote extends _ViewHelper {
 
 
     public function help($text, $data=NULL) {
+        if(is_null($data)){
+            $data = $this->_view;
+        }
         $quoteView = new \Iris\MVC\Quote($text, $data);
         return $quoteView->render();
     }

@@ -214,6 +214,16 @@ class _BaseController {
         }
     }
 
+    public function quote($text, $data=\NULL){
+        if(is_null($data)){
+            $data = $this->_view;
+        }
+        $quoteView = new \Iris\MVC\Quote($text, $data);
+        $render = $quoteView->render();
+        $this->_view->addPrerending($render);
+        $this->setViewScriptName('__QUOTE__');
+    }
+    
     /**
      * Offers a way to render a view manually by giving its name. 
      * By default, it is echoed directly.

@@ -115,7 +115,7 @@ class Partial extends View {
             $this->_properties = $data;
         }
         else {
-            $type = self::$_ViewType;
+            $type = static::$_ViewType;
             throw new \Iris\Exceptions\BadParameterException("A $type data must be an array or a view");
         }
     }

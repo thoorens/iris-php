@@ -36,7 +36,7 @@ use Iris\Engine as ie,
  * @version $Id: $ * 
  */
 class View {
-    
+
     use \Iris\Translation\tTranslatable;
 
     /**
@@ -72,13 +72,12 @@ class View {
      * @var Iris\Engine\Response
      */
     protected $_response;
-
 //    public function getActionView() {
 //        return $this->_viewScriptName;
 //    }
 
     protected $_prerending = '';
-    
+
     public function setViewScriptName($name) {
         $this->_viewScriptName = $name;
     }
@@ -104,10 +103,10 @@ class View {
         return $this->_properties[$name];
     }
 
-    public function addPrerending($text){
+    public function addPrerending($text) {
         $this->_prerending .= $text;
     }
-    
+
     /**
      * Evaluates the (implicit or explicit) view script
      * and renders it as html string
@@ -116,9 +115,6 @@ class View {
      * @return string 
      */
     public function render($forcedScriptName = NULL) {
-//        iris_debug("scriptName : ".$scriptName,\FALSE);
-//        iris_debug('URL:'.$this->_response,\FALSE);
-//        iris_debug('viewScriptName:'.$this->_viewScriptName,\FALSE);
         if (strpos($this->_viewScriptName, '/')) {
             $forcedScriptName = $this->_viewScriptName;
         }
@@ -127,14 +123,22 @@ class View {
             \Iris\Time\StopWatch::DisableRTDDisplay();
             die(''); // stop process - file is complete
         }
-        // there is a template to render
-        $template = $this->_getTemplate($forcedScriptName);
-        $iviewFile = $this->_renderTemplate($template);
-        ob_start();
-        echo $this->_prerending;
-        $this->_eval($iviewFile);
-        $page = ob_get_clean();
-        return $page;
+        // In case of simple quoting, there is no template file to treat
+        elseif (($forcedScriptName == '__QUOTE__' or $this->_viewScriptName == '__QUOTE__')) {
+            echo $this->_prerending; // the "quotation" has been already prerended
+            return;
+        }
+        // In normal cases, there is a template file to render
+        else {
+            
+            $template = $this->_getTemplate($forcedScriptName);
+            $iviewFile = $this->_renderTemplate($template);
+            ob_start();
+            echo $this->_prerending;
+            $this->_eval($iviewFile);
+            $page = ob_get_clean();
+            return $page;
+        }
     }
 
     /**
@@ -295,6 +299,5 @@ class View {
         return static::$_LastUsedScript;
     }
 
-    
 }
 
