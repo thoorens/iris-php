@@ -31,7 +31,7 @@ require_once 'library/Iris/Exceptions/PHPException.php';
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class core_ERROR extends \Iris\MVC\_Controller implements \Iris\Translation\iTranslatable {
+class core_ERROR extends \Iris\MVC\_Controller {
     use \Iris\Translation\tSystemTranslatable;
     /**
      *

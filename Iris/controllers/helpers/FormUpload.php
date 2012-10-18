@@ -28,7 +28,7 @@ namespace Iris\controllers\helpers;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class FormUpload extends _ControllerHelper implements \Iris\Translation\iTranslatable {
+class FormUpload extends _ControllerHelper{
 
     use \Iris\Translation\tSystemTranslatable;
     

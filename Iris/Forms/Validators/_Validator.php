@@ -30,7 +30,7 @@ namespace Iris\Forms\Validators;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _Validator implements \Iris\Translation\iTranslatable {
+abstract class _Validator {
 
     use \Iris\Translation\tSystemTranslatable;
     

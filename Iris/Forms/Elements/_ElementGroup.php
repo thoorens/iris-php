@@ -37,7 +37,7 @@ use Iris\Forms\Validators as iv;
  * An abstract group, serving as a super class for ButtonGroup, RadioGroup...
  * 
  */
-abstract class _ElementGroup extends \Iris\Forms\_Element implements \Iris\Translation\iTranslatable, iAidedValue {
+abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue {
     
     use \Iris\Translation\tSystemTranslatable;
 

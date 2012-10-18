@@ -32,7 +32,7 @@ namespace Iris\Translation;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class _Messages implements iTranslatable{
+class _Messages{
     use \Iris\Translation\tTranslatable;
     
     

@@ -30,7 +30,7 @@ use \Iris\Engine\Memory as Memory;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class admin_col1 extends \IrisInternal\main\controllers\_SecureIslet implements \Iris\Translation\iTranslatable {
+class admin_col1 extends \IrisInternal\main\controllers\_SecureIslet {
 
     use \Iris\Translation\tSystemTranslatable;
     
