@@ -19,12 +19,27 @@ else
         exit 3
     else
         TARGET=$1/iris
+        echo "Creating directory $TARGET"
         mkdir -p $TARGET
-        cp -pr CLI $TARGET
-        cp -pr Dojo $TARGET
-        cp -pr ILO $TARGET
+        echo "Copying library folders..."
+        echo "  -main library (Iris)"
         cp -pr Iris $TARGET
-        cp -pr IrsInternal $TARGET
+        echo "  -Iris LayOut resources (ILO)"  
+        cp -pr ILO $TARGET
+        echo "  -Iris Internal modules (IrisInternal)"
+        cp -pr IrisInternal $TARGET
+        echo "  -Iris Command Line Interpreter (CLI)"
+        cp -pr CLI $TARGET
+        echo "  -Dojo extensions (Dojo)"
+        cp -pr Dojo $TARGET
+        echo "  -Iris WorkBench (IrisWB)"
+        cp -pr IrisWB $TARGET
+        echo "  -Tutorial internal library (Tutorial)"
+        cp -pr Tutorial $TARGET
+        echo "  -Special folders Extensions and Core (for class customisation)"
+        cp -pr Extensions $TARGET
+        cp -pr Core $TARGET
+        echo "Creating iris.php in /usr/local/bin"
         ln -s $PWD/CLI/iris.php /usr/local/bin/iris.php
     fi
 fi
