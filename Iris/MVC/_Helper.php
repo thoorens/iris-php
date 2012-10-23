@@ -32,7 +32,7 @@ use \Iris\Engine as IEN;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-abstract class _Helper implements \Iris\Translation\iTranslatable {//*/
+abstract class _Helper{
     use \Iris\Translation\tSystemTranslatable;
 
 
@@ -62,7 +62,7 @@ abstract class _Helper implements \Iris\Translation\iTranslatable {//*/
      * 
      * @param string $functionName Class name of helper
      * @param array $arguments arguments for help method
-     * @param mixed $view the view possibly containing the helper (not used for controller helpers)
+     * @param mixed $view the view/controller possibly containing the helper
      * @return mixed 
      */
     public static function HelperCall($functionName, $arguments, $caller) {
