@@ -1,0 +1,11 @@
+<?  // Variables are set in islet Tutorial\\tutoPage
+    $t="tabs$id"?>
+<h2 class="tuto">{title}</h2>
+{$t->divMaster()}
+<div {$t->item("show$id")}> 
+     {page}
+</div>
+<div {$t->item("explanations$id")}> 
+     {text}
+</div>
+{$t->endMaster()}

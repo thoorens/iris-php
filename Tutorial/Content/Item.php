@@ -43,6 +43,8 @@ class Item {
     private $_title;
     private $_text;
     private $_id;
+    private $_duration=10;
+    private $_page;
 
     public function createDummy($id) {
         $this->_title = "Title $id";
@@ -51,19 +53,55 @@ class Item {
         return $this;
     }
 
+    /**
+     * 
+     * @return string
+     */
+    public function getPage() {
+        return $this->_page;
+    }
+
+    /**
+     * 
+     * @param string $page
+     * @return \Tutorial\Content\Item
+     */
+    public function setPage($page) {
+        $this->_page = $page;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return string
+     */    
     public function getTitle() {
         return $this->_title;
     }
 
+    /**
+     * 
+     * @param string $title
+     * @return \Tutorial\Content\Item
+     */
     public function setTitle($title) {
         $this->_title = $title;
         return $this;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getText() {
         return $this->_text;
     }
 
+    /**
+     * 
+     * @param string $text
+     * @return \Tutorial\Content\Item
+     */
     public function setText($text) {
         $this->_text = $text;
         return $this;
@@ -77,6 +115,16 @@ class Item {
         $this->_id = $id;
         return $this;
     }
+
+    public function getDuration() {
+        return $this->_duration;
+    }
+
+    public function setDuration($duration) {
+        $this->_duration = $duration;
+        return $this;
+    }
+
 
 
 }

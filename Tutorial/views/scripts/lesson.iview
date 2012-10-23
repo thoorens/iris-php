@@ -1,0 +1,7 @@
+{slides->divMaster()}
+<?foreach($content as $key => $item):?>
+<div {slides->item($key)}> 
+     {islet('tutoPage',$item,'index','#Tutorial')}
+</div>
+<?endforeach?>
+{slides->endMaster()}
