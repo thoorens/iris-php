@@ -35,7 +35,7 @@ namespace Dojo\views\helpers;
  * @version $Id: $ * 
  */
 class Container extends _DojoHelper {
-    
+    use \Dojo\Translation\tTranslatable;
 
     
     /**
@@ -132,7 +132,8 @@ class Container extends _DojoHelper {
         // for javascript, returns a div with Dojo attributes
         if ($this->_JS) {
             return '<div id="' . $this->_name . '" design="headline" dijitParams="top" style="height:' . $this->_height .
-                    'px;width:' . $this->_width . 'px" dojoType="dijit.layout.' . $this->_type . 'Container">';
+                    'px;width:' . $this->_width . 'px" dojoType="dijit.layout.' . $this->_type . 'Container"'.
+                    ' data-dojo-id="'. $this->_name . '" >';
         }
         else {
             // with no javascript, returns a serie of buttons (unless altNodisplay is false)
@@ -210,7 +211,7 @@ class Container extends _DojoHelper {
         // javascript mode: dojo attributes are inserted in the div
         else {
             if ($selectedItem == $itemIndex) {
-                $selected = 'selected = "true"';
+                $selected = ' selected = "true"';
             }
             else {
                 $selected = '';
@@ -270,5 +271,6 @@ class Container extends _DojoHelper {
         $this->_default = $name;
         return $this;
     }
+    
 }
 
