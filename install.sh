@@ -40,6 +40,6 @@ else
         cp -pr Extensions $TARGET
         cp -pr Core $TARGET
         echo "Creating iris.php in /usr/local/bin"
-        ln -s $PWD/CLI/iris.php /usr/local/bin/iris.php
+        ln -s $TARGET/CLI/iris.php /usr/local/bin/iris.php
     fi
 fi
