@@ -72,7 +72,7 @@ class Image extends \Iris\views\helpers\_ViewHelper {
             $class = 'class="' . $class . '"';
         }
         return sprintf('<img id="%s" src="%s%s" title="%s" alt="%s" class="tuto_absolute %s" %s/>' . "\n", $id, $dir, $file, $title, $alt, $class, $attributes) .
-                sprintf("<style>img#%s\n{margin: %dpx 0 0 %dpx}\n</style>\n", $id, $top, $left);
+                sprintf("<style>img#%s\n{top: %dpx; left: %dpx}\n</style>\n", $id, $top, $left);
     }
 
 }

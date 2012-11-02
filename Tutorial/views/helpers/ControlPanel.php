@@ -92,7 +92,8 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
         $html .= $button->setId('Nosound')->render($this->_('X'), \NULL, $this->_('Toggle sound'), '');
         $html .= $button->setId('Plus')->render($this->_('+'), \NULL, $this->_('Increase volume'), '');
         $class = \Iris\Engine\Mode::IsDevelopment() ? '' : 'class="tuto_hidden"';
-        $html .= "<span id=\"tuto_seconds\" $class>0</span> &diams; ";
+        $html .= "<span id=\"tuto_seconds\" $class>0</span>/";
+        $html .= "<span id=\"tuto_maxseconds\" $class>0</span> &diams; ";
         $html .= "<span id=\"tuto_totalseconds\" $class>0</span>";
         $this->_prepareScript($times, $channel);
         return $html;
@@ -129,7 +130,8 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
     soundController = '';
 
     function tuto_init(){
-        slides=dojo.getObject('slides');
+        dojo.byId('tuto_maxseconds').innerHTML=timing[current];
+        frames=dojo.getObject('frames');
         soundController = dojo.byId('$soundController');
         dojo.attr('First','onClick','reset()');
         dojo.attr('Prev','onClick','previous()');
@@ -167,7 +169,7 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
     }
     
     function reset(){
-        slides.selectChild('label1');
+        frames.selectChild('label1');
         dojo.byId('tuto_seconds').innerHTML=0;
         current = 0;
         sec = 0;
@@ -178,7 +180,7 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
     }
     
     function previous(){
-        slides.back();
+        frames.back();
         current--;
         if(current<0){
             current = max-1;
@@ -188,7 +190,7 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
     }
 
     function next(){
-        slides.forward();
+        frames.forward();
         sec=0;
         current++;
         if(current == max){
@@ -230,6 +232,7 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
     
     function _updateTimer(){
         dojo.byId('tuto_totalseconds').innerHTML=total[current];
+        dojo.byId('tuto_maxseconds').innerHTML=timing[current];
         dojo.byId('tuto_seconds').innerHTML=0;
     }
    
