@@ -76,7 +76,7 @@ class _Controller extends _BaseController {
         $layout = \Iris\MVC\Layout::GetInstance();
         $layoutName = $layout->getViewScriptName();
         // Complex treatment with layout and possibly subviews
-        if (!is_null($layoutName)) {
+        if (!empty($layoutName)) {
             try {
                 $layout->setResponse($this->_response);
                 $layout->setMainView($this->_view);
