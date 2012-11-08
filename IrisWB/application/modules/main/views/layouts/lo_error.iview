@@ -7,6 +7,7 @@
         <link rel="stylesheet" type="text/css" href="/css/wberror.css">
         {title()->render(TRUE)}
         {autoResource()}
+        {siteIcon()}
     </head>
     <body {dojo_body()}{bodyOnload()}>
         <div id="main">

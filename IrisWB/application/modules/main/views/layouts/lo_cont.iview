@@ -7,7 +7,8 @@ $layout = __FILE__;
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/css/wb.css">
         {title()->render(TRUE)}
-        {dojo_head()}
+        {siteIcon()}
+        {autoResource()}
     </head>
     <body {dojo_body()}{bodyOnload()}{wbColors('ORANGE2')}>
         <div id="main">
