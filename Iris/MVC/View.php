@@ -157,6 +157,8 @@ class View {
                 $inScript = TRUE;
             }
             if (!$inStyle and !$inScript) {
+                $line = str_replace("{php}", '<?php ', $line);
+                $line = str_replace("{/php}", '?>', $line);
                 $line = preg_replace("/({)(.*?)(})/i", '<?= $this->$2?>', $line);
             }
             if (strpos($line, '</style>') !== FALSE) {
