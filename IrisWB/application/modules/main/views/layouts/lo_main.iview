@@ -15,14 +15,14 @@
                 </div><!-- Title -->
                 <div class="column one">
                     <h2>Column 1</h2>
-                    {loremIpsum(6,TRUE)}
+                    {loremIpsum([0,5,10,15])}
                 </div><!-- 1 -->
                 <div class="column two">
                     {mainView()}
                 </div><!-- 2 -->
                 <div class="column three ">
                     <h2>Column 3</h2>
-                    {loremIpsum(6,FALSE)}
+                    {loremIpsum([4,8,12,16,20])}
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">

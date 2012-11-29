@@ -19,7 +19,7 @@ $layout = __FILE__;
                 </div><!-- Title -->
                 <div class="column one">
                     <h2>Column 1</h2>
-                    {loremIpsum(5)}
+                    {loremIpsum([0,45,46,47,48])}
 
                 </div><!-- 1 -->
                 <div class="column two">
@@ -27,7 +27,7 @@ $layout = __FILE__;
                 </div><!-- 2 -->
                 <div class="column three ">
                     <h2>Column 3</h2>
-                    {loremIpsum(5,FALSE)}
+                    {loremIpsum([50,51,52,53,54])}
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">
