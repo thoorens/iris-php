@@ -57,12 +57,28 @@ class LoremIpsum extends _ViewHelper {
 
     /**
      * 
-     * @param int $items (number of sentences or paragraphs)
+     * @param mixed $items (number of sentences or paragraphs or array with item numbers)
      * @param boolean $lorem if true, the first sentence is the traditional one
      * @param boolean $paragraph if true, counts the paragraphs instead of sentences
      * @return string
      */
     public function help($items, $lorem = TRUE, $paragraph = FALSE) {
+        if(is_array($items)){
+            return $this->_fixed($items);
+        }
+        else{
+            return $this->_lorem($items, $lorem, $paragraph);
+        }
+    }
+
+    
+    /*
+     * @param int $items (number of sentences or paragraphs)
+     * @param boolean $lorem if true, the first sentence is the traditional one
+     * @param boolean $paragraph if true, counts the paragraphs instead of sentences
+     * @return string
+     */
+    private function _lorem($items, $lorem = TRUE, $paragraph = FALSE){
         $text = '';
         if ($lorem) {
             $text = $this->_sentenceArray[0];
@@ -79,7 +95,14 @@ class LoremIpsum extends _ViewHelper {
         }
         return $text;
     }
-
+    
+    public function _fixed($items) {
+        foreach($items as $item){
+            $text[] = $this->_sentenceArray[$item % $this->_sentenceNumber];
+        }
+        return implode(' ',$text);
+    }
+    
     /**
      * Generates a paragraph
      * 
@@ -213,6 +236,8 @@ Nulla vestibulum convallis felis, a sollicitudin dui semper vel.
 
 END;
     }
+
+    
 
 }
 
