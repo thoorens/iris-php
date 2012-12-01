@@ -28,5 +28,6 @@
             <div id="foot">
                 {wbFooter('modules/main/views/scripts/lo_color.iview')}
             </div><!--foot-->
+        </div><!--main-->
     </body>
 </html>

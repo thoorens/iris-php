@@ -29,5 +29,6 @@
             <div id="foot">
                 {wbFooter('modules/main/views/scripts/lo_error.iview')}
             </div><!--foot-->
+        </div><!--main-->  
     </body>
 </html>

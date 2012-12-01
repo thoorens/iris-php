@@ -33,5 +33,6 @@ $layout = __FILE__;
             <div id="foot">
                 {wbFooter('modules/main/views/scripts/lo_app.iview')}
             </div><!--foot-->
+        </div><!--main-->
     </body>
 </html>

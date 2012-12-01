@@ -34,4 +34,5 @@
             <div id="foot">
                 {wbFooter('modules/testLayout/views/layouts/lo_testlayout2.iview')}
             </div><!--foot-->
+        </div><!--main-->
     </body>
