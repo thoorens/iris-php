@@ -1,0 +1,9 @@
+{titlepane->divTitle('An expandable section')}
+{loremIpsum(10)}
+{titlepane->endDiv()}
+{titlepane->open()->divTitle('Another section (already open)')}
+{loremIpsum(10)}
+{titlepane->endDiv()}
+{titlepane->setDuration(2000)->setId('id12345')->divTitle('Still another (slow)')}
+{loremIpsum(10)}
+{titlepane->endDiv()}

@@ -1,0 +1,24 @@
+<button id="btnIn">Fade in</button>
+<div id="region1">
+    Nouveau texte
+</div>
+
+<button id="btnOut">Fade out</button>
+<div id="region2">
+    Ancien texte
+</div>
+<button id="btnInOut">Fade in and out</button>
+<div id="region3">
+    In and out
+</div>
+<div id="region4">
+    La suite est automatique
+</div>
+<div id="region5">
+    Ceci va disparaître
+</div>
+{dojo_autoAnimation()->in('region1','btnIn',10000)}
+{dojo_autoAnimation()->out('region2','btnOut',10000)}
+{dojo_autoAnimation()->InOut('region3','btnInOut',10000)}
+{dojo_autoAnimation()->waitIn('region4',3000,10000)}
+{dojo_autoAnimation()->waitOut('region5',3000,10000)}

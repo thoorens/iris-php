@@ -1,0 +1,12 @@
+<h2>{title}</h2>
+
+{containers->divMaster()}
+<div {containers->item("first")}> 
+    {loremIpsum([0,1,3,5,7,9,11])}
+</div>
+<div {containers->item("second")}> 
+    {loremIpsum([2,4,6,8,10,12,14])}
+</div>
+{containers->endMaster()}
+
+

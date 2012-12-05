@@ -18,7 +18,7 @@ class _dojo extends \modules\_application {
      * settings
      */
     protected function _moduleInit() {
-        // You should modify this demo layout
+        $this->_setLayout('main');
     }
 
 }

@@ -4,3 +4,12 @@
     </div>
 
 </div>
+    <h2>Modify the Workbench</h2>
+    <ul>
+        <li>
+            {button('Manage the categories','/manager/categories','Modify the categories')}
+        </li>
+        <li>
+            {button('Manage the screens','/manager/screens','Modify the screens')}
+        </li>
+    </ul>

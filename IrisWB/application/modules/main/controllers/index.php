@@ -33,25 +33,10 @@ class index extends _main {
 
     public function tocAction() {
         $this->_view->dojo_Mask();
-        $list = $this->_sequence->getStructuredSequence();
-        foreach ($list as $key => $value) {
-            if (is_array($value)) {
-                array_walk($value,array($this,'_keepDescription'));
-                $newList[$key] = $value;
-            }
-            else {
-                $newList[$key] = $this->_keepDescription($value);
-            }
-        }
-        $this->__sequence = $newList;
+        $this->__sequence = $this->getScreenList($this->_sequence);
     }
 
-    private function _keepDescription(&$value, $dummy=\NULL) {
-        list($description, $dum) = explode('|', $value . '|');
-        $value = $description;
-        return $value;
-    }
-
+    
     public function controllerAction() {
         
     }
