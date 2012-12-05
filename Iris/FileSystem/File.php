@@ -306,7 +306,7 @@ class File {
             }
         }
         // @todo : try catch
-        @link($oldPath, $newPath);
+        @copy($oldPath, $newPath);
         if (error_get_last()) {
             if (!@copy($oldPath, $newPath)) {
                 $messages = error_get_last();
