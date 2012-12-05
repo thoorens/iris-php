@@ -20,4 +20,8 @@ class animation extends _dojo {
             'logoName' => 'mainLogo'));
     }
 
+    
+    public function fadeinAction(){
+        
+    }
 }

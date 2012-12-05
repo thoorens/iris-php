@@ -1,6 +1,6 @@
 <?php
 
-$this->dojo_container('tabs');
+$this->dojo_tabContainer('tabs');
 $this->tabs->setDefault('desc')
         ->setItems(array('desc' => 'Description', 'stack' => 'Error stack', 'det' => 'Details'));
 $lines = count($this->error()->details);

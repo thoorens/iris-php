@@ -1,3 +1,4 @@
+<?php // in preAjax version ?>
 {frames->divMaster()}
 <?foreach($content as $key => $item):?>
 <div {frames->item($key)}> 

@@ -38,7 +38,7 @@ namespace Tutorial\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class ControlPanel extends \Iris\views\helpers\_ViewHelper {
+class ControlPanel extends \Dojo\views\helpers\_DojoHelper {
 
     use \Tutorial\Translation\tSystemTranslatable;
 
@@ -62,6 +62,7 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
      */
     public function help($times = \NULL, $channel = 'NEXT') {
         if (is_null($times)) {
+            $this->_manager->addRequisite('dojo/dom-class','dojo/dom-class');
             return $this;
         }
         else {
@@ -72,56 +73,48 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
     /**
      * Does the job: html for button bar and javascript
      * 
-     * @param array(int) $times The time duration of each frame
+     * @param array(int) $duration The time duration of each frame
      * @param string $channel The publish/subscribe channel name (defautl NEXT)
      * @return string 
      * @throws \Iris\Exceptions\HelperException
      */
-    public function render($times, $channel = 'NEXT') {
-            if(! is_array($times)){
-                throw new \Iris\Exceptions\HelperException('The first argument of ControlPannel is an array of seconds.');
-            }
-        $button = $this->_view->button();
+    public function render($duration, $channel = 'NEXT') {
+        $button = $this->_view->button();        
         $html = $button->setId('List')->render($this->_('List'), '/tutorials/index/list', '', '');
-        $html .= $button->setId('First')->render($this->_('Restart'), \NULL, '', '');
-        $html .= $button->setId('Prev')->render($this->_('Previous'), \NULL, '', '');
-        $html .= $button->setId('Next')->render($this->_('Next'), \NULL, '', '');
-        $html .= $button->setId('Stop')->render($this->_('Stop'), \NULL, '', '');
-        $html .= $button->setId('Play')->render($this->_('Play'), \NULL, '', '');
-        $html .= $button->setId('Minus')->render($this->_('-'), \NULL, $this->_('Reduce volume'), '');
-        $html .= $button->setId('Nosound')->render($this->_('X'), \NULL, $this->_('Toggle sound'), '');
-        $html .= $button->setId('Plus')->render($this->_('+'), \NULL, $this->_('Increase volume'), '');
+        $html .= $button->setId('First')->setOnClick('')->render($this->_('Restart'), \NULL, '', '');
+        $html .= $button->setId('Prev')->setOnClick('previous()')->render($this->_('Previous'), \NULL, '', '');
+        $html .= $button->setId('Next')->setOnClick('next()')->render($this->_('Next'), \NULL, '', '');
+        $html .= $button->setId('Stop')->setOnClick('stop()')->render($this->_('Stop'), \NULL, '', '');
+        $html .= $button->setId('Play')->setOnClick('start()')->render($this->_('Play'), \NULL, '', '');
+        $html .= $button->setId('Minus')->setOnClick('minus()')->render($this->_('-'), \NULL, $this->_('Reduce volume'), '');
+        $html .= $button->setId('Nosound')->setOnClick('nosound()')->render($this->_('X'), \NULL, $this->_('Toggle sound'), '');
+        $html .= $button->setId('Plus')->setOnClick('plus()')->render($this->_('+'), \NULL, $this->_('Increase volume'), '');
         $class = \Iris\Engine\Mode::IsDevelopment() ? '' : 'class="tuto_hidden"';
         $html .= "<span id=\"tuto_seconds\" $class>0</span>/";
         $html .= "<span id=\"tuto_maxseconds\" $class>0</span> &diams; ";
         $html .= "<span id=\"tuto_totalseconds\" $class>0</span>";
-        $this->_prepareScript($times, $channel);
+        $this->_prepareScript($duration, $channel);
         return $html;
     }
 
+    
+    
     /**
      * Completes the button bar with javascript code
      *  
-     * @param array(int) $times The time duration of each frame
+     * @param array(int) $duration The time duration of each frame
      * @param string $channel The publish/subscribe channel name (defautl NEXT)
      */
-    private function _prepareScript($times, $channel) {
+    private function _prepareScript($duration, $channel) {
         $this->_view->styleLoader('tuto_style', '.tuto_hidden{display:none;}');
-        $array = '[' . implode(',', $times) . ']';
+        $array = '[' . implode(',', $duration) . ']';
         $accumulator = 0;
-        $max = count($times);
-        $total[] = 0;
-        foreach ($times as $time) {
-            $accumulator += $time;
-            $total[] = $accumulator;
-        }
-        $totalTime = '[' . implode(',', $total) . ']';
+        $max = count($duration);
         $soundController = $this->_soundController;
         $autostart = $this->_autostart ? 'true' : 'false';
         $continueLabel = $this->_('Continue');
         $script = <<<STOP
     timing = $array;
-    total = $totalTime;
     max= $max;
     current = 0;
     sec = 0;
@@ -131,23 +124,17 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
 
     function tuto_init(){
         dojo.byId('tuto_maxseconds').innerHTML=timing[current];
-        frames=dojo.getObject('frames');
+        //frames=dojo.getObject('frames');
         soundController = dojo.byId('$soundController');
-        dojo.attr('First','onClick','reset()');
-        dojo.attr('Prev','onClick','previous()');
-        dojo.attr('Next','onClick','next()');
-        dojo.attr('Stop','onClick','stop()');
-        dojo.attr('Play','onClick','start()');
-        dojo.attr('Minus','onClick','minus()');
-        dojo.attr('Nosound','onClick','nosound()');
-        dojo.attr('Plus','onClick','plus()');
         if(running){
             soundController.play();
             dojo.addClass('Play','tuto_hidden');
         }
         else{
             dojo.addClass('Stop','tuto_hidden');
-        }
+        };
+        domClass.remove('tuto_container','loading_image');
+        domClass.remove('tuto_internal','tuto_hidden');
         tuto_timer();
     }
     
@@ -231,8 +218,7 @@ class ControlPanel extends \Iris\views\helpers\_ViewHelper {
     }
     
     function _updateTimer(){
-        dojo.byId('tuto_totalseconds').innerHTML=total[current];
-        dojo.byId('tuto_maxseconds').innerHTML=timing[current];
+        dojo.byId('tuto_maxseconds').innerHTML=timing;
         dojo.byId('tuto_seconds').innerHTML=0;
     }
    
