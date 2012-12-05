@@ -93,9 +93,6 @@ class Layout extends View implements \Iris\Design\iSingleton {
         parent::setViewScriptName($name);
     }
 
-    public function getViewScriptName() {
-        return $this->_viewScriptName;
-    }
     
     /**
      * Returns the name of the directory where to find the script
@@ -103,7 +100,7 @@ class Layout extends View implements \Iris\Design\iSingleton {
      * 
      * @return string 
      */
-    protected function _viewDirectory() {
+    public function viewDirectory() {
         return "layouts/lo";
     }
 

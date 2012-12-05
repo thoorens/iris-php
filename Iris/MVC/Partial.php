@@ -72,7 +72,7 @@ class Partial extends View {
      * @return string
      */
 
-    protected function _viewDirectory() {
+    public function viewDirectory() {
         return "scripts/";
     }
 

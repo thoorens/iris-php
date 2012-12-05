@@ -83,8 +83,9 @@ class Quote extends Partial {
      * @return string
      */
     protected function _getTemplate($scriptName) {
-        //iris_debug($this->_textTemplate);
-        return $this->_textTemplate;
+        $template = new Template(\NULL);
+        $template->setText($this->_textTemplate);
+        return $template;
     }
 
     

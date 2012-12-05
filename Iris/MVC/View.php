@@ -2,9 +2,6 @@
 
 namespace Iris\MVC;
 
-use Iris\Engine as ie,
-    Iris\Exceptions as ix;
-
 // See real class at bottom of file
 
 /*
@@ -68,33 +65,40 @@ class View {
     protected $_viewScriptName = '';
 
     /**
-     *
+     * The response which has selected the view
+     * 
      * @var Iris\Engine\Response
      */
     protected $_response;
-//    public function getActionView() {
-//        return $this->_viewScriptName;
-//    }
 
-    protected $_prerending = '';
+    /**
+     * Some text to be preprend to the final rendering
+     * @var string 
+     */
+    protected $_prerendering = '';
 
+    /**
+     * Sets an explicit view script file name
+     * 
+     * @param string $name
+     */
     public function setViewScriptName($name) {
         $this->_viewScriptName = $name;
     }
 
     /**
-     *
-     * @param type $name
-     * @param type $value 
+     * The magic set method to manage view internal variables
      * 
-     * @todo interdire accès aux variables non publiques
+     * @param string $name
+     * @param mixed $value 
      */
     public function __set($name, $value) {
         $this->_properties[$name] = $value;
     }
 
     /**
-     * Instance variable are maintained in an array
+     * The magic get method to manage view internal variables
+     * Instance variables are maintained in an array
      * 
      * @param type $name
      * @return type 
@@ -103,19 +107,24 @@ class View {
         return $this->_properties[$name];
     }
 
+    /**
+     * Adds a text to be prepend to the final rendering
+     * 
+     * @param string $text
+     */
     public function addPrerending($text) {
-        $this->_prerending .= $text;
+        $this->_prerendering .= $text;
     }
 
     /**
      * Evaluates the (implicit or explicit) view script
-     * and renders it as html string
+     * and renders it as an html string
      *  
      * @param string $forcedScriptName (usually NULL)
      * @return string 
      */
     public function render($forcedScriptName = NULL) {
-        if (strpos($this->_viewScriptName, '/')) {
+        if (strpos($this->_viewScriptName, '/') !== FALSE) {
             $forcedScriptName = $this->_viewScriptName;
         }
         // File generators and loaders have no view part, stop them and no time measurement.
@@ -125,59 +134,35 @@ class View {
         }
         // In case of simple quoting, there is no template file to treat
         elseif (($forcedScriptName == '__QUOTE__' or $this->_viewScriptName == '__QUOTE__')) {
-            echo $this->_prerending; // the "quotation" has been already prerended
+            echo $this->_prerendering; // the "quotation" has been already prerended
             return;
         }
         // In normal cases, there is a template file to render
         else {
-            
             $template = $this->_getTemplate($forcedScriptName);
-            $iviewFile = $this->_renderTemplate($template);
             ob_start();
-            echo $this->_prerending;
-            $this->_eval($iviewFile);
+            echo $this->_prerendering;
+            $this->_eval($template);
             $page = ob_get_clean();
             return $page;
         }
     }
 
-    /**
-     * Explores the array template and replace all template tags 
-     * by php short echo tags. Returns a string.
-     *  
-     * @param array $template
-     * @return string 
-     */
-    private function _renderTemplate($template) {
-        $inStyle = $inScript = FALSE;
-        foreach ($template as &$line) {
-            if (strpos($line, '<style') !== FALSE) {
-                $inStyle = TRUE;
-            }if (strpos($line, '<script') !== FALSE) {
-                $inScript = TRUE;
-            }
-            if (!$inStyle and !$inScript) {
-                $line = str_replace("{php}", '<?php ', $line);
-                $line = str_replace("{/php}", '?>', $line);
-                $line = preg_replace("/({)(.*?)(})/i", '<?= $this->$2?>', $line);
-            }
-            if (strpos($line, '</style>') !== FALSE) {
-                $inStyle = FALSE;
-            }
-            if (strpos($line, '</script>') !== FALSE) {
-                $inScript = FALSE;
-            }
-        }
-        return implode("", $template);
+    public function getViewScriptName() {
+        return $this->_viewScriptName;
+    }
+
+    public static function getViewType() {
+        return static::$_ViewType;
     }
 
     /**
      * Evals the text passed in argument (with a lot of error trapping)
      * 
-     * @param type $phtml
-     * @param type $scriptFileName The name of the script (for 
+     * @param Template $template
      */
-    private function _eval($phtml) {
+    private function _eval($template) {
+        $phtml = $template->renderTemplate();
         foreach ($this->_properties as $name => $value) {
             ${$name} = $value;
         }
@@ -201,7 +186,7 @@ class View {
             catch (\Iris\Exceptions\ErrorException $exception) {
                 $errMessage = $exception->getMessage();
                 $viewType = static::$_ViewType;
-                $file = self::$_LastUsedScript;
+                $file = $template->getIViewScriptName();
                 $trace = $exception->getTrace();
                 // take the line number from the trace containing eval()'d error
                 foreach ($trace as $traceItem) {
@@ -223,29 +208,11 @@ class View {
     /**
      * Get a template content. In view, by reading a file found by the loader
      * 
-     * @param type $forcedScriptName
+     * @param string $forcedScriptName
      * @return string 
      */
     protected function _getTemplate($forcedScriptName) {
-        $loader = ie\Loader::GetInstance();
-        $viewType = static::$_ViewType;
-        try {
-            // the case where a scriptName has been explicitely required (renderNow)
-            if (!is_null($forcedScriptName)) {
-                $viewFile = $loader->loadView($forcedScriptName, "scripts", $this->_response);
-            }
-            else {
-                $viewFile = $loader->loadView($this->_viewScriptName, $this->_viewDirectory(), $this->_response);
-            }
-        }
-        catch (\Iris\Exceptions\LoaderException $l_ex) {
-            throw new \Iris\Exceptions\LoaderException("Problem with $viewType " .
-                    $l_ex->getMessage(), NULL, $l_ex);
-        }
-        static::$_LastUsedScript = $viewFile; // for debugging purpose
-        $scriptFileName = IRIS_ROOT_PATH . '/' . $viewFile;
-        $file = file($scriptFileName);
-        return $file;
+        return new Template($forcedScriptName, $this);
     }
 
     /**
@@ -254,7 +221,7 @@ class View {
      * 
      * @return String 
      */
-    protected function _viewDirectory() {
+    public function viewDirectory() {
         $controllerName = $this->_response->getControllerName();
         $controller = str_replace("\\", "/", $controllerName);
         return "scripts/$controller";
@@ -289,10 +256,6 @@ class View {
         return $this->_response;
     }
 
-    public function __toString() {
-        return print_r($this, TRUE);
-    }
-
     /**
      * Gets the last used script name (for debugging or demo purpose)
      * @return string
@@ -301,5 +264,12 @@ class View {
         return static::$_LastUsedScript;
     }
 
+    /**
+     * Sets the last used script name (for debugging or demo purpose)
+     */
+    public static function SetLastScriptName($name) {
+        static::$_LastUsedScript = $name;
+    }
+    
 }
 

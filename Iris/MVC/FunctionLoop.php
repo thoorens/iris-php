@@ -63,7 +63,7 @@ class FunctionLoop extends \Iris\MVC\Partial {
      * @return string
      */
 
-    protected function _viewDirectory() {
+    public function viewDirectory() {
         return "scripts/";
     }
 
