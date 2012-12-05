@@ -40,12 +40,15 @@ class ToolTip extends _DojoHelper {
     protected $_label;
     private $_class=NULL;
 
-    public function help() {
+    public function help($var = \NULL) {
+        if(!is_null($var)){
+            $this->_view->$var = $this;
+        }
         return $this;
     }
 
     protected function _init() {
-        $this->_manager->addRequisite("dijit/Tooltip");
+        $this->_manager->addRequisite('"dijit/Tooltip"');
     }
 
     public function render($connectId=NULL,$text = NULL) {

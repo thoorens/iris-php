@@ -66,19 +66,18 @@ BASE;
 
         // loads necessary scripts for dojo functions
         $text .= "<script type=\"text/javascript\">\n";
-        foreach ($manager->getRequisites() as $requisite) {
-            $text .= "dojo.require(\"$requisite\");\n";
+        foreach ($manager->getRequisites() as $key => $requisite) {
+            $requisite = '"dojo/parser",'.$requisite;
+            $initCode = '';
+            $text .= "require([$requisite]$initCode);\n";
         }
-        $text .= "dojo.require(\"dojo.parser\");\n";
-        foreach($manager->getInitCode() as $initCode){
-            $text .= $initCode."\n";
+        /* @var $bubble \Dojo\Engine\Bubble */
+        foreach(\Dojo\Engine\Bubble::GetAllBubbles() as $bubble){
+            $text .= $bubble->html();
         }
         $text .= "</script>\n";
-
         return $text;
     }
 
-
 }
-
 ?>

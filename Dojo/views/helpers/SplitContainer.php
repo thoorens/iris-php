@@ -1,8 +1,6 @@
 <?php
 
-
-
-namespace Dojo\Forms\Elements;
+namespace Dojo\views\helpers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -21,27 +19,23 @@ namespace Dojo\Forms\Elements;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
+ *
  */
 
- /**
- * The Dojo version of the Form class
- * 
+/**
+ * This helper permits to use Split containers of Dojo. If javascript
+ * is not available on the client, it simulate the tab with buttons and interaction
+ * with the server. Another option is to display all the items, with <h5> title in front
+ * of them.
+ *
+
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ * @version $Id: $ * 
+ */
+class SplitContainer extends _Container{
 
-class Form extends \Iris\Forms\Elements\Form {
-
-    public function __construct($name, $action=NULL, $method='post') {
-        parent::__construct($name, $action, $method);
-        \Dojo\Manager::GetInstance()->addRequisite("dojoForm", '"dijit/form/Form"');
-    }
-
-    protected function _formTag() {
-        return sprintf('<form name="%s" id="%s" data-dojo-type="dijit.form.Form" action="%s" method="%s" %s>', $this->_name, $this->_name, $this->_action, $this->_method, $this->_renderAttributes());
-    }
+    protected static $_Type = 'SplitContainer';
 
 }
-
-?>

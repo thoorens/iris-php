@@ -35,7 +35,6 @@ namespace Dojo\views\helpers;
 class Mask extends _DojoHelper {
 
     protected static $_Singleton = TRUE;
-    
     private $_label;
 
     public function help() {
@@ -43,16 +42,16 @@ class Mask extends _DojoHelper {
     }
 
     protected function _init() {
-        $this->_manager->addRequisite('dijit.form.ToggleButton');
+        \Dojo\Engine\Bubble::GetBubble('toggle_button')->addModule('dijit/form/ToggleButton');
     }
 
-    public function buttonMask($text, $label=NULL) {
+    public function buttonMask($text, $label = NULL) {
         if (is_null($label)) {
-            $label = $text."_details";
+            $label = $text . "_details";
         }
         $this->_label = $label;
         return <<<HTML
-            <button dojoType="dijit.form.ToggleButton" iconClass="dijitCheckBoxIcon">
+   <button data-dojo-type="dijit/form/ToggleButton" data-dojo-props="iconClass:'dijitCheckBoxIcon', checked: false">
                  <script type="dojo/method" event="onChange" args="newValue">
                  if(newValue){
                      dojo.removeClass("$label", "dojoIrisMask");
@@ -65,8 +64,8 @@ class Mask extends _DojoHelper {
                 </button>
 HTML;
     }
-    
-    public function attributes(){
+
+    public function attributes() {
         $label = $this->_label;
         return "class=\"dojoIrisMask\" id=\"$label\"";
     }

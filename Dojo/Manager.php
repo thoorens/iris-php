@@ -29,7 +29,9 @@ namespace Dojo;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Manager implements \Iris\Design\iSingleton {
+class Manager{
+    use \Iris\Engine\tSingleton;
+    
     const GOOGLE="https://ajax.googleapis.com/ajax/libs/dojo/";
     const AOL ="http://o.aolcdn.com/dojo/";
     const YANDEX = "http://yandex.st";
@@ -108,19 +110,9 @@ class Manager implements \Iris\Design\iSingleton {
      * 
      * @var string 
      */
-    protected $_version = '1.7.0';
+    protected $_version = '1.8.0';
 
-    /**
-     * Obtaining the unique instance
-     * 
-     * @return Manager
-     */
-    public static function GetInstance() {
-        if (is_null(self::$_Instance)) {
-            self::$_Instance = new self();
-        }
-        return self::$_Instance;
-    }
+    
 
     /**
      * The constructor is private (singleton). It inits the basic CSS
@@ -289,14 +281,25 @@ class Manager implements \Iris\Design\iSingleton {
      */
     public function addRequisite($index, $name=NULL) {
         if (is_null($name)) {
-            $name = $index;
+            $requisite = $index;
+        }
+        elseif(is_array($name)){
+            $requisite = '"';
+            $requisite .= implode('","',$name);
+            $requisite .= '"';
+            //iris_debug($requisite);
+        }
+        else{
+            $requisite = $name;
         }
         if (!isset($this->_requisites[$index])) {
-            $this->_requisites[$index] = $name;
+            $this->_requisites[$index] = $requisite;
         }
         return $this;
     }
 
+    
+    
     /**
      * Add a style for Dojo
      * 
@@ -349,5 +352,3 @@ class Manager implements \Iris\Design\iSingleton {
     }
 
 }
-
-?>

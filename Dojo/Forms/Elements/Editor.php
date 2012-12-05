@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Dojo\Forms\Elements;
 
 /*
@@ -45,9 +43,10 @@ class Editor extends \Iris\Forms\Elements\AreaElement {
         $this->_hiddenCompanion = $hiddenCompanion;
         $dojoManager = \Dojo\Manager::GetInstance();
         $this->_dojoManager = $dojoManager;
-        $dojoManager->addRequisite("dijitEditor", "dijit.Editor");
-        $dojoManager->addRequisite('editordomready', 'dojo/domReady!');
-        $dojoManager->addRequisite('toolbarAlways', "dijit._editor.plugins.AlwaysShowToolbar");
+        $dojoManager->addRequisite('dojo_editor',[
+        "dijit/Editor",
+        'dojo/domReady!',
+        'dijit/_editor/plugins/AlwaysShowToolbar']);
         $dojoManager->addInitCode('editor_hidden', <<<JSEditor
             dojo.addOnLoad(function() {
             var editor = dijit.byId("$editorName");
@@ -76,7 +75,7 @@ JSEditor
         return $this;
     }
 
-    public function render($layout=\NULL) {
+    public function render($layout = \NULL) {
         if (count($this->_plugins)) {
             $plugins = implode("','", $this->_plugins);
             $this->setPlugins("['$plugins']");

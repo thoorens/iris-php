@@ -49,7 +49,6 @@ class AutoAnimation extends _Animation {
      */
     private $_lastTime = 0;
 
-
     /**
      * Makes an object appears slowly (or not) after some seconds. The starting method is registred
      * for later use in $_jobs (see subscribe()).
@@ -89,7 +88,6 @@ class AutoAnimation extends _Animation {
         }
         return $this->_fadeX([self::FADEIN, self::FADEOUT], $objectId, $delay, $duration, $start);
     }
-
 
     /**
      * 
@@ -153,7 +151,7 @@ STARTER;
         $script .= $opacityCode;
         // in case of more than one effect, use dojo.fx
         if ($multi) {
-            $this->_manager->addRequisite('dojo.fx');
+            $this->_manager->addRequisite('"dojo.fx"');
             $num = 0;
             foreach ($functions as $function) {
                 $startingTime = $num == 0 ? $startingTime : $delay[$num];
@@ -180,6 +178,133 @@ STARTER;
         return $script;
     }
 
-}
+    public function in($node, $button, $duration = 5000) {
+        $this->commonFade();
+        $script = <<< SCRIPT
+   require(["dojo/domReady!"], function(){
+        var io_args = {
+        node : "$node",
+        duration : $duration,
+        button : "$button",
+        dojofunction : "fadeIn" ,
+        opacity : 0
+        }
+        commonFade(io_args); 
+});
+SCRIPT;
+        $this->_view->javascriptLoader('fadeIn', $script);
+    }
 
-?>
+    public function waitIn($node, $delay = 5000, $duration = 5000) {
+        $this->commonFade();
+        $script = <<< SCRIPT
+   require(["dojo/domReady!"], function(){
+        var io_args = {
+        node : "$node",
+        duration : $duration,
+        dojofunction : "fadeIn" ,
+        delay : $delay,
+        opacity : 0
+        }
+        commonFade(io_args); 
+});
+SCRIPT;
+        $this->_view->javascriptLoader('waitIn', $script);
+    }
+
+    public function waitOut($node, $delay = 5000, $duration = 5000) {
+        $this->commonFade();
+        $script = <<< SCRIPT
+   require(["dojo/domReady!"], function(){
+        var io_args = {
+        node : "$node",
+        duration : $duration,
+        dojofunction : "fadeOut" ,
+        delay : $delay,
+        opacity : 1
+        }
+        commonFade(io_args); 
+});
+SCRIPT;
+        $this->_view->javascriptLoader('waitOut', $script);
+    }
+
+    public function out($node, $button, $duration = 5000) {
+        $this->commonFade();
+        $script = <<< SCRIPT
+      require(["dojo/domReady!"], function(){
+        var io_args = {
+        node : "$node",
+        duration : $duration,
+        button : "$button",
+        dojofunction : "fadeOut" ,
+        opacity : 1
+        }
+        commonFade(io_args); 
+});
+SCRIPT;
+        $this->_view->javascriptLoader('fadeOut', $script);
+    }
+
+    public function inOut($node, $button, $duration = 5000) {
+        $this->commonFade();
+        $script = <<< SCRIPT
+      require(["dojo/domReady!"], function(){
+        var io_args = {
+        node : "$node",
+        duration : $duration,
+        button : "$button",
+        dojofunction : "fadeInOut" ,
+        opacity : 0
+        }
+        commonFade(io_args); 
+});
+SCRIPT;
+        $this->_view->javascriptLoader('fadeInOut', $script);
+    }
+    
+    public function commonFade() {
+        // Test loaded to gain time
+        static $loaded = \FALSE;
+        if (!$loaded) {
+            $script = <<< SCRIPT
+    function commonFade(args){
+    require(["dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style","dojo/fx", "dojo/domReady!"],
+    function(dom, fx, on, style, coreFx){
+        // Style the dom node to opacity 0 or 1;
+        style.set(args.node, "opacity", args.opacity);
+        
+        // Function linked to the button to trigger the fade.
+        function fadeIt(){
+            style.set(args.node, "opacity", args.opacity);
+            if(args.dojofunction=='fadeIn'){
+                fx.fadeIn({node: args.node,duration: args.duration}).play();
+            }
+            else if(args.dojofunction=='fadeOut'){
+                fx.fadeOut({node: args.node,duration: args.duration}).play();
+            }
+            else if(args.dojofunction=='fadeInOut'){
+            alert('in out');
+                animIn = coreFx.fadeIn({node: args.node,duration: args.duration});
+                animOut = coreFx.fadeOut({node: args.node,duration: args.duration});
+                coreFx.combine([animIn, animOut]).play();
+            }
+            else if(args.dojofunction=='fadeOutIn'){
+            
+            }
+        }
+        if(args.button == null){
+            setTimeout(fadeIt,args.delay); 
+        }
+        else{
+            on(dom.byId(args.button), "click", fadeIt);
+        }
+    })
+    };
+SCRIPT;
+            $this->_view->javascriptLoader('commonFade', $script);
+            $loaded = \TRUE;
+        }
+    }
+
+}

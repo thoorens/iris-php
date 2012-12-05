@@ -18,7 +18,8 @@ class Button extends _DojoHelper {
     private $_id = \NULL;
 
     protected function _init() {
-        $this->_manager->addRequisite("dijit/form/Button");
+        $bubble = \Dojo\Engine\Bubble::GetBubble('toggle_button');
+        $bubble->addModule('dijit/form/Button');
     }
     
     private function _idAttribute() {
