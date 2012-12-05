@@ -32,6 +32,8 @@ namespace Iris\views\helpers;
  * has been generated. help() place an html comment and UpdateHeader()
  * replaces it by the necessary style and script loading
  * 
+ * @todo change this stupid description
+
  */
 class Month extends \Iris\views\helpers\_ViewHelper implements \Iris\Time\iTimeRenderer {
 

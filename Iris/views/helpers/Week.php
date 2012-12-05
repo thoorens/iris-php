@@ -31,6 +31,7 @@ namespace Iris\views\helpers;
  * A way to manage script and style references after all the page
  * has been generated. help() place an html comment and UpdateHeader()
  * replaces it by the necessary style and script loading
+ * @todo change this stupid description
  * 
  */
 class Week extends \Iris\views\helpers\_ViewHelper implements \Iris\Time\iTimeRenderer {
