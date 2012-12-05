@@ -29,7 +29,7 @@ namespace iris\views\helpers;
 
 /**
  * A way to manage script and style references after all the page
- * has been generated. help() place an html comment and UpdateHeader()
+ * has been generated. help() place an html comment and HeaderBodyTuning()
  * replaces it by the necessary style and script loading
  * 
  */
@@ -54,12 +54,16 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
         return self::LOADERMARK;
     }
 
+    
+    
     /**
      * Replaces the html comment by scripts and styles
+     * and add javascript code before &lt;/body>
      * 
      * @param string $text The page text before finalization 
+     * @param \Iris\Time\StopWatch $stopWatch
      */
-    public static function UpdateHeader(&$text) {
+    public static function HeaderBodyTuning(&$text, $stopWatch = \NULL, $componentId = 'iris_RTD') {
         $auto = self::GetInstance();
         $loaders = "\t<!-- LOADERS begin -->\n";
         foreach ($auto->_additionalHeadLoader as $loaderName) {
@@ -69,6 +73,10 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
         $loaders .= "\t<!-- LOADERS end -->\n";
         $text = str_replace(self::LOADERMARK,$loaders,$text);
         $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
+        $starter .= \Iris\views\helpers\Signature::computeMD5($text);
+        if(!is_null($stopWatch)){
+            $starter .= $stopWatch->jsDisplay($componentId);
+        }
         $text = str_replace('</body>',$starter."\n</body>",$text);
     }
 

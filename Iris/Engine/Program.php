@@ -75,7 +75,7 @@ class Program {
                     ->dispatch(); // pre and post in dispatch ??????
             $dispatcher->postDispatch();
             $text = ob_get_clean();
-            \Iris\views\helpers\AutoResource::UpdateHeader($text);
+            \Iris\views\helpers\AutoResource::HeaderBodyTuning($text, $this->stopWatch);
             echo $text;
         }
         catch (\Exception $exception) {
@@ -153,13 +153,7 @@ class Program {
         Mode::SetSiteMode($mode);
     }
 
-    /**
-     * The destructor adds, if convenient and necessary, a time duration 
-     * for the main script
-     */
-    public function __destruct() {
-        echo $this->stopWatch->jsDisplay();
-    }
+    
 
     /**
      * Error box with title and message, for error debugging purpose

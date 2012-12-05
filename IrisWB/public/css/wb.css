@@ -134,4 +134,9 @@ table.show td {
     background-color: white;
 }
 
-
+.iris_md5_ok {
+    color:#43e680;
+}
+.iris_md5_bad {
+    color:#e88;
+}

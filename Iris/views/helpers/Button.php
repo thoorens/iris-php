@@ -15,21 +15,7 @@ use Iris\System\Client;
  * @version $Id: $ */
 class Button extends _ViewHelper {
 
-    private $_id = \NULL;
-
-    private function _idAttribute() {
-        $id = $this->_id;
-        $attribute = '';
-        if (!is_null($id)) {
-            $attribute = sprintf(' id="%s" ', $id);
-        }
-        return $attribute;
-    }
-
-    public function setId($id) {
-        $this->_id = $id;
-        return $this;
-    }
+    private $_attributes = array();
 
     /**
      * A special array corresponding to a non existent button
@@ -60,23 +46,23 @@ class Button extends _ViewHelper {
             return('');
         }
         // no JS compatibility
-        $id = $this->_idAttribute();
+        $attributes = $this->_getAttributes();
         if (!\Iris\Users\Session::JavascriptEnabled()) {
             $href = is_null($url) ? '' : "href=\"$url\"";
             if ($this->_oldBrowser()) {
                 $class .= '_old_nav';
-                return "<a $href $id class=\"$class\" title=\"$tooltip\">&nbsp;$message&nbsp;</a>";
+                return "<a $href $attributes class=\"$class\" title=\"$tooltip\">&nbsp;$message&nbsp;</a>";
             }
             else {
                 // Bouton dans un lien 
                 return "<a $href>" .
-                        "<button class=\"$class\" $id title=\"$tooltip\">$message</button></a>";
+                        "<button class=\"$class\" $attributes title=\"$tooltip\">$message</button></a>";
             }
         }
         else {
             // Bouton avec Javascript
             $onclick = is_null($url) ? '' : "onclick=\"javascript:location.href='$url'\"";
-            return "<button class=\"$class\" $id title=\"$tooltip\" $onclick>$message</button>";
+            return "<button class=\"$class\" $attributes title=\"$tooltip\" $onclick>$message</button>";
         }
     }
 
@@ -102,6 +88,25 @@ class Button extends _ViewHelper {
                 return $version < 7 ? TRUE : FALSE;
         }
         return FALSE;
+    }
+
+    public function __call($name, $arguments) {
+        if (strpos($name, 'set') === 0) {
+            $key = lcfirst(substr($name, 3));
+            $this->_attributes[$key] = $arguments[0];
+            return $this;
+        }
+        else {
+            return parent::__call($name, $arguments);
+        }
+    }
+
+    private function _getAttributes() {
+        $html = '';
+        foreach ($this->_attributes as $name => $value) {
+            $html .= "$name=\"$value\" ";
+        }
+        return $html;
     }
 
 }
