@@ -103,6 +103,7 @@ class Template {
         ['{endif}', '<?php endif;?>'],
         // local variables
         ['/({\$)(\w+)(})/i', '<?=$$2?>'],
+        ['/({\()(.*)(\)})/i', '<?=$$2?>'],
         // instance variables and methods
         ['/({)(.*?)(})/i', '<?=$this->$2?>'],
     ];
