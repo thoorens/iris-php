@@ -98,14 +98,14 @@ class Template {
         ['/{foreach\((\w+),(\w+)\)}/i', '<?php foreach($$1 as $$2):?>'],
         ['{endforeach}', '<?php endforeach;?>'],
         // if then else
-        ['/{if\((.+)\)}/i', '<?php if($1):?>'],
+        ['/{if\((.+?)\)}/', '<?php if($1):?>'],
         ['{else}', '<?php else: ?>'],
         ['{endif}', '<?php endif;?>'],
         // local variables
-        ['/({\$)(\w+)(})/i', '<?=$$2?>'],
-        ['/({\()(.*)(\)})/i', '<?=$$2?>'],
+        ['/({\$)(\w+?)(})/', '<?=\$$2?>'],
+        ['/({\()(.*?)(\)})/', '<?=\$$2?>'],
         // instance variables and methods
-        ['/({)(.*?)(})/i', '<?=$this->$2?>'],
+        ['/({)(.*?)(})/', '<?=\$this->$2?>'],
     ];
 
     /**
