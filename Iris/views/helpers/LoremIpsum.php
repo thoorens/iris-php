@@ -81,7 +81,7 @@ class LoremIpsum extends _ViewHelper {
     private function _lorem($items, $lorem = TRUE, $paragraph = FALSE){
         $text = '';
         if ($lorem) {
-            $text = $this->_sentenceArray[0];
+            $text = $this->_sentenceArray[0].' ';
             $items--;
         }
         if ($paragraph) {
