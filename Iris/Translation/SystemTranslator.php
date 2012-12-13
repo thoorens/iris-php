@@ -123,9 +123,9 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
 // CRUD
         "Add %U %E| (type %P)" => "Ajouter %U %E| de type %P",
         'Display %D %E %I' => "Afficher %D %E %I",
-        'Modify %D %E %I' => 'Modifier %D %E %I',
-        'Delete %D %E %I' => 'Supprimer %D %E %I',
-        'Upload %D %E %I' => 'Téléverser %D %E %I',
+        'Modify %D %E %O' => 'Modifier %D %E %O',
+        'Delete %D %E %O' => 'Supprimer %D %E %O',
+        'Upload %D %E %O' => 'Téléverser %D %E %O',
         'Go to the first «%E»' => 'Aller sur la première fiche «%E»',
         'Go to the previous «%E»' => 'Aller sur la précédente fiche «%E»',
         'Go to the next «%E»' => 'Aller sur la fiche «%E» suivante',
