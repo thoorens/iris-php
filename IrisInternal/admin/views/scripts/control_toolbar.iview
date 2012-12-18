@@ -1,15 +1,18 @@
 <!--A tool bar for administration during development-->
-<style>
+{php}
+    $this->styleLoader('controltb',<<<END
     #iris_admintoolbar{
         font-size :0.8em;
-        background-color:<?= $color ?>;
+        background-color:$color;
         text-align: left;
-        color: <?= $reverseColor ?>;
+        color:$reverseColor;
     }
     span#iris_RTD{
         color: white;
     }
-</style>
+END
+);
+{/php}
 <div id="iris_admintoolbar">
     &nbsp; <span id="iris_RTD"></span>
     &nbsp;{ILO_goInternal('admin',TRUE)}
