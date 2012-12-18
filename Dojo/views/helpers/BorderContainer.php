@@ -60,7 +60,7 @@ class BorderContainer extends _Container {
         self::TRAILING => 'trailing',
     ];
     private $_layoutMode;
-    protected static $_Type = 'Border';
+    protected static $_Type = 'BorderContainer';
 
     protected function _init() {
         $this->_layoutMode = self::HEADLINE;
