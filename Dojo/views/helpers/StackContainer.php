@@ -36,7 +36,7 @@ namespace Dojo\views\helpers;
  */
 class StackContainer extends _Container{
 
-    protected static $_Type = 'Stack';
+    protected static $_Type = 'StackContainer';
     
     private $_position = self::NONE;
     
