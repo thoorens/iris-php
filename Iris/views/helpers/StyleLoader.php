@@ -71,7 +71,7 @@ class StyleLoader extends _LoaderHelper {
         foreach ($this->_styles as $style) {
             $text .= <<<ENDSTYLE
 <style>\n
-        $style;    
+        $style    
 </style>\n
 ENDSTYLE;
         }
