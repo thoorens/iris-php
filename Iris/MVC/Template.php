@@ -94,7 +94,7 @@ class Template {
         ['{php}', '<?php '],
         ['{/php}', '?>'],
         // foreach with and without key
-        ['/{foreach\((\w+),(\w+),(\w+)\)}/i', '<?php foreach($$1 as $$3=>$$2):?>'],
+        ['/{foreach\((\w+),(\w+),(\w+)\)}/i', '<?php foreach($$1 as $$2=>$$3):?>'],
         ['/{foreach\((\w+),(\w+)\)}/i', '<?php foreach($$1 as $$2):?>'],
         ['{endforeach}', '<?php endforeach;?>'],
         // if then else
