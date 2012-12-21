@@ -163,8 +163,8 @@ class View {
      */
     private function _eval($template) {
         $phtml = $template->renderTemplate();
-        foreach ($this->_properties as $name => $value) {
-            ${$name} = $value;
+        foreach ($this->_properties as $name => $_) {
+            ${$name} = &$this->_properties[$name];
         }
         if (\Iris\Engine\Mode::IsDevelopment() and !is_null(\Iris\Engine\Superglobal::GetGet('EvalError'))) {
             eval("?>" . $phtml);
