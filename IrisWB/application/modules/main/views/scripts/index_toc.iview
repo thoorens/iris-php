@@ -1,14 +1,14 @@
 <div>
     <h1>Table of tests</h1>
     <ul>
-        {foreach(sequence,value,key)}
+        {foreach(sequence,key,value)}
             {if(!is_array($value))}
                 <li><a href="{$key}">{$value}</a></li>  
             {else}
                 {php}$label = 'lbl_' . md5($key){/php}
                 <li><b>{dojo_mask()->buttonMask($key,$label)}</b>
                     <ul {dojo_mask()->attributes()}>
-                        {foreach(value,value2,key2)}
+                        {foreach(value,key2,value2)}
                             <li><a href="{$key2}">{$value2}</a></li>
                         {endforeach}   
                     </ul>

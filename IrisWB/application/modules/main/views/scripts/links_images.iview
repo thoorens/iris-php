@@ -1,0 +1,29 @@
+<div>
+    <div id="page">
+        <table>
+            <tr>
+                {php}$image1 = $this->image('jtleft.jpg'){/php}
+                <td>
+                    {(image1)}
+                </td>
+                <td>
+                    <pre>
+                        {showHtml($image1,\TRUE)}
+                    </pre>
+                </td>
+            </tr>
+            <tr>
+                {php}$image2 = $this->image('jtleft.jpg','Portrait','Portrait of Jacques Thoorens'){/php}
+                <td>
+                    {(image2)}
+                </td>
+                <td>
+                    <pre>
+                        {showHtml($image2,\TRUE)}
+                    </pre>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>

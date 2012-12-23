@@ -2,6 +2,7 @@
     <div id="page">
         {wbExplain($this)}
     </div>
-    {quote($text)}
-    
+    <div class="quoted">
+        {quote($text)}
+    </div>
 </div>

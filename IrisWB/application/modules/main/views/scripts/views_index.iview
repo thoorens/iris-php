@@ -3,5 +3,7 @@
         {wbExplain($this)}
     </div>
     {wbScriptNames($required)}
-    
+    <p>
+        We have no partial here....
+    </p>
 </div>

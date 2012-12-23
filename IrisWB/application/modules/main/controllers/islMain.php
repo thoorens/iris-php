@@ -47,7 +47,7 @@ class islMain extends \Iris\MVC\_Islet{
         // the action parameter should have been initialized in the helper Islet call 
         // and the tooltip comes from anywhere through Memory
         $this->__tooltip = $this->_fromMemory('tooltip');
-        $number = rand(11, 20);
+        $number = 15;
         $this->__result = $this->compute($number,'+');
         $this->__text = $text;
     }

@@ -1,0 +1,41 @@
+<div>
+    <div id="page">
+        {wbExplain($this)}
+        <p/>
+        <table class="show">
+            <tr>
+                <th>$this->var1</th>
+                <th>$var1</th>
+            </tr>
+            <tr>
+                <td>{(this->var1)}</td>
+                <td>{var1}</td>
+            </tr>
+            <tr>
+                <td class="title" colspan="2">$this->var1 = 'Value changed';</td>
+            </tr>
+            {php}$this->var1 = 'Value changed'{/php}
+            <tr>
+                <td>{(this->var1)}</td>
+                <td>{var1}</td>
+            </tr>
+            {php}$var1='Other change'{/php}
+            <tr>
+                <td class="title" colspan="2">$var1='Other change';</td>
+            </tr><tr>
+                <td>{(this->var1)}</td>
+                <td>{var1}</td>
+            </tr>
+        </table>
+            <h3>Variables in loop</h3>
+        <ul>    
+        {foreach(array,key,item)}
+            <li>{key} - {item}</li>
+        {endforeach}
+        </ul>
+        <h3>A local variable</h3>
+        {php}$test = "This is a test"{/php}
+        {test}
+    </div>
+
+</div>
