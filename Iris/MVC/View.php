@@ -108,6 +108,13 @@ class View {
     }
 
     /**
+     * A call back to copy properties from main view if necessary 
+     *   
+     */
+    protected function _copyMainViewProperties() {
+    }
+
+        /**
      * Adds a text to be prepend to the final rendering
      * 
      * @param string $text
@@ -148,10 +155,19 @@ class View {
         }
     }
 
+    /**
+     * In most case, a script name has been stored
+     * @return string
+     */
     public function getViewScriptName() {
         return $this->_viewScriptName;
     }
 
+    /**
+     * Returns the type of view (e.g. layout)
+     * 
+     * @return string
+     */
     public static function getViewType() {
         return static::$_ViewType;
     }
@@ -163,6 +179,8 @@ class View {
      */
     private function _eval($template) {
         $phtml = $template->renderTemplate();
+        // add external properties if necessary (e.g. from mainView to layout)
+        $this->_copyMainViewProperties();
         foreach ($this->_properties as $name => $_) {
             ${$name} = &$this->_properties[$name];
         }

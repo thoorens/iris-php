@@ -42,20 +42,20 @@ class Layout extends View implements \Iris\Design\iSingleton {
      * @var Layout
      */
     private static $_Instance = \NULL;
-    
+
     /**
      * A protection for constructor
      * @var boolean
      */
     private static $_Security = \TRUE;
-    
+
     /**
      * Type of view
      * 
      * @var string
      */
     protected static $_ViewType = 'layout';
-    
+
     /**
      *
      * @var type View
@@ -75,11 +75,12 @@ class Layout extends View implements \Iris\Design\iSingleton {
      * @param type $actionView 
      */
     public function __construct() {
-       if(self::$_Security){
-           throw new \Iris\Exceptions\InternalException("Singleton Layout can't be directly instancied");
-       }
-       self::$_Security = \TRUE;
+        if (self::$_Security) {
+            throw new \Iris\Exceptions\InternalException("Singleton Layout can't be directly instancied");
+        }
+        self::$_Security = \TRUE;
     }
+
     /**
      * Set a scriptname to the layout
      * after stripping out 'lo_' prefix if necessary
@@ -93,7 +94,6 @@ class Layout extends View implements \Iris\Design\iSingleton {
         parent::setViewScriptName($name);
     }
 
-    
     /**
      * Returns the name of the directory where to find the script
      * corresponding to the layout
@@ -130,12 +130,24 @@ class Layout extends View implements \Iris\Design\iSingleton {
      * @return type 
      */
     public function __get($name) {
+        // it may have been copied by _getProperties
         if(isset($this->_properties[$name])){
             $value = $this->_properties[$name];
         } else{
-            $value = $this->_mainView->$name;
+        $value = $this->_mainView->$name;
         }
         return $value;
+    }
+
+    /**
+     * Fills the properties with the properties from the main view.
+     * 
+     */
+    protected function _copyMainViewProperties() {
+        foreach ($this->_mainView->_copyMainViewProperties() as $name => $value) {
+            $this->$name = $value;
+        }
+        return $this->_properties;
     }
 
     /**
@@ -164,14 +176,12 @@ class Layout extends View implements \Iris\Design\iSingleton {
      * @return Layout
      */
     public static function GetInstance() {
-        if(is_null(self::$_Instance)){
+        if (is_null(self::$_Instance)) {
             self::$_Security = \FALSE;
             self::$_Instance = new Layout();
         }
         return self::$_Instance;
     }
-
-    
 
 }
 
