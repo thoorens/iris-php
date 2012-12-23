@@ -134,9 +134,28 @@ table.show td {
     background-color: white;
 }
 
+table.show tr td.title{
+    background-color: #FAA;
+    color:white;
+    font-weight: bold;
+    text-align: center;
+}
 .iris_md5_ok {
     color:#43e680;
 }
 .iris_md5_bad {
     color:#e88;
+}
+
+ul.crud li a {
+    
+    text-decoration: none;
+}
+
+.quoted{
+    color: #A00;
+}
+
+.quoted2{
+    color: #00A;
 }
