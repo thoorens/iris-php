@@ -101,10 +101,11 @@ class Template {
         ['/{if\((.+?)\)}/', '<?php if($1):?>'],
         ['{else}', '<?php else: ?>'],
         ['{endif}', '<?php endif;?>'],
-        // local variables
-        ['/({\$)(\w+?)(})/', '<?=\$$2?>'],
+        // view and local variables
+        ['/({)(\w+?)(})/', '<?=\$$2?>'],
+        // long expressions (var + method)
         ['/({\()(.*?)(\)})/', '<?=\$$2?>'],
-        // instance variables and methods
+        // view helpers
         ['/({)(.*?)(})/', '<?=\$this->$2?>'],
     ];
 
