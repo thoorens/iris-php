@@ -144,7 +144,7 @@ class Layout extends View implements \Iris\Design\iSingleton {
      * 
      */
     protected function _copyMainViewProperties() {
-        foreach ($this->_mainView->_copyMainViewProperties() as $name => $value) {
+        foreach ($this->_mainView->_properties as $name => $value) {
             $this->$name = $value;
         }
         return $this->_properties;
