@@ -3,13 +3,13 @@
     <ul>
         {foreach(sequence,key,value)}
             {if(!is_array($value))}
-                <li><a href="{$key}">{$value}</a></li>  
+                <li><a href="{key}">{value}</a></li>  
             {else}
                 {php}$label = 'lbl_' . md5($key){/php}
                 <li><b>{dojo_mask()->buttonMask($key,$label)}</b>
                     <ul {dojo_mask()->attributes()}>
                         {foreach(value,key2,value2)}
-                            <li><a href="{$key2}">{$value2}</a></li>
+                            <li><a href="{key2}">{value2}</a></li>
                         {endforeach}   
                     </ul>
                 </li>
