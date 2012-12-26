@@ -13,46 +13,45 @@ namespace modules\main\controllers;
 class loop extends _main {
 
     public function simpleAction() {
-        $this->__array = array(1,"two","trois","cuatro","fünf");
-        
+        $this->__numbers = [1, "two", "trois", "cuatro", "fünf"];
     }
-    
-    public function assocAction(){
-        $this->__array = array(
+
+    public function assocAction() {
+        $this->__numberTranslations = [
             'un' => 'uno',
             'deux' => 'dos',
             'trois' => 'tres',
             'quatre' => 'cuatro',
             'cinq' => 'cinco',
-            );
+        ];
     }
-    
-    public function recursiveAction(){
-        $data['Français'] = array(
+
+    public function recursiveAction() {
+        $words['Français'] = [
             'color' => 'BLUE1',
-            'categories' => array(
-                'Animaux' => array('chat','chien','cheval'),
-                'Nourriture' => array('pain','fromage','poisson'),
-                'Couleurs' => array('rouge','vert','bleu')
-            )
-        );
-        $data['English'] = array(
+            'categories' => [
+                'Animaux' => ['chat', 'chien', 'cheval'],
+                'Nourriture' => ['pain', 'fromage', 'poisson'],
+                'Couleurs' => ['rouge', 'vert', 'bleu'],
+            ]
+        ];
+        $words['English'] = [
             'color' => 'GREEN1',
-            'categories' => array(
-                'Animals' => array('cat','dog','horse'),
-                'Food' => array('bread','cheese','fish'),
-                'Colors' => array('red','green','blue')
-            )
-        );
-        $data['Español'] = array(
+            'categories' => [
+                'Animals' => ['cat', 'dog', 'horse'],
+                'Food' => ['bread', 'cheese', 'fish'],
+                'Colors' => ['red', 'green', 'blue'],
+            ]
+        ];
+        $words['Español'] = [
             'color' => 'ORANGE1',
-            'categories' => array(
-                'Animales' => array('gato','perro','caballo'),
-                'Comida' => array('pan','queso','pescado'),
-                'Colores' => array('rojo','verde','azul')
-            )
-        );
-        $this->__data = $data;
+            'categories' => [
+                'Animales' => ['gato', 'perro', 'caballo'],
+                'Comida' => ['pan', 'queso', 'pescado'],
+                'Colores' => ['rojo', 'verde', 'azul'],
+            ]
+        ];
+        $this->__words = $words;
     }
 
 }
