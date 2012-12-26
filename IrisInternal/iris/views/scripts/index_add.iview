@@ -1,7 +1,6 @@
-<?php
+{php}
 $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
-//$det2 = $this->dojo_details()->setAspectClass('dojoIrisMask2');
-?>
+{/php}
 <h1>
     Présentation du framework IRIS-PHP
 </h1>
