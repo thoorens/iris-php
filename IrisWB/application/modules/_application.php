@@ -25,7 +25,9 @@ class _application extends \Iris\MVC\_Controller {
         // TextSequence is deprecated and left only for information
         //\Iris\Structure\_Sequence::$DefaultSequenceType = "\\Workbench\\TextSequence";
         $this->_setLayout('app');
-        $this->_sequence = \workbench\TextSequence::GetInstance();
+        $sequence = \workbench\TextSequence::GetInstance();
+        \Iris\Engine\Memory::Set('sequence', $sequence);
+        $this->_sequence = $sequence;
         $this->__Title = $this->_sequence->getCurrentDesc();
     }
 
