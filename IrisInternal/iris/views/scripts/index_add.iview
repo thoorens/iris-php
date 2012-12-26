@@ -12,23 +12,18 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
 </p>
 
 <ul>
-    <?php
-    foreach ($features as $feature):
-    echo "<li>" . $det->details($feature->Title, $feature->Details) . "</li>\n";
-    endforeach;
-    $det->connectEvent('onclick');
-    ?>
+    {foreach(features,feature)}
+        <li>{(det->details($feature->Title, $feature->Details))}</li>
+    {endforeach}
 </ul>
 <p>
     La version 1.0 du framework est prévue pour la fin de l'année 2012. Le projet sera 
     sous licence GPL 3.0. Les caractéristiques suivantes seront ajoutées dans le framework.
 </p>
 <ul>
-    <?php
-    foreach ($plans as $plan) :
-    echo "<li>" . $det->details($plan->Title, $plan->Details) . "</li>\n";
-    endforeach;
-    ?>
+    {foreach(plans,plan)}
+        <li>{(det->details($plan->Title, $plan->Details))}</li>
+    {endforeach}
 </ul>
 <p>
     Deux sites en cours de création sont disponibles pour les futurs utilisateurs du framework:
@@ -61,7 +56,6 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
         Ces changements pourraient être intégrés par la suite au projet principal.
     </li>
 </ul>
-<?php
-echo $det->connectEvent('onclick');
+{(det->connectEvent('onclick'))};
 
 
