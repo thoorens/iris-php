@@ -44,7 +44,7 @@ namespace CLI {
                     $coder = new Code($this->_analyser);
                     $coder->makeVirtualParameter(TRUE);
                     break;
-// Show all parameters for the default project
+// Shows all parameters for the default project
                 case 'status':
                     $projectConfig = $this->_analyser->loadDefaultProject();
                     echo "-------------------------------------------------------------\n";
@@ -52,6 +52,7 @@ namespace CLI {
                     echo "-------------------------------------------------------------\n";
                     $this->_analyser->displayParameters();
                     break;
+// Lists all existing projects                 
                 case 'list':
                     echo "-------------------------------------------------------------\n";
                     echo "List of existing project(s) \n";
@@ -80,27 +81,31 @@ namespace CLI {
          * Locks a project, to prevent its deletion
          */
         protected function _lockproject() {
-            $projectName = $this->_protectProject(1);
-            echo "$projectName has been locked.\n";
+            $projectName = $this->_protectProject(\TRUE);
         }
 
         /**
          * Unlocks a project to permit its deletion
          */
         protected function _unlockproject() {
-            $projectName = $this->_protectProject(0);
-            echo "$projectName has been unlocked.\n";
+            $projectName = $this->_protectProject(\FALSE);
         }
 
+        /**
+         * Marks an existing project as been (un)locked. Exception when project
+         * @param boolean $status
+         * @throws \Iris\Exceptions\CLIException 
+         */
         private function _protectProject($status) {
             $configs = $this->_analyser->getConfigs();
             $projectName = $this->_analyser->getProjectName();
             if (!isset($configs[$projectName])) {
                 throw new \Iris\Exceptions\CLIException("The project '$projectName' doesn't exist. Choose another one.\n");
             }
-            $configs[$projectName]->Locked = $status;
+            $configs[$projectName]->Locked = $status ? 1 : 0 ;
             $this->_updateConfig($configs);
-            return $projectName;
+            $finalState = $status ? 'locked' : 'unlocked';
+            echo "The project $projectName has been $finalState.\n";
         }
 
         protected function _docproject() {
