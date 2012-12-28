@@ -178,8 +178,8 @@ APACHE;
                 $doneJobs = self::CONTROLLER + self::ACTION;
             }
             elseif (!file_exists("$destination/modules/$module/views/scripts/{$controller}_$action.iview")) {
-                echo "$action\n";
                 $this->_newAction($destination, $module, $controller, $action);
+                $doneJobs = self::ACTION;
             }
         }
         if ($doneJobs == 0) {
