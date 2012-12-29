@@ -107,8 +107,10 @@ abstract class _Container extends _DojoHelper {
      */
     protected $_width = 650;
     protected $_specials = array();
+    
+    
 
-    /**
+        /**
      * This methods initializes the container, gives it a name seen by the view.
      * 
      * @param string $varName the name of the container seen by the view containing it
@@ -121,7 +123,7 @@ abstract class _Container extends _DojoHelper {
             $this->_type = static::$_Type;
             $type = $this->_type;
             \Dojo\Engine\Bubble::GetBubble($this->_type)->addModule("dijit/layout/$type")
-                    ->addModule("dojo/parser")->addModule("dijit/layout/ContentPane");
+                    ->addModule("dojo/parser")->addModule("dijit/layout/ContentPane")->addModule("dijit/layout/LinkPane");
         }
         if (!is_null($varName)) {
             $this->_view->$varName = $this;
@@ -145,7 +147,7 @@ abstract class _Container extends _DojoHelper {
         $html = $this->_buttons(self::TOP);
         // for javascript, returns a div with Dojo attributes
         if ($this->_JS) {
-            $html .= '<div id="' . $this->_name . '" design="headline" style="height:' . $this->_height;
+            $html .= '<div id="' . $this->_name . '" style="height:' . $this->_height;
             $html .= 'px;width:' . $this->_width . 'px" data-dojo-type="dijit.layout.' . $this->_type.'"';
             $html .= $this->_specialAttributes();
             $html .= ' data-dojo-id="' . $this->_name . '" >';
@@ -162,7 +164,7 @@ abstract class _Container extends _DojoHelper {
                 }
             }
         }
-        return $html;
+        return $html."\n";
     }
 
     /**
@@ -171,7 +173,7 @@ abstract class _Container extends _DojoHelper {
      * @return string
      */
     public function endMaster() {
-        $html = "\n</div>\n";
+        $html = "\n</div><!-- end ".$this->_name."-->\n";
         $html .= $this->_buttons(self::BOTTOM);
         return $html;
     }
@@ -225,6 +227,13 @@ abstract class _Container extends _DojoHelper {
         return $item->render($this->_JS);
     }
 
+    public function linkedItem($itemIndex, $url){
+        $item = $this->getItem($itemIndex);
+        $item->setLink($url);
+        return $item->render($this->_JS);
+    }
+    
+    
     /**
      * If set to true (default), the display of the different items is managed by the server.
      * The Url has to be set to create the links

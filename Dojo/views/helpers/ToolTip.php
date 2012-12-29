@@ -66,14 +66,11 @@ class ToolTip extends _DojoHelper {
             $class = " class=\"$className\"";
         }
         return <<< JS
-        <div data-dojo-type="dijit/Tooltip" $class data-dojo-props="connectId:'$connectId',position:['$this->_position'], showDelay:'$this->_showDelay'">
+        <div class="dijitTooltipContainer" data-dojo-type="dijit/Tooltip" $class 
+            data-dojo-props="connectId:'$connectId',position:['$this->_position'], showDelay:'$this->_showDelay'">
         $text
         </div >
 JS;
-    }
-
-    public function setRequiredDone($requiredDone) {
-        $this->_requiredDone = $requiredDone;
     }
 
     public function setConnectId($connectId) {

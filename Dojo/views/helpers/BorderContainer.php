@@ -100,7 +100,7 @@ class BorderContainer extends _Container {
 
     
     protected function _specialAttributes() {
-        $mode = $this->_layoutMode = self::HEADLINE ? 'headline' : 'sidebar';
+        $mode = $this->_layoutMode == self::HEADLINE ? 'headline' : 'sidebar';
         $this->_specials[] = "design:'$mode'";
         //$this->_specials[] = "gutters:true";
         //$this->_specials[] = "liveSplitters:true";

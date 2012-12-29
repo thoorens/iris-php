@@ -33,7 +33,8 @@ namespace Dojo\views\helpers;
  */
 class Details extends _DojoHelper {
 
-        
+    protected $_id = 'det';
+    
     /**
      * The class who must mask the text (something like "display:none;"
      * 
@@ -102,7 +103,17 @@ class Details extends _DojoHelper {
         $this->_tag = $tag;
     }
 
-       
+    
+    public function getId() {
+        return $this->_id."_";
+    }
+
+    public function setId($id) {
+        $this->_id = $id;
+        return $this;
+    }
+
+        
     /**
      * A way to change the sensible zone: it's a format string with
      * two parameters %s : the first (required) is the id of toggler,
@@ -129,11 +140,12 @@ class Details extends _DojoHelper {
             
         }
         else {
-            $toggler = sprintf($this->_toggler, "beg_$num",$this->_($label,TRUE));
+            $det = $this->getId();
+            $toggler = sprintf($this->_toggler, "tog_$det$num",$this->_($label,TRUE));
             $html = <<<HTML
 $beginning
 $toggler
-<$this->_tag id="det_$num" class="$this->_maskClass $this->_aspectClass">$details
+<$this->_tag id="$det$num" class="$this->_maskClass $this->_aspectClass">$details
 </$this->_tag>
 HTML;
         }
@@ -146,16 +158,24 @@ HTML;
      * @param type $sensibleClass
      * @return string 
      */
-    public function connectEvent($event,$sensibleClass='beg_') {
+    public function connectEvent($event) {
+        $det = $this->getId();
         $html = '<script type="text/javascript">' . "\n";
         $html .= 'dojo.addOnLoad(function() {' . "\n";
         for ($i = 1; $i <= $this->_num; $i++) {
             $html .= sprintf('dojo.connect(dojo.byId("%s"), "%s",function (e){dojo.toggleClass("%s", "%s")});' . "\n", 
-                    $sensibleClass.$i, $event, "det_$i", $this->_maskClass);
+                    'tog_'.$det.$i, $event, "$det$i", $this->_maskClass);
         }
         $html .="});\n</script>\n";
         return $html;
     }
-
+    
+    public function connectEvents($events){
+        $html = '';
+        foreach($events as $event){
+            $html .= $this->connectEvent($event);
+        }
+        return $html;
+    }
 }
 

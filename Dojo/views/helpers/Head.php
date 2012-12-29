@@ -59,9 +59,11 @@ class Head extends \Iris\views\helpers\_LoaderHelper{
         }
         $text .= <<< BASE
 <link rel="stylesheet" type="text/css" href="$source/dijit/themes/$style/$style.css">
-<script type="text/javascript" src="$script"
-djConfig="parseOnLoad:$parseOnLoad, isDebug:$debug">
-</script>\n
+<script>
+    dojoConfig = {parseOnLoad: $parseOnLoad, debug:$debug}
+</script>
+<script type="text/javascript" src="$script">
+</script>
 BASE;
 
         // loads necessary scripts for dojo functions
