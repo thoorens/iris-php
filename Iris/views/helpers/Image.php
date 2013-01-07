@@ -43,16 +43,19 @@ class Image extends _ViewHelper {
      * @return string 
      */
     public function help($file, $alt = 'Image', $title = NULL, $dir = \NULL, $class = '', $attributes = '') {
-        //if(file)
+        // providing a default alt attribute
         if (is_null($alt)) {
             $alt = "Image $file";
         }
+        // providing a default title attribute
         if (is_null($title)) {
             $title = $alt;
         }
+        // if $dir is not provided, prepend /images to the file name
         if (is_null($dir) or $dir == '') {
             $dir = '/images';
         }
+        // mention class if it has one
         if ($class != '') {
             $class = 'class="' . $class . '"';
         }
