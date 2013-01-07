@@ -42,7 +42,7 @@ class layout extends _testLayout{
                
         
         if(is_null($number)){
-            $number = rand(2,10);
+            $number = 5;
         }
         // has 3 subcontrollers and 3 islets
         $this->_setLayout('testlayout2');
