@@ -122,7 +122,7 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         'Retype password:' => 'Retapez le mot de passe:',
 // CRUD
         "Add %U %E| (type %P)" => "Ajouter %U %E| de type %P",
-        'Display %D %E %I' => "Afficher %D %E %I",
+        'Display %D %E %O' => "Afficher %D %E %O",
         'Modify %D %E %O' => 'Modifier %D %E %O',
         'Delete %D %E %O' => 'Supprimer %D %E %O',
         'Upload %D %E %O' => 'Téléverser %D %E %O',
