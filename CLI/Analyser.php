@@ -3,7 +3,7 @@
 namespace CLI;
 
 define('LINUX_BASE_DIR', '/opt/Iris/library/');
-define('WINDOWS_BASE_DIR', 'c:/program/Iris/library/');
+define('WINDOWS_BASE_DIR', 'c:/opt/Iris/library/');
 
 /*
  * This file is part of IRIS-PHP.
@@ -25,7 +25,7 @@ define('WINDOWS_BASE_DIR', 'c:/program/Iris/library/');
  *
  */
 
-/** 
+/**
  * The main entry for CLI. The command line is analysed and
  * a serie of parameters are initialized from CL options
  * and ini files in ~user/.iris (iris.ini and projects.ini)
@@ -38,6 +38,7 @@ class Analyser {
     /**
      * Possible values for the processor
      */
+
     const PROJECT = 1;  // manage a project
     const CORECODE = 2; // create Core class
     const SHOW = 3;
@@ -45,6 +46,9 @@ class Analyser {
     const WORKDONE = 5;
     const CODE = 6;
     const PASSWORD = 7;
+
+    private $_windows;
+    private $_linux;
 
     /**
      * The choiced processor after analysis
@@ -104,7 +108,7 @@ class Analyser {
         // watermaking
         'o:' => 'copyright:',
         'w:' => 'password:',
-        // 
+            // 
     );
 
     /**
@@ -155,6 +159,13 @@ class Analyser {
      * @param string $systemDir the directory containing the framework
      */
     public function __construct($argv, $systemDir = LINUX_BASE_DIR) {
+        if (PHP_OS == 'WINNT') {
+            $this->_linux = \FALSE;
+        }
+        else {
+            $this->_linux = \TRUE;
+        }
+        $this->_windows = !$this->_linux;
         self::$_IrisSystemDir = $systemDir;
         // by default, there is no default base dir for the project 
         $this->_defaults['ProjectDir'] = '';
@@ -184,7 +195,8 @@ class Analyser {
                 // -------------------
                 case 'c': case 'createproject':
                     // special requirement for createproject
-                    if ($value[0] != '/') {
+                    if (($this->_linux and $value[0] != '/')
+                            or ($this->_windows and $value[1] != ':')) {
                         throw new \Iris\Exceptions\CLIException('The path to project must be absolue');
                     }
                 // NO BREAK HERE createproject continues
@@ -192,15 +204,28 @@ class Analyser {
                 case 'L': case 'lockproject':
                 case 'U': case 'unlockproject':
                 case 'r': case 'removeproject':
-                    $dir = $value;
-                    // if path given, create name
-                    if ($dir[0] == '/') {
-                        $name = substr(str_replace('/', '_', $dir), 1);
+                    $dir = str_replace('\\', '/', $value);
+                    if ($this->_linux) {
+                        // if path given, create name
+                        if ($dir[0] == '/') {
+                            $name = substr(str_replace('/', '_', $dir), 1);
+                        }
+                        // if name given, create path (not possible for creating project see above)
+                        else {
+                            $name = $dir;
+                            $dir = "/" . str_replace('_', '/', $name);
+                        }
                     }
-                    // if name given, create path (not possible for creating project see above)
-                    else {
-                        $name = $dir;
-                        $dir = "/" . str_replace('_', '/', $name);
+                    else { // windows
+                        if ($dir[1] == ':') {
+                            $name = str_replace('/', '_', $dir);
+                            $name[1] = '-';
+                        }
+                        else {
+                            $name = $dir;
+                            $dir = str_replace('_', '/', $name);
+                            $dir[1] = ':';
+                        }
                     }
                     $this->_parameters['ProjectName'] = $name;
                     $this->_parameters['ProjectDir'] = $dir;
@@ -269,13 +294,13 @@ class Analyser {
                     $this->_option = $option;
                     $this->_processor = self::PARAM;
                     break;
-                
+
                 case 'N': case 'menuname':
                     $this->_parameters['MenuName'] = $value;
                     $this->_option = $option;
                     $this->_processor = self::PARAM;
                     break;
-                
+
                 case 'n': case 'makemenu':
                     $this->_processor = self::PROJECT;
                     $this->_option = $option;
@@ -302,7 +327,7 @@ class Analyser {
                     $this->_option = $option;
                     $this->_parameters['FileName'] = $value;
                     break;
-                
+
                 // password management
                 case 'w': case 'password':
                     $this->_processor = self::PASSWORD;
@@ -359,7 +384,7 @@ class Analyser {
             case self::PASSWORD:
                 require_once self::GetIrisSystemDir() . '/Iris/Users/_Password.php';
                 $password = \Iris\Users\_Password::EncodePassword($this->_option);
-                echo $password."\n";
+                echo $password . "\n";
                 break;
             // Nothing to do
             case self::WORKDONE:
@@ -416,7 +441,7 @@ class Analyser {
      * @param type $sendit
      * @return \Iris\SysConfig\Config 
      */
-    public function loadDefaultProject($sendit=TRUE) {
+    public function loadDefaultProject($sendit = TRUE) {
         $configs = $this->_configs;
         $defaultProject = $configs['Iris']->DefaultProject;
         if (is_null($defaultProject) or $defaultProject == '') {
@@ -662,7 +687,7 @@ class Analyser {
      * @return string 
      */
 
-    public function promptUser($promptStr, $defaultVal=false) {
+    public function promptUser($promptStr, $defaultVal = false) {
         ;
 
         if ($defaultVal) {                             // If a default set

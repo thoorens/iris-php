@@ -80,7 +80,7 @@ namespace CLI;
      * @param array $configs 
      */
     protected function _updateConfig($configs) {
-        $os = \Iris\OS\_OS::GetOSInstance();
+        $os = \Iris\OS\_OS::GetInstance();
         $paramDir = $os->getUserHomeDirectory() . "/.iris";
         $this->_analyser->writeParams($paramDir . "/projects.ini", $configs);
     }

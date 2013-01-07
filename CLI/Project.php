@@ -126,7 +126,7 @@ namespace CLI {
             if (count($CommandLine) > 1 and $CommandLine[1] == 'simulate') {
                 $simulating = TRUE;
             }
-            $this->_os = \Iris\OS\_OS::GetOSInstance();
+            $this->_os = \Iris\OS\_OS::GetInstance();
             $this->_os->setSimulate($simulating);
             $projectDir = $this->_analyser->getProjectDir();
             $projectName = $this->_analyser->getProjectName();
@@ -199,7 +199,7 @@ namespace CLI {
             if (!isset($configs[$this->_analyser->getProjectName()])) {
                 throw new \Iris\Exceptions\CLIException('You cannot remove a non existent project');
             }
-            $os = \Iris\OS\_OS::GetOSInstance();
+            $os = \Iris\OS\_OS::GetInstance();
             $CommandLine = $this->_analyser->getCommandLine();
             $simulate = TRUE;
             if (count($CommandLine) > 1 and $CommandLine[1] == 'confirm') {
@@ -286,7 +286,7 @@ namespace CLI {
          * @param boolean $simulating If TRUE only display the file to be deleted
          */
         public static function EmptyDir($dir, $level = 0, $simulating = TRUE) {
-            $os = \Iris\OS\_OS::GetOSInstance();
+            $os = \Iris\OS\_OS::GetInstance();
             $os->setSimulate($simulating);
             $os->tabLevel = $level;
             if (filetype($dir) == 'link') {

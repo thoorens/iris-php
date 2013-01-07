@@ -158,7 +158,7 @@ APACHE;
      * @param string $action 
      */
     public function makeNewCode($module, $controller, $action) {
-        $this->_os = \Iris\OS\_OS::GetOSInstance();
+        $this->_os = \Iris\OS\_OS::GetInstance();
         $configs = $this->_analyser->getConfigs();
         $defaultProject = $configs['Iris']->DefaultProject; //must exist
         $projectDir = "/" . str_replace('_', '/', $defaultProject);
@@ -317,7 +317,7 @@ TEXT;
                 $newFile .= $line;
             }
         }
-        $os = \Iris\OS\_OS::GetOSInstance();
+        $os = \Iris\OS\_OS::GetInstance();
         $os->file_put_contents($fileName, $newFile);
     }
 

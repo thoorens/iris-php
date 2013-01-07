@@ -29,7 +29,6 @@
 define('IRISVERSION', '0.9 - beta');
 define('CLI', 'CLI');
 define('BADINI', "Your param file does not seem to be a valid one. Please check your configuration according to the manual instructions.\n");
-$cli = CLI;
 
 /**
  * To prevent a loading of Loader which contains \Iris\Engine\Debug
@@ -38,6 +37,7 @@ class Debug {
 
     /**
      * Display a var_dump between <pre> tags
+     * 
      * @param mixed $var : a var or text to dump
      */
     public static function Dump($var) {
@@ -49,9 +49,10 @@ class Debug {
 
     /**
      * Display a var_dump between <pre> tags and die
+     * 
      * @param mixed $var : a var or text to dump
      */
-    public static function DumpAndDie($var, $dieMessage=NULL) {
+    public static function DumpAndDie($var, $dieMessage = NULL) {
         if (is_null($dieMessage)) {
             echo "<hr\>\n";
             $trace = debug_backtrace();
@@ -62,7 +63,7 @@ class Debug {
     }
 
 //@todo move to another class
-    public static function Kill($message=NULL) {
+    public static function Kill($message = NULL) {
         die($message); // the only authorized die in programm
     }
 
@@ -75,7 +76,19 @@ class Debug {
 
 }
 
-function iris_debug($var, $die = TRUE, $Message=NULL) {
+// end if class Debug
+
+/* =============================================================
+ * FUNCTIONS
+ */
+
+/**
+ * 
+ * @param type $var
+ * @param type $die
+ * @param type $Message
+ */
+function iris_debug($var, $die = TRUE, $Message = NULL) {
     if ($die) {
         \Debug::DumpAndDie($var, $Message, 1);
     }
@@ -84,34 +97,87 @@ function iris_debug($var, $die = TRUE, $Message=NULL) {
     }
 }
 
-// Create or load INI file
-//@todo Unix dependant
-$paramDir = getenv('HOME') . "/.iris";
-if (!file_exists($paramDir)) {
-    echo "Creating $paramDir\n";
-    mkdir($paramDir);
+/**
+ * 
+ * @param type $var
+ * @return type
+ */
+function shellvar($var) {
+    return str_replace("\n", "", shell_exec("echo %$var%"));
 }
-$paramFile = "$paramDir/iris.ini";
-if (!file_exists($paramFile)) {
-    if ($argc == 1) {
-        echo "You must supply the path to your Iris-PHP installation to init your parameter file\n";
-        die("before beeing able to use this program. See documentation if necessary.\n");
+
+function getParamFile($userDir) {
+
+    global $argc;
+    global $argv;
+    if(is_null($userDir)){
+        echo "Iris PHP is not able to find where where to read or write your parameter files\.n";
+        die ('IRIS PHP CLI will not be functional on your system, sorry.');
     }
-    else {
-        $pathIris = $argv[1];
-        if (!file_exists("$pathIris/$cli/Analyser.php")) {
-            die("$pathIris does not seem to be a valid Iris-PHP instrallation directory.\n");
+    $paramDir = "$userDir/.iris";
+    if (!file_exists($paramDir)) {
+        echo "Creating $paramDir\n";
+        mkdir($paramDir);
+    }
+    $paramFile = "$paramDir/iris.ini";
+    // if not parameter file, create it
+    if (!file_exists($paramFile)) {
+        if ($argc == 1) {
+            echo "You must supply the path to your Iris-PHP installation to init your parameter file\n";
+            die("before beeing able to use this program. See documentation if necessary.\n");
         }
-        $data = <<<STOP
+        else {
+            $pathIris = $argv[1];
+            if (!file_exists("$pathIris/CLI/Analyser.php")) {
+                die("$pathIris does not seem to be a valid Iris-PHP installation directory.\n");
+            }
+            $data = <<<STOP
 [Iris]
 PathIris = $pathIris
 STOP;
-        file_put_contents($paramFile, $data);
-        echo "Parameter file $paramFile has been created\n";
-        die("Now you can use this program (iris.php --help for help)\n");
+            file_put_contents($paramFile, $data);
+            echo "Parameter file $paramFile has been created\n";
+            die("Now you can use this program (iris.php --help for help)\n");
+        }
+    }
+    return [$paramFile, file($paramFile)];
+}
+
+/* End of functions
+ * =============================================================================
+ */
+
+// in which OS has PHP been compiled ?
+if (PHP_OS == 'WINNT') {
+    $windows = \TRUE;
+}
+else {
+    $windows = \FALSE;
+}
+
+// Check existence of ini file
+if ($windows) {
+    // expect Vista/7/8  
+    $userDir = shellvar("localappdata");
+    if (!file_exists($userDir)) {
+        // expect 2000/XP
+        $userDir = shellvar("appdata");
+        // impossible to locate the user parameter directory
+        if (!file_exists($userDir)) {
+            $userDir = \NULL;
+        }
     }
 }
-$iniFile = file($paramFile);
+else { // Unix
+    $userDir = getenv('HOME');
+    // impossible to locate the user parameter directory
+    if (!file_exists($userDir)) {
+        $userDir = \NULL;
+    }
+}
+
+list($paramFile, $iniFile) = getParamFile($userDir);
+$paramDir = dirname($paramFile);
 
 // Analyse INI file
 if (count($iniFile) < 2) {
@@ -127,19 +193,21 @@ if (trim($para) != 'PathIris') {
 $pathIris = str_replace('"', '', trim($value));
 
 // load some classes (with dependences)
-$classes = array(
+$cli = CLI;
+$classes = [
     $cli . '/Analyser', $cli . '/_Process',
-    'Iris/Engine/tSingleton','Iris/Engine/Memory', 'Iris/Log', 'Iris/Exceptions/_Exception', 'Iris/Exceptions/CLIException',
+    $cli . '/_Help', $cli . '/Help/French',
+    'Iris/Engine/tSingleton', 'Iris/Engine/Memory', 'Iris/Log', 'Iris/Exceptions/_Exception', 'Iris/Exceptions/CLIException',
     'Iris/SysConfig/_Parser', 'Iris/SysConfig/ConfigIterator', 'Iris/SysConfig/Config', 'Iris/SysConfig/IniParser',
-    'Iris/OS/_OS', 'Iris/OS/Unix', 'Iris/OS/Windows',
+    'Iris/OS/_OS', 'Iris/OS/Unix', 'Iris/OS/Windows','Iris/OS/XP',
     'Iris/Exceptions/NotSupportedException',
-    $cli . '/_Help', $cli . '/Help/French');
+    ];
 foreach ($classes as $classe) {
     //echo "LOADING $pathIris/$classe\n";
     include_once "$pathIris/$classe.php";
 }
 
-\Iris\OS\_OS::GetOSInstance();
+\Iris\OS\_OS::GetInstance();
 
 try {
 
@@ -169,6 +237,9 @@ catch (Exception $ex) {
 }
 // update INI file
 //$analyser->writeParams($paramDir . "/projects.ini");
+
+
+
 
 
 
