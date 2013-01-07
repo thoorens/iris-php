@@ -23,7 +23,7 @@ namespace Iris\OS;
 
 /**
  * Some functions are specifics or behave differently in Windows.
- * Futhermore there is no Windows but WindowsS. This class is for Windows 7 and 8
+ * Futhermore the is no Windows but WindowsS
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -33,30 +33,59 @@ namespace Iris\OS;
  * Unix. The joke apart, it is a way to simplify.
  * 
  */
-class Windows extends _OS{
+class XP extends _OS{
     
+    protected function __construct() {
+        $version = self::_DetectOS();
+        throw new \Iris\Exceptions\CLIException("For now, Iris CLI does not support $version");
+        parent::__construct();
+    }
+
+    
+    /**
+     *
+     * @param type $target
+     * @param type $link 
+     * @todo remove the exception and treat symlinks according to 
+     * windows version
+     */
+    public function symlink($target, $link) {
+        throw new \Iris\Exceptions\NotSupportedException('No linking possible in Windows XP');
+    }
+
+    /**
+     *
+     * @param type $from_path
+     * @param type $to_path 
+     * @todo remove the exception and treat links according to 
+     * windows version
+     */
+    public function link($from_path, $to_path) {
+        throw new \Iris\Exceptions\NotSupportedException('No linking possible in Windows XP');
+    }
+
     /**
      * Get user home directory 
      * 
      * @return string
      */
     public function getUserHomeDirectory(){
-        
-        /**
-ALLUSERSPROFILE=C:\ProgramData
-APPDATA=C:\Users\jacques\AppData\Roaming
+        /** XP:
+ALLUSERSPROFILE=C:\Documents and Settings\All Users
+APPDATA=C:\Documents and Settings\Administrateur\Application Data
+CommonProgramFiles=C:\Program Files\Fichiers communs
+HOME=C:\home
 HOMEDRIVE=C:
-HOMEPATH=\Users\jacques
-LOCALAPPDATA=C:\Users\jacques\AppData\Local
+HOMEPATH=\Documents and Settings\Administrateur
 OS=Windows_NT
-Path=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;c:\xampp\php\
-PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
-PUBLIC=C:\Users\Public
+Path=C:\oraclexe\app\oracle\product\10.2.0\server\bin;C:\WINDOWS\system32;
+C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Gnu\bin;;C:\GNU\BIN
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH
 SystemDrive=C:
-SystemRoot=C:\Windows
-USERNAME=jacques
-USERPROFILE=C:\Users\jacques
-windir=C:\Windows
+SystemRoot=C:\WINDOWS
+USERNAME=Administrateur
+USERPROFILE=C:\Documents and Settings\Administrateur
+windir=C:\WINDOWS
          */
         $dir = $this->shellvar('%LOCALAPPDATA%');
         return $dir;
@@ -67,4 +96,4 @@ windir=C:\Windows
     }
 }
 
-?>
+

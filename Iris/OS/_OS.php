@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\OS;
 
 /*
@@ -34,6 +32,7 @@ namespace Iris\OS;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _OS {// implements \Iris\Design\iSingleton 
+
     const MKDIR = 1;
     const COPY = 2;
     const UNLINK = 3;
@@ -44,9 +43,29 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     const TOUCH = 8;
     const PUT = 9;
     const GET = 10;
+    const UNKNOWN = 'UNKNOWN';
+    const LINUX = 'LINUX';
+    const WIN8 = 'WINDOWS 8';
+    const WIN7 = 'WINDOWS 7';
+    const WINVI = 'WINDOWS VISTA';
+    const WINXP = 'WINDOWS XP';
+    const WINNT = 'WINDOWS NT';
 
+    private static $_OS = [
+        self::UNKNOWN,
+        self::LINUX,
+        self::WIN8,
+        self::WIN7,
+        self::WINVI,
+        self::WINXP,
+        self::WINNT,
+    ];
     public $tabLevel = 0;
 
+    
+    
+    
+    protected $_version;
     /**
      * An array containing all the format for displaying verbose messages
      * 
@@ -64,13 +83,22 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * return the instance of the active OS
      * @return Unix (or maybe Windows)
      */
-    public static function GetOSInstance() {
+    public static function GetInstance() {
         if (self::$_Instance == NULL) {
-            if (self::_NeedWindows()) {
-                self::$_Instance = new Windows();
-            }
-            else {
-                self::$_Instance = new Unix();
+            switch (self::_DetectOS()) {
+                case self::UNKNOWN:
+                case self::LINUX:
+                    self::$_Instance = new Unix();
+                    break;
+                case self::WIN8:
+                case self::WIN7:
+                    self::$_Instance = new Windows();
+                    break;
+                case self::WINVI:
+                case self::WINNT:
+                case self::WINXP:
+                    self::$_Instance = new XP();
+                    break;
             }
         }
         return self::$_Instance;
@@ -99,6 +127,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * to minimize dependencies in CLI)
      */
     protected function __construct() {
+        $this->_version = self::_DetectOS();
         $this->_format[self::MKDIR] = "Creating directory %s\n";
         $this->_format[self::COPY] = "Copying %s to %s\n";
         $this->_format[self::UNLINK] = "Removing %s\n";
@@ -116,10 +145,10 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * 
      * @param string $fileName
      */
-     public function fullPermission($fileName){
-         \chmod($fileName,0777);
-     }
-    
+    public function fullPermission($fileName) {
+        \chmod($fileName, 0777);
+    }
+
     /**
      * A substitute to standard mkdir with verbose and simulation modes
      * 
@@ -205,7 +234,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param int $time
      * @param int $atime 
      */
-    public function touch($filename, $time=NULL, $atime=NULL) {
+    public function touch($filename, $time = NULL, $atime = NULL) {
         $this->_verbose and $this->_echo(self::TOUCH, $filename);
         $this->_simulate or touch($filename, $time, $atime);
     }
@@ -218,7 +247,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param mixed $data
      * @param int $flags
      */
-    public function file_put_contents($filename, $data, $flags=NULL) {
+    public function file_put_contents($filename, $data, $flags = NULL) {
         $this->_verbose and $this->_echo(self::PUT, $filename);
         $this->_simulate or file_put_contents($filename, $data, $flags);
     }
@@ -244,45 +273,33 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param string $destination the path to the new file
      * @param array $replacement an associative array with the fields and values 
      */
-    public function createFromTemplate($source, $destination, $replacement=array()) {
+    public function createFromTemplate($source, $destination, $replacement = array()) {
         $text = $this->file_get_contents($source);
         foreach ($replacement as $from => $to) {
             $text = preg_replace("/$from/", "$to", $text);
         }
         $this->file_put_contents($destination, $text);
     }
-    
-    
+
     /**
      * This function has to determine if the running OS is Windows
      * 
      * @staticvar boolean $Answer
      * @return string 
      */
-    protected static function _NeedWindows() {
-        static $Answer = NULL;
-        if (!is_null($Answer))
-            return $Answer;
-        $Anser = FALSE;
-        ob_start();
-        phpinfo(1);
-        $s = ob_get_contents();
-        ob_end_clean();
-        $array = explode("\n", $s);
-        $line = 0;
-        $found = FALSE;
-        do {
-            if (strpos($array[$line], 'System =>') === 0) {
-                $found = TRUE;
+    protected static function _DetectOS() {
+        static $osName = \NULL;
+        if (is_null($osName)) {
+            $uname = php_uname('a');
+            $osName = self::UNKNOWN;
+            foreach (self::$_OS as $os) {
+                if (strpos(strtoupper($uname), $os) !== \FALSE) {
+                    $osName = $os;
+                    break;
+                }
             }
-            else
-                $line++;
         }
-        while (!$found);
-        $lineOS = $array[$line];
-        if (strpos(strtoupper($lineOS), 'WIN') !== FALSE)
-            $Answer = TRUE;
-        return $Anser;
+        return $osName;
     }
 
     /**
@@ -316,7 +333,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param int $messageType Number of the format to use
      * @param string/array $value  parameters (1 or 2)
      */
-    protected function _echo($messageType, $values, $level=0) {
+    protected function _echo($messageType, $values, $level = 0) {
         for ($l = 0; $l < $level; $l++) {
             echo "  ";
         }
@@ -347,6 +364,10 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @return string
      */
     public abstract function getUserHomeDirectory();
-}
 
+    protected function shellvar($var) {
+        return str_replace("\n", "", shell_exec("echo %$var%"));
+    }
+    
+}
 
