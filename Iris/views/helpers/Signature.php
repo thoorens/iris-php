@@ -32,45 +32,91 @@ namespace iris\views\helpers;
  */
 class Signature extends \Iris\views\helpers\_ViewHelper {
 
-    protected static $_Singleton = \TRUE;
-    private static $_Name = '';
+    const URL = 0;
+    const MD5 = 1;
 
-    public function help($name = \NULL) {
-        if(!is_null($name)){
-        self::$_Name = $name;
-        }
+    /**
+     * The view helper is a singleton
+     * 
+     * @var boolean
+     */
+    protected static $_Singleton = \TRUE;
+    /**
+     * The name of the span containing the md5 signature
+     * @var string
+     */
+    private static $_SpanID = 'iris_md5';
+    /**
+     * The name of the model class used to store the md5 value, 
+     * if NULL there is no md5 management, TSequence in WB
+     * 
+     * @var string
+     */
+    private static $_Model = \NULL;
+    /**
+     * An array containing the names of the fields used to make the mapping
+     * URL - md5 (URL and Md5 in WB)
+     * @var array
+     */
+    private static $_Fields = array();
+
+    /**
+     * Access the singleton 
+     * @param string $id (the optional id of the span field
+     * @return \iris\views\helpers\Signature
+     */
+    public function help($id = \NULL) {
         return $this;
     }
 
+    /**
+     * Change the span id
+     * @param string $id (the optional id of the span field
+     */
+    public static function SetSpanId($id){
+        self::$_SpanID = $id;
+    }
     
-    
+    /**
+     * Creates the HTML code with a span which is to contain the MD5 value
+     * 
+     * @return string HTML code
+     */
     public function display() {
-        if($this->_OldMd5()==''){
-            return '';
-        }
-        $name = static::$_Name;
-        return "<b>MD5 finger print<b> : <span id=\"$name\"></span>";
+        $name = static::$_SpanID;
+        return "<b>MD5 finger print</b> : <span id=\"$name\"></span>";
     }
 
-    public function saveButton(){
-        if($this->_OldMd5()==''){
+    /**
+     * Creates the HTML code for a button to save the current MD5
+     * 
+     * @return string
+     */
+    public function saveButton() {
+        $name = self::$_SpanID;
+        $button = '<button class="norm"  title="%s" onclick="" id="%s">%s</button>';
+        return sprintf($button, 'Save the present MD5 signature', "b_$name", 'Save MD5');
+    }
+
+    /**
+     * If necessary, compute the md5 code for the present page and place it in the
+     * a span zone.
+     * 
+     * @param string $text the entire HTML code for the page
+     * @return string
+     */
+    public static function computeMD5(&$text) {
+        if (is_null(self::$_Model)) {
             return '';
         }
-        $name = self::$_Name;
-        $button = '<button class="norm"  title="%s" onclick="" id="%s">%s</button>';
-        return sprintf($button,'Save the present MD5 signature',"b_$name",'Save MD5');
-    }
-    
-    
-    public static function computeMD5($text) {
-        $componentId = self::$_Name;
+        $componentId = self::$_SpanID;
         if ($componentId == '') {
             $javascriptCode = '';
         }
         else {
             $md5 = md5($text);
             $url = self::_URL();
-            $link = 'javascript:location.href=\''."/manager/md5/save$url/$md5"."'";
+            $link = 'javascript:location.href=\'' . "/manager/md5/save$url/$md5" . "'";
             if ($md5 == self::_OldMd5()) {
                 $class = 'iris_md5_ok';
             }
@@ -90,23 +136,49 @@ JS;
         return $javascriptCode;
     }
 
+    /**
+     * Gets the old md5 code stored in the database
+     * 
+     * @return string
+     */
     private static function _OldMd5() {
-        $tSequences = new \models\TSequence();
-        $screen = $tSequences->fetchRow('URL=', self::_URL());
-        if(is_null($screen)){
+        $model = "\\models\\".self::$_Model;
+        $tSequences = new $model();
+        $urlField = self::$_Fields[self::URL];
+        $screen = $tSequences->fetchRow("$urlField=", self::_URL());
+        //iris_debug($screen);
+        if (is_null($screen)) {
             return '';
         }
-        return $screen->Md5;
+        $md5Field = self::$_Fields[self::MD5];
+        return $screen->$md5Field;
     }
 
-    
-    private static function _URL(){
+    /**
+     * Gets the present URL
+     * 
+     * @return string
+     */
+    private static function _URL() {
         $response = \Iris\Engine\Response::GetCurrentInstance();
         $module = $response->getModuleName();
         $controller = $response->getControllerName();
         $action = $response->getActionName();
         return "/$module/$controller/$action";
-
     }
+
+    /**
+     * Sets the model and URK and md5 field names in the model
+     * 
+     * @param string $model
+     * @param string $URLField
+     * @param string $md5Field
+     */
+    public static function SetModel($model, $URLField, $md5Field) {
+        self::$_Model = $model;
+        self::$_Fields[self::URL] = $URLField;
+        self::$_Fields[self::MD5] = $md5Field;
+    }
+
 }
 
