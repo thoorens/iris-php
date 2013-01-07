@@ -223,16 +223,16 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
      * Returns a create link/icon
      * @return string
      */
-    public function create() {
-        return $this->render('create', TRUE);
+    public function create($active=TRUE) {
+        return $this->render('create', $active);
     }
 
     /**
      * Returns a read link/icon
      * @return string
      */
-    public function read() {
-        return $this->render('read');
+    public function read($active=TRUE) {
+        return $this->render('read', $active);
     }
 
     /**
