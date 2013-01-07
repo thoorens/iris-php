@@ -144,8 +144,8 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         'Read' => 'Lire',
         'Delete' => 'Supprimer',
         // DEMO
-        'Now you can begin to conceive your own web site...' =>
-        'Vous pouvez à présent concevoir votre nouveau site web...',
+        'Now you can begin to modify this page...' =>
+        'Vous pouvez à présent modifier cette page...',
         'Welcome to IRIS-PHP framework' =>
         'Bienvenue dans le framework IRIS-PHP',
 // WorkBench
