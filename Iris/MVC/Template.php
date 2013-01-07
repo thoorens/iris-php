@@ -90,6 +90,8 @@ class Template {
      * @var array
      */
     private static $_Token = [
+        // escaping {
+        ['/%{%(.*)%}%/','{$1}',\TRUE],
         // php tags
         ['{php}', '<?php '],
         ['{/php}', '?>'],
@@ -101,6 +103,13 @@ class Template {
         ['/{if\((.+?)\)}/', '<?php if($1):?>'],
         ['{else}', '<?php else: ?>'],
         ['{endif}', '<?php endif;?>'],
+        // special variables
+        //@todo better treat them in View
+        ['{ITEM}','<?=$this->ITEM?>'],
+        ['{KEY}','<?=$this->KEY?>'],
+        ['{LOOPKEY}','<?=$this->LOOPKEY?>'],
+        ['{CURRENTLOOPKEY}','<?=$this->CURRENTLOOPKEY?>'],
+        ['{ALLDATA}','<?=$this->ALLDATA?>'],
         // view and local variables
         ['/({)(\w+?)(})/', '<?=\$$2?>'],
         // long expressions (var + method)
@@ -203,10 +212,15 @@ class Template {
                 if (!$inStyle and !$inScript) {
                     foreach (self::$_Token as $tokens) {
                         if ($tokens[0][0] == '/') {
-                            $line = preg_replace($tokens[0], $tokens[1], $line);
+                            $modLine = preg_replace($tokens[0], $tokens[1], $line);
                         }
                         else {
-                            $line = str_replace($tokens[0], $tokens[1], $line);
+                            $modLine = str_replace($tokens[0], $tokens[1], $line);
+                        }
+                        if($line!=$modLine){
+                            $line = $modLine;
+                            if(isset($tokens[2]))
+                                break;
                         }
                     }/*
                       $line = str_replace("{php}", '<?php ', $line);
