@@ -43,6 +43,16 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
         $this->setCurrent("/$url");
     }
 
+    /**
+     * Obtains the description corresponding to the URL
+     * an array of 3 elements acceptable by Button helper<ul>
+     * <li>label
+     * <li>url
+     * <li>small description</ul>
+     * 
+     * @param string $url
+     * @return string
+     */
     protected function _getURL3($url, $defaultLabel) {
         if (is_null($url)) {
             return $this->_noLink();
@@ -126,7 +136,6 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
      * @return string
      */
     protected function _getPrevious() {
-        die('ok');
         return $this->getPrevious(\FALSE);
     }
 
@@ -138,8 +147,18 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
         return $this;
     }
 
+    /**
+     * Return a message adapted to the current displayed view.
+     * 
+     * @param \Iris\MVC\View $view
+     */
     public function getMessage($view) {
-        
+        $url = $this->getCurrent()[1];
+        if (is_null($url)) {
+            return '';
+        }
+        $row = \models\TSequence::GetItem($url);
+        return $row->FR;
     }
 
 }
