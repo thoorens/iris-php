@@ -32,11 +32,10 @@ namespace CLI;
  * 
  */
 abstract class _Help {
-    
+
     const NOPATH = 1;
 
     protected $_functions;
-
 
     function __construct($functions) {
         $this->_functions = $functions;
@@ -68,15 +67,15 @@ abstract class _Help {
             case 'url':case 'u':
                 $this->_url();
                 break;
-            
+
             case 'mkcore':case 'k':
                 $this->_mkCore();
                 break;
-            
+
             case 'searchcore':case 'K':
                 $this->_searchCore();
                 break;
-                    
+
 
             /** ==============================================================================================
              * 
@@ -98,7 +97,7 @@ abstract class _Help {
             echo "\tiris.php -h=$function (ou -h=$f)\n";
         }
     }
-    
+
     abstract protected function _general();
 
     abstract protected function _url();
@@ -110,14 +109,58 @@ abstract class _Help {
     abstract protected function _alterProject();
 
     abstract protected function _default($command);
-    
+
     abstract protected function _show();
-    
+
     abstract public function error($number);
-    
-    public function GetInstance(){
+
+    public function GetInstance() {
         return new self(array());
     }
+
+    /**
+     * Return the name of the localized class for help
+     * 
+     * @return string
+     * @todo Verify if english version works for windows
+     */
+    public static function DetectLanguage() {
+        $default = 'French';
+        // detection
+        if(\Iris\OS\_OS::$OSName == 'LINUX'){
+            $detected = explode(':',getenv('LANGUAGE'))[1];
+        }
+        // windows
+        else{
+            // What follows is awfull! But write me a nicer way
+            // to windows@thoorens.net
+            $text = shell_exec('help dir');
+            switch(explode(" ",$text)[0]){
+                case 'Affiche':
+                    $detected = 'fr';
+                    break;
+                case 'Displays': // I am even sure
+                    $detected = 'en';
+                    break;
+                default:
+                    $detected = $default;
+            }
+        }
+        switch ($detected) {
+            case 'fr':
+                $language = 'French';
+                break;
+            case 'en':
+                $language = "English";
+                break;
+            default:
+                echo "Sorry, your language is not available. Switching to default: $default.\n";
+                $language = 'French';
+                break;
+        }
+        return $language;
+    }
+
 }
 
 ?>
