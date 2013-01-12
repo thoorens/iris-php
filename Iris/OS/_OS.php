@@ -123,6 +123,12 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     protected $_simulate = FALSE;
 
     /**
+     * A String to indentificate OS
+     * @var type 
+     */
+    public static $OSName;
+    
+    /**
      * The class behaves as a singleton (not marked by \Iris\Design\iSingleton
      * to minimize dependencies in CLI)
      */
@@ -299,6 +305,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
                 }
             }
         }
+        self::$OSName = $osName;
         return $osName;
     }
 
