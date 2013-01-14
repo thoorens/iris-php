@@ -119,6 +119,24 @@ class Config implements \IteratorAggregate {
     }
 
     /**
+     * Magic method to test the existence of a property
+     * 
+     * @param type $propertyName
+     * @return boolean
+     */
+    public function __isset($propertyName) {
+        if (isset($this->_data[$propertyName])) {
+            return \TRUE;
+        }
+        // explicit parent may help to find property value
+        elseif (!is_null($this->_parent)) {
+            return isset($this->_parent->$propertyName);
+        }
+        return \FALSE;
+    }
+
+    
+    /**
      * 
      * @param Config $parent
      * @param int $inheritance 
