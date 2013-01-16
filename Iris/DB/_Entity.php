@@ -68,6 +68,7 @@ abstract class _Entity {
      * @var \Iris\DB\_EntityManager
      */
     private $_entityManager = NULL;
+    protected static $_fixedEntityManager = \FALSE;
 
     /**
      * By default, the row are of type Object
@@ -134,7 +135,15 @@ abstract class _Entity {
      */
     protected function _initialize($EM) {
         if (is_null($EM)) {
-            $EM = _EntityManager::GetInstance();
+            // tests the existence of an alternative EM
+            if (static::$_fixedEntityManager!=\FALSE) {
+                $crudClass = static::$_fixedEntityManager;
+                $EM = $crudClass::GetEM();
+            }
+            // otherwise take the default one
+            else {
+                $EM = _EntityManager::GetInstance();
+            }
         }
         $this->_entityManager = $EM;
         if (is_null($this->_entityName)) {
