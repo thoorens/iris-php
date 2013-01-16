@@ -105,6 +105,26 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     }
 
     /**
+     * Returns the number corresponding to full permission to user only
+     * 
+     * @return int
+     * @todo : could be changed for management through Admin
+     */
+    public static function GetPrivateMod(){
+        return 0755;
+    }
+    
+    /**
+     * Returns the number corresponding to full permission
+     * 
+     * @return int
+     * @todo : could be changed for management through Admin
+     */
+    public static function GetPublicMod(){
+        return 0777;
+    }
+    
+    /**
      * TRUE if verbosity on
      * @var boolean  
      */
