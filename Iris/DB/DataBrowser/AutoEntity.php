@@ -68,9 +68,11 @@ class AutoEntity extends _Entity {
         $path = \Iris\DB\_EntityManager::$entityPath;
         $class = "$path\\T".ucfirst($tableName);
         $loader = \Iris\Engine\Loader::GetInstance();
+        // if a class exists, take it
         if($loader->loadClass($class, \FALSE)){
-            return new $class();
+            return new $class($EM);
         }
+        // otherwise, it is necessary to use an Autoentity
         self::$_NewFlag = TRUE;
         // If no entity manager is specified, tries to use a specific for Autoentities (otherwise, it will take the default one)
         if(is_null($EM) and ! is_null(self::$EntityManager)){
