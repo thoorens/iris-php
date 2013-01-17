@@ -22,6 +22,7 @@ namespace Iris\DB\DataBrowser;
  */
 
 /**
+ * This trait offers a controller the power to manage a table (CRUD operation)
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -34,16 +35,19 @@ trait tCrudManager {
      * It can be set to another name or set to NULL. In that case, each script
      * takes the action name (update, delete, create, read).
      * 
-     * The simple way to change it consists in a single line in _init() method
-     *      $this->_commonViewScript = 'whatyouwant";
+     * The simple way to change it consists in a single line in _init() or 
+     * customize() methods
+     *      $this->_changeViewScript = 'whatyouwant";
      * or
-     *       $this->_commonViewScript = \NULL;
+     *       $this->_changeViewScript = \NULL;
      * 
      * @var string
      */
     protected $_commonViewScript = 'editall';
 
     /**
+     * This magic method simulates the four createAction, updateAction....
+     * methods using _Crud class.
      * 
      * @param string $actionName
      * @param type $parameters
@@ -55,15 +59,33 @@ trait tCrudManager {
         $this->_customize($shortAction);
     }
 
-    private final function _changeViewScript($actionName) {
+    /**
+     * Change the common view script for all 4 actions (if null, the default
+     * update, delete, create, read will be used)
+     * 
+     * @param string $scriptName The action script name 
+     */
+    protected final function _changeViewScript($scriptName) {
         if (is_null($this->_commonViewScript)) {
-            $this->_commonViewScript = $actionName;
+            $this->_commonViewScript = $scriptName;
         }
     }
 
-    private function _customize($actionName){
+    /**
+     * By overwriting this method, one can modify one or many implicit methods of the
+     * CRUD manager
+     * 
+     * @param string $actionName one among create/read/update/delete
+     */
+    protected function _customize($actionName){
         
     }
+    
+    /**
+     * A default error action to be overwritten.
+     * 
+     * @param int $num
+     */
     public function errorAction($num) {
         die("There is an error $num");
     }
