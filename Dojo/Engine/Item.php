@@ -53,6 +53,18 @@ class Item {
      * @var boolean 
      */
     protected $_default = \FALSE;
+    
+    
+    protected $_link = NULL;
+    
+    public function getLink() {
+        return $this->_link;
+    }
+
+    public function setLink($link) {
+        $this->_link = $link;
+        return $this;
+    }
 
     function __construct($name, $value) {
         $this->_name = $name;
@@ -105,10 +117,12 @@ class Item {
         if (!$JS) {
             // none of the items are displayed except the selected one
             if ($this->_altNodisplay) {
-                if (!$this->_default)
+                if (!$this->_default){
                     $html = 'style = "display:none"';
-                else
+                }
+                else{
                     $html = '';
+                }
             }else {
                 // if all items are to be seen, the label is displayed as
                 // a title. The div
@@ -123,10 +137,14 @@ class Item {
             else {
                 $selected = '';
             }
+            //@todo splitter ain't allways true
             $this->itemProps[] = "splitter:'true'";
             $props = implode(',',$this->itemProps);
             $html =  sprintf(' id="%s" title="%s" data-dojo-type="dijit.layout.ContentPane" %s data-dojo-props="%s"',
                     $name, $label, $selected, $props); // $specialAttributes 
+            if(!is_null($this->_link)){
+                $html .= sprintf(' href="%s" ',$this->_link);
+            }
         }
         return $html;
     }

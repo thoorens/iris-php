@@ -32,154 +32,34 @@ namespace Dojo\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class AutoAnimation extends _Animation {
+class AutoAnimation extends _DojoHelper {
 
-    const FADEIN = 0;
-    const FADEOUT = 1;
-
-    private $_functionData = [
-        self::FADEIN => ['fadeIn', 0],
-        self::FADEOUT => ['fadeOut', 1],
-    ];
+    protected static $_Singleton = \TRUE;
 
     /**
-     * The last event time from beginning of frame
+     * The last event time from beginning of screeen
      * 
      * @var type 
      */
     private $_lastTime = 0;
+    private $_id = 0;
 
-    /**
-     * Makes an object appears slowly (or not) after some seconds. The starting method is registred
-     * for later use in $_jobs (see subscribe()).
-     * 
-     * @param string $objectId Object id
-     * @param int $delay milliseconds before fadin
-     * @param int $duration transition duration
-     * @param mixed $start bolean to auto start or array (with commander controller and event)
-     * @return type
-     */
-    public function fadeIn($objectId, $delay = 0, $duration = 5000, $start = \TRUE) {
-        $this->_jobs[] = $objectId;
-        return $this->_fadeX(self::FADEIN, $objectId, $delay, $duration, $start);
+    public function help() {
+        return $this;
     }
 
-    /**
-     * Makes an object disappears slowly (or not) after some seconds. The starting method is registred
-     * for later use in $_jobs (see subscribe()).
-     * 
-     * @param string $objectId Object id
-     * @param int $delay milliseconds before fadin (negative is relative to previous)
-     * @param int $duration transition duration
-     * @param mixed $start bolean to auto start or array (with commander controller and event)
-     * @return type
-     */
-    public function fadeOut($objectId, $delay = 0, $duration = 5000, $start = \TRUE) {
-        $this->_jobs[] = $objectId;
-        return $this->_fadeX(self::FADEOUT, $objectId, $delay, $duration, $start);
-    }
-
-    public function fadeInOut($objectId, $delay = [0, 10000], $duration = 5000, $start = \TRUE) {
-        $this->_jobs[] = $objectId;
-        if (!is_array($delay)) {
-            $delay1 = $delay;
-            $delay2 = 2 * $delay;
-            $delay = [$delay1, $delay2];
-        }
-        return $this->_fadeX([self::FADEIN, self::FADEOUT], $objectId, $delay, $duration, $start);
+    public function getId() {
+        return++$this->_id;
     }
 
     /**
      * 
-     * @param int $function animation to realize : 0 for FADIN, 1 for 
-     * @param type $objectId
-     * @param type $delay
-     * @param type $duration
-     * @param type $start
-     * @return type
-     * @throws \Iris\Exceptions\HelperException
+     * @param type $node node name
+     * @param type $button the button to click to start fading in
+     * @param type $duration the duration of the fading in
      */
-    private function _fadeX($function, $objectId, $delay = 0, $duration = 5000, $start = \TRUE) {
-        if (is_array($delay)) {
-            $delay0 = array_shift($delay);
-            array_unshift($delay, 0);
-        }
-        else {
-            $delay0 = $delay;
-        }
-        // in case of negative delay, the previous animation time is added to the delay
-        // making a relative delay (for at once select -1)
-        if ($delay0 < 0) {
-            $startingTime = $this->_lastTime - $delay0;
-        }
-        else {
-            $startingTime = $delay0;
-        }
-        // no starter code : the animation is run by hand
-        if ($start === \FALSE) {
-            $starterCode = '';
-        }
-        // un controller name and an event are provided in an array
-        elseif (is_array($start)) {
-            list($controller, $event) = $start;
-            $starterCode = <<<STARTER
-"var $controller = dojo.byId(\"$controller\");";
-dojo.connect($controller,'$event', 'restart$objectId');
-STARTER;
-        }
-        // default starter code : after loading the page
-        elseif ($start === \TRUE) {
-            $starterCode = "dojo.connect(null,'onload','restart$objectId');";
-        }
-        // no other way to start
-        else {
-            throw new \Iris\Exceptions\HelperException('Parameter "start" of fadeIn/fadeOut helpers must be boolean or an array');
-        }
-        // is the one or many actions to do
-        $multi = \FALSE;
-        if (is_array($function)) {
-            $functions = $function;
-            $function = $functions[0];
-            $multi = \TRUE;
-        }
-        // define the initial state of opacity
-        $opacity = $this->_functionData[$function][1];
-        $opacityCode = "  dojo.style('$objectId', \"opacity\", \"$opacity\");\n";
-        // the script start here
-        $script = '<script type="text/javascript">' . "\n";
-        $script .= "  function restart$objectId(){\n";
-        $script .= $opacityCode;
-        // in case of more than one effect, use dojo.fx
-        if ($multi) {
-            $this->_manager->addRequisite('"dojo.fx"');
-            $num = 0;
-            foreach ($functions as $function) {
-                $startingTime = $num == 0 ? $startingTime : $delay[$num];
-                $animName = "animated$num";
-                $animations[] = $animName;
-                $functionName = $this->_functionData[$function][0];
-                $script .= "  var $animName = dojo.$functionName({node:$objectId,duration:$duration,delay:$startingTime});\n";
-                $this->_lastTime += abs($delay[$num]) + $duration;
-                $num++;
-            }
-            $animArray = "[" . implode(',', $animations) . "]";
-            $script .= "dojo.fx.chain($animArray).play();\n";
-        }
-        // if only one effect, run it at once
-        else {
-            $functionName = $this->_functionData[$function][0];
-            $script .= "  var animated = dojo.$functionName({node:$objectId,duration:$duration,delay:$startingTime});\n";
-            $script .= "  animated.play(0,true);\n";
-            $this->_lastTime = $startingTime + $duration;
-        }
-        $script .= "  }\n";
-        $script .= "  $starterCode\n";
-        $script .= "</script>\n";
-        return $script;
-    }
-
     public function in($node, $button, $duration = 5000) {
-        $this->commonFade();
+        $this->_commonFade();
         $script = <<< SCRIPT
    require(["dojo/domReady!"], function(){
         var io_args = {
@@ -192,11 +72,18 @@ STARTER;
         commonFade(io_args); 
 });
 SCRIPT;
-        $this->_view->javascriptLoader('fadeIn', $script);
+        $this->_view->javascriptLoader('fadeIn' . $this->getId(), $script);
     }
 
+    /**
+     * 
+     * @param type $node the node name
+     * @param type $delay the time (in sec) before fading in
+     * @param type $duration the duration of the fading in
+     */
     public function waitIn($node, $delay = 5000, $duration = 5000) {
-        $this->commonFade();
+        $this->_commonFade();
+        $delay = $this->_delay($delay);
         $script = <<< SCRIPT
    require(["dojo/domReady!"], function(){
         var io_args = {
@@ -209,11 +96,18 @@ SCRIPT;
         commonFade(io_args); 
 });
 SCRIPT;
-        $this->_view->javascriptLoader('waitIn', $script);
+        $this->_view->javascriptLoader('waitIn' . $this->getId(), $script);
     }
 
+    /**
+     * 
+     * @param string $node the node name
+     * @param int $delay the time (in sec) before fading out
+     * @param int $duration the duration of the fading out
+     */
     public function waitOut($node, $delay = 5000, $duration = 5000) {
-        $this->commonFade();
+        $this->_commonFade();
+        $delay = $this->_delay($delay);
         $script = <<< SCRIPT
    require(["dojo/domReady!"], function(){
         var io_args = {
@@ -226,11 +120,18 @@ SCRIPT;
         commonFade(io_args); 
 });
 SCRIPT;
-        $this->_view->javascriptLoader('waitOut', $script);
+        $this->_view->javascriptLoader('waitOut' . $this->getId(), $script);
     }
 
+    /**
+     * Fades out a displayed part of the screen
+     * 
+     * @param string $node node name
+     * @param type $button the button to click to start fading out
+     * @param type $duration the duration of the fading out
+     */
     public function out($node, $button, $duration = 5000) {
-        $this->commonFade();
+        $this->_commonFade();
         $script = <<< SCRIPT
       require(["dojo/domReady!"], function(){
         var io_args = {
@@ -243,16 +144,27 @@ SCRIPT;
         commonFade(io_args); 
 });
 SCRIPT;
-        $this->_view->javascriptLoader('fadeOut', $script);
+        $this->_view->javascriptLoader('fadeOut' . $this->getId(), $script);
     }
 
-    public function inOut($node, $button, $duration = 5000) {
-        $this->commonFade();
+    /**
+     * Fades in an non displayed part of the screen before fade out it again
+     * 
+     * @param type $node the node name
+     * @param type $button the button to click to start fading in
+     * @param type $duration the duration of the fading in
+     * @param int $duration2 the duration of the fading out
+     */
+    public function inOut($node, $button, $duration = 5000, $duration2 = \NULL) {
+        if (is_null($duration2))
+            $duration2 = $duration;
+        $this->_commonFade();
         $script = <<< SCRIPT
       require(["dojo/domReady!"], function(){
         var io_args = {
         node : "$node",
         duration : $duration,
+        duration2 : $duration2,    
         button : "$button",
         dojofunction : "fadeInOut" ,
         opacity : 0
@@ -260,10 +172,42 @@ SCRIPT;
         commonFade(io_args); 
 });
 SCRIPT;
-        $this->_view->javascriptLoader('fadeInOut', $script);
+        $this->_view->javascriptLoader('fadeInOut' . $this->getId(), $script);
     }
-    
-    public function commonFade() {
+
+    /**
+     * Fades out an displayed part of the screen before fade in it again
+     * 
+     * @param string $node the node name
+     * @param string $button the button to click to start fading out
+     * @param int $duration the duration of the fading out
+     * @param int $duration2 the duration of the fading in
+     */
+    public function outIn($node, $button, $duration = 5000, $duration2 = \NULL) {
+        if (is_null($duration2))
+            $duration2 = $duration;
+        $this->_commonFade();
+        $script = <<< SCRIPT
+      require(["dojo/domReady!"], function(){
+        var io_args = {
+        node : "$node",
+        duration : $duration,
+        duration2 : $duration2,
+        button : "$button",
+        dojofunction : "fadeOutIn" ,
+        opacity : 1
+        }
+        commonFade(io_args); 
+});
+SCRIPT;
+        $this->_view->javascriptLoader('fadeOutIn' . $this->getId(), $script);
+    }
+
+    /**
+     * Common part of all the method: a javascript function who does all the job.
+     * @staticvar type $loaded
+     */
+    protected function _commonFade() {
         // Test loaded to gain time
         static $loaded = \FALSE;
         if (!$loaded) {
@@ -284,13 +228,14 @@ SCRIPT;
                 fx.fadeOut({node: args.node,duration: args.duration}).play();
             }
             else if(args.dojofunction=='fadeInOut'){
-            alert('in out');
-                animIn = coreFx.fadeIn({node: args.node,duration: args.duration});
-                animOut = coreFx.fadeOut({node: args.node,duration: args.duration});
-                coreFx.combine([animIn, animOut]).play();
+                animIn = fx.fadeIn({node: args.node,duration: args.duration});
+                animOut = fx.fadeOut({node: args.node,duration: args.duration2});
+                coreFx.chain([animIn, animOut]).play();
             }
             else if(args.dojofunction=='fadeOutIn'){
-            
+                animOut = fx.fadeOut({node: args.node,duration: args.duration});
+                animIn = fx.fadeIn({node: args.node,duration: args.duration2});
+                coreFx.chain([animOut, animIn]).play();
             }
         }
         if(args.button == null){
@@ -307,4 +252,59 @@ SCRIPT;
         }
     }
 
+    public function scroll($destination, $trigger) {
+        $script = <<<SCRIPT
+   require(["dojo/window", "dojo/on", "dojo/dom", "dojo/dom-geometry", "dojo/domReady!"],
+function(win, on, dom, domGeom){
+  on(dom.byId("$trigger"), "click", function(){
+    win.scrollIntoView('$destination');
+  });
+  });
+SCRIPT;
+        $this->_view->javascriptLoader('scroll', $script);
+    }
+
+    public function autoScroll($destination, $delay) {
+        $delay = $this->_delay($delay);
+        $script = <<<SCRIPT
+   require(["dojo/window", "dojo/dom-geometry", "dojo/domReady!"],
+function(win, dolater, domGeom){
+var count = 0;
+setTimeout(function(){
+        win.scrollIntoView('$destination');
+    }, $delay);
+  });
+SCRIPT;
+        $this->_view->javascriptLoader('scroll', $script);
+    }
+
+    /**
+     * Returns the HTML text for an empty div serving as a destination
+     * for scroll or autoScroll.
+     * 
+     * @param string $name
+     * @return string
+     */
+    public function scrollMarker($name){
+        return "<div id=\"$name\"></div>\n";
+    }
+    
+    /**
+     * Converts relatives time to absolute
+     * @param int $delay the starting time (if <0, considered as relative)
+     * @return int
+     */
+    private function _delay($delay) {
+        if ($delay > 0) {
+            $startingTime = $delay;
+        }
+        else {
+            $startingTime = $this->_lastTime - $delay;
+        }
+        $this->_lastTime = $startingTime;
+        return $startingTime;
+    }
+
+    
+    
 }
