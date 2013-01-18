@@ -267,7 +267,7 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
 
     /**
      * Creates an associative array with an URL (ref), a help text (help)
-     * and then operation name (operation)
+     * and the operation name (operation)
      * 
      * @param string $operation Operation name
      * @return array
@@ -283,7 +283,7 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
                     $objectName = $this->_data->{$this->_descField};
                 }
                 else {
-                    $objectName = "ENTITE";
+                    $objectName = "ENTITY";
                     $paramI = "id";
                 }
                 break;
@@ -299,6 +299,13 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
         $params['help'] = $this->_makeHelp($format, $objectName);
         $params['operation'] = $operation;
         return $params;
+    }
+    
+    public function testCLI($operation){
+        $opParam = $this->_operationParams[$operation];
+        $format = $this->_treatCategory($opParam[0], $this->_subType);
+        $objectName = "someName";
+        return $this->_makeHelp($format, $objectName);
     }
 
     /**
@@ -346,7 +353,12 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
      * @return string 
      */
     private function _makeHelp($format, $objectName) {
-        list($initialGender, $entity) = explode('_', $this->_entity);
+        $aEntity = explode('_', $this->_entity);
+        // if no gender, push Neutral
+        if(count($aEntity)==1){
+            array_unshift($aEntity, 'N_');
+        }
+        list($initialGender, $entity) = $aEntity;
         list($def, $undef) = explode('_', $this->_articles($initialGender));
         $format = str_replace('%U', $undef, $format);
         $format = str_replace('%D', $def, $format);
