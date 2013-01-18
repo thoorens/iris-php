@@ -46,7 +46,7 @@ class Head extends \Iris\views\helpers\_LoaderHelper{
         if(!$manager->isActive()){
             return '';
         }
-        $source = $manager->getSource();
+        $source = $manager->getURL();
         $script = $manager->getScript();
         $style = $manager->getStyle();
         $parseOnLoad = $manager->getParseOnLoad();

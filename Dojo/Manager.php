@@ -20,6 +20,9 @@ namespace Dojo;
  * 
  * @copyright 2012 Jacques THOORENS
  */
+define('URL_DOJO_GOOGLE', "https://ajax.googleapis.com/ajax/libs/dojo/");
+define('URL_DOJO_AOL', "http://o.aolcdn.com/dojo/");
+define('URL_DOJO_YANDEX', "http://yandex.st/dojo");
 
 /**
  * This class is used internally by all Dojo helpers to manage the
@@ -29,13 +32,14 @@ namespace Dojo;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Manager{
-    use \Iris\Engine\tSingleton;
-    
-    const GOOGLE="https://ajax.googleapis.com/ajax/libs/dojo/";
-    const AOL ="http://o.aolcdn.com/dojo/";
-    const YANDEX = "http://yandex.st";
+class Manager {
 
+    use \Iris\Engine\tSingleton;
+
+    const LOCAL = 0;
+    const GOOGLE = 1;
+    const AOL = 2;
+    const YANDEX = 3;
 
     /**
      * Part of the singleton mechanism
@@ -72,8 +76,12 @@ class Manager{
     protected $_dojoActive = FALSE;
 
     /**
-     * The dojo style used in the program among standard 4
-     * 
+     * The dojo style used in the program among the 4 standard styles <ul>
+     * <li>nihilo
+     * <li>soria
+     * <li>tundra
+     * <li>claro
+     * </ul>
      * @var string
      */
     protected $_style = 'nihilo'; // soria/tundra/claro/nihilo
@@ -83,13 +91,9 @@ class Manager{
      * 
      * @var string 
      */
-    protected $_source = '/js';
+    protected $_source = self::LOCAL;
 
-    /**
-     *
-     * @var boolean
-     */
-    private $_local = TRUE;
+    
 
     /**
      * By default Dojo is parsed on page load
@@ -106,13 +110,13 @@ class Manager{
     protected $_debug; //true in development / false in production
 
     /**
-     * Version number correspond to the version used to write Iris-PHP
+     * Version number correspond to the version used to write Iris-PHP.
+     * This number is only used in remote URL. With local source, only
+     * one version is supposed to installed in public/js folder.
      * 
      * @var string 
      */
     protected $_version = '1.8.0';
-
-    
 
     /**
      * The constructor is private (singleton). It inits the basic CSS
@@ -195,7 +199,7 @@ class Manager{
      *
      * @param type $value 
      */
-    public function setActive($value=TRUE) {
+    public function setActive($value = TRUE) {
         $this->_dojoActive = $value;
     }
 
@@ -226,20 +230,21 @@ class Manager{
 
     /**
      *
-     * @param type $source 
+     * @param int $source 
      */
-    public function setSource($source) {
-        $this->setActive();
-        $this->_source = $source;
+    public static function SetSource($source) {
+        self::GetInstance()->_source = $source;
     }
 
     /**
-     *
-     * @return type 
+     * Returns the source URL for the main script of dojo,
+     * whose name is not the same in local or remote URL.
+     *  
+     * @return string 
      */
     public function getScript() {
-        $source = $this->getSource();
-        if ($this->_local) {
+        $source = $this->getURL();
+        if ($source == self::LOCAL) {
             return "$source/dojo/dojo.js";
         }
         else {
@@ -249,24 +254,22 @@ class Manager{
 
     /**
      *
-     * @return type 
+     * @return string 
      */
-    public function getSource() {
+    public function getURL() {
         $version = $this->getVersion();
-        $this->_local = FALSE;
         switch ($this->_source) {
-            case 'Google':
-                $source = self::GOOGLE . $version;
+            case self::GOOGLE:
+                $source = URL_DOJO_GOOGLE . $version;
                 break;
-            case 'AOL':
-                $source = self::AOL . $version;
+            case self::AOL:
+                $source = URL_DOJO_AOL . $version;
                 break;
-            case 'Yandex':
-                $source = self::YANDEX . $version;
+            case self::YANDEX:
+                $source = URL_DOJO_YANDEX . $version;
                 break;
             default:
-                $source = $this->_source;
-                $this->_local = TRUE;
+                $source = '/js';
                 break;
         }
         return $source;
@@ -279,17 +282,17 @@ class Manager{
      * @param type $name
      * @return Manager (for fluent interface)
      */
-    public function addRequisite($index, $name=NULL) {
+    public function addRequisite($index, $name = NULL) {
         if (is_null($name)) {
             $requisite = $index;
         }
-        elseif(is_array($name)){
+        elseif (is_array($name)) {
             $requisite = '"';
-            $requisite .= implode('","',$name);
+            $requisite .= implode('","', $name);
             $requisite .= '"';
             //iris_debug($requisite);
         }
-        else{
+        else {
             $requisite = $name;
         }
         if (!isset($this->_requisites[$index])) {
@@ -298,8 +301,6 @@ class Manager{
         return $this;
     }
 
-    
-    
     /**
      * Add a style for Dojo
      * 
