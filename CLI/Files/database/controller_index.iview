@@ -1,0 +1,14 @@
+{php}$icone = $this->crudIcon(){/php}
+<h1>Example edition</h1>
+<div>
+    {(icone->create())} Add a new person
+    <ul class="crud">
+        {foreach(lines,line)}            
+            <li>
+                {(icone->setData($line)->update())}
+                {(icone->delete())}
+                {(line->{=DESCRIPTION=})}
+            </li>
+            {endforeach}
+        </ul>
+    </div>
