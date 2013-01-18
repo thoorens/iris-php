@@ -1,7 +1,6 @@
 <?php
 
 namespace modules\manager\controllers;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -27,29 +26,24 @@ namespace modules\manager\controllers;
  * @version $Id: $ */
 
 /**
- * This small class implements a way to record the md5 checksum of each
- * screen of WB in the inner database
  * 
+ * Created for IRIS-PHP 0.9 - beta
+ * Description of sides
+ * 
+ * @author jacques
+ * @license not defined
  */
+class islSides extends \Iris\MVC\_Islet {
 
-class md5 extends _manager {
+    public function leftAction() {
+        $tSections = new \models\TSections();
+        $tSections->where('id>', 0);
+        $this->__sections = $tSections->fetchall();
+    }
 
-    /**
-     * This action saves the md5 chacksum corresponding to the module/controller/action
-     * passed as parameters
-     * 
-     * @param string $module
-     * @param string $controller
-     * @param string $action
-     * @param string $md5
-     */
-    public function saveAction($module, $controller, $action, $md5) {
-        $url = "/$module/$controller/$action";
-        $tSequences = new \models\TSequence();
-        $screen = $tSequences->fetchRow('URL=', $url);
-        $screen->Md5 = $md5;
-        $screen->save();
-        $this->reroute($url);
+    public function rightAction() {
+       $this->_view->dojo_Mask();
+       $this->__sequence = $this->getScreenList();
     }
 
 }

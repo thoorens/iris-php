@@ -1,5 +1,4 @@
 <?php
-
 namespace modules\manager\controllers;
 
 /*
@@ -26,31 +25,38 @@ namespace modules\manager\controllers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 
+
 /**
  * 
+ * Created for IRIS-PHP 0.9 - beta
+ * Description of categories
+ * 
+ * @author jacques
+ * @license not defined
  */
-class screens extends _manager {
+class sections extends _manager {
 use \Iris\DB\DataBrowser\tCrudManager;
 
-    public function indexAction($section = 10) {
+
+    
+    public function indexAction() {
         $icons = \Iris\Subhelpers\Crud::getInstance();
         $icons
                 // définition du contrôleur
-                ->setController('/manager/screens')
+                ->setController('/manager/sections')
                 // définition du préfixe d'action (on aura par exemple insert_media)
-                ->setActionName('screen')
+                ->setActionName('section')
                 // précision du genre de l'entité (M, F ou M' F' pour les élisions)
                 // et de son intitulé
-                ->setEntity("M'_écran")
+                ->setEntity("F_section")
                 // champ de l'intitulé servant à décrire l'objet affecté
-                ->setDescField('Description')
+                ->setDescField('GroupName')
                 // champ constituant la clé primaire
                 ->setIdField('id');
-        $tSection = new \models\TSequence();
-        $tSection->where('section_id=',$section);
-        $screens = $tSection->fetchall();
-        $this->__screens = $screens;
-        $this->__category = $screens[0]->_at_section_id->GroupName;
+        $tSection = new \models\TSections();
+        $tSection->where('id<>', 0);
+        $this->__data = $tSection->fetchall();
     }
 
+    
 }

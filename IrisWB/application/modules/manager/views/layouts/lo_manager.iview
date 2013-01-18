@@ -14,17 +14,17 @@
                     <h1>Iris Workbench Manager</h1>
                 </div><!-- Title -->
                 <div class="column one">
-                    {islet('sides',[],'left')}
+                    {islet('islSides',[],'left')}
                 </div><!-- 1 -->
                 <div class="column two">
                     {mainView()}
                 </div><!-- 2 -->
                 <div class="column three ">
-                    {islet('sides',[],'right')}
+                    {islet('islSides',[],'right')}
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/main/views/scripts/lo_main.iview')}
+                {wbFooter('modules/manager/views/scripts/lo_manager.iview')}
             </div><!--foot-->
         </div><!--main--> 
     </body>

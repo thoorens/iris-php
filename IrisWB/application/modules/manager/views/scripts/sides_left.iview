@@ -1,8 +1,0 @@
-<h2>List of categories</h2>
-<ul>
-<?php
-foreach($sections as $section):?>
-<li>{$section->GroupName}</li>
-<?endforeach?>
-    {/php}
-</ul>

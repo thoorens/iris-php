@@ -1,0 +1,24 @@
+<h2>List of screens</h2> 
+<div>
+    {php}
+        $det = $this->dojo_details()->setAspectClass('mask2');
+        foreach($sequence as $key=>$value):
+            if(!is_array($value)):
+                $title = "<li><a href=\"$key\">$value\"</a></li>"; 
+                $details = '';
+            else:
+                $title = "<li>$key</li>\n";
+                $details = "<ul>\n";
+                    foreach($value as $key2=>$value2):
+                            $details.= "<li><a href=\"$key2\">$value2</a></li>\n";
+                    endforeach;
+               $details.="</ul>\n";
+           endif;
+           $section[$title] = $details; 
+       endforeach;
+     {/php}
+     {foreach(section,titre,details)}
+        {(det->details("", $details,$titre))}
+     {endforeach}
+     {(det->connectEvent('onclick'))}
+</div>

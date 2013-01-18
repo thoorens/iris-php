@@ -1,9 +1,14 @@
+{php}$icone = $this->crudIcon(){/php}
+<h2>Edit a screen in <i>{category}</i></h2>
 <div>
-    <div id="page">
-        {welcome(2)}
-        <p>
-            {_('Now you can begin to conceive your own web site...',TRUE)}
-        </p>
+    {(icone->create(10))} Create a new screen
+    <ul class="crud">
+        {foreach(screens,screen)}            
+            <li>
+                {(icone->setData($screen)->update())}
+                {(icone->delete())}
+                {(screen->Description)}
+            </li>
+            {endforeach}
+        </ul>
     </div>
-
-</div>

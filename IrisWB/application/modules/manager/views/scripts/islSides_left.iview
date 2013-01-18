@@ -1,0 +1,6 @@
+<h2>Available categories</h2>
+<ul>
+{foreach(sections,sec)}
+    <li><a href="/manager/screens/index/{(sec->id)}">{(sec->GroupName)}</a></li>
+{endforeach}
+</ul>
