@@ -5,7 +5,7 @@ define('DESC', 2);
 define('GPL', 3);
 define('END', 4);
 
-$fileName = $argv[1];
+$fileName = $GLOBALS['argv'][1];
 $file = file($fileName);
 $newFile = '';
 $modified = FALSE;
