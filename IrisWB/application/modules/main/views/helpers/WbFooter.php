@@ -36,7 +36,7 @@ class WbFooter extends _ViewHelper {
     
     public function help($layoutName,$buttons = 5){
         $html = "<b>Layout :</b> $layoutName";
-        $html .= " - ".$this->signature('iris_md5')->display();
+        $html .= " - ".$this->signature()->display();
         $html .= '<br/>';
         $html .= $this->ILO_goInternal($buttons);
         $html .= $this->signature()->saveButton();
