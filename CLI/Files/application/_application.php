@@ -17,7 +17,10 @@ class _application extends \Iris\MVC\_Controller {
      * settings
      */
     protected final function _applicationInit() {
-        
+        // these parameters are only for demonstration purpose
+        // and required by the default layout defined in {MODULECONTROLLER}
+        $this->__buttons = 1 + 4;
+        $this->__logoName = 'mainLogo';
     }
 
 }

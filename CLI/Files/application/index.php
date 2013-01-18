@@ -13,11 +13,10 @@ namespace modules\{MODULE}\controllers;
 class {CONTROLLER} extends {MODULECONTROLLER} {
 
     public function indexAction() {
-        // these parameters are only for demonstration purpose
-        $this->__(NULL, array(
-            'Title' => {TITLE},
-            'buttons' => 1+4,
-            'logoName' => 'mainLogo'));
+        // this Title var is required by the default layout defined in {MODULECONTROLLER}
+        $this->__Title = $this->_view->welcome(1);
     }
+    
+    
 
 }
