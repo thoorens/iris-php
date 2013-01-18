@@ -1,6 +1,7 @@
 <?php
 
 namespace CLI;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -27,9 +28,8 @@ namespace CLI;
  * @author Jacques THOORENS (jacques@thoorens.net)
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $
- */ 
- abstract class _Process {
- 
+ */
+abstract class _Process {
 
     /**
      *
@@ -57,6 +57,7 @@ namespace CLI;
      */
     public function __construct($analyser) {
         $this->_analyser = $analyser;
+        $this->_os = \Iris\OS\_OS::GetInstance();
     }
 
     /**
@@ -80,17 +81,16 @@ namespace CLI;
      * @param array $configs 
      */
     protected function _updateConfig($configs) {
-        $os = \Iris\OS\_OS::GetInstance();
-        $paramDir = $os->getUserHomeDirectory() . "/.iris";
-        $this->_analyser->writeParams($paramDir . "/projects.ini", $configs);
+        $paramDir = $this->_os->getUserHomeDirectory() . "/.iris";
+        Parameters::GetInstance()->writeParams($paramDir . "/projects.ini", $configs);
     }
 
     protected function _createDir($directories, $base) {
         foreach ($directories as $directory) {
-            $permissions = 0755;
-            if($directory[0]=='!'){
-                $directory = substr($directory,1);
-                $permissions = 0777;
+            $permissions = $this->_os->GetPrivateMod();
+            if ($directory[0] == '!') {
+                $directory = substr($directory, 1);
+                $permissions = $this->_os->GetPublicMod();
             }
             $directory = "$base/$directory";
             $this->_os->mkDir($directory, $permissions, TRUE);
@@ -105,12 +105,19 @@ namespace CLI;
      * @param string $destination the path to the new file
      * @param array $replacement an associative array with the fields and values 
      */
-    protected function _createFile($source, $destination, $replacement=array()) {
-        $replacement['{PROJECTNAME}'] = $this->_analyser->getDetailedProjectName();
-        $replacement['{LICENSE}'] = $this->_analyser->getLicense();
-        $replacement['{AUTHOR}'] = $this->_analyser->getAuthor();
+    protected function _createFile($source, $destination, $replacement = array()) {
+        if(file_exists(($destination))){
+            require_once $this->_analyser->GetIrisLibraryDir().'/Iris/FileSystem/File.php';
+            $file = new \Iris\FileSystem\File(basename($destination),  dirname($destination));
+            $file->backup(10);
+            echo "The file $destination already exists. A backup has been made.\n";
+        }
+        $parameters = Parameters::GetInstance();
+        $replacement['{PROJECTNAME}'] = $parameters->getDetailedProjectName();
+        $replacement['{LICENSE}'] = $parameters->getLicense();
+        $replacement['{AUTHOR}'] = $parameters->getAuthor();
         $replacement['{IRISVERSION}'] = IRISVERSION;
-        $replacement['{COMMENT}'] = $this->_analyser->getComment();
+        $replacement['{COMMENT}'] = $parameters->getComment();
         $this->_os->createFromTemplate($source, $destination, $replacement);
     }
 

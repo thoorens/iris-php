@@ -42,13 +42,13 @@ class Code extends _Process {
      * @param boolean $display if TRUE only display the file content 
      */
     public function makeVirtualParameter($display = FALSE) {
-        $projectDir = $this->_analyser->getProjectDir();
-        $projectName = $this->_analyser->getProjectName();
+        $parameters = Parameters::GetInstance();
+        $projectDir = $parameters->getProjectDir();
+        $projectName = $parameters->getProjectName();
         $virtualFile = "$projectDir/$projectName.virtual";
         if(!$display)echo "Creating $virtualFile for httpd-virtual.conf.\n";
-        $projectName = $this->_analyser->getProjectName();
-        $url = $this->_analyser->getUrl();
-        $publicDir = $this->_analyser->getPublicDir();
+        $url = $parameters->getUrl();
+        $publicDir = $parameters->getPublicDir();
         $docRoot = "$projectDir/$publicDir";
         if(strpos($url,'.')!==FALSE){
             $text = $this->_virtualApache($docRoot, $url, \TRUE);
@@ -102,16 +102,18 @@ APACHE;
      * @param string $projectDir the project base directory name
      */
     public function makePublic($projectDir) {
-        $publicDir = $this->_analyser->getPublicDir();
+        $parameters = Parameters::GetInstance();
+        $publicDir = $parameters->getPublicDir();
         echo "Making public directories and files ($publicDir/...).\n";
-        $this->_os->mkDir("$projectDir/$publicDir", 0755);
-        $this->_os->mkDir("$projectDir/$publicDir/images", 0755);
-        $this->_os->mkDir("$projectDir/$publicDir/css", 0755);
-        $this->_os->mkDir("$projectDir/$publicDir/js", 0755);
+        $permissions = $this->_os->GetPrivateMod();
+        $this->_os->mkDir("$projectDir/$publicDir", $permissions);
+        $this->_os->mkDir("$projectDir/$publicDir/images", $permissions);
+        $this->_os->mkDir("$projectDir/$publicDir/css", $permissions);
+        $this->_os->mkDir("$projectDir/$publicDir/js", $permissions);
         // copy and adapt index.php
-        $source = Analyser::GetIrisSystemDir() . '/CLI/Files/public';
+        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/public';
         $destination = "$projectDir/$publicDir";
-        $this->_createFile("$source/index.php", "$destination/index.php", array('{APPLICATION}' => $this->_analyser->getApplicationName()));
+        $this->_createFile("$source/index.php", "$destination/index.php", array('{APPLICATION}' => $parameters->getApplicationName()));
         // other files are simply copied
         $this->_createFile("$source/dothtaccess", "$destination/.htaccess");
         $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php");
@@ -126,20 +128,21 @@ APACHE;
      */
     public function makeApplication($projectDir) {
         // directories beginning by '!' have full permissions
-        $directories = array(
+        $directories = [
             'models/crud',
             '!config/admin',
             '!data/private',
             '!data/public',
             'modules'
-        );
-        $files = array(
+        ];
+        $files = [
             '_application.php' => "modules/_application.php",
-            '00_debug.php' => "config/00_Debug.php"
-        );
-
-        $programName = $this->_analyser->getApplicationName();
-        $source = Analyser::GetIrisSystemDir() . '/CLI/Files/application';
+            '00_debug.php' => "config/00_debug.php",
+            '20_settings.php' => "config/20_settings.php",
+        ];
+        $parameters = Parameters::GetInstance();    
+        $programName = $parameters->getApplicationName();
+        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destination = "$projectDir/$programName";
         echo "Making application directories and files ($programName/...).\n";
         $this->_createDir($directories, $destination);
@@ -158,14 +161,13 @@ APACHE;
      * @param string $action 
      */
     public function makeNewCode($module, $controller, $action) {
+        $parameters = Parameters::GetInstance();
         $this->_os = \Iris\OS\_OS::GetInstance();
-        $configs = $this->_analyser->getConfigs();
+        $configs = $parameters->getProjects();
         $defaultProject = $configs['Iris']->DefaultProject; //must exist
         $projectDir = "/" . str_replace('_', '/', $defaultProject);
         $projectConfig = $configs[$defaultProject];
-        //iris_debug($projectConfig);
         $programName = $projectConfig->ApplicationName;
-        ////$this->_analyser->getApplicationName();
         $destination = "$projectDir/$programName";
         $doneJobs = 0;
         if (!file_exists("$destination/modules/$module")) {
@@ -203,7 +205,7 @@ APACHE;
     }
 
     private function _newModule($destination, $moduleName, $controllerName = 'index', $actionName = 'index') {
-        $source = Analyser::GetIrisSystemDir() . '/CLI/Files/application';
+        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $directories = array(
             "modules/$moduleName/controllers/helpers",
             "modules/$moduleName/views/layouts",
@@ -222,7 +224,7 @@ APACHE;
     }
 
     private function _newController($destination, $moduleName, $controllerName, $actionName = 'index') {
-        $source = Analyser::GetIrisSystemDir() . '/CLI/Files/application';
+        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destinationMod = "$destination/modules/$moduleName";
         if ($moduleName == 'main' and $controllerName == 'index') {
             $title = '$this->_view->welcome(1)';
@@ -245,7 +247,7 @@ APACHE;
     }
 
     private function _newAction($destination, $moduleName, $controllerName, $actionName) {
-        $source = Analyser::GetIrisSystemDir() . '/CLI/Files/application';
+        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destinationMod = "$destination/modules/$moduleName";
         $scriptName = "$destinationMod/views/scripts/{$controllerName}_$actionName.iview";
         if (file_exists($scriptName)) {
@@ -280,8 +282,8 @@ END;
     }
 
     protected function _copyright() {
-        $parameters = $this->_analyser->getParameters();
-        $fileName = $parameters['FileName'];
+        $parameters = Parameters::GetInstance();
+        $fileName = $parameters->getFileName();
         if (basename($fileName) == 'Code.php') {
             throw new \Iris\Exceptions\CLIException('Code.php cannot modify itself!');
         }
@@ -302,7 +304,7 @@ END;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  *
 
 TEXT;

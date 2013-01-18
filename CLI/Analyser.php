@@ -2,9 +2,6 @@
 
 namespace CLI;
 
-define('LINUX_BASE_DIR', '/opt/Iris/library/');
-define('WINDOWS_BASE_DIR', 'c:/opt/Iris/library/');
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -46,9 +43,11 @@ class Analyser {
     const WORKDONE = 5;
     const CODE = 6;
     const PASSWORD = 7;
+    const BASE = 8;
 
     private $_windows;
     private $_linux;
+    
 
     /**
      * The choiced processor after analysis
@@ -78,7 +77,7 @@ class Analyser {
      * 
      * @var array
      */
-    public static $Functions = array(
+    public static $Functions = [
         'h::' => 'help::',
         's:' => 'show:',
         't' => 'test',
@@ -90,7 +89,7 @@ class Analyser {
         'L:' => 'lockproject:',
         'U:' => 'unlockproject:',
         'd:' => 'setdefaultproject',
-        'm:' => 'projectmetatdata:',
+        'm:' => 'projectmetadata:',
         'a:' => 'applicationdir:',
         'p:' => 'publicdir:',
         'u:' => 'url:',
@@ -108,23 +107,15 @@ class Analyser {
         // watermaking
         'o:' => 'copyright:',
         'w:' => 'password:',
-            // 
-    );
+        // database
+        'B:' => 'database:',
+        'b:' => 'selectbase:',
+        'I' => 'makedbini',
+        'O:' => 'otherdb:',
+        'e:' => 'entitygenerate:'
+    ];
 
-    /**
-     * The parameters read or analyzed.
-     * 
-     * @var array(string) 
-     */
-    private $_parameters = array();
-
-    /**
-     * the default values for the parameters
-     * 
-     * @var array(string) 
-     */
-    private $_defaults = array();
-
+    
     /**
      * The choiced action for the processor.
      * 
@@ -132,33 +123,21 @@ class Analyser {
      */
     private $_option;
 
-    /**
-     * The content of the projects.ini file
-     * 
-     * @var array(\Iris\SysConfig\Config)
-     */
-    private $_configs = NULL;
-
-    /**
-     * The default project name
-     * 
-     * @var string 
-     */
-    private $_defaultProject;
-
+    
     /**
      * The Iris system directory name
      * 
      * @var string 
      */
-    private static $_IrisSystemDir;
+    private static $_LibraryDir;
 
     /**
-     * The constructor initializes some defaults vars.
+     * The constructor initializes some defaults vars and then 
+     * analyses the command line
      * 
-     * @param string $systemDir the directory containing the framework
+     * @param string $libraryDir the directory containing the framework
      */
-    public function __construct($argv, $systemDir = LINUX_BASE_DIR) {
+    public function __construct($libraryDir) {
         if (PHP_OS == 'WINNT') {
             $this->_linux = \FALSE;
         }
@@ -166,19 +145,9 @@ class Analyser {
             $this->_linux = \TRUE;
         }
         $this->_windows = !$this->_linux;
-        self::$_IrisSystemDir = $systemDir;
-        // by default, there is no default base dir for the project 
-        $this->_defaults['ProjectDir'] = '';
-        // public and application defaults
-        $this->_defaults['PublicDir'] = 'public';
-        $this->_defaults['ApplicationName'] = 'application';
-        // default controller and action
-        $this->_defaults['ProjectName'] = '';
-        $this->_defaults['Locked'] = 1;
-        global $argv;
-        // all parameters and commands are in command line
+        self::$_LibraryDir = $libraryDir;
+        
         $this->_AnalyseCmdLine();
-        $this->_defaults['CommandLine'] = $argv;
     }
 
     /**
@@ -186,6 +155,7 @@ class Analyser {
      * init respective private variables
      */
     private function _AnalyseCmdLine() {
+        $parameters = Parameters::GetInstance();
         // Read options
         $options = $this->cli_options();
         foreach ($options as $option => $value) {
@@ -227,11 +197,8 @@ class Analyser {
                             $dir[1] = ':';
                         }
                     }
-                    $this->_parameters['ProjectName'] = $name;
-                    $this->_parameters['ProjectDir'] = $dir;
-                    $this->_parameters['ModuleName'] = 'main';
-                    $this->_parameters['ControllerName'] = 'index';
-                    $this->_parameters['ActionName'] = 'index';
+                    $parameters->setProjectName($name);
+                    $parameters->setProjectDir($dir);
                     $this->_processor = self::PROJECT;
                     $this->_option = $option;
                     $this->_defaultProject = $name;
@@ -246,7 +213,7 @@ class Analyser {
                 // option "interactive" in project creation : metadata are request through
                 // a dialog in console
                 case 'i': case 'interactive':
-                    $this->_parameters['Interactive'] = TRUE;
+                    $parameters->setInteractive(TRUE);
                     break;
 
                 case 'D': case 'doc':
@@ -255,18 +222,18 @@ class Analyser {
                     break;
 
                 // Set public dir  (default is public)   
-                case 'P': case 'publicdir':
-                    $this->_parameters['PublicDir'] = $value;
+                case 'p': case 'publicdir':
+                    $parameters->setPublicDir($value);
                     break;
 
                 // set application dir (default is application)
                 case 'a': case 'applicationdir':
-                    $this->_parameters['ApplicationName'] = $value;
+                    $parameters->setApplicationName($value);
                     break;
 
                 // set url (default is mysite.local)
                 case 'u': case 'url':
-                    $this->_parameters['Url'] = $value;
+                    $parameters->setUrl($value);
                     break;
 
                 // project metadata management
@@ -277,26 +244,26 @@ class Analyser {
 
                 // define module/controller/action
                 case 'M':case 'module':
-                    $this->_parameters['ModuleName'] = $value;
-                    $this->_parameters['ControllerName'] = 'index';
-                    $this->_parameters['ActionName'] = 'index';
+                    $parameters->setModuleName($value);
+                    $parameters->setControllerName('index');
+                    $parameters->setActionName('index');
                     $this->_option = $option;
                     $this->_processor = self::PARAM;
                     break;
                 case 'C': case 'controller':
-                    $this->_parameters['ControllerName'] = $value;
-                    $this->_parameters['ActionName'] = 'index';
+                    $parameters->setControllerName($value);
+                    $parameters->setActionName('index');
                     $this->_option = $option;
                     $this->_processor = self::PARAM;
                     break;
                 case 'A': case 'action':
-                    $this->_parameters['ActionName'] = $value;
+                    $parameters->setActionName($value);
                     $this->_option = $option;
                     $this->_processor = self::PARAM;
                     break;
 
                 case 'N': case 'menuname':
-                    $this->_parameters['MenuName'] = $value;
+                    $parameters->setMenuName($value);
                     $this->_option = $option;
                     $this->_processor = self::PARAM;
                     break;
@@ -304,15 +271,37 @@ class Analyser {
                 case 'n': case 'makemenu':
                     $this->_processor = self::PROJECT;
                     $this->_option = $option;
-                    $this->_parameters['Items'] = $value;
+                    $parameters->setItems($value);
                     break;
 
-
+                // database
+                case 'B': case 'database':
+                    $this->_processor = self::BASE;
+                    $this->_option = $option . "_" . $value;
+                    break;
+                case 'b': case 'selectbase':
+                    $this->_processor = self::BASE;
+                    $this->_option = $option;
+                    $parameters->setDatabase($value);
+                    break;
+                case 'I': case 'makedbini':
+                    $this->_processor = self::BASE;
+                    $this->_option = $option;
+                    break;
+                case 'O': case 'otherdb':
+                    $this->_processor = self::BASE;
+                    $this->_option = $option;
+                    break;
+                case 'e': case 'entitygenerate':
+                    $this->_processor = self::BASE;
+                    $this->_option = $option;
+                    $parameters->setEntityName($value);
+                    break;
                 // make core_Class
                 case'k': case 'mkcore':
                     $this->_processor = self::CORECODE;
                     $this->_option = $option;
-                    $this->_parameters['ClassName'] = $value;
+                    $parameters->setClassName($value);
                     break;
 
                 // recreate the file config/overridden.classes
@@ -325,7 +314,7 @@ class Analyser {
                 case 'o': case 'copyright':
                     $this->_processor = self::CODE;
                     $this->_option = $option;
-                    $this->_parameters['FileName'] = $value;
+                    $parameters->setFileName($value);
                     break;
 
                 // password management
@@ -351,38 +340,49 @@ class Analyser {
         }
     }
 
+    /**
+     * Process the line by using all the parameters and options
+     * of the command line.
+     * 
+     * @throws \Iris\Exceptions\CLIException
+     */
     public function process() {
         switch ($this->_processor) {
             // Project management
             case self::PROJECT:
-                require_once self::GetIrisSystemDir() . '/CLI/Project.php';
+                require_once self::GetIrisLibraryDir() . '/CLI/Project.php';
                 $project = new \CLI\Project($this);
                 $project->process();
                 break;
             // Core class creation (for user customization)
             case self::CORECODE:
                 $newCode['module'] = $this->getModuleName();
-                $config = $this->loadDefaultProject();
+                //$config = $this->loadDefaultProject();
                 if ($config == NULL) {
                     throw new \Iris\Exceptions\CLIException('No active default project, please select one...');
                 }
-                require_once self::GetIrisSystemDir() . '/CLI/CoreMaker.php';
+                require_once self::GetIrisLibraryDir() . '/CLI/CoreMaker.php';
                 $code = new \CLI\CoreMaker($this);
                 $code->process();
                 break;
             // Display status    
             case self::SHOW:
-                require_once self::GetIrisSystemDir() . '/CLI/Project.php';
+                require_once self::GetIrisLibraryDir() . '/CLI/Project.php';
                 $project = new \CLI\Project($this);
                 $project->process();
                 break;
             case self::CODE:
-                require_once self::GetIrisSystemDir() . '/CLI/Code.php';
+                require_once self::GetIrisLibraryDir() . '/CLI/Code.php';
                 $code = new \CLI\Code($this);
                 $code->process();
                 break;
+            case self::BASE:
+                require_once self::GetIrisLibraryDir() . '/CLI/Database.php';
+                $base = new \CLI\Database($this);
+                $base->process();
+                break;
             case self::PASSWORD:
-                require_once self::GetIrisSystemDir() . '/Iris/Users/_Password.php';
+                require_once self::GetIrisLibraryDir() . '/Iris/Users/_Password.php';
                 $password = \Iris\Users\_Password::EncodePassword($this->_option);
                 echo $password . "\n";
                 break;
@@ -397,27 +397,10 @@ class Analyser {
         }
     }
 
-    public function readParams($paramFile) {
-        $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
-        $configs = $parser->processFile($paramFile);
-        $this->_configs = $configs;
-        $mainConfig = $configs['Iris'];
-        if (!is_null($mainConfig->DefaultProject)) {
-            $this->_defaultProject = $mainConfig->DefaultProject;
-        }
-        return $configs;
-    }
-
-    public function getParameters() {
-        return $this->_parameters;
-    }
-
-    public function writeParams($paramFile, $configs) {
-        $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
-        $parser->exportFile($paramFile, $configs);
-    }
+    
 
     public function _treatMetadata($value) {
+
         if (is_array($value)) {
             foreach ($value as $value1) {
                 $this->_treatMetadata($value1);
@@ -426,7 +409,7 @@ class Analyser {
         else {
             $values = explode('=', $value);
             if (count($values) != 2) {
-                throw new \Iris\Exceptions\CLIException('Invalid project metadata in -m/--projectmetada option.');
+                throw new \Iris\Exceptions\CLIException('Invalid project metadata in -m/ --projectmetada option.');
             }
             list($parameterName, $parameterValue) = $values;
             if (isset(self::$_Metadata[$parameterName])) {
@@ -436,46 +419,9 @@ class Analyser {
         }
     }
 
-    /**
-     *
-     * @param type $sendit
-     * @return \Iris\SysConfig\Config 
-     */
-    public function loadDefaultProject($sendit = TRUE) {
-        $configs = $this->_configs;
-        $defaultProject = $configs['Iris']->DefaultProject;
-        if (is_null($defaultProject) or $defaultProject == '') {
-            throw new \Iris\Exceptions\CLIException
-                    ("No default project. You can define one with iris.php --setdefaultproject\n" .
-                    "or create a new one with iris.php --createproject.");
-        }
-        if (isset($configs[$defaultProject])) {
-            foreach ($configs[$defaultProject] as $key => $value) {
-                $this->_parameters[$key] = $value;
-            }
-            // no parameters in command Line
-            $this->_parameters['CommandLine'] = array('iris.php');
-            if ($sendit) {
-                return $configs[$defaultProject];
-            }
-        }
-        else {
-            throw new \Iris\Exceptions\CLIException("The default project is broken. Analyse configuration");
-        }
-    }
-
-    public function createNewConfig() {
-        $config = new \Iris\SysConfig\Config($this->getProjectName());
-        foreach ($this->_parameters as $key => $value) {
-            if ($key != 'CommandLine') {
-                $config->$key = $value;
-            }
-        }
-        return $config;
-    }
-
-    public static function GetIrisSystemDir() {
-        return self::$_IrisSystemDir;
+    
+    public static function GetIrisLibraryDir() {
+        return self::$_LibraryDir;
     }
 
     /**
@@ -523,158 +469,23 @@ class Analyser {
         return $options_array;
     }
 
-    /*
-     * Accesseurs 
-     */
-
-    public function getProjectName() {
-        return $this->_getParameter('ProjectName');
-    }
-
-    public function getProjectDir() {
-        return $this->_getParameter('ProjectDir');
-    }
-
-    public function getPublicDir() {
-        return $this->_getParameter('PublicDir');
-    }
-
-    public function getModuleName() {
-        return $this->_getParameter('ModuleName');
-    }
-
-    public function getControllerName() {
-        return $this->_getParameter('ControllerName');
-    }
-
-    public function getActionName() {
-        return $this->_getParameter('ActionName');
-    }
-
-    public function getApplicationName() {
-        return $this->_getParameter('ApplicationName');
-    }
-
-    public function getClasseName() {
-        return $this->_getParameter('ClassName');
-    }
-
-    public function getCommandLine() {
-        return $this->_getParameter('CommandLine');
-    }
-
-    private function _getParameter($name) {
-        if (isset($this->_parameters[$name])) {
-            return $this->_parameters[$name];
-        }
-        if (isset($this->_defaults[$name])) {
-            $this->_parameters[$name] = $this->_defaults[$name];
-            return $this->_defaults[$name];
-        }
-        if (!is_null($this->_configs)) {
-            $configs = $this->_configs;
-            if (isset($configs['Iris']) and isset($configs[$configs['Iris']->DefaultProject])) {
-                $defaultProject = $configs['Iris']->DefaultProject;
-                $config = $configs[$defaultProject];
-                return $config->$name;
-            }
-        }
-        throw new \Iris\Exceptions\CLIException("Parameters $name unknown");
-    }
-
-    public function getUrl() {
-        if (!isset($this->_parameters['Url'])) {
-            $this->_parameters['Url'] = basename($this->getProjectDir()) . '.local';
-        }
-        return $this->_parameters['Url'];
-    }
-
-    /**
-     *
-     * @return string
-     * @todo Implement a true user name management
-     */
-    public function getAuthor() {
-        if (isset($this->_parameters['Author'])) {
-            return $this->_parameters['Author'];
-        }
-        return getenv('USER');
-    }
-
-    public function __call($name, $arguments) {
-        if (substr($name, 0, 3) == 'put') {
-            $key = substr($name, 3);
-            $this->_parameters[$key] = $arguments[0];
-        }
-//        }putUserName($name){
-//        $this->_parameters['Author'] = $name;
-    }
-
-    /**
-     *
-     * @return string
-     * @todo Implement a true license management
-     */
-    public function getLicense() {
-        if (isset($this->_parameters['License'])) {
-            return $this->_parameters['License'];
-        }
-        return 'not defined';
-    }
-
-    public function getComment() {
-        if (isset($this->_parameters['Comment'])) {
-            return $this->_parameters['Comment'];
-        }
-        return '';
-    }
-
-    /**
-     *
-     * @return string
-     * @todo Implement a true project name management
-     */
-    public function getDetailedProjectName() {
-        if (isset($this->_parameters['DetailedProjectName'])) {
-            return $this->_parameters['DetailedProjectName'];
-        }
-        return $this->getProjectName();
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getConfigs() {
-        return $this->_configs;
-    }
-
+    
+    
     /**
      *
      * @param type $command 
-     * @todo detect true language
      */
     private function _help($command) {
-        $language = 'French';
+        $language = \CLI\_Help::DetectLanguage();
         $helpClass = "\\CLI\\Help\\$language";
         $help = new $helpClass(self::$Functions);
         $help->display($command);
     }
 
-    /**
-     * Only for information, displays the values of the parameters
-     */
-    public function displayParameters() {
-        foreach ($this->_parameters as $key => $value) {
-            if ($key !== 'CommandLine') {
-                echo "$key : $value\n";
-            }
-        }
-    }
-
+    
     /*
      * Function: Prompt user and get user input, returns value input by user.
-     *          Or if return pressed returns a default if used e.g usage
+     *            Or if return pressed returns a default if used e.g usage
      * $name = promptUser("Enter your name");
      * $serverName = promptUser("Enter your server name", "localhost");
      * Note: Returned value requires validation 
@@ -682,12 +493,13 @@ class Analyser {
      * @author : Mike Gleaves (Ric)
      * @see http://wiki.uniformserver.com/index.php/PHP_CLI:_User_Input
      * 
-     * @param string $promptStr
-     * @param mixe $defaultVal
-     * @return string 
+     * @param string $promptStr the message for the user
+     * @param mixed $defaultVal the default value
+     * @return string the value returned (may be the default)
+     * @todo This method could be static
      */
 
-    public function promptUser($promptStr, $defaultVal = false) {
+    public function promptUser($promptStr, $defaultVal = \FALSE) {
         ;
 
         if ($defaultVal) {                             // If a default set
@@ -704,8 +516,25 @@ class Analyser {
             return $userVal;                              // return value
         }
     }
+    
+    /**
+     * 
+     * @param string $promptStr the message for the user
+     * @param mixed $defaultVal the default value (a boolean or string or int equivalent)
+     * @param string $local localised strings synonymous to TRUE (by def in French)
+     * @return boolean the value returned (may be the default)
+     */
+    public function  promptUserLogical($promptStr, $defaultVal = 'FALSE', $local = 'ouivrai'){
+        if(is_bool($defaultVal)){
+            $defaultVal = $defaultVal ? 'TRUE' : 'FALSE';
+        }
+        $value = $this->promptUser($promptStr, $defaultVal);
+        return strpos("1\\trueyes".$local, strtolower($value)) === \FALSE ? \FALSE : \TRUE;
+    }
 
-//========================================= End promptUser ============
+    
+    
+
 }
 
 ?>

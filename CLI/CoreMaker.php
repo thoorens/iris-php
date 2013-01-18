@@ -54,13 +54,14 @@ class CoreMaker extends _Process {
      * in library/extensions directory. The class is added to the list in config/overriddenclasses.php 
      */
     protected function _makecore() {
+        $parameters = Parameters::GetInstance();
         $mydir = 'Extensions/';
-        $className = $this->_analyser->getClasseName();
+        $className = $parameters->getClasseName();
         if (array_search($className, $this->_protectedClasses) !== FALSE) {
             throw new \Iris\Exceptions\CLIException("Class $className can't be overridden through CLI. 
 Overwrite __construct in public/Bootstrap.php instead and load your own class manually.");
         }
-        $project = $this->_analyser->loadDefaultProject();
+        $project = $parameters->loadDefaultProject();
         $libraryName = $this->_getLibraryName($project);
         $iris_library = $project->ProjectDir . "/$libraryName/";
         $classPath = str_replace('\\', '/', $className) . '.php';
@@ -105,7 +106,7 @@ END;
         file_put_contents($toPath, $file);
 
         // add the class to overridden.classes file
-        $toPath = $project->ProjectDir . '/' . $this->_analyser->getApplicationName() . '/config/overridden.classes';
+        $toPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . '/config/overridden.classes';
         $text = "\t\\Iris\\Engine\\Loader::";
         $text .= '$UserClasses' . "['$className']=\\TRUE;\n";
         if (!file_exists($toPath)) {
@@ -135,7 +136,8 @@ END;
      * content.
      */
     protected function _searchcore() {
-        $project = $this->_analyser->loadDefaultProject();
+        $parameters = Parameters::GetInstance();
+        $project = $parameters->loadDefaultProject();
         $iris_library = $this->_getLibraryName($project);
         $classes = array();
         $this->_readCoreFile($project->ProjectDir . '/' . $iris_library . '/Core', '', $classes);
@@ -143,7 +145,7 @@ END;
         foreach ($classes as $class) {
             $text .= sprintf("\t\\Iris\\Engine\\Loader::\$UserClasses['%s']=\\TRUE;\n", $class);
         }
-        $toPath = $project->ProjectDir . '/' . $this->_analyser->getApplicationName() . '/config/overridden.classes';
+        $toPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . '/config/overridden.classes';
         file_put_contents($toPath, $text);
     }
 
