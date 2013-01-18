@@ -1,0 +1,35 @@
+{php}
+    $data = [
+    ['2011','2011 is the year <i>Iris-PHP</i> has been started'],
+    ['1953','The developper of the framework is born in 1953'],
+    ['5.4','5.4 is the <b>minimum version</b> required by Iris-PHP'],
+    ['4','There are 4 ways to specify a <i>layout</i> in Iris-PHP'],
+];
+// IMPORTANT : each detail helper has a different id
+$det1 = $this->details1->setAspectClass('dojoIrisMask2')->setId('det1');
+$det2 = $this->details2->setAspectClass('dojoIrisMask2')->setId('det2');
+{/php}
+<div>
+    <div id="page">
+        {wbExplain($this)}
+        <div class="example">
+        <h3>Iris-PHP and numbers (mouseover version)</h3>
+        <p>Put mouse on "Details" to show or hide more text.</p>
+        <ul>
+            {foreach(data,item)}
+                <li>{(det1->details($item[0],$item[1]))}</li>
+            {endforeach}
+       </ul>
+            {(det1->connectEvent('mouseover'))}
+
+            <h3>Iris-PHP and numbers (mouseover/out version)</h3>
+            <p>Place mouse on "Details" to read more text.</p>
+            <ul>
+                {foreach(data,item)}
+                    <li>{(det2->details($item[0],$item[1]))}</li>
+                {endforeach}
+            </ul>
+            {(det2->connectEvents(['mouseover','mouseout']))}
+        </div>
+    </div>
+</div>
