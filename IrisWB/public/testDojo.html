@@ -1,21 +1,93 @@
-<!DOCTYPE html>
-<html >
-<head>
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="/css/wb.css">
+        <link href="/images/favicon.ico" rel="shortcut icon" />        	<!-- LOADERS begin -->
+        <link rel="stylesheet" type="text/css" href="/!documents/file/resource/css/dojo.css">
+        <link rel="stylesheet" type="text/css" href="/js/dijit/themes/nihilo/nihilo.css">
+        <script>
+            dojoConfig = {parseOnLoad: true, debug:true};
+        </script>
+        <script type="text/javascript" src="/js/dojo/dojo.js">
+        </script><script type="text/javascript">
+            require(["dijit/layout/BorderContainer","dojo/parser","dijit/layout/ContentPane"]);</script>
+        <style>
 
-	<link rel="stylesheet" href="/js/dijit/themes/claro/claro.css">
-	<style type="text/css">.box { color: white; background-color: #ba2929; width: 200px; height: 50px; padding: 10px; }</style>
-<script src='/js/dojo/dojo.js' data-dojo-config='async: true, parseOnLoad: true'></script><script>require(["dojo/parser", "dijit/Tooltip", "dijit/form/Button"]);</script>
-</head>
-<body class="claro">
-    <div class="box">Example content above button</div>
-<button id="buttonId" data-dojo-type="dijit/form/Button">Longanimity</button>
-<button id="button2" data-dojo-type="dijit/form/Button">Tooltip below</button>
-<div class="box">Example content below button</div>
-<div data-dojo-type="dijit/Tooltip" data-dojo-props="connectId:'buttonId',position:['above']">
-    a <i>disposition</i> to bear injuries patiently : <b>forbearance</b>
-</div>
-<div data-dojo-type="dijit/Tooltip" data-dojo-props="connectId:'button2',position:['below']">
-    a <i>disposition</i> to bear injuries patiently : <b>forbearance</b>
-</div>
-</body>
+            #iris_admintoolbar{
+                font-size :0.8em;
+                background-color:#148;
+                text-align: left;
+                color:#eb7;
+            }
+            span#iris_RTD{
+                color: white;
+            }    
+        </style>
+        <!-- LOADERS end -->
+    </head>
+    <body  class="nihilo" style="background-color:#FA8">
+        <div id="main">
+            <!--A tool bar for administration during development-->
+            <div id="iris_admintoolbar">
+                &nbsp; <span id="iris_RTD"></span>
+                &nbsp;<button class="norm"  title="Accéder aux outils d'administration" onclick="javascript:location.href='/!admin'">Administration</button>
+                &nbsp;User : <b>somebody - </b>(<i>browse</i>)
+                &nbsp;<button class="norm"  title="Reset the session" onclick="javascript:location.href='/!iris/reset'">RESET</button>
+            </div>
+            <div id="container">
+                <div id='Title'>
+                    <h1>Dojo - Containers - Borders</h1>
+                </div><!-- Title -->
+                <div class="column one">
+                    <h2>Column 1</h2>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin porta nibh quis velit porta a venenatis lectus aliquet. Fusce sed magna id dolor pellentesque luctus. Pellentesque eleifend purus vitae quam tristique a fringilla quam faucibus.                </div><!-- 1 -->
+                <div class="column two">
+                    <h1>Test</h1>
+                    <h2>Example of border</h2>
+
+                    <div id="containers" style="height:250px;width:450px" data-dojo-type="dijit.layout.Border" data-dojo-props="design:'headline'"  data-dojo-id="containers" ><!--Dojo--><div  id="top" title="First tab" data-dojo-type="dijit.layout.ContentPane"  data-dojo-props="region:'top',splitter:'true'"> 
+                            top
+                        </div>
+                        <div  id="right" title="Fourth tab" data-dojo-type="dijit.layout.ContentPane"  data-dojo-props="region:'right',splitter:'true'"> 
+                            right
+                        </div>
+                        <div  id="bottom" title="Second tab" data-dojo-type="dijit.layout.ContentPane"  data-dojo-props="region:'bottom',splitter:'true'"> 
+                            bottom
+                        </div>
+                        <div  id="left" title="Third tab" data-dojo-type="dijit.layout.ContentPane"  data-dojo-props="region:'left',splitter:'true'"> 
+                            left
+                        </div>
+                        <div  id="center" title="Fith tab" data-dojo-type="dijit.layout.ContentPane"  data-dojo-props="region:'center',splitter:'true'"> 
+                            center
+                        </div>
+
+                    </div><!--Dojo-->
+
+
+                </div><!-- 2 -->
+                <div class="column three ">
+                    <h2>Column 3</h2>
+                    Integer quis arcu at libero rhoncus molestie a non odio. Sed at odio a odio cursus pellentesque. Vestibulum vel nisl vel magna euismod tempus. Aenean vel augue ac diam ultrices condimentum. Proin imperdiet turpis egestas nibh mollis quis malesuada ipsum auctor.                </div><!-- 3 -->
+            </div><!-- container -->
+            <div id="foot">
+                <b>Layout :</b> modules/main/views/scripts/lo_main.iview - <b>MD5 finger print</b> : <span id="iris_md5"></span><br/><button class="norm"  title="Accéder aux outils d'administration" onclick="javascript:location.href='/!admin'">Administration</button>
+                <button class="norm"  title="Return to irisphp.org" onclick="javascript:location.href='http://irisphp.org'">Site officiel du framework Iris PHP</button>
+                <button class="norm"  title="Save the present MD5 signature" onclick="" id="b_iris_md5">Save MD5</button><button class="norm"  title="Dojo - Containers - Stack" onclick="javascript:location.href='/dojo/containers/stack'">Previous</button>
+                <button class="norm"  title="Table of tests" onclick="javascript:location.href='/index/toc'">TOC</button>
+                <button class="norm"  title="Dojo - Containers - Split" onclick="javascript:location.href='/dojo/containers/split'">Next</button>
+            </div><!--foot-->
+        </div><!--main-->  
+        <script>
+            md5fp = dojo.byId('iris_md5');
+            md5fp.innerHTML = '<i>bdd718ea1ec48a79fa57ff33d71b2535</i>';
+            dojo.addClass('iris_md5','iris_md5_bad');
+            dojo.attr( "b_iris_md5",'onclick',"javascript:location.href='/manager/md5/save/dojo/containers/border/bdd718ea1ec48a79fa57ff33d71b2535'");  
+        </script>
+        <script>
+            exectime = document.getElementById('iris_RTD');
+            exectime.innerHTML = "Execution time : <b>0.0858</b>";
+        </script>
+
+    </body>
 </html>

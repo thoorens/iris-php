@@ -81,6 +81,11 @@ p.errorTrue{
     color:white;
 }
 
+div.example{
+    color:#080;
+    background-color: #FFD;
+}
+
 .smallcolumn3{
     padding-left:10px;
     width:155px;
