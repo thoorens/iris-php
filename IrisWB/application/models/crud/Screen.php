@@ -1,8 +1,6 @@
 <?php
 
-
-
-namespace modules\testLayout\controllers;
+namespace models\crud;
 
 /*
  * This file is part of IRIS-PHP.
@@ -23,32 +21,28 @@ namespace modules\testLayout\controllers;
  * @copyright 2012 Jacques THOORENS
  *
  * 
+ */
+
+/**
+ * 
+ * Test of basic crud operations
+ * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-
-/**
- * Demo class for Iris Workbench
- * It is a test class for Islets (type : found in another module)
- * 
- */
-class islTestLayout extends \Iris\MVC\_Islet{
+class Screen extends \Iris\DB\DataBrowser\_Crud {
+ 
     
-    /**
-     *
-     * @param string $text A message received from outside 
-     */
-    public function indexAction($text="Message not found"){
-        // islets are not completely deaf
-        // the action parameter should have been initialized in the helper Islet call 
-        // and the tooltip comes from anywhere through Memory
-        $this->__tooltip = $this->_fromMemory('tooltip');
-        $number = 17;
-        $this->__result = $this->compute($number,'-');
-        $this->__text = $text;
+    public function __construct($param = NULL) {
+        parent::__construct($param);
+        $dbType = \Iris\Users\Session::GetInstance()->getValue('dbType', 'sqlite');
+        $entity = \Iris\DB\DataBrowser\AutoEntity::entityBuilder('sequence', array('id'),
+                \models\_invoiceManager::getEM($dbType));
+        $this->setEntity($entity);
+        $this->setActions("erreur", "index");
     }
+
+
     
 }
-
-?>

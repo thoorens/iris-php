@@ -1,11 +1,11 @@
 <h1>Demo of animation</h1>
 <div id="explication1" >
-    {loremipsum(5,1)}  
+    {loremIpsum(5,1)}  
 
-    {dojo_autoAnimation()->fadeIn('explication1',10000)}
+    {dojo_autoAnimation()->waitIn('explication1',1000)}
     <h3 id="special">Suite...</h3>
     <div id="explication2" >
-        {loremipsum(5,1)}  
+        {loremIpsum(5,1)}  
     </div>
-    {dojo_autoAnimation()->fadeIn('explication2',5000,array('special','onclick'))}
+    {dojo_autoAnimation()->in('explication2','special',5000)}
 </div>

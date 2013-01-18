@@ -1,0 +1,10 @@
+<!-- This script is for demonstration use in WorkBench -->
+<div>
+    <div id="page">
+        {wbExplain($this)}
+    </div>
+    {wbScriptNames($required)}
+    <br/>
+    {partial($reqPartial,array('name'=>$reqPartial))}
+    <br/>
+</div>

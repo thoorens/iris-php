@@ -1,8 +1,9 @@
+<!-- This script is for demonstration use in WorkBench -->
 <div>
     <div id="page">
         {wbExplain($this)}
-        {wbScriptNames($required)}
     </div>
+    {wbScriptNames($required)}
     <p>
         We have no partial here....
     </p>

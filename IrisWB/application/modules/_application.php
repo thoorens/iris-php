@@ -29,6 +29,8 @@ class _application extends \Iris\MVC\_Controller {
         \Iris\Engine\Memory::Set('sequence', $sequence);
         $this->_sequence = $sequence;
         $this->__Title = $this->_sequence->getCurrentDesc();
+        // set the model for MD5
+        \Iris\views\helpers\Signature::SetModel('TSequence', 'URL', 'Md5');
     }
 
 }

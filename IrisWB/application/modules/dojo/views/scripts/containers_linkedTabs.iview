@@ -1,0 +1,11 @@
+<div>
+    <div id="page">
+        {wbExplain($this)}
+        {containers->divMaster()}
+        <div {containers->linkedItem("first",'/include/content1.html')}> 
+        </div>
+        <div {containers->linkedItem("second",'/include/content2.html')}> 
+        </div>
+        {containers->endMaster()}
+    </div>
+</div>
