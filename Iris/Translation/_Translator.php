@@ -18,7 +18,7 @@ namespace Iris\Translation;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
@@ -35,16 +35,16 @@ namespace Iris\Translation;
 abstract class _Translator {
 
     const FRAMEWORKLANGUAGE = 'EN';
-    
+
     protected static $CurrentLanguage;
-    
+
     /**
      * A translator is provided by default.
      * 
      * @var _Translator
      */
     protected static $_CurrentTranslator = NULL;
-    
+
     /**
      * A translator is installed by default or set by the developper.
      * The NullTranslator does not translate anything, but can be
@@ -53,26 +53,39 @@ abstract class _Translator {
      * @return _Translator
      */
     public static function GetCurrentTranslator() {
-        if(is_null(self::$_CurrentTranslator)){
+        if (is_null(self::$_CurrentTranslator)) {
             self::$_CurrentTranslator = new \Iris\Translation\NullTranslator();
             self::SetLanguage();
         }
         return self::$_CurrentTranslator;
     }
-    
-    protected static function SetLanguage(){
-        $client = new \Iris\System\Client();
-        self::$CurrentLanguage = $client->getLanguage();
+
+    /**
+     * A static method to determine the current language. In CLI mode, it 
+     * can be used to change the language (by default English).
+     */
+    public static function SetLanguage($newLanguage = \NULL) {
+        static $cliLanguage = 'English';
+        if (php_sapi_name() == 'cli') {
+            if(!is_null($newLanguage)){
+                $cliLanguage = $newLanguage;
+            }
+            self::$CurrentLanguage = $cliLanguage;
+        }
+        else {
+            $client = new \Iris\System\Client();
+            self::$CurrentLanguage = $client->getLanguage();
+        }
     }
-    
+
     /**
      *
      * @param _Translator $translator 
      */
-    public static function SetCurrentTranslator(_Translator $translator){
+    public static function SetCurrentTranslator(_Translator $translator) {
         self::$_CurrentTranslator = $translator;
     }
-    
+
     /**
      * This method needs to be overridden to provide a real translation.
      * 
@@ -80,10 +93,10 @@ abstract class _Translator {
      * @param string $language
      * @return string 
      */
-    public function translate($message,$language = NULL){
+    public function translate($message, $language = NULL) {
         return $message;
     }
-    
+
 }
 
 ?>
