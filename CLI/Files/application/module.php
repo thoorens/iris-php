@@ -20,6 +20,10 @@ class {MODULECONTROLLER} extends \modules\_application {
     protected final function _moduleInit() {
         // You should modify this demo layout
         $this->_setLayout('!irisShadow');
+        // these parameters are only for demonstration purpose
+        // and required by the default layout defined in {MODULECONTROLLER}
+        $this->__buttons = 1 + 4;
+        $this->__logoName = 'mainLogo';
     }
 
 }
