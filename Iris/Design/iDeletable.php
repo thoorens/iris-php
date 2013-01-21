@@ -1,6 +1,6 @@
 <?php
 
-namespace Iris\Admin\models;
+namespace Iris\Design;
 
 /*
  * This file is part of IRIS-PHP.
@@ -22,17 +22,17 @@ namespace Iris\Admin\models;
  */
 
 /**
- * Model for the application modules
+ * An entity class will be deletable if it can marked has deleted
+ * and insertion doesn't create a new record if a delete one already exists.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TModules extends _IrisObject {
-    
-    protected static $_InsertionKeys = ['ModuleName'];
-    
-    
+interface iDeletable {
+
+    public function markDeleted($tableName, $id = \NULL);
+    public function undeleteOrInsert($values);
 }
 
-
+?>

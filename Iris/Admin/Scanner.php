@@ -50,40 +50,22 @@ class Scanner {
      */
     protected $_tActions;
 
-    /**
-     *
-     * @var array 
-     */
-    protected $_scannedModules = NULL;
-
-    /**
-     *
-     * @var array 
-     */
-    protected $_scannedControllers = array();
-
-    /**
-     *
-     * @var array 
-     */
-    protected $_scannedActions = array();
-
-    public function clean($file) {
-        $fileName = IRIS_PROGRAM_PATH . "/modules/$file";
-        //$fileName = '/srv/Iris/library/Iris/Engine/Loader.php';
+    public function clean($fileName) {
         if (!file_exists($fileName)) {
             $contenu = "Fichier inconnu : $fileName";
         }
         else {
             $contenu = file_get_contents($fileName);
-            self::RemoveComments($contenu);
-            //$contenu = highlight_string($contenu, TRUE);
+//            self::RemoveComments($contenu);
+//            self::RemoveBlancs($contenu);
         }
-        return explode("\n", $contenu);
+        return explode("\n",$contenu);
     }
 
     public function __construct() {
         $this->_tModules = new models\TModules;
+        $this->_tControllers = new models\TControllers;
+        $this->_tActions = new models\TActions;
     }
 
     public function collect() {
@@ -102,56 +84,43 @@ class Scanner {
      * Scans all the application in search of modules, controllers and actions
      */
     public function scanApplication() {
-        $this->_moduleScan();
-        //return;
-        // controller loop
-        foreach ($this->_scannedModules as $moduleName => $moduleFileName) {
-            $tModules = new models\TModules();
+        $tModules = $this->_tModules;
+        // Before scanning mark all objects as deleted
+        $tModules->markDeleted('modules');
+        $tModules->markDeleted('controllers');
+        $tModules->markDeleted('actions');
+        $modules = $this->_moduleScan();
+        foreach ($modules as $moduleName => $moduleFileName) {
             $module = $tModules->fetchRow('ModuleName=', $moduleName);
-            $this->_controllerScan($moduleName, $moduleFileName, $module->id);
-            foreach ($this->_scannedControllers as $controllerName => $controllerFileName) {
-
-                iris_debug($this->_scannedControllers);
-                $actions = $this->_actionScan($moduleName, $controllerName, $controllerFileName);
+            $controllers = $this->_controllerScan($moduleName, $moduleFileName, $module->id);
+            foreach ($controllers as $controllerName => $controllerFileName) {
+                $this->_actionScan($module->id, $controllerName, $controllerFileName);
             }
         }
     }
 
     /**
-     * Scans the application directory in search of modules
+     * Scans the application directory in search of modules. 
+     * Old modules are marked as deleted
      */
     protected function _moduleScan() {
-//        $newC = new models\TControllers;
-//        $newC->createRow();
         $modules = array();
         $path = IRIS_PROGRAM_PATH . "/modules";
         $dir = new \DirectoryIterator($path);
-        $tModule = new models\TModules();
-        $tModule->getEntityManager()->directSQL("Update Modules set Deleted = 1;");
+        $tModule = $this->_tModules;
         foreach ($dir as $file) {
-            //$tModule =new models\TModules();
             $fileName = $file->getFilename();
             if ($file->isDir() and $fileName[0] != '.') {
-                $tModule->where('ModuleName=', $fileName);
-                $module = $tModule->fetchRow();
-                if (is_null($module)) {
-                    $module = $tModule->createRow();
-                    $module->ModuleName = $fileName;
-                }
-                else {
-                    $module->Deleted = \FALSE;
-                }
-                $module->save();
+                $tModule->undeleteOrInsert([$fileName],[$fileName]);
                 $modules[$fileName] = "$path/$fileName";
             }
         }
-        $this->_scannedModules = $modules;
+        return $modules;
     }
 
     protected function _controllerScan($moduleName, $moduleFileName, $moduleId) {
         $controllers = array();
-        $tControllers = new models\TControllers();
-        $tControllers->getEntityManager()->directSQL("Update Controllers set Deleted = 1;");
+        $tControllers = $this->_tControllers;
         $dir = new \DirectoryIterator("$moduleFileName/controllers");
         foreach ($dir as $file) {
             $fileName = $file->getFilename();
@@ -159,25 +128,25 @@ class Scanner {
             if ($file->isFile() and $extension == 'php') {
                 $controllerName = basename($fileName, '.php');
                 $controllers[$controllerName] = $file->getRealPath();
-                $tControllers->where('ControllerName=',$controllerName);
-                $tControllers->where('module_id=',$moduleId);
-                $controller = $tControllers->fetchRow();
-                if(is_null($controller)){
-                    $controller = $tControllers->createRow();
-                    $controller->ControllerName = $controllerName;
-                    $controller->module_id = $moduleId;
-                }
-                else{
-                    $controller->Deleted = \FALSE;
-                }
-                $controller->save();
+                $tControllers->undeleteOrInsert([$controllerName, $moduleId]);
             }
         }
-        $this->_scannedControllers[$moduleName] = $controllers;
+        return $controllers;
     }
 
-    protected function _actionScan($module, $controlerName, $controllerFileName) {
+    protected function _actionScan($moduleId, $controlerName, $controllerFileName) {
         $fichier = $this->clean($controllerFileName);
+        foreach($fichier as $line){
+            if(preg_match('/function (.*)Action/', $line)){
+                $actionName =preg_replace('/.*function (.*)Action.*/','$1',$line);
+                $tControllers = $this->_tControllers;
+                $tControllers->where('module_id=',$moduleId)
+                        ->where('ControllerName=',$controlerName);
+                $controllerId = $tControllers->fetchRow()->id;
+                $tActions = $this->_tActions;
+                $tActions->undeleteOrInsert([$actionName, $controllerId]);
+            }
+        }
     }
 
     /**
@@ -192,7 +161,10 @@ class Scanner {
     public static function RemoveComments(& $string) {
         $string = preg_replace("%(#|;|(//)).*%", "", $string);
         $string = preg_replace("%/\*(?:(?!\*/).)*\*/%s", "", $string); // google for negative lookahead
-        return $string;
+    }
+
+    public static function RemoveBlancs(& $string) {
+        $string = preg_replace("/^ *[^a-zA-Z<\$-]/m","",$string);
     }
 
 }

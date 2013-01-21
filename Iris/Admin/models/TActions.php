@@ -32,14 +32,8 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 class TActions extends _IrisObject {
     
+    protected static $_InsertionKeys = ['ActionName', 'controller_id'];
     
-    protected static $_TableDefinition =
-        'CREATE  TABLE "main"."actions" (
-        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
-        "ActionsName" TEXT NOT NULL, 
-        "controller_id" INTEGER NOT NULL,
-        FOREIGN KEY ("controller_id") REFERENCES "controllers"("id"))'
-            ;
 
 
     
@@ -47,4 +41,4 @@ class TActions extends _IrisObject {
     
 }
 
-?>
+

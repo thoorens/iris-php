@@ -27,8 +27,11 @@ namespace Iris\Admin\models;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _IrisObject extends \Iris\DB\_Entity {
-    const DB_PARAM_FILE = "admin/params.sqlite";
+abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDeletable{
+
+    const DB_PARAM_FILE = "base/adminparams.sqlite";
+
+    protected static $_InsertionKeys;
 
     /**
      * This pragma enabled referential integrity
@@ -42,7 +45,7 @@ abstract class _IrisObject extends \Iris\DB\_Entity {
      * 
      * @param \Iris\DB\_EntityManager $EM 
      */
-    public function __construct($EM=NULL) {
+    public function __construct($EM = NULL) {
         if (is_null($EM)) {
             $EM = $this->_getSystemEM();
         }
@@ -50,18 +53,15 @@ abstract class _IrisObject extends \Iris\DB\_Entity {
     }
 
     /**
-     * Returns the EM for the system table database
-     * Its is in/program/config/admin/params.sqlite
+     * Returns the EM for the system table database.
+     * Its is in /application/config/admin/params.sqlite
      * 
      * @return \Iris\DB\_EntityManager 
      */
-    protected function _getSystemEM($normal=TRUE) {
+    protected function _getSystemEM() {
+        //die('get em');
         $configPath = IRIS_PROGRAM_PATH . "/config";
-        if ($normal === TRUE) {
-            $db = "$configPath/" . self::DB_PARAM_FILE;
-        } else {
-            $db = "$configPath/" . $normal;
-        }
+        $db = "$configPath/" . self::DB_PARAM_FILE;
         $newBase = FALSE;
         if (!file_exists($db)) {
             touch($db);
@@ -75,15 +75,107 @@ abstract class _IrisObject extends \Iris\DB\_Entity {
         if ($newBase) {
             // table creation
             $connexion = $EM->getConnexion();
-            $connexion->exec(self::$_TableDefinition);
-            $connexion->exec(TModules::$_TableDefinition);
-            $connexion->exec(TControllers::$_TableDefinition);
-            $connexion->exec(TActions::$_TableDefinition);
+            $connexion->exec(self::DDLText('TModules'));
+            $connexion->exec(self::DDLText('TControllers'));
+            $connexion->exec(self::DDLText('TActions'));
         }
-        $tables = $EM->listTables();
         return $EM;
     }
 
-}
+    /**
+     * Marks all the records of a table as deleted 
+     * 
+     * @param string $tableName
+     */
+    public function markDeleted($tableName, $id = \NULL) {
+        $EM = $this->getEntityManager();
+        if (is_null($id)) {
+            $EM->directSQL("Update $tableName set Deleted = 1;");
+        }
+        else{
+            throw new \Iris\Exceptions\NotSupportedException('Mark deleted has not been written to Delete individual records');
+        }
+            
+    }
 
-?>
+    /**
+     * 
+     * @param array $searchValues
+     * @param array $newData
+     */
+    public function undeleteOrInsert($values) {
+        $assoc = array_combine(static::$_InsertionKeys, $values);
+        foreach ($assoc as $key => $value) {
+            $this->where("$key=", $value);
+        }
+        // search object
+        $object = $this->fetchRow();
+        // if necessary create and init it
+        if (is_null($object)) {
+            $object = $this->createRow();
+            foreach ($assoc as $key => $value)
+                $object->$key = $value;
+        }
+        // in anay case, mark as not deleted
+        $object->Deleted = \FALSE;
+        $object->save();
+    }
+
+    /**
+     * Returns the DDL creation command of an object in database.
+     * 
+     * @param string $name The object name
+     * @return string
+     */
+    public static function DDLText($name) {
+        switch ($name) {
+            // a view
+            case 'modcont':
+                $sql = <<<SQL
+CREATE VIEW "modcont" AS 
+select ModuleName, ControllerName, controllers.Deleted
+from modules inner join controllers
+on modules.id = controllers.module_id
+where modules.Deleted=0
+order by 1,2;
+SQL;
+                break;
+
+            // the actions
+            case 'TActions':
+                $sql = <<<SQL2
+CREATE  TABLE "main"."actions" (
+        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
+        "ActionName" TEXT NOT NULL, 
+        "controller_id" INTEGER NOT NULL,
+        "Deleted" BOOLEAN DEFAULT 0,
+        FOREIGN KEY ("controller_id") REFERENCES "controllers"("id"));
+SQL2;
+                break;
+
+            // the controllers
+            case 'TControllers':
+                $sql = <<<SQL
+CREATE  TABLE "main"."controllers" (
+        id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
+        ControllerName TEXT  NOT NULL, 
+        module_id INTEGER  NOT NULL,
+        Deleted BOOLEAN DEFAULT 0,
+        FOREIGN KEY ("module_id") REFERENCES "modules"("id"));
+SQL;
+                break;
+
+            // the modules
+            case 'TModules':
+                $sql = <<<SQL
+CREATE  TABLE "main"."modules" (
+        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
+        "ModuleName" TEXT  NOT NULL,
+        "Deleted" BOOLEAN DEFAULT 0);
+SQL;
+                break;
+        }
+        return $sql;
+    }
+
+}

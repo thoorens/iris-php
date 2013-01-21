@@ -32,18 +32,10 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 class TControllers extends _IrisObject {
     
+    protected static $_InsertionKeys = ['ControllerName', 'module_id'];
     
-    protected static $_TableDefinition =
-        'CREATE  TABLE "main"."controllers" (
-        id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
-        ControllerName TEXT  NOT NULL, 
-        module_id INTEGER  NOT NULL,
-        Deleted BOOLEAN DEFAULT 0,
-        FOREIGN KEY ("module_id") REFERENCES "modules"("id"))';
 
 
 
 
 }
-
-?>
