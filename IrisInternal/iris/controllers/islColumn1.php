@@ -25,7 +25,7 @@ namespace IrisInternal\iris\controllers;
 /**
  * 
  */
-class add_col1 extends \Iris\MVC\_Islet {
+class islColumn1 extends \Iris\MVC\_Islet {
 
     public function indexAction() {
 
