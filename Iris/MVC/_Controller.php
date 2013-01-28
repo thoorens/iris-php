@@ -191,7 +191,7 @@ class _Controller extends _BaseController {
     }
 
     /**
-     * Prepare an action to return pure date (optionaly preceded by a header
+     * Prepare an action to return pure data (optionaly preceded by a header
      * (if content-type is not null)
      * 
      * @param string $contentType
