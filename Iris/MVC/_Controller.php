@@ -75,7 +75,7 @@ class _Controller extends _BaseController {
         $this->_view->setResponse($this->_response);
         $layout = \Iris\MVC\Layout::GetInstance();
         $layoutName = $layout->getViewScriptName();
-        // Complex treatment with layout and possibly subviews
+// Complex treatment with layout and possibly subviews
         if (!empty($layoutName)) {
             try {
                 $layout->setResponse($this->_response);
@@ -126,12 +126,12 @@ class _Controller extends _BaseController {
      * URL (in $_noAclRoute)
      */
     protected function _verifyAcl() {
-        // always happy
+// always happy
         $acl = \Iris\Users\Acl::GetInstance();
         $resource = '/' . $this->getModuleName() . '/' . $this->getControllerName();
         if (!$acl->hasPrivilege($resource, $this->getActionName())) {
             $this->reroute($this->_noAclRoute, TRUE);
-            // no return
+// no return
         }
     }
 
@@ -188,6 +188,22 @@ class _Controller extends _BaseController {
             throw new \Iris\Exceptions\ControllerException("Subcontroller $number is not defined");
         }
         return $this->_wrappers[$number];
+    }
+
+    /**
+     * Prepare an action to return pure date (optionaly preceded by a header
+     * (if content-type is not null)
+     * 
+     * @param string $contentType
+     */
+    protected function _ajaxMode($contentType = \NULL) {
+// no timing
+        \Iris\Time\StopWatch::DisableRTDDisplay();
+// no layout
+        $this->_setLayout(NULL);
+// no view script
+        $this->setViewScriptName('__NO_RENDER__');
+        \header("\content-type:$contentType\"");
     }
 
 }
