@@ -32,16 +32,52 @@ use \Iris\views\helpers\_ViewHelper;
  */
 
 /**
- * Projet IRIS-PHP
+ * Display a ToolBar for administrative purpose at development time only
  */
 class AdminToolBar extends _ViewHelper {
 
     protected static $_Singleton = true;
 
-    public function help($show=TRUE, $color='#148') {
-        if (!\Iris\Engine\Mode::IsProduction() and $show) {
+    /**
+     *
+     * @var boolean If true, the toolbar will have a menu for all actions 
+     * (if possible)
+     */
+    private $_menu = \TRUE;
+
+    /**
+     * returns the HTML text for the toolbar or the reference for later use
+     * 
+     * @param boolean $display
+     * @param int $color
+     * @return mixed
+     */
+    public function help($display = \TRUE, $color = '#148') {
+        if (is_null($display) or $display == '') {
+            return $this;
+        }
+        return $this->render($display, $color);
+    }
+
+    /**
+     * returns the HTML text for the toolbar
+     * 
+     * @param boolean $display
+     * @param int $color
+     * @return string
+     */
+    public function render($display = \TRUE, $color = '#148'){
+        if (!\Iris\Engine\Mode::IsProduction() and $display) {
             return $this->_view->islet('control', array($color), 'index', '!admin');
         }
+    }
+    
+    /**
+     * Accessor for the menu variable (if true will display a menu with all actions
+     * @param boolean $menu
+     */
+    public function setMenu($menu) {
+        $this->_menu = $menu;
     }
 
 }
