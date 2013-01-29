@@ -30,7 +30,7 @@ div#main{
     min-height:520px;
     float:left;
     padding: 0 20px;
-    margin: 0 20 px;
+    margin:0;
 }
 .one{
     width : 200px;
@@ -43,6 +43,12 @@ div#main{
     width:500px;
     background-color:#f0f8ff
 }
+
+.two2{
+    width:740px;
+    background-color:#f0f8ff
+}
+
 .three{
     width:200px;
     background-color:#fff0f0;

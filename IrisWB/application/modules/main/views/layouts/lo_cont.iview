@@ -1,6 +1,3 @@
-<?php
-$layout = __FILE__;
-?>
 <!doctype html>
 <html>
     <head>
@@ -20,15 +17,14 @@ $layout = __FILE__;
                 <div class="column one">
                     <h2>Column 1</h2>
                     {loremIpsum([0,45,46,47,48])}
-
                 </div><!-- 1 -->
-                <div class="column two">
-                    {mainView()}
-                </div><!-- 2 -->
                 <div class="column three ">
                     <h2>Column 3</h2>
                     {loremIpsum([50,51,52,53,54])}
                 </div><!-- 3 -->
+                <div class="column two">
+                    {mainView()}
+                </div><!-- 2 -->
             </div><!-- container -->
             <div id="foot">
                 {wbFooter('modules/main/views/scripts/lo_cont.iview')}
