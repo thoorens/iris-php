@@ -28,19 +28,44 @@ namespace Iris\Admin\models;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TActions extends _IrisObject {
+class TAdmin extends _IrisObject {
 
-    protected static $_InsertionKeys = ['Name', 'controller_id'];
 
     public static function DDLText() {
         return <<<SQL2
-CREATE  TABLE "main"."actions" (
+CREATE  TABLE "main"."admin" (
         "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
-        "Name" TEXT NOT NULL, 
-        "controller_id" INTEGER NOT NULL,
-        "Deleted" BOOLEAN DEFAULT 0,
-        FOREIGN KEY ("controller_id") REFERENCES "controllers"("id"));
+        "LastUpdate" TIMEDATE,
+        "Deleted" BOOLEAN DEFAULT 0);
 SQL2;
+    }
+
+    public static function LastUpdate() {
+        $date = new \Iris\Time\TimeDate;
+        $tAdmin = new \Iris\Admin\models\TAdmin();
+        $admin = $tAdmin->fetchRow();
+        if (is_null($admin)) {
+            $admin = $tAdmin->createRow();
+        }
+        $admin->LastUpdate = $date->toString();
+        $admin->save();
+    }
+
+    public static function GetLastUpdate($formated = \TRUE) {
+        $tAdmin = new \Iris\Admin\models\TAdmin();
+        $admin = $tAdmin->fetchRow();
+        if (is_null($admin)) {
+            $date = "Never";
+        }
+        else {
+            $date = new \Iris\Time\TimeDate($admin->LastUpdate);
+        }
+        if ($formated) {
+            return $date == 'Never' ? $date : $date->toString('H:i (j/m/Y)');
+        }
+        else {
+            return $date;
+        }
     }
 
 }

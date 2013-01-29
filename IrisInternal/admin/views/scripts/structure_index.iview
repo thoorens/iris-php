@@ -1,0 +1,16 @@
+<h1>Structure analysis</h1>
+
+<p>
+    This part of the admin is able to scan the whole project and determine:
+</p>
+<ul>
+    <li>the modules</li>
+    <li>the controllers in each module</li>
+    <li>the actions for each controller</li>
+</ul>
+<p>
+    The project has been scanned entirely : {date}
+<p>
+    The entire process may take various seconds. <b>It is not a good idea to run it on a shared server.</b> 
+</p>
+{button('Rescan the whole project','/!admin/structure/rescan','Check all the modules, controllers and actions')}

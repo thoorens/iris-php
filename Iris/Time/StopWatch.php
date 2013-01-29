@@ -30,7 +30,8 @@ namespace Iris\Time;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class StopWatch {
-
+    use \Iris\Translation\tSystemTranslatable;
+    
     /**
      * If TRUE, disable the execution time display
      * 
@@ -100,10 +101,11 @@ class StopWatch {
      * @return string
      */
     protected function _defaultDisplay($duration, $componentId) {
+        $timeLabel = $this->_('Execution time');
         $javascriptCode = <<< JS
 <script>
     exectime = document.getElementById('$componentId');
-    exectime.innerHTML = "Execution time : <b>$duration</b>";
+    exectime.innerHTML = "$timeLabel : <b>$duration</b>";
 </script>
 
 JS;

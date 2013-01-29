@@ -75,9 +75,10 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
         if ($newBase) {
             // table creation
             $connexion = $EM->getConnexion();
-            $connexion->exec(self::DDLText('TModules'));
-            $connexion->exec(self::DDLText('TControllers'));
-            $connexion->exec(self::DDLText('TActions'));
+            $connexion->exec(TModules::DDLText());
+            $connexion->exec(TControllers::DDLText());
+            $connexion->exec(TActions::DDLText());
+            $connexion->exec(TAdmin::DDLText());
         }
         return $EM;
     }
@@ -127,55 +128,22 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
      * @param string $name The object name
      * @return string
      */
-    public static function DDLText($name) {
+    public static function DDLSpecial($name) {
         switch ($name) {
             // a view
             case 'modcont':
                 $sql = <<<SQL
 CREATE VIEW "modcont" AS 
-select ModuleName, ControllerName, controllers.Deleted
+select modules.Name, controllers.Name, controllers.Deleted
 from modules inner join controllers
 on modules.id = controllers.module_id
 where modules.Deleted=0
 order by 1,2;
 SQL;
                 break;
-
-            // the actions
-            case 'TActions':
-                $sql = <<<SQL2
-CREATE  TABLE "main"."actions" (
-        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
-        "ActionName" TEXT NOT NULL, 
-        "controller_id" INTEGER NOT NULL,
-        "Deleted" BOOLEAN DEFAULT 0,
-        FOREIGN KEY ("controller_id") REFERENCES "controllers"("id"));
-SQL2;
-                break;
-
-            // the controllers
-            case 'TControllers':
-                $sql = <<<SQL
-CREATE  TABLE "main"."controllers" (
-        id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
-        ControllerName TEXT  NOT NULL, 
-        module_id INTEGER  NOT NULL,
-        Deleted BOOLEAN DEFAULT 0,
-        FOREIGN KEY ("module_id") REFERENCES "modules"("id"));
-SQL;
-                break;
-
-            // the modules
-            case 'TModules':
-                $sql = <<<SQL
-CREATE  TABLE "main"."modules" (
-        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
-        "ModuleName" TEXT  NOT NULL,
-        "Deleted" BOOLEAN DEFAULT 0);
-SQL;
-                break;
         }
-        return $sql;
     }
+
+            
 
 }

@@ -30,8 +30,17 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 class TModules extends _IrisObject {
     
-    protected static $_InsertionKeys = ['ModuleName'];
+    protected static $_InsertionKeys = ['Name'];
     
+    public static function DDLText() {
+        return <<<SQL
+CREATE  TABLE "main"."modules" (
+        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
+        "Name" TEXT  NOT NULL,
+        "Deleted" BOOLEAN DEFAULT 0);
+SQL;
+    }
+
     
 }
 

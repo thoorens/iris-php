@@ -1,1 +1,3 @@
-<!-- No toolbar in production -->
+{php}
+/* No toolbar in production */
+{/php}

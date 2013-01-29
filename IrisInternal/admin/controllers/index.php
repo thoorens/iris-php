@@ -38,7 +38,7 @@ class index extends _admin {
     }
 
     /**
-     * Admin welcome
+     * Admin welcome some explanation and a menu
      */
     public function indexAction() {
         $this->__buttons = $this->adminButtons();

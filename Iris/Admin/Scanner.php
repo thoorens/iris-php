@@ -59,7 +59,7 @@ class Scanner {
 //            self::RemoveComments($contenu);
 //            self::RemoveBlancs($contenu);
         }
-        return explode("\n",$contenu);
+        return explode("\n", $contenu);
     }
 
     public function __construct() {
@@ -68,16 +68,38 @@ class Scanner {
         $this->_tActions = new models\TActions;
     }
 
-    public function collect() {
-        $ModuleData = array();
-        foreach ($this->_scannedModules as $module => $dummy) {
-            $controllerData = array();
-            foreach ($this->_scannedControllers[$module] as $controller => $dummy2) {
-                $controllerData[$controller] = "Détails";
-            }
-            $ModuleData[$module] = $controllerData;
-        }
-        return $ModuleData;
+//    public function collect() {
+//        $ModuleData = array();
+//        foreach ($this->_scannedModules as $module => $dummy) {
+//            $controllerData = array();
+//            foreach ($this->_scannedControllers[$module] as $controller => $dummy2) {
+//                $controllerData[$controller] = "Détails";
+//            }
+//            $ModuleData[$module] = $controllerData;
+//        }
+//        return $ModuleData;
+//    }
+
+    public function getModules() {
+        $tModules = $this->_tModules;
+        $tModules->where('Deleted=', 0)->order('Name');
+        return $tModules->fetchall();
+    }
+
+    public function getControllers($moduleId) {
+        $tControllers = $this->_tControllers;
+        $tControllers->where('Deleted=', 0)
+                ->where('module_id=',$moduleId)
+                ->order('Name');
+        return $tControllers->fetchall();
+    }
+
+    public function getActions($controllerId) {
+        $tActions = $this->_tActions;
+        $tActions->where('Deleted=', 0)
+                ->where('controller_id=',$controllerId)
+                ->order('Name');
+        return $tActions->fetchall();
     }
 
     /**
@@ -91,12 +113,13 @@ class Scanner {
         $tModules->markDeleted('actions');
         $modules = $this->_moduleScan();
         foreach ($modules as $moduleName => $moduleFileName) {
-            $module = $tModules->fetchRow('ModuleName=', $moduleName);
+            $module = $tModules->fetchRow('Name=', $moduleName);
             $controllers = $this->_controllerScan($moduleName, $moduleFileName, $module->id);
             foreach ($controllers as $controllerName => $controllerFileName) {
                 $this->_actionScan($module->id, $controllerName, $controllerFileName);
             }
         }
+        \Iris\Admin\models\TAdmin::LastUpdate();
     }
 
     /**
@@ -111,7 +134,7 @@ class Scanner {
         foreach ($dir as $file) {
             $fileName = $file->getFilename();
             if ($file->isDir() and $fileName[0] != '.') {
-                $tModule->undeleteOrInsert([$fileName],[$fileName]);
+                $tModule->undeleteOrInsert([$fileName], [$fileName]);
                 $modules[$fileName] = "$path/$fileName";
             }
         }
@@ -125,7 +148,7 @@ class Scanner {
         foreach ($dir as $file) {
             $fileName = $file->getFilename();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            if ($file->isFile() and $extension == 'php') {
+            if ($file->isFile() and $extension == 'php' and $fileName[0]!='_') {
                 $controllerName = basename($fileName, '.php');
                 $controllers[$controllerName] = $file->getRealPath();
                 $tControllers->undeleteOrInsert([$controllerName, $moduleId]);
@@ -136,12 +159,12 @@ class Scanner {
 
     protected function _actionScan($moduleId, $controlerName, $controllerFileName) {
         $fichier = $this->clean($controllerFileName);
-        foreach($fichier as $line){
-            if(preg_match('/function (.*)Action/', $line)){
-                $actionName =preg_replace('/.*function (.*)Action.*/','$1',$line);
+        foreach ($fichier as $line) {
+            if (preg_match('/function (.*)Action/', $line)) {
+                $actionName = preg_replace('/.*function (.*)Action.*/', '$1', $line);
                 $tControllers = $this->_tControllers;
-                $tControllers->where('module_id=',$moduleId)
-                        ->where('ControllerName=',$controlerName);
+                $tControllers->where('module_id=', $moduleId)
+                        ->where('Name=', $controlerName);
                 $controllerId = $tControllers->fetchRow()->id;
                 $tActions = $this->_tActions;
                 $tActions->undeleteOrInsert([$actionName, $controllerId]);
@@ -164,7 +187,7 @@ class Scanner {
     }
 
     public static function RemoveBlancs(& $string) {
-        $string = preg_replace("/^ *[^a-zA-Z<\$-]/m","",$string);
+        $string = preg_replace("/^ *[^a-zA-Z<\$-]/m", "", $string);
     }
 
 }

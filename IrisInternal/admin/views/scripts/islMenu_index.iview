@@ -1,0 +1,10 @@
+<div class="vlist">
+    <p/>
+    <ul>
+        {foreach(buttons,button)}
+            <li>
+                <a href="{(button[1])}" title="{(button[2])}">{(button[0])}</a>
+            </li>
+        {endforeach}
+    </ul>     
+</div>

@@ -1,21 +1,31 @@
 <!--A tool bar for administration during development-->
 {php}
+    $userLabel = $this->_('Current user:');
+    $this->styleLoader('/!documents/file/resource/css/admintoolbar.css');
+    if($color!='#148'){
     $this->styleLoader('controltb',<<<END
-    #iris_admintoolbar{
-        font-size :0.8em;
-        background-color:$color;
-        text-align: left;
-        color:$reverseColor;
-    }
-    span#iris_RTD{
-        color: white;
-    }
+#iris_admintoolbar{
+   background-color:$color;
+  color:$reverseColor;
+}
 END
 );
+}
 {/php}
 <div id="iris_admintoolbar">
-    &nbsp; <span id="iris_RTD"></span>
-    &nbsp;{ILO_goInternal('admin',TRUE)}
-    &nbsp;User : <b>{userName} - </b>(<i>{group}</i>)
-    &nbsp;{ILO_goInternal('reset',TRUE)}
-</div>
+    {if($MENU)}
+        <div class="menu_admin">
+            &nbsp;{ILO_menu()}
+        </div><!-- menu_admin -->
+        <div class="menu_admin2">
+            {endif}
+            &nbsp; <span id="iris_RTD"></span>
+            &nbsp;{ILO_goInternal('admin',TRUE)}
+            &nbsp;{userLabel} : <b>{userName} - </b>(<i>{group}</i>)
+            &nbsp;{ILO_goInternal('reset',TRUE)}
+            {if($MENU)}
+            </div> <!-- menuadmin2 -->
+            <div class="reset">
+            </div>
+            {endif}
+        </div><!-- iris_admintoolbar -->

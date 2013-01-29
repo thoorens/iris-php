@@ -120,7 +120,7 @@ abstract class _Helper{
 
     /**
      *
-     * @return _Helper 
+     * @return static 
      */
     public static function GetInstance() {
         // late binding class name

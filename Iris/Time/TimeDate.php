@@ -213,7 +213,7 @@ class TimeDate implements \Serializable {
                 $numbers = $badTime;
             }
             else {
-                $hour = ($apm == 'PM' ? 12 : 0) + $numbers[0];
+                $hour = ($ampm == 'PM' ? 12 : 0) + $numbers[0];
                 $minute = $numbers[1];
                 $second = (count($numbers) == 3) ? $numbers[2] : 0;
                 if ($hour < 0 or $hour > 24 or $minute < 0 or $minute > 59 or $second < 0 or $second > 59) {

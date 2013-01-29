@@ -153,7 +153,13 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         "Cet écran d'erreur est volontaire et attendu",
         
         // Internal
-        "Site powered by Iris-PHP"=>"Site motorisé par Iris-PHP",
+        'Site powered by Iris-PHP'=>'Site motorisé par Iris-PHP',
+        
+        // Admin Toolbar
+        'Available actions'=>'Actions disponibles',
+        'Links to all action in the application'=>'Liens vers les actions de toute l\'application',
+        'Current user:'=>'Utilisateur en cours:',
+        'Execution time'=>'Temps d\'exécution',
     );
 
     public static function GetInstance() {

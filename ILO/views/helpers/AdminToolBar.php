@@ -68,7 +68,7 @@ class AdminToolBar extends _ViewHelper {
      */
     public function render($display = \TRUE, $color = '#148'){
         if (!\Iris\Engine\Mode::IsProduction() and $display) {
-            return $this->_view->islet('control', array($color), 'index', '!admin');
+            return $this->_view->islet('control', [$color, $this->_menu], 'index', '!admin');
         }
     }
     

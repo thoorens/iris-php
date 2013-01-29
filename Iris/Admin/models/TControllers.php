@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\Admin\models;
 
 /*
@@ -31,11 +29,18 @@ namespace Iris\Admin\models;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class TControllers extends _IrisObject {
-    
-    protected static $_InsertionKeys = ['ControllerName', 'module_id'];
-    
 
+    protected static $_InsertionKeys = ['Name', 'module_id'];
 
-
+    public static function DDLText() {
+        return <<<SQL
+CREATE  TABLE "main"."controllers" (
+        id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , 
+        Name TEXT  NOT NULL, 
+        module_id INTEGER  NOT NULL,
+        Deleted BOOLEAN DEFAULT 0,
+        FOREIGN KEY ("module_id") REFERENCES "modules"("id"));
+SQL;
+    }
 
 }

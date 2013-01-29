@@ -2,8 +2,6 @@
 
 namespace IrisInternal\admin\controllers;
 
-use \Iris\Engine\Memory as Memory;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -30,7 +28,7 @@ use \Iris\Engine\Memory as Memory;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class admin_col1 extends \IrisInternal\main\controllers\_SecureIslet {
+class islMenu extends \IrisInternal\main\controllers\_SecureIslet {
 
     use \Iris\Translation\tSystemTranslatable;
     
@@ -40,9 +38,9 @@ class admin_col1 extends \IrisInternal\main\controllers\_SecureIslet {
         $this->__commentaire1 = 'Jacques THOORENS';
         $functions[] = $this->_('Role tester|/!admin/roles/switch|Switch to a dummy user having a specific role',TRUE);
         $functions[] = $this->_('ACL management|/!admin/roles/acl|Display and edit all Access Control Lists',TRUE);
-        $functions[] = $this->_('Structure management||Manage modules, controllers and action',TRUE);
-        $functions[] = $this->_('Function 4||Future enhancement',TRUE);
-        $functions[] = $this->_('Function 5||Future enhancement',TRUE);
+        $functions[] = $this->_('Structure management|/!admin/structure/index|Manage modules, controllers and action',TRUE);
+        //$sfunctions[] = $this->_('Function 4||Future enhancement',TRUE);
+        //$functions[] = $this->_('Function 5||Future enhancement',TRUE);
         foreach($functions as $function){
             $buttons[] = explode('|',$function);
         }

@@ -28,23 +28,23 @@ namespace IrisInternal\admin\controllers;;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class control extends \Iris\MVC\_Islet{
+class structure extends _admin{
     
     
-    public function indexAction($color, $menu = \FALSE){
-        $this->__color=$color;
-        $this->__reverseColor = \Iris\System\Functions::GetComplementaryColor($color);
-        $this->__rtdColor = 'white';
-        \Iris\Users\Session::GetInstance();
-        $identity = \Iris\Users\Identity::GetInstance();
-        $this->__userLabel = 'User:';
-        $this->__userName = $identity->getName();
-        $this->__group = $identity->getRole();
-        if(!\Iris\Engine\Mode::IsProduction()){
-            $this->setViewScriptName('toolbar');
-        }
-        $this->__MENU = $menu;
-        
+    public function indexAction(){
+        $date = \Iris\Admin\models\TAdmin::GetLastUpdate();
+        $this->__date = $date;
+    }
+    
+    public function rescanAction(){
+        $this->preRender('structure_rescan');
+        $this->redirect('doscan');
+    }
+    
+    public function doscanAction(){
+        $scanner = new \Iris\Admin\Scanner;
+        $scanner->scanApplication();
+        $this->reroute('/!admin/structure');
     }
 }
 

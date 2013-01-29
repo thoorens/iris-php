@@ -77,12 +77,19 @@ ENDSTYLE;
         }
         // render style files
         foreach ($this->_styleFiles as $file => $dummy) {
-            $text .= sprintf('<link href="/css/%s" rel="stylesheet" type="text/css" />', $file);
+            $url = $this->_URL($file);
+            $text .= '<link href="'.$url.'" rel="stylesheet" type="text/css" />';
             $text .= "\n";
         }
         return $text;
     }
 
+    private function _URL($file){
+        if($file[1]=='!'){
+            return $file;
+        }
+        return "/css/$file";
+    }
 }
 
 ?>
