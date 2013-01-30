@@ -24,76 +24,150 @@ namespace Dojo\Engine;
 /**
  * This class is used internally by all Dojo helpers to manage the
  * components to load. Each bubble has its proper environment, prerequisites and
- * internal function
+ * internal function. It includes the Ajax functions.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Bubble {
+class Bubble{
 
+    const TEXT = 1;
+    const JSON = 2;
+    const XML = 3;
+    
+    /**
+     * All the bubble are placed in a repository
+     * @var array(Bubble)
+     */
     private static $_Repository = array();
     
+    /**
+     * The name of the bubble
+     * 
+     * @var string
+     */
     private $_bubbleName;
     
+    /**
+     * A list of requisites for the bubble. 
+     * @var array
+     */
     private $_modules = array();
+    
+    /**
+     *
+     * @var type 
+     */
+    private $_internalFunction = \NULL;
 
     /**
      * Returns a bubble (after creating it if necessary)
      * by its name
      * 
-     * @param string $bubleName
-     * @return Bubble
+     * @param string $bubbleName The name of the bubble to create/retrieve
+     * @return Bubble for fluent interface
      */
     public static function GetBubble($bubbleName) {
-        if(!isset(self::$_Repository[$bubbleName])){
+        if (!isset(self::$_Repository[$bubbleName])) {
             self::$_Repository[$bubbleName] = new Bubble($bubbleName);
         }
         return self::$_Repository[$bubbleName];
-            
     }
 
     /**
+     * Returns all the bubbles (used internally to generate the javascript
+     * code.
      * 
      * @return array
      */
-    public static function GetAllBubbles(){
+    public static function GetAllBubbles() {
         return self::$_Repository;
     }
-    
-    function __construct($bubbleName) {
+
+    /**
+     * A private constructor, each bubble is created or retrieved by its name.
+     * 
+     * @param string $bubbleName The name of the new bubble
+     */
+    private function __construct($bubbleName) {
         $this->_bubbleName = $bubbleName;
     }
 
-    
-    public function addModule($moduleName, $linked = \FALSE){
-        $this->_modules[$moduleName] = $linked;
+    /**
+     * Adds a requisite to the bubble, corresponding to a Dojo module and
+     * optionaly to a var in the corresponding function signature
+     * 
+     * @param string $moduleName the module name (with path)
+     * @param mixed $linkedVar the variable mapped to the object created with the module
+     * @return \Dojo\Engine\Bubble for fluent interface
+     */
+    public function addModule($moduleName, $linkedVar = \FALSE) {
+        $this->_modules[$moduleName] = $linkedVar;
+        return $this;
+    }
+
+    /**
+     * Some modules are supported as special and identified by predefined constants
+     * (eg JSON or XML). Text modules are implicit and doesn't need a specific module.
+     * 
+     * @param int $type The number corresponding to the speciale module.
+     * @return \Dojo\Engine\Bubble for fluent interface
+     */
+    public function addSpecialModule($type){
+        switch($type){
+            case self::JSON:
+                $this->addModule('dojo/JSON', 'json');
+                break;
+            default:
+        }
         return $this;
     }
     
-    public function html(){
+    /**
+     * Creates the javascript code for all bubbles in the application.
+     * 
+     * @return string
+     */
+    public function render() {
         $linkedModules = array();
         $unlinkedModules = array();
         $parameters = array();
-        foreach($this->_modules as $name => $linked){
-            if($linked!== \FALSE){
+        foreach ($this->_modules as $name => $linkedVar) {
+            if ($linkedVar !== \FALSE) {
                 $linkedModules[] = $name;
-                $parameters[] = $linked;
-            }else{
+                $parameters[] = $linkedVar;
+            }
+            else {
                 $unlinkedModules[] = $name;
             }
         }
-        $allModule = array_merge($linkedModules,$unlinkedModules);
+        $allModule = array_merge($linkedModules, $unlinkedModules);
         $html = 'require(["';
-        $html .= implode('","',$allModule);
+        $html .= implode('","', $allModule);
         $html .= '"]';
-        if(count($linkedModules)>0){
-            $html .= 'function(';
-            $html .= implode(',',$linkedModules);
-            $html .= '){some javascript}';
+        if (count($linkedModules) > 0) {
+            $functionText = $this->_internalFunction;
+            $html .= ',function(';
+            $html .= implode(',',$parameters);
+            $html .= "){$functionText}";
         }
         $html .= ');';
         return $html;
     }
+
+    /**
+     * Stores the text for the internal function of the bubble (only needed
+     * in case the is linked modules and code to use them.
+     * 
+     * @param string $text
+     */
+    public function defFonction($text) {
+        $this->_internalFunction = $text;
+    }
+
+    
+    
+
 }
 

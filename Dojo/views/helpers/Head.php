@@ -74,8 +74,8 @@ BASE;
             $text .= "require([$requisite]$initCode);\n";
         }
         /* @var $bubble \Dojo\Engine\Bubble */
-        foreach(\Dojo\Engine\Bubble::GetAllBubbles() as $bubble){
-            $text .= $bubble->html();
+        foreach(\Dojo\Engine\Bubble::GetIterator() as $bubble){
+            $text .= $bubble->render();
         }
         $text .= "</script>\n";
         return $text;

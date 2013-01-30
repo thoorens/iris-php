@@ -1,0 +1,72 @@
+/* Meyer 149 */
+
+/* Decoration */
+ul {
+    width: 10em; 
+    margin: 0 0 0 1em; 
+    padding: 0; 
+    list-style: none;
+    border: 1px solid tan; 
+    border-bottom: 0;}
+ul li a {
+    display: block; 
+    padding: 0.25em; 
+    border-bottom: 1px solid tan;
+    text-decoration: none; 
+    color: #090215;}
+
+
+/* First level : horizontal */
+ul.menu > li{
+    display:inline;
+    position:relative;
+}
+/* Mask all submenu */
+ul.menu ul{
+    display:none;
+}
+/* Show submenu when on master */
+li.sub:hover > ul{
+    display:block;
+    position: absolute;
+    white-space: nowrap;
+
+}
+/* Show submenu when on master */
+ul.menu li:hover > ul{
+    display:block;
+    position: absolute;
+    white-space: nowrap;
+    margin-left:0px;
+}
+
+
+/* Test */
+ul.menu ul li.sub:hover > ul{
+    top : 0;
+    left:100%;
+}
+
+
+li.sub{
+    position:relative;
+}
+/* Colors */
+
+ul.menu li ul li a {
+background-color:#68A;
+color:#FD8;
+font-weight:bold;
+}
+
+ul.menu ul li ul li a {
+background:#81a4c6;
+color:#FD8;
+}
+
+ul.menu ul li ul li ul li a {
+background:#8fb6db;
+color:#420;
+}
+
+
