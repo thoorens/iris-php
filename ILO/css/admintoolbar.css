@@ -13,6 +13,7 @@ span#iris_RTD{
     background-color:#148;
     text-align: left;
     color:#eb7;
+    font-size: 100%;
 }
 
 /* =====================================================
@@ -33,6 +34,12 @@ div.reset{
     clear:both;    
 }
 
+#iris_atb *{
+    z-index: 100;
+    margin: 0;
+    padding: 0;
+}
+
 #iris_atb a#main{
     color:black;
     background-color: #eee;
@@ -48,6 +55,8 @@ to explain what follows */
     margin: 0 0 0 1em; 
     padding: 0; 
     list-style: none;
+    line-height: 1em;
+
 }
 
 #iris_atb ul li a {
@@ -115,5 +124,5 @@ to explain what follows */
 #iris_atb ul.level1,
 #iris_atb ul.level2,
 #iris_atb ul.level3 {
-box-shadow:0 5px 10px rgba(0,0,0, .8);
+    box-shadow:0 5px 10px rgba(0,0,0, .8);
 }
