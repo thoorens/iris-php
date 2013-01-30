@@ -29,7 +29,7 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDeletable{
 
-    const DB_PARAM_FILE = "base/adminparams.sqlite";
+    const DB_PARAM_FILE = "/config/base/adminparams.sqlite";
 
     protected static $_InsertionKeys;
 
@@ -60,17 +60,16 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
      */
     protected function _getSystemEM() {
         //die('get em');
-        $configPath = IRIS_PROGRAM_PATH . "/config";
-        $db = "$configPath/" . self::DB_PARAM_FILE;
+        $dbFile = IRIS_PROGRAM_PATH .self::DB_PARAM_FILE;
         $newBase = FALSE;
-        if (!file_exists($db)) {
-            touch($db);
-            if (!file_exists($db)) {
-                throw new \Iris\Exceptions\FileException("$db cannot be created (verify directory structure and file permissions.");
+        if (!file_exists($dbFile)) {
+            touch($dbFile);
+            if (!file_exists($dbFile)) {
+                throw new \Iris\Exceptions\FileException("$dbFile cannot be created (verify directory structure and file permissions.");
             }
             $newBase = TRUE;
         }
-        $dsn = "sqlite:" . $db;
+        $dsn = "sqlite:" . $dbFile;
         $EM = \Iris\DB\_EntityManager::EMFactory($dsn);
         if ($newBase) {
             // table creation

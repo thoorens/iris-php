@@ -45,11 +45,11 @@ class Menu extends _ViewHelper {
     private $_scanner;
 
     public function help() {
-        $this->styleLoader('/!documents/file/resource/css/menu.css');
+        if(!file_exists(IRIS_PROGRAM_PATH.\Iris\Admin\models\_IrisObject::DB_PARAM_FILE)){
+            return '';
+        }
         $this->_scanner = new \Iris\Admin\Scanner;
-        $modules = $this->_scanner->getModules();
-        $html = $this->_render();
-        return $html;
+        return $this->_render();
     }
 
     private function renderModule($module) {
