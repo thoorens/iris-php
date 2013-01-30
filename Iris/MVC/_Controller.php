@@ -203,7 +203,9 @@ class _Controller extends _BaseController {
         $this->_setLayout(NULL);
 // no view script
         $this->setViewScriptName('__NO_RENDER__');
-        \header("\content-type:$contentType\"");
+        if($contentType!=\NULL){
+            \header("content-type:$contentType");
+        }
     }
 
 }
