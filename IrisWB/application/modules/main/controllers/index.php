@@ -8,12 +8,12 @@ class index extends _main {
      * Set a layout at controller level
      */
     public function _init() {
-        $this->_setLayout('cont');
+        $this->_setLayout('controller');
     }
 
     public function indexAction() {
         $this->_setLayout('color');
-        $this->__bodyColor = 'WHITE';
+        $this->__bodyColor = 'ORANGE1';
     }
 
     public function errorAction($number) {

@@ -1,0 +1,21 @@
+<div{wbColors()}>
+    <div>
+        {wbExplain($this)}
+    </div>
+
+</div>
+{ajax()->onEvent('mouseover','mybutton','/ajax/get/message4','message1')}
+
+<div>
+    <div id="page">
+        <p>
+            A message will appear if someone places the mouse cursor over this button:
+            <button id="mybutton">See message</button>
+        </p>
+        <div class="example">
+            <p id="message1">
+            </p>
+        </div>
+    </div>
+
+</div>

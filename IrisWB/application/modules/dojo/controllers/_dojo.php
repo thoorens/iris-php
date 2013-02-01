@@ -19,6 +19,7 @@ class _dojo extends \modules\_application {
      */
     protected function _moduleInit() {
         $this->_setLayout('main');
+        $this->__bodyColor = 'ORANGE3';
     }
 
 }

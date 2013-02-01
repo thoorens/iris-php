@@ -12,6 +12,11 @@ namespace modules\main\controllers;
  */
 class variables extends _main {
 
+    protected function _init() {
+        $this->_setLayout('main');
+        $this->__bodyColor = 'ORANGE2';
+    }
+
     public function indexAction() {
         // these parameters are only for demonstration purpose
         $this->__var1 = 'Initial content';
@@ -28,6 +33,7 @@ class variables extends _main {
         ];
         $this->__array = [1, 2, 3];
         $this->_setLayout('special');
+        $this->__bodyColor = 'ORANGE1';
     }
 
 }

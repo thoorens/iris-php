@@ -1,0 +1,20 @@
+<div{wbColors()}>
+    <div>
+        {wbExplain($this)}
+    </div>
+
+</div>
+{ajax()->onTime(5000,'/ajax/get/message2','message')}
+
+<div>
+    <div id="page">
+        <p>
+            Here is the message received from the server after 5 seconds:
+        </p>
+        <div class="example">
+            <p id="message">
+            </p>
+        </div>
+    </div>
+
+</div>

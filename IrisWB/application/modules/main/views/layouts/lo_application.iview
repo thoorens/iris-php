@@ -1,12 +1,14 @@
 <!doctype html>
 <html>
+    <!-- This layout is used only as an exemple of an application defined layout -->
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/css/wb.css">
+        {title()->render(TRUE)}
         {siteIcon()}
         {autoResource()}
     </head>
-    <body {dojo_body()}{bodyOnload()}{wbColors($bodyColor)}>
+    <body {dojo_body()}{bodyOnload()}{wbColors('ORANGE4')}>
         <div id="main">
             {ILO_adminToolBar()}
             <div id="container">
@@ -15,19 +17,16 @@
                 </div><!-- Title -->
                 <div class="column one">
                     <h2>Column 1</h2>
-                    {loremIpsum([0,5,10,15])}
+                    {loremIpsum([1,12,22,32,42])}
                 </div><!-- 1 -->
-                <div class="column two">
+                <div class="column two2">
                     {mainView()}
                 </div><!-- 2 -->
-                <div class="column three ">
-                    <h2>Column 3</h2>
-                    {loremIpsum([4,8,12,16,20])}
-                </div><!-- 3 -->
+                
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/main/views/scripts/lo_main.iview')}
+                {wbFooter('modules/main/views/scripts/lo_application.iview')}
             </div><!--foot-->
-        </div><!--main-->  
+        </div><!--main-->
     </body>
 </html>

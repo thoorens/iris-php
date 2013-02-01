@@ -22,6 +22,7 @@ class scripts extends _errors {
 
     public function layoutAction() {
         $this->_setLayout('stupid');
+        $this->__bodyColor = 'ORANGE2';
     }
 
     public function isletAction() {

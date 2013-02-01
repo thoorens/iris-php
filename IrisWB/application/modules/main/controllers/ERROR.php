@@ -15,6 +15,7 @@ class ERROR extends core_ERROR {
     public function preDispatch() {
 
         $this->_setLayout('error');
+        $this->__bodyColor = 'ORANGE2';
         //$url = $this->_prepareExceptionDisplay(3);die($url);
         $this->_sequence = \workbench\TextSequence::GetInstance();
         $this->_sequence->setCurrent("/$this->_url");
@@ -54,6 +55,7 @@ class ERROR extends core_ERROR {
         // Production
         else {
             $this->_setLayout('errorprod');
+            $this->__bodyColor = 'ORANGE2';
             $this->setViewScriptName('prod');
             $this->__page = \Iris\Exceptions\ErrorHandler::$_Trace[0];
             $this->__title = $this->_('Error');

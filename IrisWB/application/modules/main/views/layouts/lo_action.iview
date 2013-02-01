@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+    <!-- This layout is used only as an exemple of an action defined layout -->
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/css/wb.css">
@@ -14,13 +15,13 @@
                 <div id='Title'>
                     <h1>{Title}</h1>
                 </div><!-- Title -->
+                <div class="column two">
+                    {mainView()}
+                </div><!-- 2 -->
                 <div class="column one">
                     <h2>Column 1</h2>
                     {loremIpsum([0,10,20,30,40,50,60])}
                 </div><!-- 1 -->
-                <div class="column two">
-                    {mainView()}
-                </div><!-- 2 -->
                 <div class="column three ">
                     <h2>Column 3</h2>
                     {loremIpsum([11,21,31,41,51,61,71])}

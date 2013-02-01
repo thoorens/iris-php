@@ -19,6 +19,7 @@ class _other extends \modules\_application {
     protected function _moduleInit() {
         // You should modify this demo layout
         $this->_setLayout('main');
+        $this->__bodyColor = 'ORANGE3';
     }
 
 }

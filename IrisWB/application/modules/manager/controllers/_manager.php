@@ -20,6 +20,7 @@ class _manager extends \modules\_application {
     protected final function _moduleInit() {
         // You should modify this demo layout
         $this->_setLayout('manager');
+        $this->__bodyColor = 'ORANGE3';
     }
 
 }

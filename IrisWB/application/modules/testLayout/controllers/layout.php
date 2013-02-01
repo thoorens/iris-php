@@ -46,6 +46,7 @@ class layout extends _testLayout{
         }
         // has 3 subcontrollers and 3 islets
         $this->_setLayout('testlayout2');
+        $this->__bodyColor = 'ORANGE1';
         // loads subcontrollers required by layout
         $this->registerSubcontroller(1,'subMain','index');
         $this->registerSubcontroller(4,'subMask','index');

@@ -14,7 +14,7 @@ class views extends _main {
 
     protected function _init() {
         $this->_setLayout('color');
-        $this->__bodyColor = 'BLUE1';
+        $this->__bodyColor = 'ORANGE2';
     }
 
     public function indexAction() {

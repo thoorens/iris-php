@@ -39,6 +39,7 @@ class layout extends _main{
         }
         // has 3 subcontrollers and 3 islets
         $this->_setLayout('testlayout');
+        $this->__bodyColor = 'ORANGE1';
         // loads subcontrollers required by layout
         $this->registerSubcontroller(1,'subMain','index');
         $this->registerSubcontroller(2,'subTestLayout','index','testLayout');
@@ -58,6 +59,7 @@ class layout extends _main{
      
     public function actionAction() {
         $this->_setLayout('action');
+        $this->__bodyColor = 'ORANGE1';
     }
     
     public function moduleAction() {

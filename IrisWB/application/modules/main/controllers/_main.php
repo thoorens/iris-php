@@ -35,7 +35,7 @@ class _main extends \modules\_application {
 
 
     public function _moduleInit() {
-        $this->_setLayout('main');
+        $this->_setLayout('module');
     }
 
     

@@ -1,0 +1,18 @@
+{ajax()->get,'/ajax/get/message','message2')}
+
+<div>
+    <button id="btn">Read</button>
+    <div id="page">
+        <p>
+            Here is the auto message I received form server:
+        </p>
+        <p id="message1">
+        </p>
+        <p>
+            Clickung the button will read another message:
+        </p>
+        <p id="message2">
+        </p>
+    </div>
+
+</div>
