@@ -19,7 +19,8 @@ class _ajax extends \modules\_application {
      */
     protected final function _moduleInit() {
         // You should modify this demo layout
-        //$this->_setLayout('!irisShadow');
+        $this->_setLayout('main');
+        $this->__bodyColor = 'ORANGE3';
         // these parameters are only for demonstration purpose
         // and required by the default layout defined in _ajax
         $this->__buttons = 1 + 4;

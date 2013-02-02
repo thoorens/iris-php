@@ -36,6 +36,7 @@ use \Iris\views\helpers\_ViewHelper;
  */
 class AdminToolBar extends _ViewHelper {
 
+    public static $AjaxMode = \TRUE;
     protected static $_Singleton = true;
 
     /**
@@ -66,12 +67,18 @@ class AdminToolBar extends _ViewHelper {
      * @param int $color
      * @return string
      */
-    public function render($display = \TRUE, $color = '#148'){
+    public function render($display = \TRUE, $color = '#148') {
         if (!\Iris\Engine\Mode::IsProduction() and $display) {
-            return $this->_view->islet('control', [$color, $this->_menu], 'index', '!admin');
+            if (self::$AjaxMode) {
+                $html = $this->_ajaxRender();
+            }
+            else {
+                $html = $this->_view->islet('control', [$color, $this->_menu], 'index', '!admin');
+            }
+            return $html;
         }
     }
-    
+
     /**
      * Accessor for the menu variable (if true will display a menu with all actions
      * @param boolean $menu
@@ -80,6 +87,17 @@ class AdminToolBar extends _ViewHelper {
         $this->_menu = $menu;
     }
 
+    public function _ajaxRender() {
+        $this->styleLoader('/!documents/file/resource/css/admintoolbar.css');
+        return <<< HTML
+<div id="iris_admintoolbar" class="atb_white">
+    Admin toolbar should be here. If you don't see it, something is wrong with Ajax. 
+</div>
+
+HTML;
+   ;
+    }
+
 }
 
-?>
+

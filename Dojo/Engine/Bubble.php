@@ -69,6 +69,9 @@ class Bubble{
      * @return Bubble for fluent interface
      */
     public static function GetBubble($bubbleName) {
+        if(count(self::$_Repository)==0){
+            \Dojo\Manager::GetInstance()->setActive();
+        }
         if (!isset(self::$_Repository[$bubbleName])) {
             self::$_Repository[$bubbleName] = new Bubble($bubbleName);
         }

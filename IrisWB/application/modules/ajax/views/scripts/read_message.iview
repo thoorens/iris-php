@@ -4,16 +4,17 @@
     </div>
 
 </div>
-{ajax()->onEvent('mouseover','mybutton','/ajax/get/message4','message1')}
-{code}
+{countDown('MSG1',6,'spanseconds')}
+{ajax()->onMessage('MSG1','/ajax/get/message5','message1')}
 <div>
     <div id="page">
         <p>
-            A message will appear if someone places the mouse cursor over this button:
-            <button id="mybutton">See message</button>
+            A message will appear in <span id="spanseconds">6</span> seconds.
+            
         </p>
+        <div class="example">
         <p id="message1">
         </p>
+        </div>
     </div>
-
 </div>
