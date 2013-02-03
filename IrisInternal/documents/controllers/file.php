@@ -37,7 +37,7 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
      * make sure Stopwatch won't spoil the end of the files
      */
     public function security() {
-        \Iris\Time\StopWatch::DisableRTDDisplay();
+        \Iris\Time\RunTimeDuration::DisableRTDDisplay();
     }
 
     public function saveAction() {

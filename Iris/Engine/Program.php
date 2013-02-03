@@ -43,7 +43,7 @@ class Program {
 
     /**
      *
-     * @var \Iris\Time\StopWatch
+     * @var \Iris\Time\RunTimeDuration
      */
     public $stopWatch;
 
@@ -54,7 +54,7 @@ class Program {
      */
     public function __construct($programName='program') {
         define('IRIS_PROGRAM_PATH',IRIS_ROOT_PATH.'/'.$programName);
-        $this->stopWatch = new \Iris\Time\StopWatch(NULL, TRUE);
+        $this->stopWatch = new \Iris\Time\RunTimeDuration(NULL);
         self::$ProgramName = $programName;
         self::AutosetSiteMode();
         Loader::GetInstance()->setApplicationName($programName);

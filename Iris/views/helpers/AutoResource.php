@@ -61,7 +61,7 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
      * and add javascript code before &lt;/body>
      * 
      * @param string $text The page text before finalization 
-     * @param \Iris\Time\StopWatch $stopWatch
+     * @param \Iris\Time\RunTimeDuration $stopWatch
      */
     public static function HeaderBodyTuning(&$text, $stopWatch = \NULL, $componentId = 'iris_RTD') {
         $auto = self::GetInstance();

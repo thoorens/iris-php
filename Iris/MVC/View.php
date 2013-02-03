@@ -136,7 +136,7 @@ class View {
         }
         // File generators and loaders have no view part, stop them and no time measurement.
         if ($forcedScriptName == '__NO_RENDER__' or $this->_viewScriptName == '__NO_RENDER__') {
-            \Iris\Time\StopWatch::DisableRTDDisplay();
+            \Iris\Time\RunTimeDuration::DisableRTDDisplay();
             die(''); // stop process - file is complete
         }
         // In case of simple quoting, there is no template file to treat

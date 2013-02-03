@@ -40,7 +40,7 @@ abstract class _SecureInternal extends \Iris\MVC\_Controller {
     
     public function __construct(\Iris\Engine\Response $response, $actionName) {
         parent::__construct($response, $actionName);
-        //\Iris\Time\StopWatch::DisableRTDDisplay();
+        //\Iris\Time\RunTimeDuration::DisableRTDDisplay();
     }
 
     /**

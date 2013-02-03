@@ -23,38 +23,33 @@ namespace Iris\Time;
 
 /**
  * A tool to measure time duration (it provides specific methods to measure
- * the execution time of the main controller but may be used for other goals)
+ * the execution time of the main controller but may be used for other goals).
+ * It may also be used as a standard stopwatch
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class StopWatch {
-    use \Iris\Translation\tSystemTranslatable;
-    
-    /**
-     * If TRUE, disable the execution time display
-     * 
-     * @var boolean
-     */
-    protected static $_DisplayRunTimeDuration = FALSE;
 
-    /**
+        /**
      * The time at which the stopwatch has been started or restarted
      * @var string
      */
     protected $_startTime;
-
+    
+    /**
+     * The time at which the stopwatch has benn stopped
+     * @var string
+     */
+    private $_stopTime;
+    
     /**
      * Creates a new stopwatch
      * @param string $startTime the optional initial time
      * @param boolean $runTimeSW if TRUE, the stopwatch measures execution time
      */
-    public function __construct($startTime=NULL, $runTimeSW = FALSE) {
-        // if execution time measure, try to find the best startTime from context
-        if ($runTimeSW) {
-            $startTime = $this->_runTimeCorrection($startTime);
-        }
+    public function __construct($startTime = NULL) {
         // if not time available, get current
         if (is_null($startTime)) {
             $startTime = microtime();
@@ -63,100 +58,60 @@ class StopWatch {
     }
 
     /**
-     * Get a temporary duration (split time
+     * Resets or restarts the stopwatch
+     */
+    public function restart(){
+        $this->_startTime = microtime();
+    }
+    
+    /**
+     * Stops the stopwatch by storing the current time
+     */
+    public function stop(){
+        $this->_stopTime = microtime();
+    }
+    
+    /**
+     * reads the duration between start and stop time, optionnaly stopping
+     * the watch.
+     * 
+     * @param boolean $stop If TRUE, stops the watch before calculating the elapsed time
+     * @return string
+     */
+    public function duration($stop = \FALSE){
+        if($stop){
+            $this->stop();
+        }
+        return self::ComputeInterval($this->_startTime, $this->_stopTime);
+    }
+    /**
+     * Gets a temporary duration (split time). Not used internally but 
+     * 
      * @return float
      */
     public function split() {
         return self::ComputeInterval($this->_startTime, microtime());
     }
 
+    /**
+     * 
+     * @param type $timeFrom
+     * @param type $timeTo
+     * @return string 
+     */
     public static function ComputeInterval($timeFrom, $timeTo) {
         $seconds = self::_GetSeconds($timeTo) - self::_GetSeconds($timeFrom);
         $seconds += (self::_GetMicroseconds($timeTo) - self::_GetMicroseconds($timeFrom));
-        return sprintf('%0.4F',$seconds);
+        return sprintf('%0.4F', $seconds);
     }
 
     /**
-     * If convenient (development and no disabling of function), 
-     * replace a component (identified by its id) by a execution time duration display
      * 
-     * @param string $componentId The empty component to be replaced by a 
-     * execution time display
-     * 
-     * @return string  
-     */
-    public function jsDisplay($componentId = 'iris_RTD') {
-        $javascriptCode = '';
-        // Display may be disabled in special controller (loader, subcontroller...)
-        if (self::$_DisplayRunTimeDuration and \Iris\Engine\Mode::IsDevelopment()) {
-            $duration = $this->ComputeInterval($this->_startTime, microtime());
-            $javascriptCode = $this->_defaultDisplay($duration, $componentId);
-        }
-        return $javascriptCode;
-    }
-
-    /**
-     * A default javascript routine to 
-     * @param string $duration
-     * @return string
-     */
-    protected function _defaultDisplay($duration, $componentId) {
-        $timeLabel = $this->_('Execution time');
-        $javascriptCode = <<< JS
-<script>
-    exectime = document.getElementById('$componentId');
-    exectime.innerHTML = "$timeLabel : <b>$duration</b>";
-</script>
-
-JS;
-        return $javascriptCode;
-    }
-
-    /**
-     * Disable the final javascript exec time routine
-     * (RunTime Duration)
-     * This is the default state
-     * 
-     * @param boolean $value 
-     */
-    public static function DisableRTDDisplay() {
-        self::$_DisplayRunTimeDuration = \FALSE;
-    }
-
-    /**
-     * Enable the final javascript exec time routine
-     * (RunTime Duration)
-     * No effect in production.
-     * 
-     * @param boolean $value 
-     */
-    public static function EnableRTDDisplay() {
-        self::$_DisplayRunTimeDuration = \TRUE;
-    }
-
-    /**
-     * Replace a given starttime (may be NULL) by a better one
-     * possibly already recorded in IRIS_STARTTIME
-     * 
-     * @param string $startTime
-     * @return string
-     */
-    protected function _runTimeCorrection($startTime) {
-        if (defined('IRIS_STARTTIME')) {
-            $startTime = IRIS_STARTTIME;
-        }
-        return $startTime;
-    }
-
-    /**
-     * Get the int part of microtime
-     * 
-     * @param string $microTime
-     * @return int 
+     * @param type $microTime
+     * @return int
      */
     private static function _GetSeconds($microTime) {
-        list($micro, $seconds) = explode(' ', $microTime);
-        return $seconds;
+        return explode(' ', $microTime)[1];
     }
 
     /**
@@ -166,10 +121,9 @@ JS;
      * @return float (<0) 
      */
     private static function _GetMicroseconds($microTime) {
-        list($micro, $seconds) = explode(' ', $microTime);
-        return $micro;
+         return explode(' ', $microTime)[0];
     }
 
+    
 }
 
-?>

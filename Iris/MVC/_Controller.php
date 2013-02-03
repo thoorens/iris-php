@@ -198,7 +198,7 @@ class _Controller extends _BaseController {
      */
     protected function _ajaxMode($contentType = \NULL) {
 // no timing
-        \Iris\Time\StopWatch::DisableRTDDisplay();
+        \Iris\Time\RunTimeDuration::DisableRTDDisplay();
 // no layout
         $this->_setLayout(NULL);
 // no view script
