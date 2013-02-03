@@ -3,7 +3,7 @@
 namespace ILO\views\helpers;
 
 use \Iris\views\helpers\_ViewHelper;
-
+use Iris\Time\RunTimeDuration as RunTimeDuration;
 /*
  * This file is part of IRIS-PHP.
  *
@@ -71,9 +71,10 @@ class AdminToolBar extends _ViewHelper {
         if (!\Iris\Engine\Mode::IsProduction() and $display) {
             if (self::$AjaxMode) {
                 $html = $this->_ajaxRender();
+                RunTimeDuration::$DisplayMode = RunTimeDuration::AJAX;
             }
             else {
-                $html = $this->_view->islet('control', [$color, $this->_menu], 'index', '!admin');
+                $html = $this->_view->islet('islToolbar', [$color, $this->_menu], 'index', '!admin');
             }
             return $html;
         }
@@ -87,8 +88,9 @@ class AdminToolBar extends _ViewHelper {
         $this->_menu = $menu;
     }
 
-    public function _ajaxRender() {
+    private function _ajaxRender() {
         $this->styleLoader('/!documents/file/resource/css/admintoolbar.css');
+        $this->ajax()->placeReplace()->get('/!admin/ajax/toolbar/1','iris_admintoolbar');
         return <<< HTML
 <div id="iris_admintoolbar" class="atb_white">
     Admin toolbar should be here. If you don't see it, something is wrong with Ajax. 

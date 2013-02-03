@@ -1,6 +1,6 @@
 <?php
 
-namespace IrisInternal\admin\controllers;;
+namespace IrisInternal\admin\controllers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -22,30 +22,27 @@ namespace IrisInternal\admin\controllers;;
  */
 
 /**
- * A controller for development time
+ * 
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class control extends \Iris\MVC\_Islet{
-    
-    
-    public function indexAction($color, $menu = \FALSE){
-        $this->__color=$color;
-        $this->__reverseColor = \Iris\System\Functions::GetComplementaryColor($color);
-        $this->__rtdColor = 'white';
-        \Iris\Users\Session::GetInstance();
-        $identity = \Iris\Users\Identity::GetInstance();
-        $this->__userLabel = 'User:';
-        $this->__userName = $identity->getName();
-        $this->__group = $identity->getRole();
-        if(!\Iris\Engine\Mode::IsProduction()){
-            $this->setViewScriptName('toolbar');
-        }
-        $this->__MENU = $menu;
-        
-    }
-}
+class ajax extends _admin {
 
-?>
+
+    /**
+     * Ajax version of the tool bar
+     * 
+     * @param boolean $menu If true, the action menu is displayed
+     * @param string $color Background color for toolbar
+     */
+    public function toolbarAction($menu = \FALSE, $color ='#145'){
+        $time = \Iris\Users\Session::GetInstance()->getValue('PreviousTime', 0.0);
+        $this->_ajaxMode();
+        $this->sharedToolbar('Ajax',$time,$menu, $color);
+        $this->renderNow('islToolbar_toolbar');
+        die();
+    }
+
+}

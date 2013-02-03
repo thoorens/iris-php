@@ -1,6 +1,7 @@
 <!--A tool bar for administration during development-->
 {php}
     $userLabel = $this->_('Current user:');
+    $timeLabel = $this->_('Execution time');
     $this->styleLoader('/!documents/file/resource/css/admintoolbar.css');
     if($color!='#148'){
     $this->styleLoader('controltb',<<<END
@@ -19,10 +20,11 @@ END
         </div><!-- menu_admin -->
         <div class="menu_admin2">
             {endif}
-            &nbsp; <span id="iris_RTD"></span>
+            &nbsp; <span id="iris_RTD">{timeLabel}: <b>{time}</b></span>
             &nbsp;{ILO_goInternal('admin',TRUE)}
             &nbsp;{userLabel} : <b>{userName} - </b>(<i>{group}</i>)
-            &nbsp;{ILO_goInternal('reset',TRUE)}
+            &nbsp;{ILO_goInternal('reset',TRUE)}           
+            <i>{mode}</i>
             {if($MENU)}
             </div> <!-- menuadmin2 -->
             <div class="reset">

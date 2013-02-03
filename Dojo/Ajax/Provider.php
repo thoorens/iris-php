@@ -27,7 +27,7 @@ namespace Dojo\Ajax;
  */
 
 /**
- * Description of Dojo
+ * An Ajax provider written in Dojo
  * 
  * Project IRIS-PHP
  * 
@@ -38,23 +38,51 @@ namespace Dojo\Ajax;
  */
 class Provider extends \Iris\Ajax\_AjaxProvider {
 
+    const BEFORE = 'before';
+    const AFTER = 'after';
+    const REPLACE = 'replace';
+    const ONLY = 'only';
+    const FIRST = 'first';
+    const LAST = 'last';
+    
+    
+    
+    
+    /**
+     * Direct get request
+     * 
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     public function get($url, $target, $type = \NULL) {
-        $bubble = $this->getBubble('ajax_get', $type);
+        $place = $this->_placeMode;
+        $bubble = $this->_getStandardBubble('ajax_get', $type);
         $bubble->defFonction(<<<JS1
 {request("$url").then(function(text){
-      domConst.place(text, "$target");
+      domConst.place(text, "$target", '$place');
     });
 }   
 JS1
         );
     }
 
+    /**
+     * The request is made when an event is fired by an objetc provider
+     * 
+     * @param string $event The event name
+     * @param string $object The object provider name
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     public function onEvent($event, $object, $url, $target, $type = \NULL) {
-        $bubble = $this->getBubble("ajax_$event" . "_$object", $type);
+        $place = $this->_placeMode;
+        $bubble = $this->_getStandardBubble("ajax_$event" . "_$object", $type);
         $bubble->defFonction(<<<JS
 {on(dom.byId("$object"), "$event", function(){
     request("$url").then(function(text){
-      domConst.place(text, "$target");
+      domConst.place(text, "$target", '$place');
     });
   });
 }   
@@ -62,36 +90,73 @@ JS
         );
     }
 
+    /**
+     * The request is made on clic on an object provider
+     * 
+     * @param string $object The object clicked
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     public function onClick($object, $url, $target, $type = \NULL) {
         $this->onEvent('click', $object, $url, $target, $type);
     }
 
+    /**
+     * The request is made after a delay
+     * 
+     * @param int $delay The delay in milliseconds
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     public function onTime($delay, $url, $target, $type = \NULL) {
-        $bubble = $this->getBubble("ajax_delay" . $type);
+        $place = $this->_placeMode;
+        $bubble = $this->_getStandardBubble("ajax_delay" . $type);
         $bubble->defFonction(<<<JS
 {setTimeout(function(){
     request("$url").then(function(text){
-      domConst.place(text, "$target");
+      domConst.place(text, "$target", '$place');
     });}, $delay);
 }   
 JS
         );
     }
 
+    /**
+     * The request is made upon reception of a message (through the topic
+     * publish and subscribe mechanism). Two parameters sent with the message
+     * are taken into account.
+     * 
+     * @param string $messageName The name of the message
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     public function onMessage($messageName, $url, $target, $type = \NULL) {
-        $bubble = $this->getBubble("msg$messageName" . $type);
+        $place = $this->_placeMode;
+        $bubble = $this->_getStandardBubble("msg$messageName" . $type);
         $bubble->addModule('dojo/topic','topic');
         $bubble->defFonction(<<<JS
 {topic.subscribe('$messageName',function(a,b){
     request("$url/"+a+'/'+b).then(function(text){
-      domConst.place(text, "$target");
+      domConst.place(text, "$target", '$place');
     });});
 }   
 JS
                 );
     }
 
-    private function getBubble($bubbleName, $type = \Dojo\Engine\Bubble::TEXT) {
+    /**
+     * Prepares a dojo bubble (by retrieving or creating it) and places some standard
+     * modules in it. If necessary, a special module is inserted (according to
+     * the request type)
+     * 
+     * @param string $bubbleName
+     * @param type $type
+     * @return type
+     */
+    private function _getStandardBubble($bubbleName, $type = \Dojo\Engine\Bubble::TEXT) {
         $bubble = \Dojo\Engine\Bubble::GetBubble($bubbleName);
         $bubble->addModule('dojo/request', 'request')
                 ->addModule('dojo/dom', 'dom')

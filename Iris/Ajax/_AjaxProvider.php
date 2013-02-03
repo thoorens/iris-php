@@ -42,6 +42,8 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
     
     protected static $_Instance = \NULL;
     
+    protected $_placeMode = self::LAST;
+    
     /**
      * The Ajax default provider (Dojo) may be changed.
      * 
@@ -57,7 +59,22 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
         return \Iris\MVC\_Helper::HelperCall('ajax');
     }
     
-    
+    /**
+     * Magic method to add some methods to the helper<ul>
+     * <li>placeBefore, placeAfter...
+     * </ul>
+     * 
+     * @param string $name
+     * @param array $arguments
+     * @return \Dojo\Ajax\Provider for fluent interface
+     */
+    public function __call($name, $arguments) {
+        if(substr($name, 0,5)=='place'){
+            $this->_placeMode = strtolower(substr($name,5));
+        }
+        return $this;
+    }
+
     
     abstract public function get($url, $target, $type =\NULL);
     abstract public function onClick($object, $url, $target, $type =\NULL);
