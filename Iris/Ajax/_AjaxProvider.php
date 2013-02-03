@@ -27,7 +27,8 @@ namespace Iris\Ajax;
 
 
 /**
- * Description of _AjaxProvider
+ * This abstract class provides all ajax functions as abstracts and need
+ * to be overwritten by a concrete class such as Dojo\Ajax\Provider
  * 
  * Project IRIS-PHP
  * 
@@ -76,10 +77,56 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
     }
 
     
+    /**
+     * Direct get request
+     * 
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     abstract public function get($url, $target, $type =\NULL);
+    
+    /**
+     * The request is made on clic on an object provider
+     * 
+     * @param string $object The object clicked
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
+    
     abstract public function onClick($object, $url, $target, $type =\NULL);
+    /**
+     * The request is made when an event is fired by an objetc provider
+     * 
+     * @param string $event The event name
+     * @param string $object The object provider name
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
+    
     abstract public function onEvent($event, $object, $url, $target, $type =\NULL);
+    /**
+     * The request is made after a delay
+     * 
+     * @param int $delay The delay in milliseconds
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     abstract public function onTime($delay, $url, $target, $type = \NULL);
+    
+    /**
+     * The request is made upon reception of a message (through the topic
+     * publish and subscribe mechanism). Two parameters sent with the message
+     * are taken into account.
+     * 
+     * @param string $messageName The name of the message
+     * @param string  $url the URL to execute
+     * @param string $target idname of the object to modify
+     * @param string $type MIME type for the request (text by default)
+     */
     abstract public function onMessage($messageName, $url, $target, $type = \NULL);
 }
 ?>
