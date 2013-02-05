@@ -4,18 +4,21 @@
     </div>
 
 </div>
-{countDown('mes1',2,'spanseconds',1,["hello"])}
-{countDown('mes2',3,'spanseconds2',2,["hello","world"])}
+ <!-- In real life, there is no sense to put the sender and the receiver in the same file.
+This is just a test -->       
+        
+{counter()->setId('counter1')->down('mes1',5,'spanseconds1',["hello"])}
+{counter()->setId('counter2')->up('mes2',10,'spanseconds2',["hello","world"])}
 
 {ajax()->onMessage('mes1','/ajax/get/message6','message1')}
 {ajax()->onMessage('mes2','/ajax/get/message7','message2')}
 <div>
     <div id="page">
         <p>
-            A message will appear in <span id="spanseconds">6</span> seconds.
+            A message will appear in <span id="spanseconds1">6</span> seconds.
         </p>
         <p>
-            A message will appear in <span id="spanseconds2">6</span> seconds.
+            A message will appear after 10 seconds (<span id="spanseconds2">6</span> elapsed).
         </p>
         <div class="example">
             <p id="message1">

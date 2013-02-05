@@ -45,7 +45,8 @@ class Provider extends \Iris\Ajax\_AjaxProvider {
     const FIRST = 'first';
     const LAST = 'last';
     
-    
+    protected $_placeMode = self::LAST;
+
     
     
     /**
@@ -137,9 +138,10 @@ JS
         $place = $this->_placeMode;
         $bubble = $this->_getStandardBubble("msg$messageName" . $type);
         $bubble->addModule('dojo/topic','topic');
+        list($urlParam, $jsParams) = $this->_generateParameters();
         $bubble->defFonction(<<<JS
-{topic.subscribe('$messageName',function(a,b){
-    request("$url/"+a+'/'+b).then(function(text){
+{topic.subscribe('$messageName',function($jsParams){
+    request('$url/'+$urlParam).then(function(text){
       domConst.place(text, "$target", '$place');
     });});
 }   

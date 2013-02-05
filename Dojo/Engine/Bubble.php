@@ -2,6 +2,8 @@
 
 namespace Dojo\Engine;
 
+
+defined('CRLF') or define('CRLF',"\n");
 /*
  * This file is part of IRIS-PHP.
  *
@@ -146,7 +148,8 @@ class Bubble{
             }
         }
         $allModule = array_merge($linkedModules, $unlinkedModules);
-        $html = 'require(["';
+        $html = "/* Dojo code for $this->_bubbleName */".CRLF; 
+        $html .= 'require(["';
         $html .= implode('","', $allModule);
         $html .= '"]';
         if (count($linkedModules) > 0) {
@@ -155,7 +158,7 @@ class Bubble{
             $html .= implode(',',$parameters);
             $html .= "){$functionText}";
         }
-        $html .= ');';
+        $html .= ');'.CRLF;
         return $html;
     }
 

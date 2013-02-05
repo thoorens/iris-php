@@ -12,26 +12,56 @@ namespace modules\ajax\controllers;
  */
 class read extends _ajax {
 
+    /*
+     * Everything is the view scripts ! This is only a demo.
+     * Each view has a minimum title and one or two Ajax calls
+     */
+    
+    /**
+     * This action adds information directly in the screen
+     * through an Ajax request
+     */
     public function getAction() {
         
     }
 
+    /**
+     * This action adds information in the screen after a short
+     * 5 second delay
+     */
     public function timeAction() {
         
     }
 
+    /**
+     * This action adds information in the screen when the user
+     * clicks a button
+     */
     public function clickAction() {
         
     }
 
+    /**
+     * This action adds information in the screen when an event
+     * occurs (the mouse is over the button)
+     */
     public function eventAction() {
         
     }
-
+    /**
+     * This action adds information in the screen when a message 
+     * is sent to a receiver (the message is sent by the action method
+     * but could be sent by another part of the code)
+     */
     public function messageAction() {
-        
+        $this->_view->counter()->down('MSG1',5,'spanseconds',['test']);
     }
     
+    /**
+     * This action adds information in the screen when two messages 
+     * are sent to receivers (the message are sent by the action method
+     * but could be sent by another part of the code)
+     */
     public function messagesAction(){
         
     }

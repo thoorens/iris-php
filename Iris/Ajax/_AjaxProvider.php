@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -25,7 +26,6 @@ namespace Iris\Ajax;
  * @copyright 2011-2013 Jacques THOORENS
  */
 
-
 /**
  * This abstract class provides all ajax functions as abstracts and need
  * to be overwritten by a concrete class such as Dojo\Ajax\Provider
@@ -37,28 +37,43 @@ namespace Iris\Ajax;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
+abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
+
+    /**
+     * The namespace path of the concrete class used to implement Ajax
+     * (by default \Dojo\Ajax)
+     * 
+     * @var string
+     */
+    protected static $_DefaultAjaxLibrary = '\\Dojo\Ajax\\';
     
-    protected static $_DefaultProvider = '\Dojo\Ajax\Provider';
-    
+    /**
+     * The subhelper static reference for simulating singleton behaviour.
+     * 
+     * @var static
+     */
     protected static $_Instance = \NULL;
-    
-    protected $_placeMode = self::LAST;
+
+    protected $_messageArgumentNumber = 2;
     
     /**
      * The Ajax default provider (Dojo) may be changed.
      * 
-     * @param string $provider
+     * @param string $library
      */
-    public static function setDefaultProvider($provider){
-        self::$_DefaultProvider = $provider;
-        }
-        
+    public static function SetDefaultAjaxLibrary($library) {
+        self::$_DefaultAjaxLibrary = $library;
+    }
 
+    public static function GetDefaultAjaxLibrary(){
+        return self::$_DefaultAjaxLibrary;
+    }
     
     protected function _provideRenderer() {
         return \Iris\MVC\_Helper::HelperCall('ajax');
     }
+
+    
     
     /**
      * Magic method to add some methods to the helper<ul>
@@ -70,13 +85,12 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
      * @return \Dojo\Ajax\Provider for fluent interface
      */
     public function __call($name, $arguments) {
-        if(substr($name, 0,5)=='place'){
-            $this->_placeMode = strtolower(substr($name,5));
+        if (substr($name, 0, 5) == 'place') {
+            $this->_placeMode = strtolower(substr($name, 5));
         }
         return $this;
     }
 
-    
     /**
      * Direct get request
      * 
@@ -84,8 +98,8 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
      * @param string $target idname of the object to modify
      * @param string $type MIME type for the request (text by default)
      */
-    abstract public function get($url, $target, $type =\NULL);
-    
+    abstract public function get($url, $target, $type = \NULL);
+
     /**
      * The request is made on clic on an object provider
      * 
@@ -94,8 +108,8 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
      * @param string $target idname of the object to modify
      * @param string $type MIME type for the request (text by default)
      */
-    
-    abstract public function onClick($object, $url, $target, $type =\NULL);
+    abstract public function onClick($object, $url, $target, $type = \NULL);
+
     /**
      * The request is made when an event is fired by an objetc provider
      * 
@@ -105,8 +119,8 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
      * @param string $target idname of the object to modify
      * @param string $type MIME type for the request (text by default)
      */
-    
-    abstract public function onEvent($event, $object, $url, $target, $type =\NULL);
+    abstract public function onEvent($event, $object, $url, $target, $type = \NULL);
+
     /**
      * The request is made after a delay
      * 
@@ -116,7 +130,7 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
      * @param string $type MIME type for the request (text by default)
      */
     abstract public function onTime($delay, $url, $target, $type = \NULL);
-    
+
     /**
      * The request is made upon reception of a message (through the topic
      * publish and subscribe mechanism). Two parameters sent with the message
@@ -128,5 +142,32 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper{
      * @param string $type MIME type for the request (text by default)
      */
     abstract public function onMessage($messageName, $url, $target, $type = \NULL);
+    
+    /**
+     * Changes the number of arguments for the sent messages (bu default 2)
+     * 
+     * @param int $messageArgumentNumber
+     */
+    public function setMessageArgumentNumber($messageArgumentNumber) {
+        $this->_messageArgumentNumber = $messageArgumentNumber;
+    }
+
+
+    /**
+     * Generates the required parameters for URL and javascript function 
+     * during message management.
+     * 
+     * @return array(string)
+     */
+    protected function _generateParameters(){
+        for($i=1;$i<=$this->_messageArgumentNumber;$i++){
+            $args[] = "p$i";
+        }
+        return [implode("+'/'+", $args), implode(',', $args)];
+    }
+    
 }
-?>
+
+
+
+

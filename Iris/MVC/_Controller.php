@@ -206,6 +206,9 @@ class _Controller extends _BaseController {
         if($contentType!=\NULL){
             \header("content-type:$contentType");
         }
+        else{
+            \header("content-type:text/html");
+        }
     }
 
 }

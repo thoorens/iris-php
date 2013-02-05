@@ -4,12 +4,14 @@
     </div>
 
 </div>
-{countDown('MSG1',6,'spanseconds')}
+<!-- In real life, there is no sense to put the sender and the receiver in the same file.
+This is just a test -->
+
 {ajax()->onMessage('MSG1','/ajax/get/message5','message1')}
 <div>
     <div id="page">
         <p>
-            A message will appear in <span id="spanseconds">6</span> seconds.
+            A message will appear in <span id="spanseconds">5</span> seconds.
             
         </p>
         <div class="example">

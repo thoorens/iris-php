@@ -1,0 +1,4 @@
+<h3>Ajax</h3>
+<p>
+    {message}
+</p>
