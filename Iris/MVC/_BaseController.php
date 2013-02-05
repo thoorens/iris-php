@@ -242,6 +242,20 @@ class _BaseController {
         }
     }
 
+    /**
+     * Permits to call a view helper (some of which are simple interfaces
+     * to javascript or Ajax code)
+     * 
+     * @param string $helperName
+     * @param mixed $args (optional and 
+     */
+    public function callViewHelper($helperName){
+        // gets optional parameters
+        $args = func_get_args();
+        array_shift($args);
+        \Iris\views\helpers\_ViewHelper::HelperCall($helperName, $args);
+    }
+    
     public function preRender($scriptName) {
         //$this->_prerendering .= $this->renderNow($scriptName, \FALSE);
         $this->_view->addPrerending($this->renderNow($scriptName, \FALSE));
