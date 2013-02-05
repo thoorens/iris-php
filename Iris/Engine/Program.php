@@ -2,7 +2,6 @@
 
 namespace Iris\Engine;
 
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -39,7 +38,7 @@ class Program {
      * 
      * @var string
      */
-    public static $ProgramName ='NONE';
+    public static $ProgramName = 'NONE';
 
     /**
      *
@@ -47,13 +46,12 @@ class Program {
      */
     public $stopWatch;
 
-    
     /**
      * Constructor for the Program instance
      * @param string $programName the program directory (not visible)
      */
-    public function __construct($programName='program') {
-        define('IRIS_PROGRAM_PATH',IRIS_ROOT_PATH.'/'.$programName);
+    public function __construct($programName = 'program') {
+        define('IRIS_PROGRAM_PATH', IRIS_ROOT_PATH . '/' . $programName);
         $this->stopWatch = new \Iris\Time\RunTimeDuration(NULL);
         self::$ProgramName = $programName;
         self::AutosetSiteMode();
@@ -65,7 +63,7 @@ class Program {
      * as a recursive entry in the process. In case of an error in the
      * error treatment, no recursive call is done.
      */
-    public function run($errorURI=NULL) {
+    public function run($errorURI = NULL) {
         try {
             ob_start();
             $dispatcher = new Dispatcher();
@@ -80,7 +78,13 @@ class Program {
         }
         catch (\Exception $exception) {
             // RedirectException is a way to escape from the initial run method end
-            if (!$exception instanceof \Iris\Exceptions\RedirectException) {
+            if ($exception instanceof \Iris\Exceptions\RedirectException) {
+                $text = ob_get_clean();
+                \Iris\views\helpers\AutoResource::HeaderBodyTuning($text, $this->stopWatch);
+                echo $text;
+            }
+            // true error
+            else {
                 $this->_errorInformation($exception);
                 // Clean all message in 
                 \Iris\Exceptions\ErrorHandler::WipeAllText();
@@ -110,11 +114,10 @@ class Program {
         $errorInfo->prepareErrorDiplay($exception);
     }
 
-    
     /**
      * @deprecated (use Mode::IsDevelopment() instead)
      */
-    public static function IsDevelopment($site=TRUE) {
+    public static function IsDevelopment($site = TRUE) {
         if (!$site) {
             throw new \Iris\Exceptions\DeprecatedException('Program::IsDevelopement() had no parameter (deprecated)');
         }
@@ -124,7 +127,7 @@ class Program {
     /**
      * @deprecated (use Mode::IsProduction() instead)
      */
-    public static function IsProduction($site=TRUE) {
+    public static function IsProduction($site = TRUE) {
         if (!$site) {
             throw new \Iris\Exceptions\DeprecatedException('Program::IsProduction() had no parameter (deprecated)');
         }
@@ -153,8 +156,6 @@ class Program {
         Mode::SetSiteMode($mode);
     }
 
-    
-
     /**
      * Error box with title and message, for error debugging purpose
      * Should not be used in a production environment. This box is used
@@ -164,7 +165,7 @@ class Program {
      * @param string $title : box title
      * @return string 
      */
-    protected function _errorBox($message, $title="Unkown class") {
+    protected function _errorBox($message, $title = "Unkown class") {
         $text = '<div style="background-color:#979; color:#FFFFFF; margin:10px; padding:5px\">';
         $text .= "&nbsp;<strong>ERROR : $title</strong><hr>";
         $text .= '<pre style="background-color:#DDD;color:#008;margin:10px;font-size:0.8em;">';
