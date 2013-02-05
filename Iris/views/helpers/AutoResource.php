@@ -61,9 +61,9 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
      * and add javascript code before &lt;/body>
      * 
      * @param string $text The page text before finalization 
-     * @param \Iris\Time\RunTimeDuration $stopWatch
+     * @param \Iris\Time\RunTimeDuration $runTimeDuration
      */
-    public static function HeaderBodyTuning(&$text, $stopWatch = \NULL, $componentId = 'iris_RTD') {
+    public static function HeaderBodyTuning(&$text, $runTimeDuration = \NULL, $componentId = 'iris_RTD') {
         $auto = self::GetInstance();
         $loaders = "\t<!-- LOADERS begin -->\n";
         foreach ($auto->_additionalHeadLoader as $loaderName) {
@@ -74,8 +74,8 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
         $text = str_replace(self::LOADERMARK,$loaders,$text);
         $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
         $starter .= \Iris\views\helpers\Signature::computeMD5($text);
-        if(!is_null($stopWatch)){
-            $starter .= $stopWatch->jsDisplay($componentId);
+        if(!is_null($runTimeDuration)){
+            $starter .= $runTimeDuration->jsDisplay($componentId);
         }
         $text = str_replace('</body>',$starter."\n</body>",$text);
     }
