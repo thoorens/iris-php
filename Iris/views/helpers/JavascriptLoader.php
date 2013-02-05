@@ -75,7 +75,8 @@ class JavascriptLoader extends _LoaderHelper {
         //die($files);
         // render indiviual scripts
         $text = '';
-        foreach ($this->_scripts as $script) {
+        foreach ($this->_scripts as $scriptLabel=>$script) {
+            $text .= "/* Javascript code for $scriptLabel */\n";
             $text .= $script . "\n";
         }
         $text = $text=='' ? '' :sprintf("<script type=\"text/javascript\">\n%s</script>\n",$text);
