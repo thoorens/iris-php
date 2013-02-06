@@ -58,12 +58,13 @@ class Provider extends \Iris\Ajax\_AjaxProvider {
      */
     public function get($url, $target, $type = \NULL) {
         $place = $this->_placeMode;
-        $bubble = $this->_getStandardBubble('ajax_get', $type);
+        $bubble = $this->_getStandardBubble('ajax_get', $url, $type);
         $bubble->defFonction(<<<JS1
-{request("$url").then(function(text){
+
+   request("$url").then(function(text){
       domConst.place(text, "$target", '$place');
     });
-}   
+ 
 JS1
         );
     }
@@ -79,14 +80,15 @@ JS1
      */
     public function onEvent($event, $object, $url, $target, $type = \NULL) {
         $place = $this->_placeMode;
-        $bubble = $this->_getStandardBubble("ajax_$event" . "_$object", $type);
+        $bubble = $this->_getStandardBubble("ajax_$event", $url, $type);
         $bubble->defFonction(<<<JS
-{on(dom.byId("$object"), "$event", function(){
+
+on(dom.byId("$object"), "$event", function(){
     request("$url").then(function(text){
       domConst.place(text, "$target", '$place');
     });
   });
-}   
+   
 JS
         );
     }
@@ -113,13 +115,14 @@ JS
      */
     public function onTime($delay, $url, $target, $type = \NULL) {
         $place = $this->_placeMode;
-        $bubble = $this->_getStandardBubble("ajax_delay" . $type);
+        $bubble = $this->_getStandardBubble("ajax_delay" . $url, $type);
         $bubble->defFonction(<<<JS
-{setTimeout(function(){
+
+setTimeout(function(){
     request("$url").then(function(text){
       domConst.place(text, "$target", '$place');
     });}, $delay);
-}   
+   
 JS
         );
     }
@@ -136,15 +139,16 @@ JS
      */
     public function onMessage($messageName, $url, $target, $type = \NULL) {
         $place = $this->_placeMode;
-        $bubble = $this->_getStandardBubble("msg$messageName" . $type);
+        $bubble = $this->_getStandardBubble("msg$messageName", $url . $type);
         $bubble->addModule('dojo/topic','topic');
         list($urlParam, $jsParams) = $this->_generateParameters();
         $bubble->defFonction(<<<JS
-{topic.subscribe('$messageName',function($jsParams){
+
+topic.subscribe('$messageName',function($jsParams){
     request('$url/'+$urlParam).then(function(text){
       domConst.place(text, "$target", '$place');
     });});
-}   
+   
 JS
                 );
     }
@@ -154,11 +158,13 @@ JS
      * modules in it. If necessary, a special module is inserted (according to
      * the request type)
      * 
-     * @param string $bubbleName
-     * @param type $type
+     * @param string $bubbleType
+     * @param $url 
+     * @param string $type
      * @return type
      */
-    private function _getStandardBubble($bubbleName, $type = \Dojo\Engine\Bubble::TEXT) {
+    private function _getStandardBubble($bubbleType, $url, $type = \Dojo\Engine\Bubble::TEXT) {
+        $bubbleName = $bubbleType.md5($url);
         $bubble = \Dojo\Engine\Bubble::GetBubble($bubbleName);
         $bubble->addModule('dojo/request', 'request')
                 ->addModule('dojo/dom', 'dom')
