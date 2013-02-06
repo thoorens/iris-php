@@ -253,7 +253,7 @@ class _BaseController {
         // gets optional parameters
         $args = func_get_args();
         array_shift($args);
-        \Iris\views\helpers\_ViewHelper::HelperCall($helperName, $args);
+        return \Iris\views\helpers\_ViewHelper::HelperCall($helperName, $args);
     }
     
     public function preRender($scriptName) {
