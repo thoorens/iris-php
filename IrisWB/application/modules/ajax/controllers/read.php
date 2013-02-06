@@ -54,7 +54,7 @@ class read extends _ajax {
      * but could be sent by another part of the code)
      */
     public function messageAction() {
-        $this->_view->counter()->down('MSG1',5,'spanseconds',['test']);
+        $this->callViewHelper('counter')->down('MSG1',5,'spanseconds',['test']);
     }
     
     /**
@@ -63,6 +63,10 @@ class read extends _ajax {
      * but could be sent by another part of the code)
      */
     public function messagesAction(){
+        // first way to call a view helper
+        $this->callViewHelper('counter')->setId('counter1')->down('mes1',5,'spanseconds1',["hello"]);
+        // second way more cryptic
+        $this->_view->counter()->setId('counter2')->up('mes2',10,'spanseconds2',["hello","world"]);
         
     }
 

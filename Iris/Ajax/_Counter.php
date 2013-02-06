@@ -40,7 +40,12 @@ namespace Iris\Ajax;
 abstract class _Counter extends \Iris\Subhelpers\_Subhelper {
 
     protected static $_Instance = \NULL;
-    protected $_counterName = 'counter';
+    
+    /**
+     * The default name for the counter. Watch out, counter with lowercase initial raises an error.
+     * @var string 
+     */
+    protected $_counterName = 'Counter';
 
     const DOWN = 0;
     const UP = 1;
