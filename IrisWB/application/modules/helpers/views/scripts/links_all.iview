@@ -1,0 +1,38 @@
+<div>
+    <h3>HTML &lt;a> links</h3>
+    <ul>
+        <li>A single link using explicit parameters:</li>
+        {link($link_message, $link_URL, $link_title)}
+        <li>A single link using an array</li>
+        {link($link_array)}
+        <li>A single link with an image</li>
+        {link()->image($image, $link_array)}
+        <li>A NULL link (won't appear)</li>
+        {link('!!!!NONE!!!!')}
+    </ul>
+
+    <h3>Javascript buttons</h3>
+    <ul>
+        <li>A button link using explicit parameters</li>
+        {button($link_message, $link_URL, $link_title)}
+        <li>A button link using an array</li>
+        {button($link_array)}
+        <li>A button link with an image</li>
+        {button()->image($icon, $link_array)}
+    </ul>
+</li>
+{php}
+    \Iris\views\Helpers\_Link::$JavaForce = \TRUE;
+{/php}
+<li><b>A button without Javascript</b>
+    <ul><li>{button($link_array)}</li></ul>
+</li>
+{php}
+            \Iris\views\Helpers\_Link::$OldBrowser = \TRUE;
+{/php}
+<li><b>Simulate a button without Javascript for an old browser</b>
+    <ul><li>{button($link_array)}</li></ul>
+</li>
+</ul>
+
+</div>

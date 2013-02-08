@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\main\controllers;
+namespace modules\helpers\controllers;
 
 /**
  * 
@@ -10,20 +10,24 @@ namespace modules\main\controllers;
  * @author jacques
  * @license not defined
  */
-class links extends _main {
+class links extends _helpers {
 
     protected function _init() {
         $this->setViewScriptName('all');
     }
 
+    public function indexAction() {
+        $this->setViewScriptName('index');
+    }
+    
     public function link1Action() {
         $this->__(\NULL, [
             'link_message' => 'Link to page 2',
-            'link_URL' => '/main/links/link2',
+            'link_URL' => '/helpers/links/link2',
             'link_title' => 'This is a link to page 2',
             'image' => 'button_p2.png',
             'icon' => 'icon_page2.png',
-            'link_array' => ['Link to page 2', '/main/links/link2', 'This is a link to page 2']
+            'link_array' => ['Link to page 2', '/helpers/links/link2', 'This is a link to page 2']
                 ]
         );
     }
@@ -31,18 +35,18 @@ class links extends _main {
     public function link2Action() {
         $this->__(\NULL, [
             'link_message' => 'Link to page 1',
-            'link_URL' => '/main/links/link1',
+            'link_URL' => '/helpers/links/link1',
             'link_title' => 'This is a link to page 1',
             'image' => 'button_p1.png',
             'icon' => 'icon_page1.png',
-            'link_array' => ['Link to page 1', '/main/links/link1', 'This is a link to page 1']
+            'link_array' => ['Link to page 1', '/helpers/links/link1', 'This is a link to page 1']
         ]);
     }
     
     
 
     public function imagesAction() {
-        $this->_view->styleLoader('explanations','td pre{font-size:0.8em}');
+        $this->callViewHelper('styleLoader', 'explanations','td pre{font-size:0.8em}');
         $this->setViewScriptName(\NULL);
     }
 }

@@ -1,0 +1,12 @@
+<div>
+    <table class='show'>
+        <tr>
+            <td>{link('IRIS-PHP site #2','http://irisphp.net','Another URL for IRIS-PHP site')}</td>
+            <td>{button('IRIS-PHP site #2','http://irisphp.net','Another URL for IRIS-PHP site')} </td>
+        </tr>
+        <tr>
+            <td>{link(['IRIS-PHP site #3','http://irisphp.com','Still another URL for IRIS-PHP site'])}</td>
+            <td>{button(['IRIS-PHP site #3','http://irisphp.com','Still another URL for IRIS-PHP site'])} </td>
+        </tr>    
+    </table>
+</div>
