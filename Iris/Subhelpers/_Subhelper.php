@@ -34,6 +34,7 @@ namespace Iris\Subhelpers;
  * @version $Id: $ */
 abstract class _Subhelper implements \Iris\Design\iSingleton {
     use \Iris\Translation\tSystemTranslatable;
+    use \Iris\views\helpers\tViewHelperCaller;
 
     /**
      *
@@ -93,6 +94,5 @@ abstract class _Subhelper implements \Iris\Design\iSingleton {
         return static::$_Instance;
     }
 
-    
 }
 

@@ -37,6 +37,7 @@ namespace Iris\MVC;
  * 
  */
 class _BaseController {
+use \Iris\views\helpers\tViewHelperCaller;
 
     /**
      * Each controller has a type to be defined in subclasses
@@ -242,19 +243,6 @@ class _BaseController {
         }
     }
 
-    /**
-     * Permits to call a view helper (some of which are simple interfaces
-     * to javascript or Ajax code)
-     * 
-     * @param string $helperName
-     * @param mixed $args (optional and 
-     */
-    public function callViewHelper($helperName){
-        // gets optional parameters
-        $args = func_get_args();
-        array_shift($args);
-        return \Iris\views\helpers\_ViewHelper::HelperCall($helperName, $args);
-    }
     
     public function preRender($scriptName) {
         //$this->_prerendering .= $this->renderNow($scriptName, \FALSE);
