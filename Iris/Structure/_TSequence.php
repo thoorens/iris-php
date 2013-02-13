@@ -99,7 +99,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
             case self::PREVIOUS;
                 $current = $tSequence->fetchRow('URL=', $url);
                 if(is_null($current)){
-                    return \Iris\views\helpers\Button::$NoLink;
+                    return \Iris\Subhelpers\Link::$NoLink;
                 }
                 $tSequence->order('id DESC');
                 $tSequence->where('id<', $current->id);
@@ -108,7 +108,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
             case self::NEXT:
                 $current = $tSequence->fetchRow('URL=', $url);
                 if(is_null($current)){
-                    return \Iris\views\helpers\Button::$NoLink;
+                    return \Iris\Subhelpers\Link::$NoLink;
                 }
                 $tSequence->order('id');
                 $tSequence->where('id>', $current->id);
@@ -122,7 +122,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
         $sequence = $tSequence->fetchRow();
         if ($array) {
             if (is_null($sequence)) {
-                $value = \Iris\views\helpers\Button::$NoLink;
+                $value = \Iris\Subhelpers\Link::$NoLink;
             }
             else {
                 $value = array($label, $sequence->URL, $sequence->Description);

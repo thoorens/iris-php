@@ -16,9 +16,7 @@ class links extends _helpers {
         $this->setViewScriptName('all');
     }
 
-    public function indexAction() {
-        $this->setViewScriptName('index');
-    }
+   
     
     public function link1Action() {
         $this->__(\NULL, [

@@ -60,10 +60,13 @@ abstract class _Subhelper implements \Iris\Design\iSingleton {
     }
 
     /**
-     * This method must provide a default renderer
+     * This method must provide a default renderer (only if render() is used)
      * @return \Iris\Subhelpers\iRenderer 
+     * @throws \Iris\Exceptions\NotSupportedException
      */
-    protected abstract function _provideRenderer();
+    protected function _provideRenderer(){
+        throw new \Iris\Exceptions\NotSupportedException('Renderer not defined. Please overwrite _provideRenderer.');
+    }
 
     /**
      * @return array

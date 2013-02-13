@@ -1,5 +1,6 @@
 <?php
-namespace Dojo\views\helpers;
+
+namespace Dojo\Subhelpers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -18,30 +19,29 @@ namespace Dojo\views\helpers;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2011-2013 Jacques THOORENS
- *
  */
 
 /**
- * Dojo version of Button
+ * This class is a subhelper for the dojo helper Link family. 
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Button extends _DojoHelper {
+class Link extends \Iris\Subhelpers\Link {
 
-    protected function _init() {
-        $bubble = \Dojo\Engine\Bubble::GetBubble('toggle_button');
-        $bubble->addModule('dijit/form/Button');
+    protected static $_Instance = NULL;
+
+    protected function _button() {
+        $args = func_get_args();
+        list($label, $url, $tooltip, $class) = $this->_normalize($args);
+        if (\Iris\Users\Session::JavascriptEnabled() and !self::$NoJavaForce) {
+            $this->addAttribute('data-dojo-type', 'dijit/form/Button');
+        }
+        $html = parent::_button($label, $url, $tooltip, $class);
+        $this->removeAttribute('data-dojo-type');
+        return $html;
     }
-    
-    
-    
-    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL){
-        $subhelper = \Dojo\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender('button',$message, $url, $tooltip, $class);
-    }
-    
 
 }
 

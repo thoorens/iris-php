@@ -1,22 +1,10 @@
 <div>
     <table class="show">
         <tr>
-            <th>HTML &lt;a> links</th>
             <th>Javascript buttons</th>
+            <th>Dojo buttons</th>
         </tr>
         <tr>
-            <td>
-                <ul>
-                    <li>A single link using explicit parameters:</li>
-                    {link($link_message, $link_URL, $link_title)}
-                    <li>A single link using an array</li>
-                    {link($link_array)}
-                    <li>A single link with an image</li>
-                    {link()->image($image, $link_array)}
-                    <li>A NULL link (won't appear)</li>
-                    {link('!!!!NONE!!!!')}
-                </ul>
-            </td>
             <td>
                 <ul>
                     <li>A button link using explicit parameters</li>
@@ -27,6 +15,18 @@
                     {button()->image($icon, $link_array)}
                     <li>With A NULL link : no button</li>
                     {button('!!!!NONE!!!!')}
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>A Dojo button link using explicit parameters</li>
+                    {dojo_button($link_message, $link_URL, $link_title)}
+                    <li>A Dojo button link using an array</li>
+                    {dojo_button($link_array)}
+                    <li>A Dojo button link with an image</li>
+                    {dojo_button()->image($icon, $link_array)}
+                    <li>With A NULL link : no button</li>
+                    {dojo_button('!!!!NONE!!!!')}
                 </ul>
             </td>
         </tr>
@@ -44,12 +44,12 @@
     \Iris\SubHelpers\Link::$NoJavaForce = \TRUE;
             {/php}
             <td>
-                <ul><li>{button($link_array)}</li></ul>
+                <ul><li>{dojo_button($link_array)}</li></ul>
             </td>
             {php}
     \Iris\SubHelpers\Link::$OldBrowser = \TRUE;
             {/php}<td>
-                <ul><li>{button($link_array)}</li></ul>
+                <ul><li>{dojo_button($link_array)}</li></ul>
             </td>
         </tr>
 
