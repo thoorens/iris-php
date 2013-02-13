@@ -49,6 +49,26 @@ class Client {
     const ARRAY_ = 4; // major and minor in an array
 
     /**
+     * Tests if the Browser is very old (that means for instance a IE prior to 7
+     * 
+     * @param boolean $force
+     * @return boolean
+     */
+    public static function OldBrowser($force = \FALSE) {
+        if ($force) {
+            return \TRUE;
+        }
+        $client = new Client();
+        switch ($client->getClient()) {
+            case self::IE:
+                $version = $client->getVersion(self::MAJOR);
+                return $version < 7 ? TRUE : FALSE;
+        }
+        return FALSE;
+    }
+    
+    
+    /**
      * Returns the client browser version number (full 11.0, major 11, 
      * minor 0 or as an array of two numbers).
      * 
