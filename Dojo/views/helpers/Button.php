@@ -31,7 +31,7 @@ namespace Dojo\views\helpers;
 class Button extends _DojoHelper {
 
     protected function _init() {
-        $bubble = \Dojo\Engine\Bubble::GetBubble('toggle_button');
+        $bubble = \Dojo\Engine\Bubble::GetBubble('form_button');
         $bubble->addModule('dijit/form/Button');
     }
     
