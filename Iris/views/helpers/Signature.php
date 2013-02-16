@@ -95,7 +95,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
     public function saveButton() {
         $name = self::$_SpanID;
         return $this->_view->button()->addAttribute('id',"b_$name")
-                ->autorender('button','Save MD5',"b_$name",'Save the present MD5 signature' );
+                ->autorender('button','Save MD5',\NULL,'Save the present MD5 signature' );
     }
 
     /**
@@ -125,10 +125,14 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
             }
             $javascriptCode = <<< JS
 <script>
-    md5fp = dojo.byId('$componentId');
-    md5fp.innerHTML = '<i>$md5</i>';
-    dojo.addClass('$componentId','$class');
-    dojo.attr( "b_$componentId",'onclick',"$link");  
+require(["dojo/dom-class", "dojo/dom", "dojo/on", "dojo/domReady!"],
+function(domClass, dom, on){
+    dom.byId("$componentId").innerHTML = "<i>$md5</i>";
+    domClass.add("$componentId", "$class");    
+    on(dom.byId("b_$componentId"), "click", function(){
+        $link;
+  });
+});
 </script>
 
 JS;
