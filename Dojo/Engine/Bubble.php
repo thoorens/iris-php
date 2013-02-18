@@ -156,7 +156,7 @@ class Bubble{
             $functionText = $this->_internalFunction;
             $html .= ',function(';
             $html .= implode(',',$parameters);
-            $html .= "){$functionText}";
+            $html .= "){ $functionText }";
         }
         $html .= ');'.CRLF;
         return $html;

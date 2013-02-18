@@ -30,7 +30,7 @@ namespace Dojo\views\helpers;
 /**
  * This helper loads all Dojo script files necessary to 
  * run the active parts of the page.
- * All file names have been collected in Dojo\Manager
+ * All file names have been collected in Dojo\Manager and Dojo\Bubble
  * by the respective dojo helpers. 
  *
  */
@@ -68,11 +68,12 @@ BASE;
 
         // loads necessary scripts for dojo functions
         $text .= "<script type=\"text/javascript\">\n";
-        foreach ($manager->getRequisites() as $key => $requisite) {
-            $requisite = '"dojo/parser",'.$requisite;
-            $initCode = '';
-            $text .= "require([$requisite]$initCode);\n";
-        }
+//        foreach ($manager->getRequisites() as $key => $requisite) {
+//            echo "Problem with <b>$key</b><br>";
+//            $requisite = '"dojo/parser",'.$requisite;
+//            $initCode = '';
+//            $text .= "require([$requisite]$initCode);\n";
+//        }
         /* @var $bubble \Dojo\Engine\Bubble */
         foreach(\Dojo\Engine\Bubble::GetAllBubbles() as $bubble){
             $text .= $bubble->render();

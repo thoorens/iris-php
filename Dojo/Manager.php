@@ -51,6 +51,7 @@ class Manager {
      * The JS prerequisites for the dojo witgets used in the program
      * 
      * @var array 
+     * @deprecated
      */
     protected $_requisites = array();
 
@@ -276,7 +277,7 @@ class Manager {
     }
 
     /**
-     * Add a requisite for Dojo
+     * Add a requisite for Dojo (using a Bubble)
      * 
      * @param type $index
      * @param type $name
@@ -295,9 +296,11 @@ class Manager {
         else {
             $requisite = $name;
         }
-        if (!isset($this->_requisites[$index])) {
-            $this->_requisites[$index] = $requisite;
-        }
+//        if (!isset($this->_requisites[$index])) {
+//            $this->_requisites[$index] = $requisite;
+//        }
+        $bubble = \Dojo\Engine\Bubble::GetBubble($index);
+        $bubble->addModule($name);
         return $this;
     }
 
