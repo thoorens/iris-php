@@ -34,16 +34,15 @@ namespace Dojo\views\helpers;
  * by the respective dojo helpers. 
  *
  */
-class Head extends \Iris\views\helpers\_LoaderHelper{
+class Head extends \Iris\views\helpers\_LoaderHelper {
 
-    
-    public function render(){
-        return $this->help();
+    public function render($mode = \FALSE) {
+        return $this->help($mode);
     }
-    
-    public function help() {
+
+    public function help($ajaxMode = \FALSE) {
         $manager = \Dojo\Manager::GetInstance();
-        if(!$manager->isActive()){
+        if (!$manager->isActive()) {
             return '';
         }
         $source = $manager->getURL();
@@ -54,10 +53,11 @@ class Head extends \Iris\views\helpers\_LoaderHelper{
 
         // Loads css and js scripts
         $text = '';
-        foreach($manager->getStyleFiles() as $file=>$dummy){
-            $text .= sprintf('<link rel="stylesheet" type="text/css" href="%s">'."\n",$file);
-        }
-        $text .= <<< BASE
+        if (!$ajaxMode) {
+            foreach ($manager->getStyleFiles() as $file => $dummy) {
+                $text .= sprintf('<link rel="stylesheet" type="text/css" href="%s">' . "\n", $file);
+            }
+            $text .= <<< BASE
 <link rel="stylesheet" type="text/css" href="$source/dijit/themes/$style/$style.css">
 <script>
     dojoConfig = {parseOnLoad: $parseOnLoad, debug:$debug}
@@ -65,9 +65,11 @@ class Head extends \Iris\views\helpers\_LoaderHelper{
 <script type="text/javascript" src="$script">
 </script>
 BASE;
-
+        }
         // loads necessary scripts for dojo functions
         $text .= "<script type=\"text/javascript\">\n";
+        $text .= \Dojo\Engine\DNameSpace::RenderAll();
+        // deprecated (replaced by bubbles)
 //        foreach ($manager->getRequisites() as $key => $requisite) {
 //            echo "Problem with <b>$key</b><br>";
 //            $requisite = '"dojo/parser",'.$requisite;
@@ -75,7 +77,7 @@ BASE;
 //            $text .= "require([$requisite]$initCode);\n";
 //        }
         /* @var $bubble \Dojo\Engine\Bubble */
-        foreach(\Dojo\Engine\Bubble::GetAllBubbles() as $bubble){
+        foreach (\Dojo\Engine\Bubble::GetAllObjects() as $bubble) {
             $text .= $bubble->render();
         }
         $text .= "</script>\n";
@@ -83,4 +85,5 @@ BASE;
     }
 
 }
+
 ?>

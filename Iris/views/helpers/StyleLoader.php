@@ -65,7 +65,10 @@ class StyleLoader extends _LoaderHelper {
      * 
      * @return string 
      */
-    public function render() {
+    public function render($ajaxMode) {
+        if($ajaxMode){
+            return '';
+        }
         // render styles
         $text = '';
         foreach ($this->_styles as $style) {
@@ -78,7 +81,7 @@ ENDSTYLE;
         // render style files
         foreach ($this->_styleFiles as $file => $dummy) {
             $url = $this->_URL($file);
-            $text .= '<link href="'.$url.'" rel="stylesheet" type="text/css" />';
+            $text .= '<link  test="" href="'.$url.'" rel="stylesheet" type="text/css" />';
             $text .= "\n";
         }
         return $text;

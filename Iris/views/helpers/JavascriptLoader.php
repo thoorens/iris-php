@@ -65,22 +65,21 @@ class JavascriptLoader extends _LoaderHelper {
      * 
      * @return string 
      */
-    public function render() {
+    public function render($mode) {
         // render script file links
         $files = '';
         foreach ($this->_scriptFiles as $file) {
             $files .= sprintf('<script type="text/javascript" src="%s"></script>', $file);
             $files .= "\n";
         }
-        //die($files);
         // render indiviual scripts
         $text = '';
         foreach ($this->_scripts as $scriptLabel=>$script) {
             $text .= "/* Javascript code for $scriptLabel */\n";
             $text .= $script . "\n";
         }
-        $text = $text=='' ? '' :sprintf("<script type=\"text/javascript\">\n%s</script>\n",$text);
-        return $files.$text;
+        $code = $text=='' ? '' :sprintf("<script type=\"text/javascript\">\n%s</script>\n",$text);
+        return $files.$code;
     }
 
 }

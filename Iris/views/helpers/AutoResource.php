@@ -34,7 +34,11 @@ namespace iris\views\helpers;
  * 
  */
 class AutoResource extends \Iris\views\helpers\_ViewHelper {
+
     const LOADERMARK = "\t<!-- LOADERS -->\n";
+    const AJAXMARK = "\t<!-- AJAX -->\n";
+    const AJAXMODE = \TRUE;
+    const HEADERMODE = \FALSE;
 
     private $_additionalHeadLoader = array();
     protected static $_Singleton = \TRUE;
@@ -42,7 +46,6 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
     public function addLoader($className) {
         $this->_additionalHeadLoader[] = $className;
     }
-    
 
     /**
      * Returns a html comment to be replaced at later stage by scripts and
@@ -54,8 +57,14 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
         return self::LOADERMARK;
     }
 
-    
-    
+    public static function HeaderBodyTuning(&$text, $runTimeDuration = \NULL, $componentId = 'iris_RTD') {
+        self::_MakeTuning(self::HEADERMODE, $text, $runTimeDuration, $componentId);
+    }
+
+    public static function AjaxTuning(&$text) {
+        self::_MakeTuning(self::AJAXMODE, $text);
+    }
+
     /**
      * Replaces the html comment by scripts and styles
      * and add javascript code before &lt;/body>
@@ -63,21 +72,26 @@ class AutoResource extends \Iris\views\helpers\_ViewHelper {
      * @param string $text The page text before finalization 
      * @param \Iris\Time\RunTimeDuration $runTimeDuration
      */
-    public static function HeaderBodyTuning(&$text, $runTimeDuration = \NULL, $componentId = 'iris_RTD') {
+    private static function _MakeTuning($ajaxMode, &$text, $runTimeDuration = \NULL, $componentId = 'iris_RTD') {
         $auto = self::GetInstance();
         $loaders = "\t<!-- LOADERS begin -->\n";
         foreach ($auto->_additionalHeadLoader as $loaderName) {
-            $loader = $loaderName::getInstance();
-            $loaders .= $loader->render();
+                $loader = $loaderName::getInstance();
+                $loaders .= $loader->render($ajaxMode);
         }
         $loaders .= "\t<!-- LOADERS end -->\n";
-        $text = str_replace(self::LOADERMARK,$loaders,$text);
         $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
-        $starter .= \Iris\views\helpers\Signature::computeMD5($text);
-        if(!is_null($runTimeDuration)){
-            $starter .= $runTimeDuration->jsDisplay($componentId);
+        if ($ajaxMode) {
+            $text = str_replace(self::AJAXMARK, $loaders, $text);
         }
-        $text = str_replace('</body>',$starter."\n</body>",$text);
+        else {
+            $text = str_replace(self::LOADERMARK, $loaders, $text);
+            $starter .= \Iris\views\helpers\Signature::computeMD5($text);
+            if (!is_null($runTimeDuration)) {
+                $starter .= $runTimeDuration->jsDisplay($componentId);
+            }
+        }
+        $text = str_replace('</body>', $starter . "\n</body>", $text);
     }
 
 }
