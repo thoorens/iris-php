@@ -2,8 +2,6 @@
 
 namespace Dojo\Engine;
 
-
-defined('CRLF') or define('CRLF',"\n");
 /*
  * This file is part of IRIS-PHP.
  *
@@ -32,31 +30,22 @@ defined('CRLF') or define('CRLF',"\n");
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Bubble{
+class Bubble {
+
+    use tRepository;
 
     const TEXT = 1;
     const JSON = 2;
     const XML = 3;
+
     
-    /**
-     * All the bubble are placed in a repository
-     * @var array(Bubble)
-     */
-    private static $_Repository = array();
-    
-    /**
-     * The name of the bubble
-     * 
-     * @var string
-     */
-    private $_bubbleName;
-    
+
     /**
      * A list of requisites for the bubble. 
      * @var array
      */
     private $_modules = array();
-    
+
     /**
      *
      * @var type 
@@ -64,39 +53,13 @@ class Bubble{
     private $_internalFunction = \NULL;
 
     /**
-     * Returns a bubble (after creating it if necessary)
-     * by its name
+     * Syntaxic sugar for GetObject
      * 
-     * @param string $bubbleName The name of the bubble to create/retrieve
-     * @return Bubble for fluent interface
+     * @param string $objectName
+     * @return Bubble
      */
-    public static function GetBubble($bubbleName) {
-        if(count(self::$_Repository)==0){
-            \Dojo\Manager::GetInstance()->setActive();
-        }
-        if (!isset(self::$_Repository[$bubbleName])) {
-            self::$_Repository[$bubbleName] = new Bubble($bubbleName);
-        }
-        return self::$_Repository[$bubbleName];
-    }
-
-    /**
-     * Returns all the bubbles (used internally to generate the javascript
-     * code.
-     * 
-     * @return array
-     */
-    public static function GetAllBubbles() {
-        return self::$_Repository;
-    }
-
-    /**
-     * A private constructor, each bubble is created or retrieved by its name.
-     * 
-     * @param string $bubbleName The name of the new bubble
-     */
-    private function __construct($bubbleName) {
-        $this->_bubbleName = $bubbleName;
+    public static function GetBubble($objectName){
+        return self::GetObject($objectName);
     }
 
     /**
@@ -119,8 +82,8 @@ class Bubble{
      * @param int $type The number corresponding to the speciale module.
      * @return \Dojo\Engine\Bubble for fluent interface
      */
-    public function addSpecialModule($type){
-        switch($type){
+    public function addSpecialModule($type) {
+        switch ($type) {
             case self::JSON:
                 $this->addModule('dojo/JSON', 'json');
                 break;
@@ -128,7 +91,7 @@ class Bubble{
         }
         return $this;
     }
-    
+
     /**
      * Creates the javascript code for all bubbles in the application.
      * 
@@ -148,17 +111,17 @@ class Bubble{
             }
         }
         $allModule = array_merge($linkedModules, $unlinkedModules);
-        $html = "/* Dojo code for $this->_bubbleName */".CRLF; 
+        $html = CRLF."/* Dojo code for $this->_objectName */" . CRLF;
         $html .= 'require(["';
         $html .= implode('","', $allModule);
         $html .= '"]';
         if (count($linkedModules) > 0) {
             $functionText = $this->_internalFunction;
             $html .= ',function(';
-            $html .= implode(',',$parameters);
+            $html .= implode(',', $parameters);
             $html .= "){ $functionText }";
         }
-        $html .= ');'.CRLF;
+        $html .= ');' . CRLF;
         return $html;
     }
 
@@ -168,12 +131,9 @@ class Bubble{
      * 
      * @param string $text
      */
-    public function defFonction($text) {
+    public function defFunction($text) {
         $this->_internalFunction = $text;
     }
-
-    
-    
 
 }
 
