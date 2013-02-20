@@ -122,7 +122,7 @@ abstract class _Container extends _DojoHelper {
         if ($this->_JS) {
             $this->_type = static::$_Type;
             $type = $this->_type;
-            \Dojo\Engine\Bubble::GetBubble($this->_type)->addModule("dijit/layout/$type")
+            \Dojo\Engine\Bubble::getBubble($this->_type)->addModule("dijit/layout/$type")
                     ->addModule("dojo/parser")->addModule("dijit/layout/ContentPane")->addModule("dijit/layout/LinkPane");
         }
         if (!is_null($varName)) {

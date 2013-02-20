@@ -42,7 +42,7 @@ class Mask extends _DojoHelper {
     }
 
     protected function _init() {
-        \Dojo\Engine\Bubble::GetBubble('toggle_button')->addModule('dijit/form/ToggleButton');
+        \Dojo\Engine\Bubble::getBubble('toggle_button')->addModule('dijit/form/ToggleButton');
     }
 
     public function buttonMask($text, $label = NULL) {

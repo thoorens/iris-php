@@ -28,8 +28,11 @@ namespace IrisInternal\admin\controllers;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ajax extends _admin {
+class ajax extends \Iris\MVC\_AjaxController {
 
+
+    public function security() {
+    }
 
     /**
      * Ajax version of the tool bar
@@ -39,10 +42,8 @@ class ajax extends _admin {
      */
     public function toolbarAction($menu = \FALSE, $color ='#145'){
         $time = \Iris\Users\Session::GetInstance()->getValue('PreviousTime', 0.0);
-        $this->_ajaxMode();
-        $this->sharedToolbar('Ajax',$time,$menu, $color);
-        $this->renderNow('islToolbar_toolbar');
-        die();
+        $this->sharedToolbar('Ajax',$time,$menu, $color, \TRUE);
+        $this->renderScript('islToolbar_toolbar');
     }
 
 }

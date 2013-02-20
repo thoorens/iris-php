@@ -19,32 +19,24 @@ namespace Iris\views\helpers;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
+ *
  */
 
 /**
- * A view helper is a kind of method each view can use
+ * This helper is a front end to the Ajax Synchro Subhelper. He returns 
+ * the unique instance of this class.
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
- * 
  */
-abstract class _LoaderHelper extends _ViewHelper {
+class Synchro extends \Iris\views\helpers\_ViewHelper{
+use \Iris\Subhelpers\tSubhelperLink;
 
-    protected static $_Singleton = TRUE;
-
-
-    protected function _subclassInit() {
-        $auto = \Iris\views\helpers\AutoResource::GetInstance();
-        $auto->addLoader(get_called_class());
+    protected function _init() {
+        $this->_subhelperName = \Iris\Ajax\_AjaxProvider::GetDefaultAjaxLibrary().'Synchro';
     }
 
-    protected abstract function render($mode);
-
-    protected function help() {
-        return $this->render();
-    }
-
+   
 }
-

@@ -48,7 +48,7 @@ class TitlePane extends _DojoHelper {
 
     public function help($varName = NULL) {
         $this->_duration = self::DURATION;
-        \Dojo\Engine\Bubble::GetBubble('titlepane')->addModule("dijit/TitlePane")
+        \Dojo\Engine\Bubble::getBubble('titlepane')->addModule("dijit/TitlePane")
                 ->addModule("dojo/parser");
         if (!is_null($varName)) {
             $this->_view->$varName = $this;

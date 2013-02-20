@@ -1,6 +1,7 @@
 <?php
 
-namespace IrisInternal\admin\controllers;;
+namespace IrisInternal\admin\controllers;
+;
 
 /*
  * This file is part of IRIS-PHP.
@@ -28,18 +29,20 @@ namespace IrisInternal\admin\controllers;;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class islToolbar extends \Iris\MVC\_Islet{
-    
+class islToolbar extends \Iris\MVC\_Islet {
+
     /**
      * Non ajax version of admin toolbar
      * 
      * @param string $color Background color
      * @param boolean $menu if true, display the action menu
      */
-    public function indexAction($color, $menu = \FALSE){
+    public function indexAction($color, $menu = \FALSE) {
         // the code is shared by the ajax version
-        $this->sharedToolbar('', '0.000',$menu, $color);
+        $this->sharedToolbar('', '0.000', $menu, $color);
+        $this->setViewScriptName('toolbar');
     }
+
 }
 
 ?>

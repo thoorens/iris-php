@@ -57,6 +57,7 @@ class Synchro extends \Iris\Ajax\_Synchro {
         $senderName = "snd_$messageName";
         $bubble = $this->_getBubble($senderName);
         $bubble->addModule('dojo/request','request');
+        $bubble->addModule('dojo/request/script','script');
         $bubble->addModule('dojo/dom-construct','domConst');
         $controllerCode = $this->_getSignalControlCode($externalSignal);
         $bubble->defFunction(<<<JS
@@ -66,7 +67,7 @@ class Synchro extends \Iris\Ajax\_Synchro {
    old = '';
    max = $max;
    nextData = {
-        URL : "/tutorials/ajax/test",
+        URL :"/tutorials/ajax/test/frInstall/1",
         max : 20000
    }
    function restart(){
@@ -74,10 +75,19 @@ class Synchro extends \Iris\Ajax\_Synchro {
    }
    function next(){
         request(nextData.URL).then(function(text){
-        domConst.place(text, "show", 'replace');
-        max = nextData.max;
-        ms = 0;
-    });
+           domConst.place(text, "twotabs", 'replace');
+           max = nextData.max;
+           ms = 0;
+        });
+   }
+   function nextjs(){
+        request.script(nextData.URL,{
+      handleAs: "javascript"
+    }).then(function(text){
+           domConst.place(text, "twotabs", 'replace');
+           max = nextData.max;
+           ms = 0;
+        });
    }
    function innerloop(){ 
 $controllerCode   
@@ -159,7 +169,7 @@ JS
                      restart();
                      break;
                   case 'next':
-                     next();
+                     nextjs();
                      break;
                 }
                 old = msg;

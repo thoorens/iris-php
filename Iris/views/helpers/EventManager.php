@@ -18,32 +18,26 @@ namespace Iris\views\helpers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
- * A view helper is a kind of method each view can use
- *
+ * A helper for managing DOM object event
+ *  
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
- * 
  */
-abstract class _LoaderHelper extends _ViewHelper {
+class EventManager extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
+use \Iris\Subhelpers\tSubhelperLink;
 
-    protected static $_Singleton = TRUE;
-
-
-    protected function _subclassInit() {
-        $auto = \Iris\views\helpers\AutoResource::GetInstance();
-        $auto->addLoader(get_called_class());
+    protected function _init() {
+        $this->_subhelperName = \Iris\Ajax\_AjaxProvider::GetDefaultAjaxLibrary().'EventManager';
     }
 
-    protected abstract function render($mode);
-
-    protected function help() {
-        return $this->render();
+    public function render(array $arg1, $arg2) {
+        return "NOT USED";
     }
 
 }

@@ -60,9 +60,6 @@ class SharedToolbar extends _ControllerHelper{
         $this->__userLabel = 'User:';
         $this->__userName = $identity->getName();
         $this->__group = $identity->getRole();
-        if(!\Iris\Engine\Mode::IsProduction()){
-            $this->setViewScriptName('toolbar');
-        }
         $this->__MENU = $menu;
     }
 }

@@ -299,7 +299,7 @@ class Manager {
 //        if (!isset($this->_requisites[$index])) {
 //            $this->_requisites[$index] = $requisite;
 //        }
-        $bubble = \Dojo\Engine\Bubble::GetBubble($index);
+        $bubble = \Dojo\Engine\Bubble::getBubble($index);
         $bubble->addModule($name);
         return $this;
     }

@@ -31,19 +31,41 @@ use \Iris\System\Client as Client;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Link extends \Iris\Subhelpers\_Subhelper {
-use tAutoRenderer;
+    use tAutoRenderer;
 
-    public function setType($type) {
-        $this->_type = $type;
-        $this->render();
-    }
+    /**
+     * Forces a NO javascript display (essentially for test purpose)
+     * @var boolean
+     */
+    public static $NoJavaForce = \FALSE;
+    /**
+     * In NoJava mode, simulate an "old" browser
+     * @var boolean
+     */
+    public static $OldBrowser = \FALSE;
+    
+    /**
+     * HTML arguments may be added and removed from here
+     * @var array 
+     */
+    protected $_attributes = array();
 
-    /* Each subclass has its own unique instance */
-
+    /**
+     * Each subhelper class has its own unique instance
+     * @var static
+     */
     protected static $_Instance = NULL;
 
-    protected function _provideRenderer() {
-        
+    
+
+    public function __call($name, $arguments) {
+        return $this->autoRender($name, $arguments);
+    }
+
+    public function display() {
+        $arguments = func_get_args();
+        $def = substr($this->_type,1);
+        return $this->autorender($def, $arguments);
     }
 
     /**
@@ -69,16 +91,15 @@ use tAutoRenderer;
 
     //public function autoRender($args){ // is in tAutoRenderer
 
-    
     /**
      * 
      * @param array $args
      * @return boolean
      */
-    protected function _dontRender($args){
+    protected function _dontRender($args) {
         return ($args[0] == self::$NoLink[0]);
     }
-    
+
     /**
      * A simple link HTML a link with href, title and class attributes
      * 
@@ -172,10 +193,6 @@ STYLE
         return "<a $href $attributes>&nbsp;$label&nbsp;</a>\n";
     }
 
-    public static $NoJavaForce = \FALSE;
-    public static $OldBrowser = \FALSE;
-    protected $_attributes = array();
-
     /**
      * A special array corresponding to a non existent button/link
      * @var array
@@ -188,6 +205,8 @@ STYLE
             $html .= "$name=\"$value\" ";
         }
         $html .= $this->_standardAttributes($tooltip, $class);
+        // ID is wiped out after creating attribute string
+        $this->removeAttribute('id');
         return $html;
     }
 
@@ -226,16 +245,43 @@ STYLE
         return $data;
     }
 
+    /**
+     * Adds an attribute to the link
+     * 
+     * @param string $name The attribute name
+     * @param mixed $value The attribute value
+     * @return \Iris\Subhelpers\Link for a fluent interface
+     */
     public function addAttribute($name, $value) {
         $this->_attributes[$name] = $value;
         return $this;
     }
 
-    public function removeAttribute($name){
-        if(isset($this->_attributes[$name])){
+    /**
+     * Removes an attribute, if it exists. May be usefull when 
+     * the link singleton is used to create various links.
+     * 
+     * @param string $name
+     * @return \Iris\Subhelpers\Link
+     */
+    public function removeAttribute($name) {
+        if (isset($this->_attributes[$name])) {
             unset($this->_attributes[$name]);
         }
+        return $this;
     }
-    
+
+    /**
+     * Sets the ID of the current link (erased after generation of
+     * the attribute string).
+     * 
+     * @param string $idName
+     * @return \Iris\Subhelpers\Link
+     */
+    public function setId($idName) {
+        $this->addAttribute('id', $idName);
+        return $this;
+    }
+
 }
 
