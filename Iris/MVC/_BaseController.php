@@ -92,7 +92,7 @@ use \Iris\views\helpers\tViewHelperCaller;
     public function __construct(\Iris\Engine\Response $response, $actionName = 'index') {
         $this->_response = $response;
         $this->_view = new View();
-        $this->setViewScriptName($actionName);
+        $this->_view->setViewScriptName($actionName);
         \Iris\Exceptions\ErrorHandler::SystemTrace(static::$_Type, $response);
     }
 
