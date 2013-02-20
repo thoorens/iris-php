@@ -45,6 +45,7 @@ class Item {
     private $_id;
     private $_duration=10;
     private $_page;
+    private $_audio;
 
     public function createDummy($id) {
         $this->_title = "Title $id";
@@ -125,6 +126,14 @@ class Item {
         return $this;
     }
 
+    public function getAudio(){
+        return $this->_audio;
+    }
+
+    public function setAudio($audio) {
+        $this->_audio = $audio;
+        return $this;
+    }
 
 
 }

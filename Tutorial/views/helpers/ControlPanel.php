@@ -7,6 +7,7 @@
 
 namespace Tutorial\views\helpers;
 
+\define('IRIS_CP', 'IrisCPINTERNAL');
 /*
  * This file is part of IRIS-PHP.
  *
@@ -43,13 +44,14 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper {
     use \Tutorial\Translation\tSystemTranslatable;
 
     protected static $_Singleton = TRUE;
+
     /**
      * The name of the associated sound controller
      * 
      * @var string
      */
-    private $_soundController = 'tuto_sound';
-    
+    private $_soundControllerId = 'tuto_sound';
+
     /**
      * If TRUE, the frame show starts at once
      * 
@@ -58,15 +60,32 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper {
     private $_autostart = \TRUE;
 
     /**
-     * The helper returns its reference or starts its rendering 
+     * The sleep duration between to emission (in 1/1000s)
+     * 
+     * @var int
      */
-    public function help($times = \NULL, $channel = 'NEXT') {
-        if (is_null($times)) {
-            $this->_manager->addRequisite('dojo/dom-class','dojo/dom-class');
+    private $_granularity = 100;
+
+    /**
+     * The time elapsed between two refreshing of counter display
+     * @var int
+     */
+    private $_refreshingInterval = 1000;
+    private $_sound = \TRUE;
+
+    /**
+     * The helper returns its reference or starts its rendering 
+     * 
+     * @param int $duration The time duration of the frame
+     * @param string $channel The publish/subscribe channel name (defautl IRIS_CP)
+     * @return string 
+     */
+    public function help($duration = \NULL, $channel = IRIS_CP) {
+        if (is_null($duration)) {
             return $this;
         }
         else {
-            return $this->render($times, $channel);
+            return $this->render($duration, $channel);
         }
     }
 
@@ -74,167 +93,123 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper {
      * Does the job: html for button bar and javascript
      * 
      * @param array(int) $duration The time duration of each frame
-     * @param string $channel The publish/subscribe channel name (defautl NEXT)
+     * @param string $channel The publish/subscribe channel name (defautl IRIS_CP)
      * @return string 
-     * @throws \Iris\Exceptions\HelperException
      */
-    public function render($duration, $channel = 'NEXT') {
-        $button = $this->_view->button();        
-        $html = $button->setId('List')->render($this->_('List'), '/tutorials/index/list', '', '');
-        $html .= $button->setId('First')->setOnClick('')->render($this->_('Restart'), \NULL, '', '');
-        $html .= $button->setId('Prev')->setOnClick('previous()')->render($this->_('Previous'), \NULL, '', '');
-        $html .= $button->setId('Next')->setOnClick('next()')->render($this->_('Next'), \NULL, '', '');
-        $html .= $button->setId('Stop')->setOnClick('stop()')->render($this->_('Stop'), \NULL, '', '');
-        $html .= $button->setId('Play')->setOnClick('start()')->render($this->_('Play'), \NULL, '', '');
-        $html .= $button->setId('Minus')->setOnClick('minus()')->render($this->_('-'), \NULL, $this->_('Reduce volume'), '');
-        $html .= $button->setId('Nosound')->setOnClick('nosound()')->render($this->_('X'), \NULL, $this->_('Toggle sound'), '');
-        $html .= $button->setId('Plus')->setOnClick('plus()')->render($this->_('+'), \NULL, $this->_('Increase volume'), '');
-        $class = \Iris\Engine\Mode::IsDevelopment() ? '' : 'class="tuto_hidden"';
-        $html .= "<span id=\"tuto_seconds\" $class>0</span>/";
-        $html .= "<span id=\"tuto_maxseconds\" $class>0</span> &diams; ";
-        $html .= "<span id=\"tuto_totalseconds\" $class>0</span>";
-        $this->_prepareScript($duration, $channel);
+    public function render($duration, $channel = IRIS_CP) {
+        /* @var $button \Iris\Subhelpers\Link */
+        $button = $this->_view->button();
+        $controlChannel = "C$channel";
+        /* @var $synchro \Iris\Ajax\_Synchro */
+        $synchro = $this->_view->synchro();
+
+        $synchro->setRefreshingInterval($this->_refreshingInterval)
+                ->setGranularity($this->_granularity)
+                ->setAutostart($this->_autostart)
+                ->send($channel, $duration, $controlChannel);
+        $html = $synchro->start($controlChannel);
+        $html .= $synchro->stop($controlChannel);
+        $html .= $synchro->restart($controlChannel);
+        $html .= $synchro->next($controlChannel);
+        if ($this->_sound) {
+            $html .= $button->setId('Minus')
+                    ->addAttribute('onclick', 'iris_dojo.soundminus()')
+                    ->display($this->_('-'), \NULL, $this->_('Reduce volume'), '');
+            //if ($this->_control & self::NOSOUND)
+            $html .= $button->setId('Nosound')
+                    ->addAttribute('onclick', 'iris_dojo.nosound()')
+                    ->display($this->_('X'), \NULL, $this->_('Toggle sound'), '');
+            //if ($this->_control & self::PLUS)
+            $html .= $button->setId('Plus')
+                    ->addAttribute('onclick', 'iris_dojo.soundplus()')
+                    ->display($this->_('+'), \NULL, $this->_('Increase volume'), '');
+            $this->_jsSound();
+        }
+        $html .= '<span id="counter1">-</span>';
+        $synchro->counterMaxDisplay($channel, 'counter1');
         return $html;
     }
 
-    
-    
     /**
-     * Completes the button bar with javascript code
-     *  
-     * @param array(int) $duration The time duration of each frame
-     * @param string $channel The publish/subscribe channel name (defautl NEXT)
+     * Sets the value of autostart
+     * 
+     * @param boolean $autostart If TRUE, counter will be started at once
+     * @return \Tutorial\views\helpers\ControlPanel for fluent interface
      */
-    private function _prepareScript($duration, $channel) {
-        $this->_view->styleLoader('tuto_style', '.tuto_hidden{display:none;}');
-        $array = '[' . implode(',', $duration) . ']';
-        $accumulator = 0;
-        $max = count($duration);
-        $soundController = $this->_soundController;
-        $autostart = $this->_autostart ? 'true' : 'false';
-        $continueLabel = $this->_('Continue');
-        $script = <<<STOP
-    timing = $array;
-    max= $max;
-    current = 0;
-    sec = 0;
-    running = $autostart;
-    oldVol = 0;
-    soundController = '';
-
-    function tuto_init(){
-        dojo.byId('tuto_maxseconds').innerHTML=timing[current];
-        //frames=dojo.getObject('frames');
-        soundController = dojo.byId('$soundController');
-        if(running){
-            soundController.play();
-            dojo.addClass('Play','tuto_hidden');
-        }
-        else{
-            dojo.addClass('Stop','tuto_hidden');
-        };
-        domClass.remove('tuto_container','loading_image');
-        domClass.remove('tuto_internal','tuto_hidden');
-        tuto_timer();
-    }
-    
-    function tuto_timer(){
-        if(running){
-            dojo.byId('Play').innerHTML = '$continueLabel';
-            counter = dojo.byId('tuto_seconds');
-            seconds = 1*counter.innerHTML;
-            counter.innerHTML = seconds+1;
-            counter2 = dojo.byId('tuto_totalseconds');
-            seconds2 = 1*counter2.innerHTML;
-            counter2.innerHTML = seconds2+1;
-            sec++;
-            if(sec>=timing[current]){
-                next();
-            }
-        }
-        compte=setTimeout('tuto_timer()',1000) 
-    }
-    
-    function reset(){
-        frames.selectChild('label1');
-        dojo.byId('tuto_seconds').innerHTML=0;
-        current = 0;
-        sec = 0;
-        soundController.currentTime=0;
-        soundController.play();
-        dojo.addClass('Play','tuto_hidden');
-        dojo.removeClass('Stop','tuto_hidden');
-    }
-    
-    function previous(){
-        frames.back();
-        current--;
-        if(current<0){
-            current = max-1;
-        }
-        dojo.publish('$channel', [current,soundController]);
-        _updateTimer();
-    }
-
-    function next(){
-        frames.forward();
-        sec=0;
-        current++;
-        if(current == max){
-             current=0;
-        }
-        dojo.publish('NEXT', [current]);
-        _updateTimer();
-    }
-    
-    
-
-    function stop(){
-        dojo.byId('Play').innerHTML = '$continueLabel';
-        running = false;
-        dojo.removeClass('Play','tuto_hidden');
-        dojo.addClass('Stop','tuto_hidden');
-        soundController.pause();
-    }
-
-    function start(){
-        running = true;
-        dojo.addClass('Play','tuto_hidden');
-        dojo.removeClass('Stop','tuto_hidden');
-        soundController.play();
-    }
-    
-    function minus(){
-        soundController.volume = controller.volume - 0.1;    
-    }
-    
-    function nosound(){
-        currentVol = soundController.volume;
-        soundController.volume=oldVol;
-        oldVol = currentVol;
-    }
-    function plus(){
-        soundController.volume = soundController.volume +0.1;    
-    }
-    
-    function _updateTimer(){
-        dojo.byId('tuto_maxseconds').innerHTML=timing;
-        dojo.byId('tuto_seconds').innerHTML=0;
-    }
-   
-STOP;
-        $this->_view->javascriptLoader(99, $script);
-        $this->_view->javascriptStarter('tuto', 'tuto_init()');
-    }
-
     public function setAutostart($autostart) {
         $this->_autostart = $autostart;
         return $this;
     }
 
-    public function setSoundController($soundController) {
-        $this->_soundController = $soundController;
+    /**
+     * Sets the id of the managed sound controller
+     * 
+     * @param string $soundControllerId
+     * @return \Tutorial\views\helpers\ControlPanel for fluent interface
+     */
+    public function setSoundControllerId($soundControllerId) {
+        $this->_soundControllerId = $soundControllerId;
         return $this;
+    }
+
+    /**
+     * Sets the interval between two sleep time
+     * 
+     * @param int $granularity
+     * @return \Tutorial\views\helpers\ControlPanel for fluent interface
+     */
+    public function setGranularity($granularity) {
+        $this->_granularity = $granularity;
+        return $this;
+    }
+
+    /**
+     * Sets the interval between two refreshing of the counter
+     * 
+     * @param int $refreshingInterval
+     * @return \Tutorial\views\helpers\ControlPanel
+     */
+    public function setRefreshingInterval($refreshingInterval) {
+        $this->_refreshingInterval = $refreshingInterval;
+        return $this;
+    }
+
+    public function _jsSound() {
+        \Dojo\Engine\DNameSpace::addObject('oldVol')
+                ->createVar(0);
+        \Dojo\Engine\DNameSpace::addObject('soundController')
+                ->createVar("''");
+        \Dojo\Engine\DNameSpace::addObject('soundminus')
+                ->createFunction('this.soundController.volume = this.soundController.volume - 0.1');
+        \Dojo\Engine\DNameSpace::addObject('soundplus')
+                ->createFunction("this.soundController.volume = this.soundController.volume +0.1;");
+        \Dojo\Engine\DNameSpace::addObject('nosound')
+                ->createFunction(<<< NOSOUND
+        currentVol = this.soundController.volume;
+        this.soundController.volume=this.oldVol;
+        this.oldVol = currentVol;
+NOSOUND
+        );
+        \Dojo\Engine\DNameSpace::addObject('initsound')
+                ->createFunction(<<< INITSOUND
+        require(['dojo'],function(dojo){
+            iris_dojo.soundController = dojo.byId('tuto_sound');
+        });
+INITSOUND
+        );
+        \Dojo\Engine\Bubble::GetBubble('soundcontrol')
+                ->addModule('dojo/topic','topic')
+                ->defFunction(<<< JS
+   
+        topic.subscribe('CIrisCPINTERNAL',function(value){
+            if(value=='start')
+               iris_dojo.soundController.play()
+            else
+               iris_dojo.soundController.pause();
+        });
+JS
+        );
+        $this->_view->javascriptStarter('test', 'iris_dojo.initsound();');
     }
 
 }

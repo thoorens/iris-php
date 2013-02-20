@@ -56,7 +56,7 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
      * @param int $max
      * @return \Tutorial\Content\Item
      */
-    public function help($num) {
+    public function help($num, $ajax = \TRUE) {
         if ($this->COMMON_max == 0)
             $this->COMMON_max = 10;
         $this->toView('title', 'Installation sous Linux');
@@ -67,11 +67,11 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
         switch ($page[self::TYPE]) {
             case self::IMAGE:
                 $pageContent = \Iris\views\helpers\_ViewHelper::HelperCall('image', $page[self::PAGECONTENT]);
-                if(isset($page[self::TEXTCONTENT])){
+                if (isset($page[self::TEXTCONTENT])) {
                     $textContent = $this->rendernow($page[self::TEXTCONTENT], \FALSE);
                 }
-                else{
-                $textContent = "Pas d'explications définies";
+                else {
+                    $textContent = "Pas d'explications définies";
                 }
                 break;
             case self::VIEW:
@@ -87,7 +87,9 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
         $item->setDuration($page[self::DURATION]);
         $item->setId = $num + 1;
         $item->setTitle($page[self::TITLE]);
+        $item->setAudio($page[self::AUDIO]);
         return $item;
     }
+
 }
 
