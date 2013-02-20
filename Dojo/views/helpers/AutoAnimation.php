@@ -48,8 +48,42 @@ class AutoAnimation extends _DojoHelper {
         return $this;
     }
 
-    public function getId() {
+    private function _getId() {
         return++$this->_id;
+    }
+
+    public function controlledIn($node, $signal, $startTime, $duration = 5000) {
+        $this->_createBubble('controlledIn'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+   
+    var io_args = {
+        node : "$node",
+        duration : $duration,
+        signal : "$signal",
+        starttime : $startTime,    
+        dojofunction : "controlledIn" ,
+        opacity : 0
+    }
+    iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
+    }
+    
+    public function controlledOut($node, $signal, $startTime, $duration = 5000) {
+        $this->_createBubble('controlledOut'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+   
+    var io_args = {
+        node : "$node",
+        duration : $duration,
+        signal : "$signal",
+        starttime : $startTime,    
+        dojofunction : "controlledOut" ,
+        opacity : 1
+    }
+    iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
     }
 
     /**
@@ -59,20 +93,19 @@ class AutoAnimation extends _DojoHelper {
      * @param type $duration the duration of the fading in
      */
     public function in($node, $button, $duration = 5000) {
-        $this->_commonFade();
-        $script = <<< SCRIPT
-   require(["dojo/domReady!"], function(){
-        var io_args = {
+        $this->_createBubble('fadeIn'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+   
+    var io_args = {
         node : "$node",
         duration : $duration,
         button : "$button",
         dojofunction : "fadeIn" ,
         opacity : 0
         }
-        commonFade(io_args); 
-});
-SCRIPT;
-        $this->_view->javascriptLoader('fadeIn' . $this->getId(), $script);
+        iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
     }
 
     /**
@@ -82,21 +115,20 @@ SCRIPT;
      * @param type $duration the duration of the fading in
      */
     public function waitIn($node, $delay = 5000, $duration = 5000) {
-        $this->_commonFade();
         $delay = $this->_delay($delay);
-        $script = <<< SCRIPT
-   require(["dojo/domReady!"], function(){
-        var io_args = {
+        $this->_createBubble('waitIn'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+   
+    var io_args = {
         node : "$node",
         duration : $duration,
         dojofunction : "fadeIn" ,
         delay : $delay,
         opacity : 0
-        }
-        commonFade(io_args); 
-});
-SCRIPT;
-        $this->_view->javascriptLoader('waitIn' . $this->getId(), $script);
+    }
+    iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
     }
 
     /**
@@ -106,21 +138,20 @@ SCRIPT;
      * @param int $duration the duration of the fading out
      */
     public function waitOut($node, $delay = 5000, $duration = 5000) {
-        $this->_commonFade();
         $delay = $this->_delay($delay);
-        $script = <<< SCRIPT
-   require(["dojo/domReady!"], function(){
-        var io_args = {
+        $this->_createBubble('waitOut'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+   
+    var io_args = {
         node : "$node",
         duration : $duration,
         dojofunction : "fadeOut" ,
         delay : $delay,
         opacity : 1
-        }
-        commonFade(io_args); 
-});
-SCRIPT;
-        $this->_view->javascriptLoader('waitOut' . $this->getId(), $script);
+    }
+    iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
     }
 
     /**
@@ -131,20 +162,19 @@ SCRIPT;
      * @param type $duration the duration of the fading out
      */
     public function out($node, $button, $duration = 5000) {
-        $this->_commonFade();
-        $script = <<< SCRIPT
-      require(["dojo/domReady!"], function(){
-        var io_args = {
+        $this->_createBubble('fadeOut'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+    
+    var io_args = {
         node : "$node",
         duration : $duration,
         button : "$button",
         dojofunction : "fadeOut" ,
         opacity : 1
-        }
-        commonFade(io_args); 
-});
-SCRIPT;
-        $this->_view->javascriptLoader('fadeOut' . $this->getId(), $script);
+    }
+    iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
     }
 
     /**
@@ -158,21 +188,20 @@ SCRIPT;
     public function inOut($node, $button, $duration = 5000, $duration2 = \NULL) {
         if (is_null($duration2))
             $duration2 = $duration;
-        $this->_commonFade();
-        $script = <<< SCRIPT
-      require(["dojo/domReady!"], function(){
-        var io_args = {
+        $this->_createBubble('inOut'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+    
+    var io_args = {
         node : "$node",
         duration : $duration,
         duration2 : $duration2,    
         button : "$button",
         dojofunction : "fadeInOut" ,
         opacity : 0
-        }
-        commonFade(io_args); 
-});
-SCRIPT;
-        $this->_view->javascriptLoader('fadeInOut' . $this->getId(), $script);
+    }
+    iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
     }
 
     /**
@@ -186,38 +215,35 @@ SCRIPT;
     public function outIn($node, $button, $duration = 5000, $duration2 = \NULL) {
         if (is_null($duration2))
             $duration2 = $duration;
-        $this->_commonFade();
-        $script = <<< SCRIPT
-      require(["dojo/domReady!"], function(){
-        var io_args = {
+        $this->_createBubble('outIn'.$this->_getId())
+                ->defFunction(<<< SCRIPT
+   
+    var io_args = {
         node : "$node",
         duration : $duration,
         duration2 : $duration2,
         button : "$button",
         dojofunction : "fadeOutIn" ,
         opacity : 1
-        }
-        commonFade(io_args); 
-});
-SCRIPT;
-        $this->_view->javascriptLoader('fadeOutIn' . $this->getId(), $script);
+    }
+    iris_dojo.commonFade(io_args); 
+SCRIPT
+        );
     }
 
     /**
-     * Common part of all the method: a javascript function who does all the job.
+     * Common part of all the method: a namespace wrapped javascript function which does all the job.
      * @staticvar type $loaded
      */
-    protected function _commonFade() {
+    protected function _createBubble($bubbleName) {
         // Test loaded to gain time
         static $loaded = \FALSE;
         if (!$loaded) {
             $script = <<< SCRIPT
-    function commonFade(args){
-    require(["dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style","dojo/fx", "dojo/domReady!"],
-    function(dom, fx, on, style, coreFx){
+    require(["dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style","dojo/fx", "dojo/topic", "dojo/domReady!"],
+    function(dom, fx, on, style, coreFx, topic){
         // Style the dom node to opacity 0 or 1;
         style.set(args.node, "opacity", args.opacity);
-        
         // Function linked to the button to trigger the fade.
         function fadeIt(){
             style.set(args.node, "opacity", args.opacity);
@@ -237,6 +263,20 @@ SCRIPT;
                 animIn = fx.fadeIn({node: args.node,duration: args.duration2});
                 coreFx.chain([animOut, animIn]).play();
             }
+            else if(args.dojofunction=='controlledIn'){
+                topic.subscribe(args.signal, function(time){
+                    if(time==args.starttime){
+                       fx.fadeIn({node: args.node,duration: args.duration}).play();
+                    }
+                });
+            }
+            else if(args.dojofunction=='controlledOut'){
+                topic.subscribe(args.signal, function(time){
+                    if(time==args.starttime){
+                       fx.fadeOut({node: args.node,duration: args.duration}).play();
+                    }
+                });
+            }
         }
         if(args.button == null){
             setTimeout(fadeIt,args.delay); 
@@ -245,11 +285,13 @@ SCRIPT;
             on(dom.byId(args.button), "click", fadeIt);
         }
     })
-    };
 SCRIPT;
-            $this->_view->javascriptLoader('commonFade', $script);
+            \Dojo\Engine\DNameSpace::GetObject('commonFade')->createFunction($script, 'args');
             $loaded = \TRUE;
         }
+        $bubble = \Dojo\Engine\Bubble::GetBubble($bubbleName);
+        $bubble->addModule("dojo/domReady!", '');
+        return $bubble;
     }
 
     public function scroll($destination, $trigger) {
@@ -285,10 +327,10 @@ SCRIPT;
      * @param string $name
      * @return string
      */
-    public function scrollMarker($name){
+    public function scrollMarker($name) {
         return "<div id=\"$name\"></div>\n";
     }
-    
+
     /**
      * Converts relatives time to absolute
      * @param int $delay the starting time (if <0, considered as relative)
@@ -305,6 +347,4 @@ SCRIPT;
         return $startingTime;
     }
 
-    
-    
 }
