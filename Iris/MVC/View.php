@@ -134,6 +134,10 @@ class View {
         if (strpos($this->_viewScriptName, '/') !== FALSE) {
             $forcedScriptName = $this->_viewScriptName;
         }
+        if ($forcedScriptName == '__AJAX__' or $this->_viewScriptName == '__AJAX__') {
+            \Iris\Time\RunTimeDuration::DisableRTDDisplay();
+            return;
+        }
         // File generators and loaders have no view part, stop them and no time measurement.
         if ($forcedScriptName == '__NO_RENDER__' or $this->_viewScriptName == '__NO_RENDER__') {
             \Iris\Time\RunTimeDuration::DisableRTDDisplay();

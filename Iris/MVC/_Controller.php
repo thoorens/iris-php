@@ -198,11 +198,11 @@ class _Controller extends _BaseController {
      */
     protected function _ajaxMode($contentType = \NULL) {
 // no timing
-        \Iris\Time\RunTimeDuration::DisableRTDDisplay();
+        //\Iris\Time\RunTimeDuration::DisableRTDDisplay();
 // no layout
         $this->_setLayout(NULL);
 // no view script
-        $this->setViewScriptName('__NO_RENDER__');
+        $this->setViewScriptName('__AJAX__');
         if($contentType!=\NULL){
             \header("content-type:$contentType");
         }
