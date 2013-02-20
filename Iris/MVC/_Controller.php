@@ -190,26 +190,6 @@ class _Controller extends _BaseController {
         return $this->_wrappers[$number];
     }
 
-    /**
-     * Prepare an action to return pure data (optionaly preceded by a header
-     * (if content-type is not null)
-     * 
-     * @param string $contentType
-     */
-    protected function _ajaxMode($contentType = \NULL) {
-// no timing
-        //\Iris\Time\RunTimeDuration::DisableRTDDisplay();
-// no layout
-        $this->_setLayout(NULL);
-// no view script
-        $this->setViewScriptName('__AJAX__');
-        if($contentType!=\NULL){
-            \header("content-type:$contentType");
-        }
-        else{
-            \header("content-type:text/html");
-        }
-    }
-
+    
 }
 
