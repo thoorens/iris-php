@@ -31,8 +31,8 @@ namespace Iris\views\helpers;
 /**
  * Can call a view helper
  */
-trait tViewHelperCaller{
-    
+trait tViewHelperCaller {
+
     /**
      * Permits to call a view helper (some of which are simple interfaces
      * to javascript or Ajax code)
@@ -40,11 +40,12 @@ trait tViewHelperCaller{
      * @param string $helperName
      * @param mixed $args (optional and 
      */
-    public function callViewHelper($helperName){
+    public function callViewHelper($helperName) {
         // gets optional parameters
         $args = func_get_args();
-        array_shift($args);
-        return \Iris\views\helpers\_ViewHelper::HelperCall($helperName, $args);
+        array_shift($args); // helperName is 
+        $view = isset($this->_view) ? $this->_view : \NULL;
+        return \Iris\views\helpers\_ViewHelper::HelperCall($helperName, $args, $view);
     }
-    
+
 }
