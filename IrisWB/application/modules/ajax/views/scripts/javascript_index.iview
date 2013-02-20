@@ -1,0 +1,39 @@
+<!-- Define 2 styles for coloring zone1 and zone2 -->
+<style>
+    .pinkcolor
+    {
+        background:lightpink;
+    }
+    .yellowcolor
+    {
+        background:lightyellow;
+    }
+</style>
+
+<div{wbColors()}>
+    <div>
+        {wbExplain($this)}
+    </div>
+
+</div>
+<div>
+    <h3>This zone is pink (through a new class) added by javascript</h3>
+    <div id="zone1">
+        {loremIpsum([0,71,72,73])}
+    </div>
+    <h3>This zone is yellow (through a new class) added by javascript (and a button event)</h3>
+    {button()->setId('myButton')->display("Change color",\NULL,'Change the zone background color to yellow')}
+    <div id="zone2">
+        {loremIpsum([0,71,72,73])}
+    </div>
+</div>
+<!-- Change the color of zone1 to pink using Javascript (and Dojo) -->
+<script>
+    require(['dojo/dom-class'],function(domclass){
+    domclass.add('zone1','pinkcolor');
+});
+</script>
+
+<!-- EventManager receives a functionCode written in Dojo and so uses Dojo modules -->
+{eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('myButton', $functionCode)}
+ 

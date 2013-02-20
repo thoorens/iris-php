@@ -1,0 +1,13 @@
+<div{wbColors()}>
+    <div>
+        {wbExplain($this)}
+    </div>
+
+</div>
+{synchro()->send('MESS', 10000)}
+<div>
+    <h3>A list</h3>
+    <ul id='zone1'>
+        {synchro()->liDisplay('MESS','zone1')}
+    </ul>
+</div>

@@ -13,7 +13,7 @@ namespace modules\ajax\controllers;
 class read extends _ajax {
 
     /*
-     * Everything is the view scripts ! This is only a demo.
+     * Everything in the view scripts ! This is only a demo.
      * Each view has a minimum title and one or two Ajax calls
      */
     
