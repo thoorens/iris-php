@@ -48,7 +48,7 @@ class Audio5 extends _ViewHelper {
     public function render($fileName, $id, $mode = self::ALL, $autoplay = \TRUE, $controls = \TRUE) {
         $controlsAttribute = $controls ? ' controls ' : '';
         $autoplayAttribute = $autoplay ? ' autoplay ' : '';
-        $html = "<audio id=\"$id\" $controlsAttribute $autoplayAttribute src=\"$fileName.aac\" type=\"audio/mp4\">\n";
+        $html = "<audio id=\"$id\" $controlsAttribute $autoplayAttribute >\n";
         if($mode & self::MP4){
             $html .= "\t <source src=\"$fileName.aac\" type=\"audio/mp4\">\n";
         }
