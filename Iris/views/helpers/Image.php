@@ -52,15 +52,19 @@ class Image extends _ViewHelper {
             $title = $alt;
         }
         // if $dir is not provided, prepend /images to the file name
-        if (is_null($dir) or $dir == '') {
-            $dir = '/images';
+        // except if file name is !document/file/..... 
+        if ((is_null($dir) or $dir == '') and $file[1]!='!') {
+            $dir = '/images/';
+        }
+        elseif(!is_null($dir) and substr($dir,-1)!='/'){
+            $dir .= '/';
         }
         // mention class if it has one
         if ($class != '') {
             $class = 'class="' . $class . '"';
         }
         return sprintf('<img src="%s" title="%s" alt="%s" %s %s/>' . "\n", 
-                $dir . "/" . $file, $title, $alt, $class, $attributes);
+                $dir . $file, $title, $alt, $class, $attributes);
     }
 
 }
