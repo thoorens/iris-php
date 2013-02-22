@@ -1,3 +1,6 @@
+<?php
+    //This is a layout specificly designed for the add page for IRIS-PHP
+?>
 <!DOCTYPE html>
 <html>
     <head>

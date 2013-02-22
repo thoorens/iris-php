@@ -18,7 +18,7 @@ namespace IrisInternal\iris\controllers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
@@ -50,11 +50,8 @@ class reset extends \IrisInternal\main\controllers\_SecureInternal {
     }
 
     /**
-     * Called by 
-     * <noscript>
-     * <meta http-equiv="refresh" content="1; URL=/!iris/reset/jsTest"/>
-     * </noscript>
-     * to enable the no js mode of the framework.
+     * An action to set a session parameter if javascript is not enabled
+     * CAUTION: DON'T PUT &ltnoscript> DIRECTLY RECURSION GUARANTED!!
      * 
      * @see view helper JavascriptDetector
      */
