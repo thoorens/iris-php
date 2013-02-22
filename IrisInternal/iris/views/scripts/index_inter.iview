@@ -1,0 +1,25 @@
+{php}
+//
+// This is version of the add page for IRIS-PHP for other languages
+//
+$det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
+{/php}
+<h1>
+    IRIS-PHP Framework presentation
+</h1>
+<p>
+    This web site has been realized using the new IRIS-PHP framework, still under development. In the current state,
+    it provides tools to create a simple web site, with the main features of a modern site, including a database in mySQL
+    or SQLite.
+</p>
+
+<p>
+    Unfortunately, your language is not yet supported for this help screen. We suggest you one of the following:
+</p>
+<ul>
+    <li>learn french, it's a so beautiful language and 
+        {link('switch to the french version of this screen','/!iris/index/index/fr')}</li>
+    <li>{link('switch to the english version of this screen','/!iris/index/index/en')} </li>
+    <li>{link('go to the official website of the project','http://irisphp.org')}</li>
+</ul>
+

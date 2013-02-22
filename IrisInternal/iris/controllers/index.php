@@ -18,7 +18,7 @@ namespace IrisInternal\iris\controllers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
@@ -33,17 +33,25 @@ class index extends \IrisInternal\main\controllers\_SecureInternal {
         
     }
 
-    public function indexAction() {
-        $this->setViewScriptName('add');
+    /**
+     * Prepares a screen in French by default, if not otherwise specified
+     * 
+     * @param sting $language The language to use (only french and english are supported)
+     */
+    public function indexAction($language = 'fr') {
+        $language = strtolower($language);
+        if(strpos('fr-en',$language)===\FALSE){
+            $language ='inter';
+        }
+        $this->setViewScriptName($language);
         $this->_setLayout('add');
         $features = \Iris\models\TAvertising::getFeatures();
         $this->__features = $features;
         $plans = \Iris\models\TAvertising::getPlans();
         $this->__plans = $plans;
+        $this->__image1 =  'logoV.jpg';
+        $this->__comment1 =  'Iris-PHP logo';
     }
 
-    public function addAction() {
-        
-    }
 
 }
