@@ -21,13 +21,13 @@ span#iris_RTD{
    Menus
 */
 
-div.menu_admin{
+div#menu_admin{
     display:line;
     float:left;
     margin-top:-12px;
 }
 
-div.menu_admin2{
+div#menu_admin2{
     float:left;
 }
 
@@ -39,6 +39,8 @@ div.reset{
     z-index: 100;
     margin: 0;
     padding: 0;
+    line-height: 1em;
+    font-size: 13px;
 }
 
 #iris_atb .menu li{

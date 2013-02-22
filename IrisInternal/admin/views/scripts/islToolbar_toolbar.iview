@@ -15,10 +15,10 @@ END
 {/php}
 <div id="iris_admintoolbar">
     {if($MENU)}
-        <div class="menu_admin">
+        <div id="menu_admin">
             &nbsp;{ILO_menu()}
         </div><!-- menu_admin -->
-        <div class="menu_admin2">
+        <div id="menu_admin2">
             {endif}
             &nbsp; <span id="iris_RTD">{timeLabel}: <b>{time}</b></span>
             &nbsp;{ILO_goInternal('admin',TRUE)}
