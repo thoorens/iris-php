@@ -4,6 +4,7 @@ namespace ILO\views\helpers;
 
 use \Iris\views\helpers\_ViewHelper;
 use Iris\Time\RunTimeDuration as RunTimeDuration;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -20,36 +21,48 @@ use Iris\Time\RunTimeDuration as RunTimeDuration;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $/**
- * This helper creates an islet for development administration management
  * 
  */
 
 /**
- * Display a ToolBar for administrative purpose at development time only
+ * Display a ToolBar for administrative purpose AT DEVELOPMENT TIME ONLY
  */
 class AdminToolBar extends _ViewHelper {
 
+    /**
+     * If TRUE, the toolbar is only prepared at runtime and refreshed later
+     * by an ajax routine. May be changed directly by this instruction in a config file:
+     * \ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
+     * 
+     * @var boolean 
+     */
     public static $AjaxMode = \TRUE;
-    protected static $_Singleton = true;
 
     /**
-     *
-     * @var boolean If true, the toolbar will have a menu for all actions 
+     * This helper is a singleton
+     * 
+     * @var boolean
+     */
+    protected static $_Singleton = \TRUE;
+
+    /**
+     * If true, the toolbar will have a menu for all actions
+     * @var boolean 
      * (if possible)
      */
     private $_menu = \TRUE;
 
     /**
-     * returns the HTML text for the toolbar or the reference for later use
+     * Returns the HTML text for the toolbar or the reference for later use
      * 
-     * @param boolean $display
+     * @param boolean $display If TRUE, 
      * @param int $color
      * @return mixed
      */
@@ -61,17 +74,16 @@ class AdminToolBar extends _ViewHelper {
     }
 
     /**
-     * returns the HTML text for the toolbar
+     * Returns the HTML text for the toolbar
      * 
-     * @param boolean $display
-     * @param int $color
+     * @param boolean $display If TRUE display at once
+     * @param int $color The background color for the toolbar (dark blue by default)
      * @return string
      */
     public function render($display = \TRUE, $color = '#148') {
         if (!\Iris\Engine\Mode::IsProduction() and $display) {
             if (self::$AjaxMode) {
                 $html = $this->_ajaxRender();
-                RunTimeDuration::$DisplayMode = RunTimeDuration::AJAX;
             }
             else {
                 $html = $this->_view->islet('islToolbar', [$color, $this->_menu], 'index', '!admin');
@@ -81,25 +93,33 @@ class AdminToolBar extends _ViewHelper {
     }
 
     /**
-     * Accessor for the menu variable (if true will display a menu with all actions
+     * Accessor for the menu variable (if true will display a menu with all defined actions)
+     * See /!admin/structure to generate
+     * 
      * @param boolean $menu
      */
     public function setMenu($menu) {
         $this->_menu = $menu;
     }
 
+    /**
+     * Loads CSS file and Ajax command to load the toolbar and prepares the RunTimeDuration to be
+     * managed through the session.
+     * 
+     * @return string
+     */
     private function _ajaxRender() {
+        RunTimeDuration::$DisplayMode = RunTimeDuration::AJAX;
         $this->styleLoader('/!documents/file/resource/css/admintoolbar.css');
-        $this->ajax()->placeReplace()->get('/!admin/ajax/toolbar/1','iris_admintoolbar');
+        $this->ajax()->placeReplace()->get('/!admin/ajax/toolbar/1', 'iris_admintoolbar');
         return <<< HTML
 <div id="iris_admintoolbar" class="atb_white">
     Admin toolbar should be here. If you don't see it, something is wrong with Ajax. 
 </div>
 
 HTML;
-   ;
+        ;
     }
 
 }
-
 

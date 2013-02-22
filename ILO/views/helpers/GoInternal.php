@@ -19,7 +19,7 @@ use \Iris\views\helpers\_ViewHelper;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -27,20 +27,42 @@ use \Iris\views\helpers\_ViewHelper;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $
 /**
- * This helper creates administration and demo buttons
+ * This helper creates administration and demo buttons. It can be 
  * 
  */
 class GoInternal extends _ViewHelper {
 
+    /**
+     * The admin button mapped bit
+     */
     const ADMIN = 1;
+    /**
+     * The main welcome page button mapped bit
+     */
     const MAIN = 2;
-    const ROOT = 4;
-    const WORKBENCH = 8;
+    /**
+     * The irisphp site button mapped bit
+     */
+    const IRISPHP = 4;
+    /**
+     * The Reset page button mapped bit
+     */
+    const RESET = 8;
     
+    /**
+     * This helper is a singleton
+     * @var boolean 
+     */
     protected static $_Singleton = true;
 
+    /**
+     * Displays one or more buttons (if first parameters is a bit field)
+     * 
+     * @param mixed $command The name of the button or an addition of bits
+     * @param boolean $developmentOnly If TRUE will appear only at development time
+     * @return string
+     */
     public function help($command,$developmentOnly=FALSE) {
-        $developmentOnly = FALSE;
         if(is_numeric($command)){
             return $this->_variousButtons($command,$developmentOnly);
         }
@@ -66,11 +88,6 @@ class GoInternal extends _ViewHelper {
                 $uri = 'http://irisphp.org';
                 $comment = $this->_('Return to irisphp.org',TRUE);
                 break;
-            case 'iriswb':
-                $text = 'Iris Work Bench';
-                $uri = 'start';
-                $comment = $this->_('Start Iris Work Bench',TRUE);
-                break;
         }
         if($developmentOnly and \Iris\Engine\Program::IsProduction()){
             return '';
@@ -78,6 +95,13 @@ class GoInternal extends _ViewHelper {
         return $this->_view->button($text,$uri,$comment);
     }
 
+    /**
+     * Displays various buttons in line
+     * 
+     * @param type $numbers Bits corresponding to the desired buttons
+     * @param boolean $developmentOnly if TRUE, the buttons will ignored in production
+     * @return string
+     */
     private function _variousButtons($numbers,$developmentOnly){
         if($developmentOnly and \Iris\Engine\Program::IsProduction()){
             return '';
@@ -89,11 +113,11 @@ class GoInternal extends _ViewHelper {
         if($numbers & self::MAIN){
             $text .= $this->help('main');
         }
-        if($numbers & self::ROOT){
+        if($numbers & self::IRISPHP){
             $text .= $this->help('irisroot');
         }
-        if($numbers & self::WORKBENCH){
-            $text .= $this->help('iriswb');
+        if($numbers & self::RESET){
+            $text .= $this->help('reset');
         }
         return $text;
     }

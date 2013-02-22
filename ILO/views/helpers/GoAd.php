@@ -20,7 +20,7 @@ use \Iris\views\helpers\_ViewHelper;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -32,21 +32,31 @@ use \Iris\views\helpers\_ViewHelper;
  */
 
 /**
- * Projet IRIS-PHP
+ * Generates an icon link to a small presentation of IRIS or to the official website
  */
 class GoAd extends _ViewHelper {
 
-    protected static $_Singleton = true;
+    /**
+     * This helper is a singleton
+     * 
+     * @var boolean
+     */
+    protected static $_Singleton = \TRUE;
 
-    public function help() {
+    /**
+     * 
+     * @param boolean $local If TRUE go the internal description, otherwise to the official site
+     * @return type
+     */
+    public function help($local = \TRUE) {
         $client = new \Iris\System\Client();
         $lang = $client->getLanguage();
         $title = $this->_('Site powered by Iris-PHP', \TRUE);
-        return <<<LINK
-<a href="/!iris?LANG=$lang">
-    <img src="/!documents/file/resource/logos/IrisSmall.png" alt="Logo IRIS-PHP" title= "$title"/>
-</a>
-LINK;
+        if($local)
+            $url = "/!iris/index/index/$lang";
+        else
+            $url = 'http://irisphp.org';
+        return $this->_view->link()->image('/!documents/file/resource/logos/IrisSmall.png',$title,$url,$title);
     }
 
 }
