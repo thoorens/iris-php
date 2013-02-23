@@ -39,7 +39,7 @@ class NudeGirl extends _ViewHelper {
 
     public function help() {
         throw new \Iris\Exceptions\NotSupportedException('Stop coding. There is no nude girl support in Iris-PHP. 
-We suggest you to call your wife (husband) and offer her a small party. If necessary, call the girl/boy who is in love with you
+We suggest you to call your wife (husband) and offer her/him a small party. If necessary, call the girl/boy who is in love with you
 but whose existence you don\'t even notice.');
     }
 
