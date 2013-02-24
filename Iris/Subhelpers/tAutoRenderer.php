@@ -49,15 +49,17 @@ trait tAutoRenderer{
      */
     public final function autoRender() {
         $args = func_get_args();
+        $max = array_shift($args);
         $function = '_' . array_shift($args);
         $this->_type = $function;
-        if (is_array($args[0])) {
-            $args = $args[0];
+        $nArgs = $this->_normalize($args, $max);
+        if($nArgs[0] == \NULL){
+            return $this;
         }
-        if($this->_dontRender($args)){
+        if($this->_dontRender($nArgs)){
             return '';
         }
-        return $this->$function($args);
+        return $this->$function($nArgs);
     }
 
     /**
@@ -69,5 +71,27 @@ trait tAutoRenderer{
     protected function _dontRender($args){
         return \FALSE;
     }   
+    
+    /**
+     * Modifies the array so that <ul>
+     * <li> it has 4 elements (filling with NULLs)
+     * <li> if the first is an array, ignores the rest
+     * </ul>
+     * 
+     * @param array $args
+     * @return type
+     */
+    protected function _normalize($args, $max = 4) {
+        if (is_array($args[0])) {
+            $data = $args[0];
+        }
+        else {
+            $data = $args;
+        }
+        while (count($data) < $max) {
+            $data[] = \NULL;
+        }
+        return $data;
+    }
     
 }

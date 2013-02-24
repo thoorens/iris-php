@@ -27,8 +27,6 @@ namespace Iris\views\helpers;
  * @version $Id: $ * 
  */
 
-
-
 /**
  * 
  *
@@ -40,16 +38,10 @@ namespace Iris\views\helpers;
  * @version $Id: $ */
 class Link extends \Iris\views\helpers\_ViewHelper {
 
-    
-    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL){
+    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL) {
         $subhelper = \Iris\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender('link',$message, $url, $tooltip, $class);
+        return $subhelper->autoRender(4, 'link', $message, $url, $tooltip, $class);
     }
-    
-    
-
-    
-
 
 }
 

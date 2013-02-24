@@ -45,6 +45,12 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     public static $OldBrowser = \FALSE;
     
     /**
+     * A special array corresponding to a non existent button/link
+     * @var array
+     */
+    public static $NoLink = ['!!!!NONE!!!!', '', ''];
+    
+    /**
      * HTML arguments may be added and removed from here
      * @var array 
      */
@@ -56,10 +62,23 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      */
     protected static $_Instance = NULL;
 
+    /**
+     * Specifies an optional image folder
+     * @var string
+     */
+    protected $_imageFolder = \NULL;
     
 
-    public function __call($name, $arguments) {
-        return $this->autoRender($name, $arguments);
+    /**
+     * Magic method which returns the HTML code for the link or button
+     * accroding to the the helper used to instanciate the subhelper
+     * 
+     * @param string $methodName The m
+     * @param array $arguments
+     * @return string
+     */
+    public function __call($methodName, $arguments) {
+        return $this->autoRender($methodName, $arguments);
     }
 
     public function display() {
@@ -69,22 +88,21 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     }
 
     /**
+     * Realizes a link or a button with an image inside
      * 
-     * @return string
+     * @param string $fileName
+     * @param string/array $label The label of the image or an array of up to four elements
+     * @param string $url The URL of the link
+     * @param string $tooltip A tooltip to display
+     * @param string $class An optional class for the link
+     * @return type
      */
-    public function image() {
+    public function image($fileName, $label, $url = \NULL, $tooltip = \NULL, $class = \NULL) {
         $args = func_get_args();
         $fileName = array_shift($args);
-        // If file name begins by /, use /images folder
-        if ($fileName[0] != '/') {
-            $src = 'src="/images/' . $fileName . '" ';
-        }
-        else {
-            $src = 'src="http://' . $fileName . '" ';
-        }
         list($label, $url, $tooltip, $class) = $this->_normalize($args);
         $this->callViewHelper('styleLoader', 'nojsbutton', 'span.btnlabel{padding:0 0 20px 20px}');
-        $image = $this->callViewHelper('image', $fileName, $label, $tooltip, \NULL, 'btnlabel');
+        $image = $this->callViewHelper('image', $fileName, $label, $tooltip, $this->_imageFolder, 'btnlabel');
         $helperName = $this->_type;
         return $this->$helperName($image, $url, $tooltip, $class);
     }
@@ -92,6 +110,8 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     //public function autoRender($args){ // is in tAutoRenderer
 
     /**
+     * Stops the rendering if the link is null 
+     * Overwrites the method in tAutoRenderer
      * 
      * @param array $args
      * @return boolean
@@ -109,9 +129,6 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     protected function _link() {
         $args = func_get_args();
         list($label, $url, $tooltip, $class) = $this->_normalize($args);
-        if (is_null($label)) {
-            return $this;
-        }
         $attributes = $this->_standardAttributes($tooltip, $class);
         return sprintf('<a href="%s" %s >%s</a>', $url, $attributes, $label);
     }
@@ -125,9 +142,6 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     protected function _button() {
         $args = func_get_args();
         list($label, $url, $tooltip, $class) = $this->_normalize($args);
-        if (is_null($label)) {
-            return $this;
-        }
         if (!\Iris\Users\Session::JavascriptEnabled() or self::$NoJavaForce) {
             $href = is_null($url) ? '' : "href=\"$url\"";
             if (Client::OldBrowser(self::$OldBrowser)) {
@@ -151,30 +165,31 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * @param string $class The optional class
      * @return string
      */
-    protected function _javascriptButton($label, $url, $tooltip, $class) {
-        $attributes = $this->_getAttributes($tooltip, $class);
+    private function _javascriptButton($label, $url, $tooltip, $class) {
+        $attributes = $this->_renderAttributes($tooltip, $class);
         $onclick = is_null($url) ? '' : "onclick=\"javascript:location.href='$url'\"";
         return "<button $attributes $onclick>$label</button>\n";
     }
 
     /**
      * Displays a HTML button encapsulated in a link &lt;a> tag (if JS not active)
+     * 
      * @param string $label The label of the button
      * @param string $href The href attribute (or empty string)
      * @param string $tooltip The optional tooptip
      * @param string $class The optional class
      * @return string
      */
-    protected function _linkButton($label, $href, $tooltip, $class) {
-        $attributes = $this->_getAttributes($tooltip, $class);
+    private function _linkButton($label, $href, $tooltip, $class) {
+        $attributes = $this->_renderAttributes($tooltip, $class);
         // Button in a link
         return "<a $href>" .
                 "<button $attributes>$label</button></a>\n";
     }
 
-    protected function _simulatedButton($label, $href, $tooltip, $class) {
+    private function _simulatedButton($label, $href, $tooltip, $class) {
         $class .= ' old_nav';
-        $attributes = $this->_getAttributes($tooltip, $class);
+        $attributes = $this->_renderAttributes($tooltip, $class);
         $this->callViewHelper('styleLoader', 'oldbrowserbuttonn', <<<STYLE
 a.old_nav{
     background-color:#EEE;
@@ -193,19 +208,16 @@ STYLE
         return "<a $href $attributes>&nbsp;$label&nbsp;</a>\n";
     }
 
-    /**
-     * A special array corresponding to a non existent button/link
-     * @var array
-     */
-    public static $NoLink = array('!!!!NONE!!!!', '', '');
+    
 
-    protected function _getAttributes($tooltip, $class) {
+    private function _renderAttributes($tooltip, $class) {
         $html = '';
         foreach ($this->_attributes as $name => $value) {
             $html .= "$name=\"$value\" ";
         }
         $html .= $this->_standardAttributes($tooltip, $class);
         // ID is wiped out after creating attribute string
+        // so that it is not used twice
         $this->removeAttribute('id');
         return $html;
     }
@@ -223,27 +235,7 @@ STYLE
         return $html;
     }
 
-    /**
-     * Modifies the array so that <ul>
-     * <li> it has 4 elements
-     * <li> if the first is an array, ignores the rest
-     * </ul>
-     * 
-     * @param array $args
-     * @return type
-     */
-    protected function _normalize($args) {
-        if (is_array($args[0])) {
-            $data = $args[0];
-        }
-        else {
-            $data = $args;
-        }
-        while (count($data) < 4) {
-            $data[] = \NULL;
-        }
-        return $data;
-    }
+    
 
     /**
      * Adds an attribute to the link
@@ -282,6 +274,18 @@ STYLE
         $this->addAttribute('id', $idName);
         return $this;
     }
+
+    /**
+     * Specifies an alternative folder for images
+     * 
+     * @param string $imageFolder The image folder name
+     * @return \Iris\Subhelpers\Link For fluent interface
+     */
+    public function setImageFolder($imageFolder) {
+        $this->_imageFolder = $imageFolder;
+        return $this;
+    }
+
 
 }
 

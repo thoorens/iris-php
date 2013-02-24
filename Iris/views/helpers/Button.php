@@ -13,11 +13,10 @@ namespace Iris\views\helpers;
  * @version $Id: $ */
 class Button extends _ViewHelper {
 
-    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL){
+    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL) {
         $subhelper = \Iris\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender('button',$message, $url, $tooltip, $class);
+        return $subhelper->autoRender(4, 'button', $message, $url, $tooltip, $class);
     }
-    
-}
 
+}
 

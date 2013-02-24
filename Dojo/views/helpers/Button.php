@@ -1,4 +1,5 @@
 <?php
+
 namespace Dojo\views\helpers;
 
 /*
@@ -34,14 +35,11 @@ class Button extends _DojoHelper {
         $bubble = \Dojo\Engine\Bubble::getBubble('form_button');
         $bubble->addModule('dijit/form/Button');
     }
-    
-    
-    
-    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL){
+
+    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL) {
         $subhelper = \Dojo\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender('button',$message, $url, $tooltip, $class);
+        return $subhelper->autoRender(4, 'button', $message, $url, $tooltip, $class);
     }
-    
 
 }
 
