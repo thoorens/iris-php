@@ -107,28 +107,30 @@ abstract class _Container extends _DojoHelper {
      */
     protected $_width = 650;
     protected $_specials = array();
-    
-    
 
-        /**
-     * This methods initializes the container, gives it a name seen by the view.
+    /**
+     * This methods initializes the container, gives it a name seen by the view. If no
+     * variable name is given, prepare to switch to programatic dijit expecting
+     * other methods to be fired
      * 
      * @param string $varName the name of the container seen by the view containing it
      * @param string $type the type of the container (by default Tab)
      * @return Container 
      */
     public function help($varName = NULL) {
-        $this->_JS = \Iris\Users\Session::JavascriptEnabled();
-        if ($this->_JS) {
-            $this->_type = static::$_Type;
-            $type = $this->_type;
-            \Dojo\Engine\Bubble::getBubble($this->_type)->addModule("dijit/layout/$type")
-                    ->addModule("dojo/parser")->addModule("dijit/layout/ContentPane")->addModule("dijit/layout/LinkPane");
+        $this->_type = static::$_Type;
+        if (is_null($varName)) {
+            // no necessity to have a bubble for declarative uses
+            \Dojo\Engine\Bubble::DropObject($this->_type);
         }
-        if (!is_null($varName)) {
+        else {
+            $this->_JS = \Iris\Users\Session::JavascriptEnabled();
+            if ($this->_JS) {
+                $this->_createBubble();
+            }
             $this->_view->$varName = $this;
+            $this->_name = $varName;
         }
-        $this->_name = $varName;
         return $this;
     }
 
@@ -148,7 +150,7 @@ abstract class _Container extends _DojoHelper {
         // for javascript, returns a div with Dojo attributes
         if ($this->_JS) {
             $html .= '<div id="' . $this->_name . '" style="height:' . $this->_height;
-            $html .= 'px;width:' . $this->_width . 'px" data-dojo-type="dijit.layout.' . $this->_type.'"';
+            $html .= 'px;width:' . $this->_width . 'px" data-dojo-type="dijit.layout.' . $this->_type . '"';
             $html .= $this->_specialAttributes();
             $html .= ' data-dojo-id="' . $this->_name . '" >';
         }
@@ -164,7 +166,38 @@ abstract class _Container extends _DojoHelper {
                 }
             }
         }
-        return $html."\n";
+        return $html . "\n";
+    }
+
+    public function jsRender($objectId, $data) {
+        $type = $this->_type;
+        $objectId = "tc1-prog";
+        $script = <<< SCRIPT
+        <script>require(["dojo/ready", "dijit/layout/$type", "dijit/layout/ContentPane"], function(ready, $type, ContentPane){
+    ready(function(){
+    var tc = new $type({
+    style: "height: 100%; width: 100%;"
+}, "$objectId");
+SCRIPT;
+        $num = 0;
+        foreach($data as $title=>$content){
+            $content = str_replace("\n", '"+"', $content);
+            $script .= <<< SCRIPT2
+var cp$num = new ContentPane({
+title: "$title",
+content: "$content"
+});
+tc.addChild(cp$num);
+SCRIPT2;
+            $num++;
+        }
+        $script .= <<< SCRIPTEND
+tc.startup();
+});
+});</script>
+SCRIPTEND;
+
+        return $script;
     }
 
     /**
@@ -173,7 +206,7 @@ abstract class _Container extends _DojoHelper {
      * @return string
      */
     public function endMaster() {
-        $html = "\n</div><!-- end ".$this->_name."-->\n";
+        $html = "\n</div><!-- end " . $this->_name . "-->\n";
         $html .= $this->_buttons(self::BOTTOM);
         return $html;
     }
@@ -227,13 +260,12 @@ abstract class _Container extends _DojoHelper {
         return $item->render($this->_JS);
     }
 
-    public function linkedItem($itemIndex, $url){
+    public function linkedItem($itemIndex, $url) {
         $item = $this->getItem($itemIndex);
         $item->setLink($url);
         return $item->render($this->_JS);
     }
-    
-    
+
     /**
      * If set to true (default), the display of the different items is managed by the server.
      * The Url has to be set to create the links
@@ -318,6 +350,14 @@ abstract class _Container extends _DojoHelper {
      */
     protected function _buttons($position) {
         return '';
+    }
+
+    public function _createBubble() {
+        \Dojo\Engine\Bubble::getBubble($this->_type)
+                ->addModule("dijit/layout/$this->_type")
+                ->addModule("dojo/parser")
+                ->addModule("dijit/layout/ContentPane")
+                ->addModule("dijit/layout/LinkPane");
     }
 
 }

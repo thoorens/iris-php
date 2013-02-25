@@ -61,7 +61,7 @@ trait tRepository{ // NameSpace is reserved
      * Returns an object (after creating it if necessary)
      * by its name
      * 
-     * @param string $objectName The name of the bubble to create/retrieve
+     * @param string $objectName The name of the object to create/retrieve
      * @return static
      */
     public static function GetObject($objectName) {
@@ -82,6 +82,16 @@ trait tRepository{ // NameSpace is reserved
      */
     public static function GetAllObjects() {
         return self::$_Repository;
+    }
+    
+    /**
+     * 
+     * @param string $objectName The name of the object to delete
+     */
+    public static function DropObject($objectName){
+        if (isset(self::$_Repository[$objectName])) {
+            unset(self::$_Repository[$objectName]);
+        }
     }
 }
 
