@@ -110,28 +110,28 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
         $label = $this->_('Start');
         $description = $this->_('Description of start');
         $name = "start_$message";
-        return $this->button($name)->setId($name)->button($label, \NULL, $description);
+        return $this->button($name)->setId($name)->display($label, \NULL, $description);
     }
 
     public function restart($message) {
         $label = $this->_('Restart');
         $description = $this->_('Description of restart');
         $name = "restart_$message";
-        return $this->button($name)->setId($name)->button($label, \NULL, $description);
+        return $this->button($name)->setId($name)->display($label, \NULL, $description);
     }
 
     public function stop($message) {
         $label = $this->_('Stop');
         $description = $this->_('Description of stop');
         $name = "stop_$message";
-        return $this->button($name)->setId($name)->button($label, \NULL, $description);
+        return $this->button($name)->setId($name)->display($label, \NULL, $description);
     }
 
     public function next($message) {
         $label = $this->_('Next');
         $description = $this->_('Description of next');
         $name = "next_$message";
-        return $this->button($name)->setId($name)->button($label, \NULL, $description);
+        return $this->button($name)->setId($name)->display($label, \NULL, $description);
     }
 
     public function setRefreshingInterval($refreshingInterval) {
