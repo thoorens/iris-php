@@ -70,21 +70,15 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     
 
     /**
-     * Magic method which returns the HTML code for the link or button
-     * accroding to the the helper used to instanciate the subhelper
-     * 
-     * @param string $methodName The m
-     * @param array $arguments
+     * Displays the final rendering for a link/button according to its type
+
+     * @param array/4strings $args The arguments : message, url, tooltip and class
      * @return string
      */
-    public function __call($methodName, $arguments) {
-        return $this->autoRender($methodName, $arguments);
-    }
-
     public function display() {
         $arguments = func_get_args();
         $def = substr($this->_type,1);
-        return $this->autorender($def, $arguments);
+        return $this->autorender(4,$def, $arguments);
     }
 
     /**
@@ -123,7 +117,7 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     /**
      * A simple link HTML a link with href, title and class attributes
      * 
-     * @param array $args The arguments : message, url, tooltip and class
+     * @param array/4strings $args The arguments : message, url, tooltip and class
      * @return string
      */
     protected function _link() {
@@ -136,7 +130,7 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     /**
      * A button HTML a link with href, title and class attributes
      * 
-     * @param array $args The arguments : message, url, tooltip and class
+     * @param array/4strings $args The arguments : message, url, tooltip and class
      * @return string
      */
     protected function _button() {
