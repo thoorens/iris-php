@@ -1,6 +1,6 @@
 <?php
-
 namespace Iris\Engine;
+
 
 /*
  * This file is part of IRIS-PHP.
@@ -33,6 +33,7 @@ namespace Iris\Engine;
  * 
  */
 
+defined('CRLF') or define('CRLF',"\n");
 defined('IRIS_ERRORMANAGEMENT') or define('IRIS_ERRORMANAGEMENT',\TRUE);
 abstract class core_Bootstrap {
 
