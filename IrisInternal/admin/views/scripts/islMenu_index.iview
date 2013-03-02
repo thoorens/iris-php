@@ -5,6 +5,6 @@
             <li>
                 <a href="{(button[1])}" title="{(button[2])}">{(button[0])}</a>
             </li>
-        {endforeach}
+        {/foreach}
     </ul>     
 </div>

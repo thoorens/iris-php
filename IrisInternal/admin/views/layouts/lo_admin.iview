@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        {title()->head()}
-        <!-- add your meta tags here -->
-        {headMeta()}
-        <link href="/!documents/file/resource/css/iris.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/iris31.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/irisColor.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/iris_vnav.css" rel="stylesheet" type="text/css" />
+        {head()}
+        {styleLoader("/!documents/file/resource/css/iris.css")}
+        {styleLoader("/!documents/file/resource/css/iris31.css")}
+        {styleLoader("/!documents/file/resource/css/irisColor.css")}
+        {styleLoader("/!documents/file/resource/css/iris_vnav.css")}
         <!--link href="/iris_aspect/css/iris_admin.css" rel="stylesheet" type="text/css" /-->
-        {dojo_head()}
     </head>
     <body {dojo_body()}>
         <div class="page_margins">

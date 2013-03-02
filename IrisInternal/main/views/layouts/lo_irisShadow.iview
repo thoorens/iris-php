@@ -1,9 +1,8 @@
 <!doctype html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        {title()->render(TRUE)}
-        <link type="text/css" rel="stylesheet" href="/!documents/file/resource/css/irisShadow.css" >
+        {head()}
+        {styleLoader("/!documents/file/resource/css/irisShadow.css")}
     </head>
     <body>
         <div id="main">

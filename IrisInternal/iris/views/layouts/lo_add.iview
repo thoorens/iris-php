@@ -4,14 +4,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        {title()->head()}
-        <!-- add your meta tags here -->
-        {headMeta()}
+        {head()}
         <link href="/!documents/file/resource/css/iris.css" rel="stylesheet" type="text/css" />
         <link href="/!documents/file/resource/css/iris31.css" rel="stylesheet" type="text/css" />
         <link href="/!documents/file/resource/css/irisColor.css" rel="stylesheet" type="text/css" />
-        {dojo_head()}
     </head>
     <body {dojo_Body()}>
         <div class="page_margins">

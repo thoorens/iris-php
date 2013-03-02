@@ -1,13 +1,8 @@
-<?php ?>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        {title()->head()}
-        <!-- add your meta tags here -->
-        {headMeta()}
-        <link href="/iris_aspect/css/iris.css" rel="stylesheet" type="text/css" />
-        <link href="/iris_aspect/css/irisColor.css" rel="stylesheet" type="text/css" />
+        {head()}
+        {styleLoader('iris.css',1)->load('irisColor.css')};
     </head>
     <body>
         <div class="page_margins">            

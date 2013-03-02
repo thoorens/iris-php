@@ -13,7 +13,7 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
 <ul>
     {foreach(features,feature)}
         <li>{(det->details($feature->Title, $feature->Details))}</li>
-    {endforeach}
+    {/foreach}
 </ul>
 <p>
     La version 1.0 du framework est prévue pour la fin de l'année 2012. Le projet sera 
@@ -22,7 +22,7 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
 <ul>
     {foreach(plans,plan)}
         <li>{(det->details($plan->Title, $plan->Details))}</li>
-    {endforeach}
+    {/foreach}
 </ul>
 <p>
     Deux sites en cours de création sont disponibles pour les futurs utilisateurs du framework:
