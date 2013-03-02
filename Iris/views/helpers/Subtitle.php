@@ -31,16 +31,13 @@ namespace Iris\views\helpers;
  * Gives facilities to manage the <title> of a page.
  *
  */
-final class Title extends _ViewHelper {
+final class Subtitle extends _ViewHelper {
 
     protected static $_Singleton = TRUE;
 
-    public function help($mainTitle = NULL, $subtitle = \NULL) {
+    public function help($text) {
         $head = \Iris\Subhelpers\Head::GetInstance();
-        $head->setTitle($mainTitle);
-        if(!is_null($subtitle)){
-            $head->setSubtitle($subtitle);
-        }
+        $head->setSubtitle($text);
     }
 
 

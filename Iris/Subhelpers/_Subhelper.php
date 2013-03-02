@@ -33,6 +33,7 @@ namespace Iris\Subhelpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _Subhelper implements \Iris\Design\iSingleton {
+    use \Iris\Engine\tSingleton;
     use \Iris\Translation\tSystemTranslatable;
     use \Iris\views\helpers\tViewHelperCaller;
 

@@ -2,8 +2,8 @@
 
 namespace Iris\views\helpers;
 
-/*
- * This file is part of IRIS-PHP.
+
+/* This file is part of IRIS-PHP.
  *
  * IRIS-PHP is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,28 +20,24 @@ namespace Iris\views\helpers;
  * 
  * @copyright 2012 Jacques THOORENS
  *
+ */
+
+/**
+ * 
+ * This helper permits to collect differents meta tags during
+ * the page construction (by calling the helper with an array
+ * parameter) and to display all of them (by calling the
+ * helper without any parameter). The array parameter consists
+ * in an associative array. The keys are used to evit doublons.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ * @todo : test it and maybe suppress
+ * @version $Id: $ * 
  */
+final class Head extends _ViewHelper {
 
-/**
- * Creates an link to the site icon
- *
- */
-class SiteIcon extends _ViewHelper {
-   
-
-    public function help($iconFile=\NULL){
-        if(is_null($iconFile)){
-            $iconFile = "/images/favicon.ico";
-        }
-        return "<link href=\"$iconFile\" rel=\"shortcut icon\" />";
-
+    public function help(){
+        return \Iris\Subhelpers\Head::GetInstance()->writeMark();
     }
-    
 }
-
-

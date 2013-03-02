@@ -45,28 +45,33 @@ class StyleLoader extends _LoaderHelper {
     /**
      * Add a new style or a new style file
      * 
-     * @param string $index name of the style or of the file
+     * @param string $name name of the style or of the file
      * @param string $content content of the style (NULL in case of file)
      */
-    public function help($index = NULL, $content = NULL) {
-        if (!is_null($index)) {
-            if (is_null($content)) {
-                $this->_styleFiles[$index] = $index;
-            }
-            else {
-                $this->_styles[$index] = $content;
-            }
+    public function help($name = NULL, $content = NULL) {
+        if (is_null($content) or is_numeric($content)) {
+            // using name as index avoid duplicates
+            $this->_styleFiles[$name] = '';
         }
-        return $this;
+        else {
+            $this->_styles[$name] = $content;
+        }
+        if(is_numeric($content)){
+            return $this;
+        }
     }
 
+    public function load($name, $content = NULL){
+        return $this->help($name, $content);
+    }
+    
     /**
      * Render styles and links to style file
      * 
      * @return string 
      */
     public function render($ajaxMode) {
-        if($ajaxMode){
+        if ($ajaxMode) {
             return '';
         }
         // render styles
@@ -81,18 +86,19 @@ ENDSTYLE;
         // render style files
         foreach ($this->_styleFiles as $file => $dummy) {
             $url = $this->_URL($file);
-            $text .= '<link  test="" href="'.$url.'" rel="stylesheet" type="text/css" />';
+            $text .= '<link  test="" href="' . $url . '" rel="stylesheet" type="text/css" />';
             $text .= "\n";
         }
         return $text;
     }
 
-    private function _URL($file){
-        if($file[1]=='!'){
+    private function _URL($file) {
+        if ($file[1] == '!') {
             return $file;
         }
         return "/css/$file";
     }
+
 }
 
 ?>

@@ -110,9 +110,9 @@ abstract class _AjaxController extends \Iris\MVC\_Controller {
         header("content-type:$this->_type");
         $text = '';
         $HTMLMode = ($this->_type == self::HTML);
-        $HTMLMode and $text .= \Iris\views\helpers\AutoResource::AJAXMARK;
+        $HTMLMode and $text .= \Iris\Subhelpers\Head::AJAXMARK;
         $text .= $this->_text;
-        $HTMLMode and \Iris\views\helpers\AutoResource::AjaxTuning($text, \NULL);
+        $HTMLMode and \Iris\Subhelpers\Head::AjaxTuning($text, \NULL);
         echo $text;
     }
 
