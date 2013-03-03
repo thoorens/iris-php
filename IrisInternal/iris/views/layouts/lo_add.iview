@@ -5,9 +5,9 @@
 <html>
     <head>
         {head()}
-        <link href="/!documents/file/resource/css/iris.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/iris31.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/irisColor.css" rel="stylesheet" type="text/css" />
+        {styleLoader("/!documents/file/resource/css/iris.css")}
+        {styleLoader("/!documents/file/resource/css/iris31.css")}
+        {styleLoader("/!documents/file/resource/css/irisColor.css")}
     </head>
     <body {dojo_Body()}>
         <div class="page_margins">
