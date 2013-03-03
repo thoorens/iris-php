@@ -2,21 +2,10 @@
 <!-- This layout is intented for internal use only -->
 <html>
     <head>
-        <noscript>
-            <meta http-equiv="refresh" content="1; URL=/javascript/desactivate"/>
-        </noscript>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        {title()->head()}
-        <!-- add your meta tags here -->
-        {headMeta()}
-        <link href="/!documents/file/resource/css/iris.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/irisColor.css" rel="stylesheet" type="text/css" />
-        <link href="/images/site.ico" rel="shortcut icon" />
-        <!--?= $this->headLink() ?-->
-        <!--?= $this->headStyle() ?-->
-        <!--?= $this->headScript() ?-->
-        <!--?= $this->headJS() ?-->
-        {dojo_Head()}
+        {javascriptDetector()}
+        {head()}
+        {styleLoader("/!documents/file/resource/css/iris.css")}
+        {styleLoader("/!documents/file/resource/css/irisColor.css")}
     </head>
     <body {dojo_Body()}>>
         <div class="page_margins">
