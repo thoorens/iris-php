@@ -3,7 +3,7 @@
     <!-- This layout is used only as an exemple of a module defined layout -->
     <head>
         {head()}
-        {styleLoader("/wb.css")}
+        {styleLoader("wb2.css")}
     </head>
     <body {dojo_body()}{bodyOnload()}{wbColors('ORANGE3')}>
         <div id="main">
@@ -14,18 +14,18 @@
                 </div><!-- Title -->
                 <div class="column one">
                     <h2>Column 1</h2>
-                    {loremIpsum([0,5,10,15])}
+                    {loremIpsum($left)}
                 </div><!-- 1 -->
                 <div class="column two">
                     {mainView()}
                 </div><!-- 2 -->
                 <div class="column three ">
                     <h2>Column 3</h2>
-                    {loremIpsum([4,8,12,16,20])}
+                    {loremIpsum($right)}
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/main/views/scripts/lo_module.iview')}
+                {wbFooter('modules/main/views/scripts/lo_module2.iview')}
             </div><!--foot-->
         </div><!--main-->  
     </body>

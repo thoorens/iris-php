@@ -2,11 +2,8 @@
 <html>
     <!-- This layout is used only as an exemple of an action defined layout -->
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" type="text/css" href="/css/wb.css">
-        {title()->render(TRUE)}
-        {siteIcon()}
-        {autoResource()}
+        {head()}
+        {styleLoader("wb.css")}
     </head>
     <body {dojo_body()}{bodyOnload()}{wbColors('ORANGE1')}>
         <div id="main">

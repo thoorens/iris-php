@@ -1,10 +1,8 @@
 <!doctype html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" type="text/css" href="/css/wb.css">
-        {siteIcon()}
-        {autoResource()}
+        {head()}
+        {styleLoader("wb.css")}
     </head>
     <body {dojo_body()}{bodyOnload()}{wbColors($bodyColor)}>
         <div id="main">
