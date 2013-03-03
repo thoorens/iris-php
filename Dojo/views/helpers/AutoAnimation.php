@@ -52,8 +52,23 @@ class AutoAnimation extends _DojoHelper {
         return++$this->_id;
     }
 
+    public function sequence($signal) {
+        $this->_createBubble('sequence')
+        ->defFunction(<<< SCRIPT
+   
+    var io_args = {
+        node : "turnEvents",
+        signal : "$signal",
+        dojofunction : "sequence" ,
+    }
+    iris_dojo.commonFade(io_args); 
+   
+SCRIPT
+        );
+    }
+
     public function controlledIn($node, $signal, $startTime, $duration = 5000) {
-        $this->_createBubble('controlledIn'.$this->_getId())
+        $this->_createBubble('controlledIn' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
     var io_args = {
@@ -68,9 +83,9 @@ class AutoAnimation extends _DojoHelper {
 SCRIPT
         );
     }
-    
+
     public function controlledOut($node, $signal, $startTime, $duration = 5000) {
-        $this->_createBubble('controlledOut'.$this->_getId())
+        $this->_createBubble('controlledOut' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
     var io_args = {
@@ -93,7 +108,7 @@ SCRIPT
      * @param type $duration the duration of the fading in
      */
     public function in($node, $button, $duration = 5000) {
-        $this->_createBubble('fadeIn'.$this->_getId())
+        $this->_createBubble('fadeIn' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
     var io_args = {
@@ -116,7 +131,7 @@ SCRIPT
      */
     public function waitIn($node, $delay = 5000, $duration = 5000) {
         $delay = $this->_delay($delay);
-        $this->_createBubble('waitIn'.$this->_getId())
+        $this->_createBubble('waitIn' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
     var io_args = {
@@ -139,7 +154,7 @@ SCRIPT
      */
     public function waitOut($node, $delay = 5000, $duration = 5000) {
         $delay = $this->_delay($delay);
-        $this->_createBubble('waitOut'.$this->_getId())
+        $this->_createBubble('waitOut' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
     var io_args = {
@@ -162,7 +177,7 @@ SCRIPT
      * @param type $duration the duration of the fading out
      */
     public function out($node, $button, $duration = 5000) {
-        $this->_createBubble('fadeOut'.$this->_getId())
+        $this->_createBubble('fadeOut' . $this->_getId())
                 ->defFunction(<<< SCRIPT
     
     var io_args = {
@@ -188,7 +203,7 @@ SCRIPT
     public function inOut($node, $button, $duration = 5000, $duration2 = \NULL) {
         if (is_null($duration2))
             $duration2 = $duration;
-        $this->_createBubble('inOut'.$this->_getId())
+        $this->_createBubble('inOut' . $this->_getId())
                 ->defFunction(<<< SCRIPT
     
     var io_args = {
@@ -215,7 +230,7 @@ SCRIPT
     public function outIn($node, $button, $duration = 5000, $duration2 = \NULL) {
         if (is_null($duration2))
             $duration2 = $duration;
-        $this->_createBubble('outIn'.$this->_getId())
+        $this->_createBubble('outIn' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
     var io_args = {
@@ -234,6 +249,7 @@ SCRIPT
     /**
      * Common part of all the method: a namespace wrapped javascript function which does all the job.
      * @staticvar type $loaded
+     * @todo verificate line after function fadeIt() 273
      */
     protected function _createBubble($bubbleName) {
         // Test loaded to gain time
@@ -243,10 +259,18 @@ SCRIPT
     require(["dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style","dojo/fx", "dojo/topic", "dojo/domReady!"],
     function(dom, fx, on, style, coreFx, topic){
         // Style the dom node to opacity 0 or 1;
-        style.set(args.node, "opacity", args.opacity);
+        if(args.node != 'turnEvents'){
+            style.set(args.node, "opacity", args.opacity);
+        }
+        else{
+            for(var i in turnEvents){
+                alert(turnEvents[i].node);
+                style.set(turnEvents[i].node, "opacity", 0);
+            }
+        }
         // Function linked to the button to trigger the fade.
         function fadeIt(){
-            style.set(args.node, "opacity", args.opacity);
+            //style.set(args.node, "opacity", args.opacity);
             if(args.dojofunction=='fadeIn'){
                 fx.fadeIn({node: args.node,duration: args.duration}).play();
             }
@@ -274,6 +298,21 @@ SCRIPT
                 topic.subscribe(args.signal, function(time){
                     if(time==args.starttime){
                        fx.fadeOut({node: args.node,duration: args.duration}).play();
+                    }
+                });
+            }
+            else if(args.dojofunction=='sequence'){
+                topic.subscribe(args.signal, function(time){
+                    for(i in turnEvents){
+                         event = turnEvents[i];
+                         if(time==event.starttime){
+                            if(event.dojofunction = 'turnon'){
+                                fx.fadeIn({node: args.node,duration: args.duration}).play();
+                            }
+                            else{
+                                fx.fadeOut({node: args.node,duration: args.duration}).play();
+                            }
+                         }
                     }
                 });
             }
