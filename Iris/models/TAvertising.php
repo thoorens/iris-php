@@ -37,8 +37,8 @@ class TAvertising {
      */
     const DEFLANGUAGE = 'FR_';
     
-    private static $_Model = NULL;
-    private static $_Language;
+    private static $_Model = \NULL;
+    private static $_Language = \NULL;
 
     /**
      * An static initializer: two vars to init
