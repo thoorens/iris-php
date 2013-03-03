@@ -31,22 +31,23 @@ div#main{
     float:left;
     padding: 0 20px;
     margin:0;
+    margin-bottom: -2000px 
 }
 .one{
     width : 200px;
     background-color:#f0fff0;
     font-style:italic;
     font-family:serif;
-    font-size:0.9em
+    font-size:0.9em;
 }
 .two{
     width:500px;
-    background-color:#f0f8ff
+    background-color:#f0f8ff;
 }
 
 .two2{
     width:740px;
-    background-color:#f0f8ff
+    background-color:#f0f8ff;
 }
 
 .three{
@@ -54,7 +55,7 @@ div#main{
     background-color:#fff0f0;
     font-style:italic;
     font-family:serif;
-    font-size:0.9em
+    font-size:0.9em;
 }
 
 #foot{
@@ -115,6 +116,11 @@ div#wbexplain{
     margin: 1px 0px 10px 0px;
     border-radius: 10px;
     background-color: #cfc;
+}
+
+div#container{
+    overflow: hidden;
+    padding-bottom: 2000px;
 }
 
 li.loop{
