@@ -73,14 +73,14 @@ class Program {
                     ->dispatch(); // pre and post in dispatch ??????
             $dispatcher->postDispatch();
             $text = ob_get_clean();
-            \Iris\views\helpers\AutoResource::HeaderBodyTuning($text, $this->runTimeDuration);
+            \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->runTimeDuration);
             echo $text;
         }
         catch (\Exception $exception) {
             // RedirectException is a way to escape from the initial run method end
             if ($exception instanceof \Iris\Exceptions\RedirectException) {
                 $text = ob_get_clean();
-                \Iris\views\helpers\AutoResource::HeaderBodyTuning($text, $this->runTimeDuration);
+                \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->runTimeDuration);
                 echo $text;
             }
             // true error
