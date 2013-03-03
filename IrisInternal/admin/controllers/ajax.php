@@ -43,7 +43,7 @@ class ajax extends \Iris\MVC\_AjaxController {
     public function toolbarAction($menu = \FALSE, $color ='#145'){
         $time = \Iris\Users\Session::GetInstance()->getValue('PreviousTime', 0.0);
         $this->sharedToolbar('Ajax',$time,$menu, $color, \TRUE);
-        $this->renderScript('islToolbar_toolbar');
+        $this->_renderScript('islToolbar_toolbar');
     }
 
 }
