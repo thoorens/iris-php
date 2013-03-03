@@ -38,17 +38,6 @@ namespace Dojo\Ajax;
  */
 class Provider extends \Iris\Ajax\_AjaxProvider {
 
-    const BEFORE = 'before';
-    const AFTER = 'after';
-    const REPLACE = 'replace';
-    const ONLY = 'only';
-    const FIRST = 'first';
-    const LAST = 'last';
-    
-    protected $_placeMode = self::LAST;
-
-    
-    
     /**
      * Direct get request
      * 
@@ -59,14 +48,36 @@ class Provider extends \Iris\Ajax\_AjaxProvider {
     public function get($url, $target, $type = \NULL) {
         $place = $this->_placeMode;
         $bubble = $this->_getStandardBubble('ajax_get', $url, $type);
+        $action = $this->_getAction($type, $target, $place);
+        $handler = $this->_getTypeHandler($type);
         $bubble->defFunction(<<<JS1
 
-   request("$url").then(function(text){
-      domConst.place(text, "$target", '$place');
-    });
+        request("$url",
+            {handleAs : "$handler"}).then(function(text){
+            $action;
+        });
  
 JS1
         );
+    }
+
+    public function getExec($object, $url, $type = \NULL) {
+
+        $bubble = $this->_getStandardBubble('ajax_getExec', $url, $type);
+        $bubble->addModule('dojo/json', 'json');
+        $script = $this->_debug($bubble);
+        $action = $this->_getAction($type, $target, $place);
+        $script .= <<< JS1
+
+        on(dom.byId("$object"), "click", function(){
+            request("$url", {
+                handleAs: "javascript"
+            }).then(function(data){
+                //...
+            });
+        });
+JS1;
+        $bubble->defFunction($script);
     }
 
     /**
@@ -81,16 +92,20 @@ JS1
     public function onEvent($event, $object, $url, $target, $type = \NULL) {
         $place = $this->_placeMode;
         $bubble = $this->_getStandardBubble("ajax_$event", $url, $type);
-        $bubble->defFunction(<<<JS
+        $script = $this->_debug($bubble);
+        $handler = $this->_getTypeHandler($type);
+        $action = $this->_getAction($type, $target, $place);
+        $script .= <<<JS
 
-on(dom.byId("$object"), "$event", function(){
-    request("$url").then(function(text){
-      domConst.place(text, "$target", '$place');
-    });
-  });
+        on(dom.byId("$object"), "$event", function(){
+            request("$url",
+                {handleAs : "$handler"}).then(function(text){
+                $action;
+            });
+        });
    
-JS
-        );
+JS;
+        $bubble->defFunction($script);
     }
 
     /**
@@ -116,15 +131,19 @@ JS
     public function onTime($delay, $url, $target, $type = \NULL) {
         $place = $this->_placeMode;
         $bubble = $this->_getStandardBubble("ajax_delay" . $url, $type);
-        $bubble->defFunction(<<<JS
+        $script = $this->_debug($bubble);
+        $handler = $this->_getTypeHandler($type);
+        $action = $this->_getAction($type, $target, $place);
+        $script .= <<<JS
 
-setTimeout(function(){
-    request("$url").then(function(text){
-      domConst.place(text, "$target", '$place');
-    });}, $delay);
+        setTimeout(function(){
+            request("$url",
+                {handleAs : "$handler"}).then(function(text){
+                $action;
+        });}, $delay);
    
-JS
-        );
+JS;
+        $bubble->defFunction($script);
     }
 
     /**
@@ -140,17 +159,22 @@ JS
     public function onMessage($messageName, $url, $target, $type = \NULL) {
         $place = $this->_placeMode;
         $bubble = $this->_getStandardBubble("msg$messageName", $url . $type);
-        $bubble->addModule('dojo/topic','topic');
+        $bubble->addModule('dojo/topic', 'topic');
         list($urlParam, $jsParams) = $this->_generateParameters();
-        $bubble->defFunction(<<<JS
+        $script = $this->_debug($bubble);
+        $handler = $this->_getTypeHandler($type);
+        $action = $this->_getAction($type, $target, $place);
+        $script .= <<<JS
 
-topic.subscribe('$messageName',function($jsParams){
-    request('$url/'+$urlParam).then(function(text){
-      domConst.place(text, "$target", '$place');
-    });});
+        topic.subscribe('$messageName',function($jsParams){
+            request('$url/'+$urlParam,
+                {handleAs : "$handler"}).then(function(text){
+                $action;
+            });
+        });
    
-JS
-                );
+JS;
+        $bubble->defFunction($script);
     }
 
     /**
@@ -164,7 +188,7 @@ JS
      * @return type
      */
     private function _getStandardBubble($bubbleType, $url, $type = \Dojo\Engine\Bubble::TEXT) {
-        $bubbleName = $bubbleType.md5($url);
+        $bubbleName = $bubbleType . md5($url);
         $bubble = \Dojo\Engine\Bubble::getBubble($bubbleName);
         $bubble->addModule('dojo/request', 'request')
                 ->addModule('dojo/dom', 'dom')
@@ -173,6 +197,49 @@ JS
                 ->addSpecialModule($type)
                 ->addModule('dojo/domReady!');
         return $bubble;
+    }
+
+    protected function _getAction($type, $target, $place){
+        if(is_null($type) or $type == \Dojo\Engine\Bubble::TEXT) {
+            return "domConst.place(text, '$target', '$place')".CRLF;
+        }
+        else{
+            return $this->_action.CRLF;
+        }
+    }
+    
+    
+    protected function _debug($param) {
+        if (is_null($this->_debugDisplayObject)) {
+            return '';
+        }
+        else {
+            $output = $this->_debugDisplayObject;
+            $param->addModule('dojo/request/notify', 'notify');
+            return <<< JS1
+   
+        notify("start", function(){
+                domConst.place("<p>start</p>", "$output");
+        });
+        notify("send", function(response, cancel){
+            // cancel() can be called to prevent the request from
+            // being sent
+            domConst.place("<p>send: <code>" + JSON.stringify(response) + "</code></p>", "$output");
+        });
+        notify("load", function(response){
+            domConst.place("<p>load: <code>" + JSON.stringify(response) + "</code></p>", "$output");
+        });
+        notify("error", function(response){
+            domConst.place("<p>error: <code>" + JSON.stringify(response) + "</code></p>", "$output");
+        });
+        notify("done", function(response){
+            domConst.place("<p>done: <code>" + JSON.stringify(response) + "</code></p>", "$output");
+        });
+        notify("stop", function(){
+            domConst.place("<p>stop</p>", "$output");
+        }); 
+JS1;
+        }
     }
 
 }
