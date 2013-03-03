@@ -22,7 +22,7 @@ namespace Tutorial\views\helpers;
  */
 
 /**
- * A helper for image display
+ * A helper for image display in a precise position
  *  
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -33,17 +33,22 @@ class Image extends \Iris\views\helpers\_ViewHelper {
 
     protected static $_Singleton = \TRUE;
     private $_folder = "";
+    private $_defaultClass = 'tuto_absolute';
 
     /**
-     * Creates an image tag with alt and title
+     * Creates an image tag with alt and title at a given position 
+     * and with a label
      * 
+     * @param string $id An id for the image
+     * @param int $top Top position (in pixels)
+     * @param int $left Left position (in pixels)
      * @param string $file Image file
      * @param string $alt Alt attribute (to display if image is missing)
      * @param string $title Title attribute (tooltip)
      * @param string $dir image directory (by default images)
      * @param string $class class name for CSS
      * @param string $attributes optional attributes or javascript
-     * @return string 
+     * @return \Tutorial\views\helpers\Image (or string)
      */
     public function help($id = \NULL, $top = 0, $left = 0, $file = '', $alt = 'Image', $title = \NULL, $dir = \NULL, $class = '', $attributes = '') {
         if (is_null($id)) {
@@ -57,6 +62,10 @@ class Image extends \Iris\views\helpers\_ViewHelper {
         $this->_folder = $folderName;
     }
 
+    public function setDefaultClass($defaultClass) {
+        $this->_defaultClass = $defaultClass;
+    }
+
     public function render($id, $top, $left, $file, $alt = 'Image', $title = \NULL, $dir = \NULL, $class = '', $attributes = '') {
         //if(file)
         if (is_null($alt)) {
@@ -66,13 +75,14 @@ class Image extends \Iris\views\helpers\_ViewHelper {
             $title = $alt;
         }
         if (is_null($dir) or $dir == '') {
-            $dir = '/images/' . $this->_folder;
+            $dir = $this->_folder;
         }
-        if ($class != '') {
-            $class = 'class="' . $class . '"';
-        }
-        return sprintf('<img id="%s" src="%s%s" title="%s" alt="%s" class="tuto_absolute %s" %s/>' . "\n", $id, $dir, $file, $title, $alt, $class, $attributes) .
-                sprintf("<style>img#%s\n{top: %dpx; left: %dpx}\n</style>\n", $id, $top, $left);
+        $classAttribute = $class . ' ' . $this->_defaultClass;
+        $attributes .= " id=\"$id\"";
+        //$image = sprintf('<img id="%s" src="%s%s" title="%s" alt="%s" class="tuto_absolute %s" %s/>' . "\n", $id, $dir, $file, $title, $alt, $class, $attributes);
+        $image = $this->_view->image($file, $alt, $title, $dir, $classAttribute, $attributes);
+        $style = sprintf("<style>img#%s\n{top: %dpx; left: %dpx}\n</style>\n", $id, $top, $left);
+        return $image . $style;
     }
 
 }
