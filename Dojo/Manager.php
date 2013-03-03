@@ -92,7 +92,7 @@ class Manager {
      * 
      * @var string 
      */
-    protected $_source = self::LOCAL;
+    protected $_source = self::GOOGLE;
 
     
 
@@ -134,7 +134,7 @@ class Manager {
         if (!\Iris\Users\Session::JavascriptEnabled()) {
             $this->addStyle('/!documents/file/resources/css/iris_nojs.css');
         }
-        // init dojo_head to register it in autoResource
+        // init dojo_head to register it in Iris\Subhelpers\Head
         views\helpers\Head::GetInstance();
     }
 
