@@ -1,4 +1,4 @@
-<?php
+{TYPE}
 
 namespace modules\main\controllers;
 

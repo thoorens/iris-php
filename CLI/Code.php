@@ -131,6 +131,7 @@ APACHE;
         $directories = [
             'models/crud',
             '!config/admin',
+            '!config/base',
             '!data/private',
             '!data/public',
             'modules'
@@ -237,6 +238,7 @@ APACHE;
             throw new \Iris\Exceptions\CLIException("Controller $controllerName already exists.");
         }
         $this->_createFile("$source/index.php", $controllerPath, array(
+            '{TYPE}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
             '{MODULECONTROLLER}' => "_$moduleName",
             '{CONTROLLER}' => $controllerName,
