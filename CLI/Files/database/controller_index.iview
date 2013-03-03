@@ -9,6 +9,6 @@
                 {(icone->delete())}
                 {(line->{=DESCRIPTION=})}
             </li>
-            {endforeach}
-        </ul>
-    </div>
+        {/foreach}
+    </ul>
+</div>

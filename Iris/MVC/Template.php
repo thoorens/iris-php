@@ -98,11 +98,11 @@ class Template {
         // foreach with and without key
         ['/{foreach\((\w+),(\w+),(\w+)\)}/i', '<?php foreach($$1 as $$2=>$$3):?>'],
         ['/{foreach\((\w+),(\w+)\)}/i', '<?php foreach($$1 as $$2):?>'],
-        ['{endforeach}', '<?php endforeach;?>'],
+        ['{/foreach}', '<?php endforeach;?>'],
         // if then else
         ['/{if\((.+?)\)}/', '<?php if($1):?>'],
         ['{else}', '<?php else: ?>'],
-        ['{endif}', '<?php endif;?>'],
+        ['{/if}', '<?php endif;?>'],
         // special variables
         //@todo better treat them in View
         ['{ITEM}','<?=$this->ITEM?>'],
@@ -208,6 +208,14 @@ class Template {
                     $inStyle = TRUE;
                 }if (strpos($line, '<script') !== FALSE) {
                     $inScript = TRUE;
+                }
+                if($inScript){
+                    if(preg_match('/{-.*-}/', $line,$matches)){
+                        $match = $matches[0];
+                        $var = substr($match,2,  strlen($match)-4);
+                        $content = $this->_view->$var;
+                        $line = preg_replace('/{-.*-}/', $content, $line);
+                    }
                 }
                 if (!$inStyle and !$inScript) {
                     foreach (self::$_Token as $tokens) {

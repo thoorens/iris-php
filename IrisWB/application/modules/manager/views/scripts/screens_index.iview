@@ -9,6 +9,6 @@
                 {(icone->delete())}
                 {(screen->Description)}
             </li>
-            {endforeach}
+            {/foreach}
         </ul>
     </div>

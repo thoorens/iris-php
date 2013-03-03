@@ -15,7 +15,7 @@ $det = $this->details->setAspectClass('dojoIrisMask2');
             <ul>
                 {foreach(data,item)}
                     <li>{(det->details($item[0],$item[1]))}</li>
-                {endforeach}
+                {/foreach}
             </ul>
             {(det->connectEvent('onclick'))}
         </div>

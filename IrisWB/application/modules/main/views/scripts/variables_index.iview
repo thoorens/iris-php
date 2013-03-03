@@ -31,7 +31,7 @@
         <ul>    
         {foreach(array,key,item)}
             <li>{key} - {item}</li>
-        {endforeach}
+        {/foreach}
         </ul>
         <h3>A local variable</h3>
         {php}$test = "This is a test"{/php}

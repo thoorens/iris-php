@@ -2,5 +2,5 @@
 <ul>
 {foreach(sections,sec)}
     <li><a href="/manager/screens/index/{(sec->id)}">{(sec->GroupName)}</a></li>
-{endforeach}
+{/foreach}
 </ul>

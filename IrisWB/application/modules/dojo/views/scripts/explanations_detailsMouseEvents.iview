@@ -18,7 +18,7 @@ $det2 = $this->details2->setAspectClass('dojoIrisMask2')->setId('det2');
         <ul>
             {foreach(data,item)}
                 <li>{(det1->details($item[0],$item[1]))}</li>
-            {endforeach}
+            {/foreach}
        </ul>
             {(det1->connectEvent('mouseover'))}
 
@@ -27,7 +27,7 @@ $det2 = $this->details2->setAspectClass('dojoIrisMask2')->setId('det2');
             <ul>
                 {foreach(data,item)}
                     <li>{(det2->details($item[0],$item[1]))}</li>
-                {endforeach}
+                {/foreach}
             </ul>
             {(det2->connectEvents(['mouseover','mouseout']))}
         </div>

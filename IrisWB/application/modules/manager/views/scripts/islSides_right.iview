@@ -19,6 +19,6 @@
      {/php}
      {foreach(section,titre,details)}
         {(det->details("", $details,$titre))}
-     {endforeach}
+     {/foreach}
      {(det->connectEvent('onclick'))}
 </div>

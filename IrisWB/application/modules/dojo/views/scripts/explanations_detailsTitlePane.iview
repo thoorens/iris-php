@@ -17,7 +17,7 @@
                 {panes->setClass('show')->divTitle($titre)}
                 {details}
                 {panes->endDiv()}
-            {endforeach}
+            {/foreach}
             </ul>
         </div>
     </div>

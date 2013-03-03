@@ -14,5 +14,5 @@
             {(section->GroupName)}
         </li>
     </ul>
-    {endforeach}
+    {/foreach}
 </div>
