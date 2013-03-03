@@ -39,6 +39,28 @@ namespace Iris\Ajax;
  */
 abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
 
+    const BEFORE = 'before';
+    const AFTER = 'after';
+    const REPLACE = 'replace';
+    const ONLY = 'only';
+    const FIRST = 'first';
+    const LAST = 'last';
+
+    const HTML = 0;
+    const JS = 1;
+    const JSON = 2;
+    const XML = 3;
+    const CSS = 4;
+
+    private static $_TypeDef = [
+      self::HTML => ['text/html','text' ],
+        self::JS => ['text/javascript','javascript'],
+        self::JSON => ['text/json','json'],
+        self::XML => ['text/xml','xml'],
+        self::CSS => ['text/css','text'],
+    ]; 
+    
+
     /**
      * The namespace path of the concrete class used to implement Ajax
      * (by default \Dojo\Ajax)
@@ -53,6 +75,10 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
      * @var static
      */
     protected static $_Instance = \NULL;
+
+    protected $_debugDisplayObject = \NULL;
+    
+    protected $_placeMode = self::LAST;
 
     protected $_messageArgumentNumber = 2;
     
@@ -73,7 +99,12 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
         return \Iris\MVC\_Helper::HelperCall('ajax');
     }
 
+    public function setDebugDisplayObject($output){
+        $this->_debugDisplayObject = $output;
+        return $this;
+    }
     
+
     
     /**
      * Magic method to add some methods to the helper<ul>
@@ -99,6 +130,8 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
      * @param string $type MIME type for the request (text by default)
      */
     abstract public function get($url, $target, $type = \NULL);
+
+    abstract public function getExec($object, $url, $type = \NULL);
 
     /**
      * The request is made on clic on an object provider
@@ -166,6 +199,24 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
         return [implode("+'/'+", $args), implode(',', $args)];
     }
     
+    
+    protected abstract function _debug($param);
+    
+    protected abstract function _getAction($type, $target, $place);
+
+    protected function _getTypeHandler($type = \NULL){
+        return $this->_getInternalType($type, 1);
+    }
+    
+    protected function _getMimeType($type = \NULL){
+        return $this->_getInternalType($type, 0);
+    }
+     private function _getInternalType($type, $offset){
+         if(is_null($type)){
+             $type = self::HTML;
+         }
+         return self::$_TypeDef[$type][$offset];
+     }
 }
 
 
