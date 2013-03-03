@@ -1,0 +1,19 @@
+<style>
+    .pinkcolor{
+        background:lightpink;
+    }
+    .yellowcolor{
+        background:lightyellow;
+    }
+</style>
+{ajax()->setDebugDisplayObject('output')->onClick('startButton',$ajaxFile, \NULL , $type)}
+<h1>Output:</h1>
+<div id="output"></div>
+<button type="button" id="startButton">{label}</button>
+<br>
+<p id="mytext">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+    Proin porta nibh quis velit porta a venenatis lectus aliquet. 
+    Fusce sed magna id dolor pellentesque luctus. 
+    Pellentesque eleifend purus vitae quam tristique a fringilla quam faucibus. 
+</p>

@@ -1,0 +1,1 @@
+{dojo_tabContainer()->jsrender("tc1-prog", $data)}

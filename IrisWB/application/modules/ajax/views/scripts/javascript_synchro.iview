@@ -1,9 +1,4 @@
-<div{wbColors()}>
-    <div>
-        {wbExplain($this)}
-    </div>
-
-</div>
+{wbHeader()}
 {synchro()->send('MESS', 10000)}
 <div>
     <h3>A list</h3>

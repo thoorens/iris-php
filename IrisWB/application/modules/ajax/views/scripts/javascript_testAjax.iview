@@ -1,9 +1,7 @@
 <h3>A list managed by a controlled synchro</h3>
 <div>
-    {synchro()->restart('CMESS')}
     {synchro()->start('CMESS')}
     {synchro()->stop('CMESS')}
-    {synchro()->next('CMESS')}
     <table class="show">
         <tr>
             {synchro()->counterMaxDisplay('MESS','counter2',2)}

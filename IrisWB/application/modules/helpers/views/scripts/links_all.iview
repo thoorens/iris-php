@@ -1,3 +1,7 @@
+{wbHeader()}
+<div>
+{warning}
+</div>
 <div>
     <table class="show">
         <tr>

@@ -1,12 +1,30 @@
 <?php
 
 namespace modules\ajax\controllers;
+/*
+ * This file is part of IRIS-PHP.
+ * 
+ * IRIS-PHP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * IRIS-PHP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @copyright 2011-2013 Jacques THOORENS
+ */
 
 /**
- * srv_IrisWB
- * Created for IRIS-PHP 0.9 - beta
- * Description of javascript
- * 
+ * Illustration of javascript : <ul>
+ * <li> a simple style applied to a div
+ * <li> a synchro sending message to a receiver
+ * <li> a synchro controlled by buttons 
  * @author jacques
  * @license not defined
  */
@@ -52,4 +70,29 @@ JS
     public function controlPanelAction(){
         
     }
+
+    public function getTabAction(){
+        
+    }
+    
+    public function putPinkAction(){
+        $this->_putColor(1);
+        $this->__label = 'Paint pink';
+    }
+    
+    public function putYellowAction(){
+        $this->_putColor(0);
+        $this->__label = 'Paint yellow';
+    }
+    
+    private function _putColor($color){
+        // if AdminToolBar is in Ajax mode, screen will be unreadable
+        // in debug mode
+        \ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
+        $this->__type = \Iris\Ajax\_AjaxProvider::JS;
+        $this->__ajaxFile = "/ajax/get/color/mytext/$color";
+        $this->setViewScriptName('putColor');
+    }
+    
+    
 }

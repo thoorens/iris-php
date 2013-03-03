@@ -1,0 +1,9 @@
+{ajax()->getExec('/ajax/get/tab','tc-prog')}
+<div id="tc-prog"></div>
+<h1>Test of containter programmatically with Ajax</h1>
+<div style="width: 350px; height: 290px">
+    <div id="tc-prog">Ici</div>
+</div>
+<div id="output">
+    <h1>Output</h1>
+</div>
