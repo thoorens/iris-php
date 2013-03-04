@@ -37,7 +37,7 @@ abstract class _LoaderHelper extends _ViewHelper {
 
     protected function _subclassInit() {
         $auto = \Iris\Subhelpers\Head::GetInstance();
-        $auto->addLoader(get_called_class());
+        $auto->registerLoader(get_called_class());
     }
 
     protected abstract function render($mode);
