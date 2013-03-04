@@ -217,6 +217,7 @@ APACHE;
         $destinationMod = "$destination/modules/$moduleName";
         // module controller file
         $this->_createFile("$source/module.php", "$destinationMod/controllers/_$moduleName.php", array(
+            '{TYPE}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
             '{MODULECONTROLLER}' => "_$moduleName"
                 )
