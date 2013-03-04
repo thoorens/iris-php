@@ -66,7 +66,7 @@ class Menu extends _ViewHelper {
         $title = $this->_('Links to all action in the application');
         $html = '<div id="iris_atb">' . CRLF;
         $html .= '  <ul class="menu" id="base">' . CRLF;
-        $html .= "    <li class=\"sub\"><a id=\"main\" title =\"$title\">$actions</a>" . CRLF;
+        $html .= "    <li class=\"sub\"><a id=\"iatb_main\" title =\"$title\">$actions</a>" . CRLF;
         $html .= '      <ul class="level1"><!-- modules-->' . CRLF;
         foreach ($this->_scanner->getModules() as $module) {
             $html .= $this->_renderModule($module);

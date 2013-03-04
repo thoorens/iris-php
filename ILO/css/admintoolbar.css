@@ -15,6 +15,7 @@ span#iris_RTD{
     text-align: left;
     color:#eb7;
     font-size: 15px;
+    
 }
 
 /* =====================================================
@@ -41,13 +42,14 @@ div.reset{
     padding: 0;
     line-height: 1em;
     font-size: 13px;
+    margin:0;
 }
 
 #iris_atb .menu li{
     border:none;
 }
 
-#iris_atb a#main{
+#iris_atb a#iatb_main{
     color:black;
     padding:.15em;
     text-align: center;
