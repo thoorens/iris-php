@@ -44,13 +44,12 @@ class SharedToolbar extends _ControllerHelper{
     /**
      * Shared code between islet islControl and controller Ajax for the toolbar
      * 
-     * @param string $mode The mode (Ajax / non ajax)
      * @param string $time The execution time (or a dummy value)
      * @param boolean $menu If true, the action menu is displayed
      * @param string $color Background color for toolbar
      */
     public function help($mode ,$time, $menu, $color){
-        $this->__mode = $mode;
+        $this->__modeIcon = ''; // by default nothing
         $this->__color=$color;
         $this->__time = $time;
         $this->__reverseColor = \Iris\System\Functions::GetComplementaryColor($color);

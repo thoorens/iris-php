@@ -42,7 +42,10 @@ class ajax extends \Iris\MVC\_AjaxController {
      */
     public function toolbarAction($menu = \FALSE, $color ='#145'){
         $time = \Iris\Users\Session::GetInstance()->getValue('PreviousTime', 0.0);
-        $this->sharedToolbar('Ajax',$time,$menu, $color, \TRUE);
+        // the code is shared by the non ajax version (see Iris\controllers\helpers)
+        $this->sharedToolbar($time,$menu, $color, \TRUE);
+        $this->__modeIcon = $this->callViewHelper('image','/!documents/file/resource/images/icons/ajax.png',
+                'ajax symbol','Toolbar managed by Ajax');
         $this->_renderScript('islToolbar_toolbar');
     }
 

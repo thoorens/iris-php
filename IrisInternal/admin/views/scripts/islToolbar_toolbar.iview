@@ -21,9 +21,10 @@ END
         {/if}
         &nbsp; <span id="iris_RTD">{timeLabel}: <b>{time}</b></span>
         &nbsp;{ILO_goInternal('admin',TRUE)}
-        &nbsp;{userLabel} : <b>{userName} - </b>(<i>{group}</i>)
+        &nbsp;{image('/!documents/file/resource/images/icons/user2.png','user symbol',$userLabel)}
+        <b>{userName} - </b>(<i>{group}</i>)
         &nbsp;{ILO_goInternal('reset',TRUE)}           
-        <i>{mode}</i>
+        <i>{modeIcon}</i>
         {if($MENU)}
         </div> <!-- menuadmin2 -->
         <div class="reset">
