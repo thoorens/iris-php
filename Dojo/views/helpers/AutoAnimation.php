@@ -32,16 +32,12 @@ namespace Dojo\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class AutoAnimation extends _DojoHelper {
+class AutoAnimation extends _Animation {
 
+     // is a Singleton (from 
     protected static $_Singleton = \TRUE;
 
-    /**
-     * The last event time from beginning of screeen
-     * 
-     * @var type 
-     */
-    private $_lastTime = 0;
+    
     private $_id = 0;
 
     public function help() {
@@ -52,21 +48,7 @@ class AutoAnimation extends _DojoHelper {
         return++$this->_id;
     }
 
-    public function sequence($signal) {
-        $this->_createBubble('sequence')
-        ->defFunction(<<< SCRIPT
-   
-    var io_args = {
-        node : "turnEvents",
-        signal : "$signal",
-        dojofunction : "sequence" ,
-    }
-    iris_dojo.commonFade(io_args); 
-   
-SCRIPT
-        );
-    }
-
+    
     public function controlledIn($node, $signal, $startTime, $duration = 5000) {
         $this->_createBubble('controlledIn' . $this->_getId())
                 ->defFunction(<<< SCRIPT
@@ -126,11 +108,11 @@ SCRIPT
     /**
      * 
      * @param type $node the node name
-     * @param type $delay the time (in sec) before fading in
+     * @param type $startTime the time (in sec) before fading in
      * @param type $duration the duration of the fading in
      */
-    public function waitIn($node, $delay = 5000, $duration = 5000) {
-        $delay = $this->_delay($delay);
+    public function waitIn($node, $startTime = 5000, $duration = 5000) {
+        $this->_computeStartTime($startTime);
         $this->_createBubble('waitIn' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
@@ -138,7 +120,7 @@ SCRIPT
         node : "$node",
         duration : $duration,
         dojofunction : "fadeIn" ,
-        delay : $delay,
+        delay : $startTime,
         opacity : 0
     }
     iris_dojo.commonFade(io_args); 
@@ -149,11 +131,11 @@ SCRIPT
     /**
      * 
      * @param string $node the node name
-     * @param int $delay the time (in sec) before fading out
+     * @param int $startTime the time (in sec) before fading out
      * @param int $duration the duration of the fading out
      */
-    public function waitOut($node, $delay = 5000, $duration = 5000) {
-        $delay = $this->_delay($delay);
+    public function waitOut($node, $startTime = 5000, $duration = 5000) {
+        $this->_computeStartTime($startTime);
         $this->_createBubble('waitOut' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
@@ -161,7 +143,7 @@ SCRIPT
         node : "$node",
         duration : $duration,
         dojofunction : "fadeOut" ,
-        delay : $delay,
+        delay : $startTime,
         opacity : 1
     }
     iris_dojo.commonFade(io_args); 
@@ -263,9 +245,11 @@ SCRIPT
             style.set(args.node, "opacity", args.opacity);
         }
         else{
-            for(var i in turnEvents){
-                alert(turnEvents[i].node);
-                style.set(turnEvents[i].node, "opacity", 0);
+            for(var i in iris_dojo.turnEvents){
+                event = iris_dojo.turnEvents[i];
+                if(event.opacity != -1){    
+                    style.set(event.node, "opacity", event.opacity);
+                }
             }
         }
         // Function linked to the button to trigger the fade.
@@ -303,14 +287,14 @@ SCRIPT
             }
             else if(args.dojofunction=='sequence'){
                 topic.subscribe(args.signal, function(time){
-                    for(i in turnEvents){
-                         event = turnEvents[i];
+                    for(i in iris_dojo.turnEvents){
+                         event = iris_dojo.turnEvents[i];
                          if(time==event.starttime){
-                            if(event.dojofunction = 'turnon'){
-                                fx.fadeIn({node: args.node,duration: args.duration}).play();
+                            if(event.dojofunction == 'turnon'){
+                                fx.fadeIn({node: event.node,duration: event.duration}).play();
                             }
                             else{
-                                fx.fadeOut({node: args.node,duration: args.duration}).play();
+                                fx.fadeOut({node: event.node,duration: event.duration}).play();
                             }
                          }
                     }
@@ -345,15 +329,15 @@ SCRIPT;
         $this->_view->javascriptLoader('scroll', $script);
     }
 
-    public function autoScroll($destination, $delay) {
-        $delay = $this->_delay($delay);
+    public function autoScroll($destination, $startTime) {
+        $this->_computeStartTime($startTime);
         $script = <<<SCRIPT
    require(["dojo/window", "dojo/dom-geometry", "dojo/domReady!"],
 function(win, dolater, domGeom){
 var count = 0;
 setTimeout(function(){
         win.scrollIntoView('$destination');
-    }, $delay);
+    }, $startTime);
   });
 SCRIPT;
         $this->_view->javascriptLoader('scroll', $script);
@@ -370,20 +354,6 @@ SCRIPT;
         return "<div id=\"$name\"></div>\n";
     }
 
-    /**
-     * Converts relatives time to absolute
-     * @param int $delay the starting time (if <0, considered as relative)
-     * @return int
-     */
-    private function _delay($delay) {
-        if ($delay > 0) {
-            $startingTime = $delay;
-        }
-        else {
-            $startingTime = $this->_lastTime - $delay;
-        }
-        $this->_lastTime = $startingTime;
-        return $startingTime;
-    }
+    
 
 }

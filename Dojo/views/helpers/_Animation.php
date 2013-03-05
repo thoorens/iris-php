@@ -34,37 +34,56 @@ namespace Dojo\views\helpers;
 abstract class _Animation extends _DojoHelper {
 
     protected static $_Singleton = \TRUE;
-
+    
     /**
-     * An array of all of the actions to start at frame display
-     * @var array(string)
+     * The last event time from beginning of screeen
+     * 
+     * @var type 
      */
-    protected $_jobs = array();
-
-    public function help() {
-        return $this;
+    private $_lastTime = 0;
+    
+    /**
+     * Converts relatives time (negative) to absolute if necessary
+     * @param int $startTime the starting time (if <0, considered as relative)
+     * @return int
+     */
+    protected function _computeStartTime(&$startTime) {
+        if ($startTime < 0) {
+            $startTime = $this->_lastTime - $startTime;
+        }
+        $this->_lastTime = $startTime;
     }
 
-    public function subscribe($number, $channel = 'NEXT') {
-        $doTheJob = '';
-        foreach ($this->_jobs as $job) {
-            $doTheJob .="restart$job();\n";
-        }
-        $this->_jobs = array();
-        return <<<SCRIPTS
-<script type="text/javascript">
-   function Subscriber(){
-      this.tasks = function(number){
-          if(number==$number){
-              $doTheJob
-        }
-        }
-      dojo.subscribe('$channel',this,"tasks");
-   }
-   var sub$number = new Subscriber();
-</script>
-SCRIPTS;
-    }
+    ///**
+    // * An array of all of the actions to start at frame display
+    // * @var array(string)
+    // */
+//    protected $_jobs = array();
+//
+//    public function help() {
+//        return $this;
+//    }
+
+//    public function subscribe($number, $channel = 'NEXT') {
+//        $doTheJob = '';
+//        foreach ($this->_jobs as $job) {
+//            $doTheJob .="restart$job();\n";
+//        }
+//        $this->_jobs = array();
+//        return <<<SCRIPTS
+//<script type="text/javascript">
+//   function Subscriber(){
+//      this.tasks = function(number){
+//          if(number==$number){
+//              $doTheJob
+//        }
+//        }
+//      dojo.subscribe('$channel',this,"tasks");
+//   }
+//   var sub$number = new Subscriber();
+//</script>
+//SCRIPTS;
+//    }
 
 
 }

@@ -29,7 +29,7 @@ namespace Tutorial\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class Code extends \Iris\views\helpers\_ViewHelper {
+class Code extends \Dojo\views\helpers\_Animation {
 
     protected static $_Singleton = \TRUE;
     
@@ -72,6 +72,7 @@ class Code extends \Iris\views\helpers\_ViewHelper {
     }
     
     private function _start($id, $startTime, $style){
+        $this->_computeStartTime($startTime);
         $html = $this->_view->dojo_AutoAnimation()->waitIn($id,$startTime,$this->_delay);
         $tag = $this->getTag(\FALSE);
         $html .= "<$tag class=\"$style\" id=\"$id\">\n";
@@ -79,6 +80,7 @@ class Code extends \Iris\views\helpers\_ViewHelper {
     }
  
     private function _next($id, $startTime, $style){
+        $this->_computeStartTime($startTime);
         $htlm = $this->_end(\FALSE);
         $htlm .= $this->_start($id, $startTime, $style);
         return $htlm;
