@@ -39,7 +39,7 @@ abstract class _ControllerHelper extends \Iris\MVC\_Helper {//*/
     // By default all controller helper are singleton
     protected static $_Singleton = TRUE;
 
-    private $_controller;
+    protected $_controller;
 
     /**
      * A convenient way of calling a controller helper by its name
