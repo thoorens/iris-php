@@ -2,40 +2,30 @@
 
 namespace Iris\views\helpers;
 
+/*
+ * This file is part of IRIS-PHP.
+ *
+ * IRIS-PHP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * IRIS-PHP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @copyright 2011-2013 Jacques THOORENS
+ */
+
 /**
  * This helper is part of the CRUD facilites offered by Iris. It serves to 
  * display icons for the different actions. The most part of its job is
  * done by \Iris\Subhelpers\Crud.
  *
- * Exemples d'utilisation :
- *
-  <pre>
-  $icone = $this->view->icone();
-  $icone
-  // définition du contrôleur
-  ->setController('/admin/ufs')
-  // définition du préfixe d'action (avant insert/update/delete)
-  ->setActionName('')
-  // précision du genre de l'entité (M, F ou M' F' pour les élisions)
-  ->gender("F'")
-  // intitulé de l'entité
-  ->entity('UF')
-  // champ de l'intitulé servant à décrire l'objet affecté
-  ->setDescField('NomUF');
-  </pre>
- *
- * Affichage:
-  $d = ....;
-  $icone->data($d);
-  $icone->render('insert');
-
- * @author Jacques THOORENS (jacques@thoorens.net)
- * @category   Zend
- * @package
- * @subpackage
- * @copyright  Copyright (c) 2009 Jacques Thoorens (http://thoorens.net)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version $Id: $ * @todo : TRANSLATE COMMENTS
  */
 class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
 use \Iris\Subhelpers\tSubhelperLink;
