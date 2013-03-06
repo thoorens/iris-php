@@ -60,6 +60,10 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
         if ($this->COMMON_max == 0)
             $this->COMMON_max = 10;
         $this->toView('title', 'Installation sous Linux');
+        $ajax = \FALSE;
+        $turn = $this->callViewHelper('dojo_turn');
+        $this->_controller->toView('turn',$turn);
+        $turn->prepare('turn','IrisCPINTERNAL',$ajax);
         $item = new \Tutorial\Content\Item();
         $item->setId($num);
         $page = $this->_pages[$num];
