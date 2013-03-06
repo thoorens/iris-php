@@ -53,7 +53,7 @@ class Counter extends \Iris\Ajax\_Counter {
         list($operator, $test) = $this->_engine($mode, $max);
         $params = $this->_implodeArgs($args);
         $counterName = $this->_counterName;
-        $this->_renderer->javascriptLoader($counterName, <<<JS
+        $this->_renderer->callViewHelper('javascriptLoader',$counterName, <<<JS
     function $counterName(seconds){
         require(['dojo','dojo/topic'],function(dojo,topic){
           counter = dojo.byId('$objectName');
@@ -82,7 +82,7 @@ JS
         list($operator, $test) = $this->_engine($mode, $max);
         $counterName = $this->_counterName;
         $params = $this->_implodeArgs($args);
-        $this->_renderer->javascriptLoader($counterName, <<<JS
+        $this->_renderer->callViewHelper('javascriptLoader',$counterName, <<<JS
     function $counterName(seconds){
         require(['dojo','dojo/topic'],function(dojo,topic){
           seconds $operator;

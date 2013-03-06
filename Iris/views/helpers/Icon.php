@@ -68,19 +68,7 @@ class Icon extends _ViewHelper {
         return '<a href="' . $ref . '">' . $icon . '</a>';
     }
 
-    /**
-     * Création d'un lien-icone avec du javascript
-     * 
-     * @param string $ref
-     * @param string $iconName
-     * @param string $help
-     * @param string $desc
-     * @param string $iconText
-     * @return type 
-     */
-    public function jsLink($ref, $iconName, $help, $desc = null, $iconText = '') {
-        
-    }
+    
 
     /**
      * accesseur en écriture pour le répertoire de base des icônes
@@ -91,15 +79,7 @@ class Icon extends _ViewHelper {
         $this->_baseDir = $baseDir;
     }
 
-    private function _setJS() {
-        if ($this->_javaScript) {
-            return;
-        }
-        $this->_view->javascriptLoader('jsLink', <<<JS
-
-JS
-        );
-    }
+    
 
 }
 

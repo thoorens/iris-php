@@ -4,7 +4,6 @@
     <head>
         {head()}
         {styleLoader("wb.css")}
-        {title()->render(TRUE)}
     </head>
     <body {dojo_body()}{bodyOnload()}{wbColors('ORANGE2')}>
         <div id="main">

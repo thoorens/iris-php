@@ -209,7 +209,7 @@ INITSOUND
         });
 JS
         );
-        $this->_view->javascriptStarter('test', 'iris_dojo.initsound();');
+        $this->callViewHelper('javascriptStarter','test', 'iris_dojo.initsound();');
     }
 
 }

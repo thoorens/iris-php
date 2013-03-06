@@ -326,7 +326,7 @@ function(win, on, dom, domGeom){
   });
   });
 SCRIPT;
-        $this->_view->javascriptLoader('scroll', $script);
+        $this->callViewHelper('javascriptLoader','scroll', $script);
     }
 
     public function autoScroll($destination, $startTime) {
@@ -340,7 +340,7 @@ setTimeout(function(){
     }, $startTime);
   });
 SCRIPT;
-        $this->_view->javascriptLoader('scroll', $script);
+        $this->callViewHelper('javascriptLoader','scroll', $script);
     }
 
     /**

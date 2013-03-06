@@ -38,7 +38,8 @@ class UnderConstruction extends \Iris\views\helpers\_ViewHelper{
     
     public function help(){
         $html = "<h3>".$this->_('Page under construction',TRUE)."</h3>\n";
-        $html .= $this->image('construction.png',$this->_('Page under construction',TRUE),NULL,'/!documents/file/resource/images');
+        $html .= $this->callViewHelper('image','construction.png',
+                $this->_('Page under construction',TRUE),NULL,'/!documents/file/resource/images');
         return $html;
     }
     

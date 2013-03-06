@@ -53,7 +53,7 @@ class Facebook extends _ViewHelper {
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 JS;
-        $this->_view->javascriptLoader('Facebook',$text);
+        $this->callViewHelper('javascriptLoader','Facebook',$text);
     }
 
     private function _render() {

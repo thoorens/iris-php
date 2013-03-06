@@ -36,8 +36,7 @@ function PopUpWindow(url,name,details) {
 window.open(url,name,details)
 }
 STOP;
-        $view = new \Iris\MVC\View();
-        $view->javascriptLoader('PopUpWindow',$script);
+        $this->_controller->callViewHelper('javascriptLoader','PopUpWindow',$script);
     }
 
 }

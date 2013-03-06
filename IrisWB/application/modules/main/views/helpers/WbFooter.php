@@ -36,16 +36,16 @@ class WbFooter extends _ViewHelper {
     
     public function help($layoutName,$buttons = 5){
         $html = "<b>Layout :</b> $layoutName";
-        $html .= " - ".$this->signature()->display();
+        $html .= " - ".$this->callViewHelper('signature')->display();
         $html .= '<br/>';
-        $html .= $this->ILO_goInternal($buttons);
-        $html .= $this->signature()->saveButton();
+        $html .= $this->callViewHelper('ILO_goInternal',$buttons);
+        $html .= $this->callViewHelper('signature')->saveButton();
         $sequence = \Iris\Structure\DBSequence::GetInstance();
         $previous = $sequence->getPrevious();
-        $html .= $this->button($previous);
-        $html .= $this->button('TOC','/index/toc','Table of tests');
+        $html .= $this->callViewHelper('button',$previous);
+        $html .= $this->callViewHelper('button','TOC','/index/toc','Table of tests');
         $next = $sequence->getNext();
-        $html .= $this->button($next);
+        $html .= $this->callViewHelper('button',$next);
         return $html;
     }
     

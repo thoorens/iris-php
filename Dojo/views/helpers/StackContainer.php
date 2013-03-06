@@ -40,9 +40,16 @@ class StackContainer extends _Container{
     
     private $_position = self::NONE;
     
+    /**
+     * 
+     * @param type $position
+     * @return string
+     * @todo Terminate
+     */
     protected function _buttons($position) {
         if($this->_position == $position){
-            $buttons = $this->dojo_controlPanel([0]);
+            $buttons = "<b>PUT BUTTONS HERE</b>";
+            //$buttons = $this->callViewHelper('dojo_controlPanel',[0]);
             $html = sprintf('<div class="stack_buttons">%s</div>',$buttons);
         }
         else{

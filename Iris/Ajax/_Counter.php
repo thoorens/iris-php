@@ -87,7 +87,7 @@ abstract class _Counter extends \Iris\Subhelpers\_Subhelper {
             $this->_unlinkedCounter(self::DOWN, $messageId, $max, $args);
         }
         $counterName = $this->_counterName;
-        $this->_renderer->javascriptStarter("$counterName", "$counterName($max)");
+        $this->_renderer->callViewHelper('javascriptStarter',"$counterName", "$counterName($max)");
     }
 
     /**
@@ -106,7 +106,7 @@ abstract class _Counter extends \Iris\Subhelpers\_Subhelper {
             $this->_unlinkedCounter(self::UP, $messageName, $max, $args);
         }
         $counterName = $this->_counterName;
-        $this->_renderer->javascriptStarter("$counterName", "$counterName(-1)");
+        $this->_renderer->callViewHelper('javascriptStarter',"$counterName", "$counterName(-1)");
     }
 
     /**

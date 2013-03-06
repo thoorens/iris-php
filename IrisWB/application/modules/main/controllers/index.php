@@ -32,7 +32,7 @@ class index extends _main {
     }
 
     public function tocAction() {
-        $this->_view->dojo_Mask();
+        $this->callViewHelper('dojo_Mask');
         $this->__sequence = $this->getScreenList();
     }
 

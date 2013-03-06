@@ -42,8 +42,8 @@ class Map extends _ViewHelper {
 //            $this->_view->loaderEvent($this->_loaderEvent, "openLayersInit$num()");
 //        }
         // file and code to insert in head part of the page
-        $this->_view->javascriptLoader('openlayers', 'http://openlayers.org/api/OpenLayers.js');
-        $this->_view->javascriptLoader("MainScript$num", <<<FIN
+        $this->callViewHelper('javascriptLoader','openlayers', 'http://openlayers.org/api/OpenLayers.js');
+        $this->callViewHelper('javascriptLoader',"MainScript$num", <<<FIN
         function openLayersInit$num() {
         dojo.removeAttr( "mapdiv$num",'style');       
         map = new OpenLayers.Map("mapdiv$num");

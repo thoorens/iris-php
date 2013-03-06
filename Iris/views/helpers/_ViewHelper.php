@@ -120,8 +120,8 @@ use tViewHelperCaller;
      * @return type 
      */
     public function __call($name, $arguments) {
-//throw new \Iris\Exceptions\InternalException('Recursive call in a view method');
-        return call_user_func_array(array($this->_view, $name), $arguments);
+        throw new \Iris\Exceptions\InternalException('Obsolete syntax: use callViewHelper() instead of $this->'.$name);
+        //return call_user_func_array(array($this->_view, $name), $arguments);
     }
 
 }

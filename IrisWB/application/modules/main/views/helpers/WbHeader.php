@@ -41,7 +41,7 @@ class WbHeader extends \Iris\views\helpers\_ViewHelper {
         //$html .= $this->_view->wbColors();
         $html .= '>' . CRLF;
         $html .= '<div id="wbexplain">' . CRLF;
-        $html .= $this->_view->wbExplain($this);
+        $html .= $this->callViewHelper('wbExplain',$this);
         $html .= '</div>' . CRLF;
         $html .= '</div>' . CRLF;
         //$html = "<h1>Stop</h1>";

@@ -110,8 +110,8 @@ class AdminToolBar extends _ViewHelper {
      */
     private function _ajaxRender() {
         RunTimeDuration::$DisplayMode = RunTimeDuration::AJAX;
-        $this->styleLoader('/!documents/file/resource/css/admintoolbar.css');
-        $this->ajax()->placeReplace()->get('/!admin/ajax/toolbar/1', 'iris_admintoolbar');
+        $this->callViewHelper('styleLoader','/!documents/file/resource/css/admintoolbar.css');
+        $this->callViewHelper('ajax')->placeReplace()->get('/!admin/ajax/toolbar/1', 'iris_admintoolbar');
         return <<< HTML
 <div id="iris_admintoolbar" class="atb_white">
     Admin toolbar should be here. If you don't see it, something is wrong with Ajax. 
