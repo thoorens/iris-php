@@ -115,48 +115,6 @@ class Program {
     }
 
     /**
-     * @deprecated (use Mode::IsDevelopment() instead)
-     */
-    public static function IsDevelopment($site = TRUE) {
-        if (!$site) {
-            throw new \Iris\Exceptions\DeprecatedException('Program::IsDevelopement() had no parameter (deprecated)');
-        }
-        return Mode::IsDevelopment($site);
-    }
-
-    /**
-     * @deprecated (use Mode::IsProduction() instead)
-     */
-    public static function IsProduction($site = TRUE) {
-        if (!$site) {
-            throw new \Iris\Exceptions\DeprecatedException('Program::IsProduction() had no parameter (deprecated)');
-        }
-        return Mode::IsProduction($site);
-    }
-
-    /**
-     * @deprecated (use Mode::GetSiteMode() instead)
-     */
-    public static function GetSiteMode() {
-        return Mode::GetSiteMode();
-    }
-
-    /**
-     * Initialiase the mode of the server, using EXEC_MODE et APPLICATION_ENV
-     * @deprecated (use Mode::AutosetSiteMode()  instead)
-     */
-    public static function AutosetSiteMode() {
-        Mode::AutosetSiteMode();
-    }
-
-    /**
-     * @deprecated (use Mode::SetSiteMode($mode) instead)
-     */
-    public static function SetSiteMode($mode) {
-        Mode::SetSiteMode($mode);
-    }
-
-    /**
      * Error box with title and message, for error debugging purpose
      * Should not be used in a production environment. This box is used
      * when an error occurs in error processing for an cry of despair.
