@@ -257,7 +257,7 @@ class Log {
      */
     public function render() {
         if ($this->_position != Log::POS_NONE) {
-            if (Engine\Program::IsDevelopment()) {
+            if (Engine\Mode::IsDevelopment()) {
                 $text = '';
                 foreach ($this->_items as $item) {
                     $text .= $item->render($this->_position);

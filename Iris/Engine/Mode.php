@@ -52,22 +52,18 @@ final class Mode {
      * Check if the server is not in production. To be sure of the actual
      * mode, use getSiteMode
      * 
-     * @param boolean $site : true if site mode/ false if application mode
      * @return boolean : TRUE if not in production or reception, FALSE otherwise
-     * @deprecated (use Mode::IsDevelopment() instead)
      */
-    public static function IsDevelopment($site = TRUE) {
-        return !self::IsProduction($site);
+    public static function IsDevelopment() {
+        return !self::IsProduction();
     }
 
     /**
      * Determine if the server is in production mode
      * 
-     * @param boolean $site true if site mode/ false if application mode
      * @return boolean : TRUE if in production or reception, FALSE otherwise
-     * @todo use $site parameter or delete it
      */
-    public static function IsProduction($site = TRUE) {
+    public static function IsProduction() {
         $mode = self::GetSiteMode();
         if ($mode == 'production' or $mode == 'reception') {
             return TRUE;
@@ -79,7 +75,8 @@ final class Mode {
 
     /**
      * Determine the "site mode" (for error treatment and parameters)
-     * @return String : the mode name 
+     *
+     *      * @return String : the mode name 
      */
     public static function GetSiteMode() {
         if (is_null(self::$_SiteMode)) {

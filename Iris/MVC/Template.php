@@ -266,10 +266,10 @@ class Template {
                 $value = \FALSE;
                 break;
             case self::CACHE_DEVELOPMENT:
-                $value = \Iris\Engine\Program::IsDevelopment();
+                $value = \Iris\Engine\Mode::IsDevelopment();
                 break;
             case self::CACHE_PRODUCTION:
-                $value = \Iris\Engine\Program::IsProduction();
+                $value = \Iris\Engine\Mode::IsProduction();
                 break;
         }
         self::$_CacheTemplate = $value;

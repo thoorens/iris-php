@@ -115,7 +115,7 @@ class ErrorHandler implements \Iris\Design\iSingleton {
                 $errorExc = new ErrorException($error['message'], \NULL, $error['type'], $error['file'], $error['line']);
                 Memory::Set('Exception', $errorExc);
                 Memory::Set('Log', \Iris\Log::GetInstance());
-                $program = new \Iris\Engine\Program(\Iris\Engine\Program::$ProgramName);
+                $program = new \Iris\Engine\Program(\Iris\Engine\Mode::$ProgramName);
                 $program->run('/ERROR');
             }
             else {

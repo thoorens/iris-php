@@ -89,7 +89,7 @@ class GoInternal extends _ViewHelper {
                 $comment = $this->_('Return to irisphp.org',TRUE);
                 break;
         }
-        if($developmentOnly and \Iris\Engine\Program::IsProduction()){
+        if($developmentOnly and \Iris\Engine\Mode::IsProduction()){
             return '';
         }
         return $this->_view->button($text,$uri,$comment);
@@ -103,7 +103,7 @@ class GoInternal extends _ViewHelper {
      * @return string
      */
     private function _variousButtons($numbers,$developmentOnly){
-        if($developmentOnly and \Iris\Engine\Program::IsProduction()){
+        if($developmentOnly and \Iris\Engine\Mode::IsProduction()){
             return '';
         }
         $text = '';

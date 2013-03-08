@@ -80,7 +80,7 @@ class Identity implements iUser, \Serializable {
         if (is_string($user)) {
             $this->unserialize($user);
             // verify timeout
-            if (ie\Program::IsDevelopment()) {
+            if (ie\Mode::IsDevelopment()) {
                 $timeout = ie\Memory::Get('defaultTimeout', self::DEFAULT_TIMEOUT);
             }
             else {

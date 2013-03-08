@@ -54,7 +54,7 @@ class Program {
         define('IRIS_PROGRAM_PATH', IRIS_ROOT_PATH . '/' . $programName);
         $this->runTimeDuration = new \Iris\Time\RunTimeDuration(NULL);
         self::$ProgramName = $programName;
-        self::AutosetSiteMode();
+        \Iris\Engine\Mode::AutosetSiteMode();
         Loader::GetInstance()->setApplicationName($programName);
     }
 

@@ -125,7 +125,7 @@ class Manager {
      */
     private function __construct() {
         $this->addStyle("/!documents/file/resource/css/dojo.css");
-        if (\Iris\Engine\Program::IsDevelopment()) {
+        if (\Iris\Engine\Mode::IsDevelopment()) {
             $this->setDebug('true');
         }
         else {

@@ -175,7 +175,7 @@ abstract class _EntityManager {
 //        if (!isset($memory->param_database)) {
 //            throw new \Iris\Exceptions\DBException('No parameter defined');
 //        }
-        $mode = \Iris\Engine\Program::GetSiteMode();
+        $mode = \Iris\Engine\Mode::GetSiteMode();
         $params = $memory->param_database;
         $param = $params[$mode];
         $dsn = self::_DsnFormater($param);

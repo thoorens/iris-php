@@ -139,7 +139,7 @@ class Manager {
         if (file_exists($pathName)) {
             return $this->_execRead($save, $pathName, $mime);
         }
-        if (\Iris\Engine\Program::IsProduction()) {
+        if (\Iris\Engine\Mode::IsProduction()) {
             return self::NOTFOUND;
         }
     }

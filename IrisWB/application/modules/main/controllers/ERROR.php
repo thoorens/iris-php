@@ -2,8 +2,7 @@
 
 namespace modules\main\controllers;
 
-use Iris\Engine\Program as _PROGRAM_;
-use Iris\Users\Identity as _IDENTITY_;
+use Iris\Engine\Mode as _MODE_;
 
 \Iris\Engine\Bootstrap::$AlternativeClasses['Iris\\main\\controllers\\ERROR'] = TRUE;
 include 'library/Iris/modules/main/controllers/ERROR.php';
@@ -66,7 +65,7 @@ class ERROR extends core_ERROR {
 
     public function documentAction($errNumber) {
         $this->__('err', $errNumber);
-        $this->__('dev', _PROGRAM_::IsDevelopment());
+        $this->__('dev', _MODE_::IsDevelopment());
     }
 
 }

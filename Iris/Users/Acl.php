@@ -105,7 +105,7 @@ class Acl implements \Iris\Design\iSingleton {
             // Fatal error in acl file
             $keyExploded = explode('.', $key);
             if (count($keyExploded) < 3) {
-                if (\Iris\Engine\Program::IsDevelopment()) {
+                if (\Iris\Engine\Mode::IsDevelopment()) {
 
                     echo "Fatal error in ACL file<br>";
                     iris_debug($key);

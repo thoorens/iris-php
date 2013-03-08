@@ -468,7 +468,7 @@ abstract class _coreLoader {
      */
     protected function _loadDebug($message, $className = NULL, $mode = \Iris\Engine\Debug::LOADER) {
         // no debugging in production
-        if (!defined('IRIS_DEBUG') or \Iris\Engine\Program::IsProduction()) {
+        if (!defined('IRIS_DEBUG') or \Iris\Engine\Mode::IsProduction()) {
             return;
         }
         // helpers have to be identified specificly

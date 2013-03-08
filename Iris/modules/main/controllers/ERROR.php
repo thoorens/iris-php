@@ -66,7 +66,7 @@ class core_ERROR extends \Iris\MVC\_Controller {
     public function indexAction() {
         // Recuperate Log if possible
         \Iris\Log::Recuperate();
-        if (\Iris\Engine\Program::IsProduction()) {
+        if (\Iris\Engine\Mode::IsProduction()) {
             $this->setViewScriptName('prod');
             $this->_setLayout('errorprod');
         }
