@@ -81,9 +81,10 @@ class AdminToolBar extends _ViewHelper {
      * @return string
      */
     public function render($display = \TRUE, $color = '#148') {
+        $this->callViewHelper('styleLoader','/!documents/file/resource/css/admintoolbar.css');
         if (!\Iris\Engine\Mode::IsProduction() and $display) {
             if (self::$AjaxMode) {
-                $html = $this->_ajaxRender();
+               $html = $this->_ajaxRender();
             }
             else {
                 $html = $this->_view->islet('islToolbar', [$color, $this->_menu], 'index', '!admin');
@@ -110,7 +111,6 @@ class AdminToolBar extends _ViewHelper {
      */
     private function _ajaxRender() {
         RunTimeDuration::$DisplayMode = RunTimeDuration::AJAX;
-        $this->callViewHelper('styleLoader','/!documents/file/resource/css/admintoolbar.css');
         $this->callViewHelper('ajax')->placeReplace()->get('/!admin/ajax/toolbar/1', 'iris_admintoolbar');
         return <<< HTML
 <div id="iris_admintoolbar" class="atb_white">

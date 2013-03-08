@@ -48,7 +48,7 @@ class SharedToolbar extends _ControllerHelper{
      * @param boolean $menu If true, the action menu is displayed
      * @param string $color Background color for toolbar
      */
-    public function help($mode ,$time, $menu, $color){
+    public function help($time, $menu, $color){
         $this->__modeIcon = ''; // by default nothing
         $this->__color=$color;
         $this->__time = $time;

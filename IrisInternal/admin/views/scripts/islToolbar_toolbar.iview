@@ -24,7 +24,7 @@ END
         &nbsp;{image('/!documents/file/resource/images/icons/user2.png','user symbol',$userLabel)}
         <b>{userName} - </b>(<i>{group}</i>)
         &nbsp;{ILO_goInternal('reset',TRUE)}           
-        <i>{modeIcon}</i>
+        {modeIcon}
         {if($MENU)}
         </div> <!-- menuadmin2 -->
         <div class="reset">
