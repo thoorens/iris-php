@@ -17,8 +17,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     min-height: 300px;
-    width: 870px;
-    box-shadow: 10px 10px 12px #555;
+    width: 670px;
 }
 
 img {
@@ -32,17 +31,17 @@ a:link, a:hover, a:visited {
 }
 
 #mainLogo {
-    background: transparent url('/!documents/file/resource/logos/Title80.jpg') no-repeat left;
-    width: 870px;
-    height: 80px;
-    background-color: #C8C88A;
-    background-position : 200px;
+    background: transparent url('/!documents/file/resource/logos/Title114.jpg') no-repeat left;
+    width: 670px;
+    floate: right;
+    height: 95px;
     border-top-left-radius:7px;
     border-top-right-radius:7px;
 }
 #downloadLogo {
     background: transparent url('/!documents/file/resource/logos/Download80.jpg') no-repeat left;
-    width: 870px;
+    width: 670px;
+    floate: right;
     height: 95px;
     border-top-left-radius:7px;
     border-top-right-radius:7px;
@@ -50,7 +49,8 @@ a:link, a:hover, a:visited {
 
 #title {
     background: url('/!documents/file/resource/bg/title.jpg') no-repeat left;
-    width: 870px;
+    width: 670px;
+    floate: left;
     height: 60px;
     float: left;
 }
@@ -61,7 +61,6 @@ a:link, a:hover, a:visited {
     font-weight: bold;
     line-height: 58px;
     text-align: left;
-    text-align: center;
     padding-left: 20px; 
     margin-top:-5px;
     text-shadow: #808080 0.1em 0.1em 0.2em;
@@ -71,17 +70,29 @@ a:link, a:hover, a:visited {
 }
 
 #container {
-    width: 870px;
+    background: #eee url('/!documents/file/resource/bg/content.jpg') repeat-y top left;
+    width: 670px;
     margin-left:auto;
     margin-right:auto;
     text-align: center;
     margin-top:50px;
-    background: linear-gradient(to right, #B0DDB6, rgba(0,255,0,0));
+    background-colore: yellow;
 
 }
 
-
-
+#contente {
+    background: #eee url('/!documents/file/resource/bg/content.jpg') no-repeat top left;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:50px;
+    width: 630px;
+    min-height: 300px;
+    height: auto;
+    text-align: left;
+}
+#version{
+    backgrounde: #CCF;
+}
 
 #content_panel {
     width: 585px;
@@ -95,15 +106,21 @@ a:link, a:hover, a:visited {
 }
 
 #foot {
-    background: red url('/!documents/file/resource/bg/foot.jpg') no-repeat left;
+    background: transparent url('/!documents/file/resource/bg/foot.jpg') no-repeat left;
     height: 65px;
-    width: 870px;
+    width: 670px;
     margin: 0;
     margin-top:0px;
-    
+    border-bottom-left-radius:7px;
+    border-bottom-right-radius:7px;
 }
 
+#shadow {
+    width: 670px;
+    height: 48px;
+    background: transparent url('/!documents/file/resource/bg/shadow.png') no-repeat left;
 
+}
 
 
 h1{
