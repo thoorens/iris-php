@@ -44,7 +44,7 @@ class Program {
      *
      * @var \Iris\Time\RunTimeDuration
      */
-    public $runTimeDuration;
+    private $_runTimeDuration;
 
     /**
      * Constructor for the Program instance
@@ -52,7 +52,7 @@ class Program {
      */
     public function __construct($programName = 'program') {
         define('IRIS_PROGRAM_PATH', IRIS_ROOT_PATH . '/' . $programName);
-        $this->runTimeDuration = new \Iris\Time\RunTimeDuration(NULL);
+        $this->_runTimeDuration = new \Iris\Time\RunTimeDuration(NULL);
         self::$ProgramName = $programName;
         \Iris\Engine\Mode::AutosetSiteMode();
         Loader::GetInstance()->setApplicationName($programName);
@@ -73,14 +73,14 @@ class Program {
                     ->dispatch(); // pre and post in dispatch ??????
             $dispatcher->postDispatch();
             $text = ob_get_clean();
-            \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->runTimeDuration);
+            \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->_runTimeDuration);
             echo $text;
         }
         catch (\Exception $exception) {
             // RedirectException is a way to escape from the initial run method end
             if ($exception instanceof \Iris\Exceptions\RedirectException) {
                 $text = ob_get_clean();
-                \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->runTimeDuration);
+                \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->_runTimeDuration);
                 echo $text;
             }
             // true error
