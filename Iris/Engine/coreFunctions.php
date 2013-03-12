@@ -61,15 +61,30 @@ function iris_assert($script, $line, $message) {
  * 
  * @param mixed $var A printable message or variable
  * @param boolean $die If true, program dies
- * @param string $Message The message to display in die instruction
+ * @param string $message The message to display in die instruction
  */
-function iris_debug($var, $die = TRUE, $Message = NULL) {
+function iris_debug($var, $die = \TRUE, $message = \NULL) {
     if ($die) {
-        \Iris\Engine\Debug::DumpAndDie($var, $Message, 1);
+        \Iris\Engine\Debug::DumpAndDie($var, $message, 1);
     }
     else {
         \Iris\Engine\Debug::Dump($var);
     }
+}
+/**
+ * Shows an object member value, even if it is protected or private
+ * 
+ * @param Object $object An object to inspect
+ * @param string $memberName A member name (may be not public)
+ * @param boolean $die If true, program dies
+ * @param string $message The message to display in die instruction
+ */
+function iris_debug_member($object, $memberName, $die = \TRUE, $message = \NULL){
+    $reflectionObject = new \ReflectionObject($object);
+    $refProp = $reflectionObject->getProperty($memberName);
+    $refProp->setAccessible(\TRUE);
+    $value = $refProp->getValue($object);
+    iris_debug($value, $die, $message);
 }
 
 assert_options(ASSERT_BAIL, 1);
