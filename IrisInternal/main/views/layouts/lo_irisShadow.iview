@@ -22,8 +22,6 @@
                 <br/>
             {ILO_goInternal($this->buttons)}
         </div><!--foot-->
-            <div id="shadow">
-            </div><!--shadow-->
         </div><!--main-->
     </body>
 </html>
