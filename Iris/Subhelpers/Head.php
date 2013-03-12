@@ -187,11 +187,11 @@ class Head {
      * <li> optionally adding javascript code just before &lt;/body> (not in Ajaxmode)
      * </ul>
      * @param string $text The prefinal html text for the page (to be modified)
-     * @param \Iris\Time\RunTimeDuration $runTimeDuration The time mesurement since the index.php start
+     * @param \Iris\Time\RuntimeDuration $runtimeDuration The time mesurement since the index.php start
      * @param string $componentId The id of the component to write into 
      */
-    public static function HeaderBodyTuning(&$text, $runTimeDuration = \NULL, $componentId = 'iris_RTD') {
-        self::_MakeTuning(self::HEADERMODE, $text, $runTimeDuration, $componentId);
+    public static function HeaderBodyTuning(&$text, $runtimeDuration = \NULL, $componentId = 'iris_RTD') {
+        self::_MakeTuning(self::HEADERMODE, $text, $runtimeDuration, $componentId);
     }
 
     /**
@@ -208,10 +208,10 @@ class Head {
      * 
      * @param boolen $ajaxMode
      * @param string $text The prefinal html text for the page (to be modified)
-     * @param \Iris\Time\RunTimeDuration $runTimeDuration The time mesurement since the index.php start
+     * @param \Iris\Time\RuntimeDuration $runtimeDuration The time mesurement since the index.php start
      * @param string $componentId The id of the component to write into 
      */
-    private static function _MakeTuning($ajaxMode, &$text, $runTimeDuration, $componentId) {
+    private static function _MakeTuning($ajaxMode, &$text, $runtimeDuration, $componentId) {
         $auto = self::GetInstance();
         $loaders = $auto->_render();
         foreach ($auto->_additionalHeadLoader as $loaderName) {
@@ -226,8 +226,8 @@ class Head {
             $text = str_replace(self::LOADERMARK, $loaders, $text);
             $starter .= \Iris\views\helpers\Signature::computeMD5($text);
             \iris\views\helpers\Signature::computeMD5($loaders);
-            if (!is_null($runTimeDuration)) {
-                $starter .= $runTimeDuration->jsDisplay($componentId);
+            if (!is_null($runtimeDuration)) {
+                $starter .= $runtimeDuration->jsDisplay($componentId);
             }
             $text = str_replace('</body>', $starter . "\n</body>", $text);
         }

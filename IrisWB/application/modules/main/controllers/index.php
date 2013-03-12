@@ -28,7 +28,7 @@ class index extends _main {
     }
 
     public function dojoAction() {
-        \Iris\Time\RunTimeDuration::DisableRTDDisplay();
+        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
     }
 
     public function tocAction() {

@@ -39,7 +39,9 @@ class islToolbar extends \Iris\MVC\_Islet {
      */
     public function indexAction($color, $menu = \FALSE) {
         // the code is shared by the ajax version (see Iris\controllers\helpers)
-        $this->sharedToolbar('0.000', $menu, $color);
+        $this->__color=$color;
+        $this->__time = "n/a";
+        $this->__MENU = $menu;
         $this->setViewScriptName('toolbar');
     }
 

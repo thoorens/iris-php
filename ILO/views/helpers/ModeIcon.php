@@ -3,6 +3,7 @@
 namespace ILO\views\helpers;
 
 use \Iris\views\helpers\_ViewHelper;
+use Iris\SysConfig\Settings;
 
 /*
  * This file is part of IRIS-PHP.
@@ -36,10 +37,10 @@ use \Iris\views\helpers\_ViewHelper;
 class ModeIcon extends _ViewHelper {
 
     public function help() {
-        if(\ILO\views\helpers\AdminToolBar::$AjaxMode){
-        $icon = $this->callViewHelper('image', '/!documents/file/resource/images/icons/ajax.png', 'ajax symbol', $this->_('Toolbar managed by Ajax'));
+        if (Settings::GetAdminTollbarAjaxMode()) {
+            $icon = $this->callViewHelper('image', '/!documents/file/resource/images/icons/ajax.png', 'ajax symbol', $this->_('Toolbar managed by Ajax'));
         }
-        else{
+        else {
             $icon = '';
         }
         return $icon;

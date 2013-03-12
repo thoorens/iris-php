@@ -1,5 +1,5 @@
 <?php
-\Iris\Time\RunTimeDuration::EnableRTDDisplay();
+\Iris\SysConfig\Settings::EnableDisplayRuntimeDuration();
 /*
  * Put a comment marker // before "return" to enable the debugging facilities,
  * otherwise the reste of this file will be ignored

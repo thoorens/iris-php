@@ -40,7 +40,7 @@ class ExecutionTime extends _ViewHelper {
         $timeComment = $this->_('Execution time');
         $timeLabel = $this->callViewHelper('image', '/!documents/file/resource/images/icons/stopwatch.png', 
                 'stopwatch symbol', $timeComment);
-        return "<span id=\"iris_RTD\">$timeLabel: <b>$time</b></span>";
+        return "$timeLabel <span id=\"iris_RTD\"><b>$time</b></span>";
     }
 }
 

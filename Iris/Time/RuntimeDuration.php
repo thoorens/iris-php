@@ -1,7 +1,6 @@
 <?php
 
 namespace Iris\Time;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -30,18 +29,9 @@ namespace Iris\Time;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class RunTimeDuration extends StopWatch {
+class RuntimeDuration extends StopWatch{
 
-    use \Iris\Translation\tSystemTranslatable;
-
-    /**
-     * If TRUE, enables the execution time display (no effect in 
-     * production environment)
-     * 
-     * @var boolean
-     */
-    protected static $_DisplayRunTimeDuration = FALSE;
-
+    
     /**
      * The display mode is either INNERCODE (javascript code contained in
      * the page) or AJAX (managed by the Ajax version of the admin tool bar)
@@ -76,7 +66,7 @@ class RunTimeDuration extends StopWatch {
     public function jsDisplay($componentId = 'iris_RTD') {
         $javascriptCode = '';
         // Display may be disabled in special controller (loader, subcontroller...)
-        if (self::$_DisplayRunTimeDuration and \Iris\Engine\Mode::IsDevelopment()) {
+        if (\Iris\SysConfig\Settings::GetDisplayRuntimeDisplay() and \Iris\Engine\Mode::IsDevelopment()) {
             $duration = $this->ComputeInterval($this->_startTime, microtime());
             if (self::$DisplayMode == self::INNERCODE) {
                 $javascriptCode = $this->_defaultDisplay($duration, $componentId);
@@ -84,6 +74,7 @@ class RunTimeDuration extends StopWatch {
             else {// self::AJAX
                 $_SESSION['PreviousTime'] = $duration;
             }
+            
         }
         return $javascriptCode;
     }
@@ -95,39 +86,18 @@ class RunTimeDuration extends StopWatch {
      * @return string
      */
     protected function _defaultDisplay($duration, $componentId) {
-        $timeLabel = $this->_('Execution time');
+        $durationDisplay = \Iris\views\helpers\_ViewHelper::HelperCall('ILO_executionTime',$duration);
         $javascriptCode = <<< JS
 <script>
     exectime = document.getElementById('$componentId');
-    exectime.innerHTML = "$timeLabel : <b>$duration</b>";
+    exectime.innerHTML = "<b>$duration</b>";
 </script>
 
 JS;
         return $javascriptCode;
     }
 
-    /**
-     * Disable the final javascript exec time routine
-     * (RunTime Duration)
-     * This is the default state
-     * 
-     * @param boolean $value 
-     */
-    public static function DisableRTDDisplay() {
-        self::$_DisplayRunTimeDuration = \FALSE;
-    }
-
-    /**
-     * Enable the final javascript exec time routine
-     * (RunTime Duration)
-     * No effect in production.
-     * 
-     * @param boolean $value 
-     */
-    public static function EnableRTDDisplay() {
-        self::$_DisplayRunTimeDuration = \TRUE;
-    }
-
+    
     /**
      * Replace a given starttime (may be NULL) by a better one
      * possibly already recorded in IRIS_STARTTIME
@@ -142,16 +112,7 @@ JS;
         return $startTime;
     }
 
-    /**
-     * Sets the display mode of run time duration either to INNERCODE
-     * or AJAX. In AJAX mode, the RTD is taken from a session variable
-     * and does not count the admintoolbar display time.
-     * 
-     * @param int $displayMode (AJAX or INNERCODE)
-     */
-    public static function setDisplayMode($displayMode) {
-        self::$DisplayMode = $displayMode;
-    }
+    
 
 }
 

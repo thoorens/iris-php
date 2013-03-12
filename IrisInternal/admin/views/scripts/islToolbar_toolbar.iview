@@ -1,33 +1,18 @@
 <!--A tool bar for administration during development-->
-{php}
-    $userLabel = $this->_('Current user:');
-    $timeLabel = $this->_('Execution time');
-    if($color!='#148'){
-        $this->styleLoader('controltb',<<<END
-#iris_admintoolbar{
-   background-color:$color;
-  color:$reverseColor;
-}
-END
-);
-}
-{/php}
+
 <div id="iris_admintoolbar">
+    {ILO_colorStyle($color)}
     {if($MENU)}
         <div id="menu_admin">
             &nbsp;{ILO_menu()}
         </div><!-- menu_admin -->
-        <div id="menu_admin2">
-        {/if}
-        &nbsp; <span id="iris_RTD">{timeLabel}: <b>{time}</b></span>
-        &nbsp;{ILO_goInternal('admin',TRUE)}
-        &nbsp;{image('/!documents/file/resource/images/icons/user2.png','user symbol',$userLabel)}
-        <b>{userName} - </b>(<i>{group}</i>)
-        &nbsp;{ILO_goInternal('reset',TRUE)}           
-        {modeIcon}
-        {if($MENU)}
-        </div> <!-- menuadmin2 -->
-        <div class="reset">
-        </div>
     {/if}
+    <div id="menu_admin2">
+        &nbsp; {ILO_executionTime($time)}
+        &nbsp;{ILO_goInternal('admin',TRUE)}
+        &nbsp;{ILO_displayUser()}
+        &nbsp;{ILO_goInternal('reset',TRUE)} 
+        &nbsp;{ILO_modeIcon()}
+    </div> <!-- menuadmin2 -->
+    <div class="reset"></div>
 </div><!-- iris_admintoolbar -->
