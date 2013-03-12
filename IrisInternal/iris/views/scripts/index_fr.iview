@@ -55,6 +55,6 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
         Ces changements pourraient être intégrés par la suite au projet principal.
     </li>
 </ul>
-{(det->connectEvent('onclick'))};
+{(det->connectEvent('onclick'))}
 
 

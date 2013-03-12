@@ -30,7 +30,6 @@ class index extends \IrisInternal\main\controllers\_SecureInternal {
      * no security required
      */
     public function security() {
-        
     }
 
     /**
@@ -39,6 +38,7 @@ class index extends \IrisInternal\main\controllers\_SecureInternal {
      * @param sting $language The language to use (only french and english are supported)
      */
     public function indexAction($language = 'fr') {
+        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
         $language = strtolower($language);
         if(strpos('fr-en',$language)===\FALSE){
             $language ='inter';
