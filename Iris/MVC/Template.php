@@ -103,6 +103,12 @@ class Template implements \Iris\Translation\iTranslatable {
         ['/{if\((.+?)\)}/', '<?php if($1):?>'],
         ['{else}', '<?php else: ?>'],
         ['{/if}', '<?php endif;?>'],
+        // switch equivalence (the dummy "c"ase '':" is required to avoid a PHP error.
+        // A PHP closing tag followed by an opening tag is not accepted in this context).
+        ['/{section\((.+?)\)}/', "<?php switch($$1): case '':?>"],
+        ['{/section}', '<?php endswitch;?>'],
+        ['/{block\((.+?)\)}/', '<?php case $1 :?>'],
+        ['{/block}', '<?php break;?>'],
         // special variables
         //@todo better treat them in View
         ['{ITEM}','<?=$this->ITEM?>'],
@@ -202,22 +208,17 @@ class Template implements \Iris\Translation\iTranslatable {
             $phtml = implode("", $this->_templateText);
         }
         else {
-            $inStyle = $inScript = FALSE;
+            $literal = FALSE;
             foreach ($this->_templateText as &$line) {
-                if (strpos($line, '<style') !== FALSE) {
-                    $inStyle = TRUE;
-                }if (strpos($line, '<script') !== FALSE) {
-                    $inScript = TRUE;
+                if (strpos($line, '{literal}') !== FALSE) {
+                    $literal = \TRUE;
+                    $line = str_replace('{literal}','', $line);
                 }
-                if($inScript){
-                    if(preg_match('/{-.*-}/', $line,$matches)){
-                        $match = $matches[0];
-                        $var = substr($match,2,  strlen($match)-4);
-                        $content = $this->_view->$var;
-                        $line = preg_replace('/{-.*-}/', $content, $line);
-                    }
+                elseif (strpos($line, '{/literal}') !== FALSE) {
+                    $literal = \FALSE;
+                    $line = str_replace('{/literal}','', $line);
                 }
-                if (!$inStyle and !$inScript) {
+                elseif(!$literal){
                     foreach (self::$_Token as $tokens) {
                         if ($tokens[0][0] == '/') {
                             $modLine = preg_replace($tokens[0], $tokens[1], $line);
@@ -230,18 +231,7 @@ class Template implements \Iris\Translation\iTranslatable {
                             if(isset($tokens[2]))
                                 break;
                         }
-                    }/*
-                      $line = str_replace("{php}", '<?php ', $line);
-                      $line = str_replace("{/php}", '?>', $line);
-                      $line = preg_replace("/({\$)(\w*)(})/i", '<?= $$2?>', $line);
-                      $line = preg_replace("/({)(.*?)(})/i", '<?= $this->$2?>', $line);
-                     */
-                }
-                if (strpos($line, '</style>') !== FALSE) {
-                    $inStyle = FALSE;
-                }
-                if (strpos($line, '</script>') !== FALSE) {
-                    $inScript = FALSE;
+                    }
                 }
             }
             $phtml = implode("", $this->_templateText);
