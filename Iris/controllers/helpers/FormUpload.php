@@ -30,7 +30,6 @@ namespace Iris\controllers\helpers;
  * @version $Id: $ */
 class FormUpload extends _ControllerHelper{
 
-    use \Iris\Translation\tSystemTranslatable;
     
     /**
      *

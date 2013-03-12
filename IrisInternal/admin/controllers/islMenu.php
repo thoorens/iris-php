@@ -28,7 +28,7 @@ namespace IrisInternal\admin\controllers;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class islMenu extends \IrisInternal\main\controllers\_SecureIslet {
+class islMenu extends \IrisInternal\main\controllers\_SecureIslet implements Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
     

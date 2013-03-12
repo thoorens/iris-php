@@ -41,12 +41,16 @@
  * @version $Id: $ * 
  * =========================================================================
  */
-define('IRIS_ENGINE_DIR', IRIS_ROOT_PATH.'/'.IRIS_LIBRARY.'/Iris/Engine/');
-require_once IRIS_ENGINE_DIR . 'coreFunctions.php';
-include_once IRIS_ENGINE_DIR . '/tSingleton.php';
-include_once IRIS_ENGINE_DIR . '/Debug.php';
-include_once IRIS_ENGINE_DIR . '/PathArray.php';
-include_once IRIS_ENGINE_DIR . '/Mode.php';
-include_once IRIS_ENGINE_DIR . '/_coreLoader.php';
-$customDir = IRIS_ENGINE_DIR;
+$irisLibrary =IRIS_ROOT_PATH.'/'.IRIS_LIBRARY;
+$irisEngineDir = "$irisLibrary/Iris/Engine/";
+
+
+require_once $irisEngineDir . 'coreFunctions.php';
+include_once $irisLibrary . '/Iris/Design/iSingleton.php';
+include_once $irisEngineDir . '/tSingleton.php';
+include_once $irisEngineDir . '/Debug.php';
+include_once $irisEngineDir . '/PathArray.php';
+include_once $irisEngineDir . '/Mode.php';
+include_once $irisEngineDir . '/_coreLoader.php';
+$customDir = $irisEngineDir;
 include_once $customDir . '/Loader.php';

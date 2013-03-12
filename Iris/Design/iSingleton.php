@@ -32,6 +32,9 @@ namespace Iris\Design;
  * @version $Id: $ */
 interface iSingleton {
 
+    /**
+     * @return static
+     */
     public static function GetInstance();
 }
 

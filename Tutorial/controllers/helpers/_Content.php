@@ -41,6 +41,7 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
     const VIEW = 1;
     const IMAGE = 2;
     const TEXT = 3;
+    
     const TITLE = 0;
     const TYPE = 1;
     const PAGECONTENT = 2;
@@ -48,7 +49,6 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
     const DURATION = 4;
     const AUDIO = 5;
 
-    protected $_pages = array();
 
     /**
      * 
@@ -64,23 +64,22 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
         $turn = $this->callViewHelper('dojo_turn');
         $this->_controller->toView('turn',$turn);
         $turn->prepare('turn','IrisCPINTERNAL',$ajax);
-        $item = new \Tutorial\Content\Item();
+        $item = $this->getItem($num);
         $item->setId($num);
-        $page = $this->_pages[$num];
         $this->__frameNumber = $num;
-        switch ($page[self::TYPE]) {
+        switch ($item->getType()) {
             case self::IMAGE:
-                $pageContent = \Iris\views\helpers\_ViewHelper::HelperCall('image', $page[self::PAGECONTENT]);
-                if (isset($page[self::TEXTCONTENT])) {
-                    $textContent = $this->rendernow($page[self::TEXTCONTENT], \FALSE);
+                $pageContent = \Iris\views\helpers\_ViewHelper::HelperCall('image', $item->getPage());
+                if ($item->getText()!='') {
+                    $textContent = $this->rendernow($item->getText(), \FALSE);
                 }
                 else {
                     $textContent = "Pas d'explications définies";
                 }
                 break;
             case self::VIEW:
-                $pageContent = $this->rendernow($page[self::PAGECONTENT], \FALSE);
-                $textContent = $this->rendernow($page[self::PAGECONTENT].'_t', \FALSE);
+                $pageContent = $this->rendernow($item->getPage(), \FALSE);
+                $textContent = $this->rendernow($item->getPage().'_t', \FALSE);
                 break;
             case self::TEXT:
                 die('Not defined');
@@ -88,12 +87,13 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
         }
         $item->setPage($pageContent);
         $item->setText($textContent);
-        $item->setDuration($page[self::DURATION]);
         $item->setId = $num + 1;
-        $item->setTitle($page[self::TITLE]);
-        $item->setAudio($page[self::AUDIO]);
         return $item;
     }
 
+    /**
+     * @return \Tutorial\Content\Item
+     */
+    protected abstract function getItem($num);
 }
 

@@ -34,7 +34,7 @@ use Iris\Engine as ie;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class Template {
+class Template implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
 

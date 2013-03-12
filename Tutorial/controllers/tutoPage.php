@@ -36,8 +36,8 @@ namespace Tutorial\controllers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class tutoPage extends \Iris\MVC\_Islet{
-    use \Tutorial\Translation\tSystemTranslatable;
+class tutoPage extends \Iris\MVC\_Islet implements \Iris\Translation\iTranslatable{
+    use \Iris\Translation\tSystemTranslatable;
     
     public function indexAction(\Tutorial\Content\Item $item){
         //iris_debug($para);

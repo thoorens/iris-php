@@ -32,7 +32,7 @@ define('URL_DOJO_YANDEX', "http://yandex.st/dojo");
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Manager {
+class Manager implements \Iris\Design\iSingleton{
 
     use \Iris\Engine\tSingleton;
 

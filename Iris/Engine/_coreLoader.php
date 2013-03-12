@@ -38,7 +38,7 @@ use Iris\Exceptions as IX;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $     * 
  */
-abstract class _coreLoader {
+abstract class _coreLoader implements \Iris\Design\iSingleton {
 
     use tSingleton;
 

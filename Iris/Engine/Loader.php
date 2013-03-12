@@ -1,22 +1,7 @@
 <?php
+namespace Iris\Engine;
 
 /* =========================================================================
- * This file contains 3 functions
- * 
- *      - __autoload
- *      - iris_assert
- *      - iris_debug
- * 
- * 1 trait
- *      - tSingleton
- * 
- * and 4 classes:
- * 
- *      - Debug
- *      - Mode
- *      - PathArray
- *      - Loader
- * 
  * This file is part of IRIS-PHP.
  *
  * IRIS-PHP is free software: you can redistribute it and/or modify
@@ -42,13 +27,12 @@
  * =========================================================================
  */
 
-namespace Iris\Engine;
 
+/**
+ * This class may be overwritten to permit customization of Loader
+ */
 class Loader extends _coreLoader {
 
-    public static function Test() {
-        echo 'Loader active';
-    }
 
 }
 

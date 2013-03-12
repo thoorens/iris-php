@@ -46,6 +46,9 @@ class Item {
     private $_duration=10;
     private $_page;
     private $_audio;
+    private $_next;
+    private $_previous;
+    private $_type;
 
     public function createDummy($id) {
         $this->_title = "Title $id";
@@ -134,6 +137,34 @@ class Item {
         $this->_audio = $audio;
         return $this;
     }
+
+    public function getNext() {
+        return $this->_next;
+    }
+
+    public function setNext($next) {
+        $this->_next = $next;
+        return $this;
+    }
+
+    public function getPrevious() {
+        return $this->_previous;
+    }
+
+    public function setPrevious($previous) {
+        $this->_previous = $previous;
+        return $this;
+    }
+
+    public function getType() {
+        return $this->_type;
+    }
+
+    public function setType($type) {
+        $this->_type = $type;
+        return $this;
+    }
+
 
 
 }

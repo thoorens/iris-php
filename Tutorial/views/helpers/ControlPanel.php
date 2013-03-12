@@ -39,9 +39,9 @@ namespace Tutorial\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class ControlPanel extends \Dojo\views\helpers\_DojoHelper {
+class ControlPanel extends \Dojo\views\helpers\_DojoHelper{
 
-    use \Tutorial\Translation\tSystemTranslatable;
+    
 
     protected static $_Singleton = TRUE;
 

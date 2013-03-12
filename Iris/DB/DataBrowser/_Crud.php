@@ -33,7 +33,7 @@ use Iris\DB\_Entity;
  * @version $Id: $ * 
  * 
  */
-abstract class _Crud{
+abstract class _Crud implements \Iris\Translation\iTranslatable{
     use \Iris\Translation\tSystemTranslatable;
 
     const DISPLAY = 0;

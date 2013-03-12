@@ -158,8 +158,11 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         // Admin Toolbar
         'Available actions'=>'Actions disponibles',
         'Links to all action in the application'=>'Liens vers les actions de toute l\'application',
-        'Current user:'=>'Utilisateur en cours:',
+        'User'=>'Utilisateur',
+        'Group'=>'Groupe',
         'Execution time'=>'Temps d\'exécution',
+        'Reset the session' => 'Réinitialiser la session',
+        'Toolbar managed by Ajax' => "Barre d'administration en mode Ajax",
     );
 
     public static function GetInstance() {

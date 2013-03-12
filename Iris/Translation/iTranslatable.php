@@ -32,7 +32,6 @@ namespace Iris\Translation;
  * Interface for provide translation in any class. It has been substituated by the
  * use of various traits which implements its intent.
  * 
- * @deprecated since version 0.9
  */
 interface iTranslatable {
     
@@ -44,7 +43,7 @@ interface iTranslatable {
     /**
      * @return string
      */
-  function _($message,$system);
+  function _($message,$system=\FALSE);
     
 }
 

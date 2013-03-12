@@ -43,13 +43,9 @@ trait tSystemTranslatable {
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\TRUE) {
-        if ($system) {
+    public function _($message, $system=\FALSE) {
             $translator = \Iris\Translation\SystemTranslator::GetInstance();
             return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
-        return $translator->translate($message);
     }
 
     /**

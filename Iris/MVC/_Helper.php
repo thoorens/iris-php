@@ -32,7 +32,7 @@ use \Iris\Engine as IEN;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-abstract class _Helper{
+abstract class _Helper implements \Iris\Translation\iTranslatable{
     use \Iris\Translation\tSystemTranslatable;
 
 

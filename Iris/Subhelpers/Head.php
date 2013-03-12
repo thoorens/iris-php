@@ -32,7 +32,7 @@ defined('TAB2') or define('TAB2', "\t\t");
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Head {
+class Head implements \Iris\Design\iSingleton {
 
     use \Iris\Engine\tSingleton;
 

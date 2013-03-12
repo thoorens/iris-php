@@ -31,7 +31,7 @@ use Iris\Forms\Validators as iv;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _Element {
+abstract class _Element implements \Iris\Translation\iTranslatable{
     use \Iris\Translation\tSystemTranslatable;
 
     const NONE = 0;
