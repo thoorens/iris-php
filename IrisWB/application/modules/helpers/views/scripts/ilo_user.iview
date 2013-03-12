@@ -1,0 +1,32 @@
+<div>
+    <div id="page">
+        <table class="show">
+            <!-- Nom et groupe -->
+            <tr>
+                <td>0 - {ILO_displayUser(0)}</td>
+                <td>1 - {ILO_displayUser(1)}</td>
+                <td>3 - {ILO_displayUser(3)}</td>
+            </tr>
+            <!-- Nom-->
+            <tr>
+                <td>4 - {ILO_displayUser(4)}</td>
+                <td>5 - {ILO_displayUser(5)}</td>
+                <td>7 - {ILO_displayUser(7)}</td>
+            </tr>
+            <!-- Groupe -->
+            <tr>
+                <td>8 - {ILO_displayUser(8)}</td>
+                <td>9 - {ILO_displayUser(9)}</td>
+                <td>11 - {ILO_displayUser(11)}</td>
+            </tr>
+            <tr>
+                <td>12 - {ILO_displayUser(12)}(Display nothing)</td>
+                <td>13- {ILO_displayUser(13)}</td>
+                <td>14 - {ILO_displayUser(15)}</td>
+            </tr>
+
+
+        </table>
+    </div>
+
+</div>
