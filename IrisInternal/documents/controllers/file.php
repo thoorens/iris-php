@@ -62,13 +62,6 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         exit;
     }
 
-    public function tutorialAction(){
-        $manager = Manager::GetInstance();
-        $params = $this->_response->getParameters();
-        $manager->getTutorial($params);
-        exit;
-    }
-    
     private function _manageFile($save) {
         $manager = Manager::GetInstance();
         $params = $this->_response->getParameters();
