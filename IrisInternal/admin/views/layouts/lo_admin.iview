@@ -22,7 +22,7 @@
                         <!--?=$this->menu()?-->
                     </div><!--hlist-->
                 </div><!--nav-->
-                <div id="main"class="clearfix" >
+                <div id="main" class="clearfix" >
                     <div id="col1">
                         <div id="col1_content" class="clearfix">
                             {islet('islMenu')}

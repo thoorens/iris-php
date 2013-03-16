@@ -67,6 +67,7 @@ class roles extends _admin {
     }
 
     public function aclAction($role='') {
+        throw new \Iris\Exceptions\NotSupportedException('Not developed yet');
         $form = $this->_roleChooser('Role name', 'A role to be tested', 'Force');
         $this->form = $form->render();
     }

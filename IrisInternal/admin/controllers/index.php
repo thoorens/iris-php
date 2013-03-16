@@ -41,32 +41,11 @@ class index extends _admin {
      * Admin welcome some explanation and a menu
      */
     public function indexAction() {
+        //\Iris\MVC\Template::setCacheTemplate(3);
     }
 
-    public function cleanAction() {
-        $scanner = new \Iris\Admin\Scanner();
-        $contenu = $scanner->clean('main/controllers/index.php');
-        $this->message = $contenu;
-    }
+    
 
-    public function scanAction() {
-        $this->__ = $this->_view->dojo_Mask();
-        $scanner = new \Iris\Admin\Scanner();
-        $scanner->scanApplication();
-        die('ok');
-        $modules = $scanner->collect();
-        iris_debug($modules);
-        $this->__modules = $modules;
-        // action loop
-    }
-
-    public function dbtestAction($class='simple') {
-        $test = new \Iris\Admin\models\TTest($class);
-        $this->meta = $test->getMetadata();
-    }
-
-    public function cssAction() {
-        $this->_view->cssAddition('testcss.css');
-    }
+    
 
 }
