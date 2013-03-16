@@ -36,7 +36,7 @@ use tViewHelperCaller;
 // Par défaut les aides de vue ne sont pas des singletons
 // protected static $_Singleton = FALSE;
 
-    
+    public $__ = '';
     
     /**
      * The private construct may be completed in subclasses through
@@ -124,6 +124,8 @@ use tViewHelperCaller;
         //return call_user_func_array(array($this->_view, $name), $arguments);
     }
 
+    
+    
 }
 
 ?>
