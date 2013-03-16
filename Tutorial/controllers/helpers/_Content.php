@@ -42,52 +42,19 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
     const IMAGE = 2;
     const TEXT = 3;
     
-    const TITLE = 0;
-    const TYPE = 1;
-    const PAGECONTENT = 2;
-    const TEXTCONTENT = 3;
-    const DURATION = 4;
-    const AUDIO = 5;
-
-
     /**
      * 
      * @param type $num
      * @param int $max
      * @return \Tutorial\Content\Item
      */
-    public function help($num, $ajax = \TRUE) {
-        if ($this->COMMON_max == 0)
-            $this->COMMON_max = 10;
-        $this->toView('title', 'Installation sous Linux');
-        $ajax = \FALSE;
-        $turn = $this->callViewHelper('dojo_turn');
-        $this->_controller->toView('turn',$turn);
-        $turn->prepare('turn','IrisCPINTERNAL',$ajax);
-        $item = $this->getItem($num);
-        $item->setId($num);
-        $this->__frameNumber = $num;
-        switch ($item->getType()) {
-            case self::IMAGE:
-                $pageContent = \Iris\views\helpers\_ViewHelper::HelperCall('image', $item->getPage());
-                if ($item->getText()!='') {
-                    $textContent = $this->rendernow($item->getText(), \FALSE);
-                }
-                else {
-                    $textContent = "Pas d'explications définies";
-                }
-                break;
-            case self::VIEW:
-                $pageContent = $this->rendernow($item->getPage(), \FALSE);
-                $textContent = $this->rendernow($item->getPage().'_t', \FALSE);
-                break;
-            case self::TEXT:
-                die('Not defined');
-                break;
-        }
-        $item->setPage($pageContent);
-        $item->setText($textContent);
-        $item->setId = $num + 1;
+    public function help($num, $ajax = \FALSE) {
+        return $this->getItem($num);
+        
+        
+        
+        
+        
         return $item;
     }
 

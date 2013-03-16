@@ -7,8 +7,6 @@
 
 namespace Tutorial\Content;
 
-use Iris\views\helpers\LoremIpsum;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -41,28 +39,26 @@ use Iris\views\helpers\LoremIpsum;
 class Item {
 
     private $_title;
-    private $_text;
     private $_id;
-    private $_duration=10;
-    private $_page;
-    private $_audio;
+    private $_duration = 10000;
+    private $_image;
     private $_next;
     private $_previous;
     private $_type;
+    private $_folder;
+    private $_language;
 
-    public function createDummy($id) {
-        $this->_title = "Title $id";
-        $this->_text = LoremIpsum::GetInstance()->help(5, \FALSE);
-        $this->_id = $id;
-        return $this;
+    function __construct($type) {
+        $this->_type = $type;
     }
 
     /**
      * 
      * @return string
      */
-    public function getPage() {
-        return $this->_page;
+    public function getImage() {
+        $image = \Iris\views\helpers\_ViewHelper::HelperCall('image', $this->_image);
+        return $image;
     }
 
     /**
@@ -70,15 +66,15 @@ class Item {
      * @param string $page
      * @return \Tutorial\Content\Item
      */
-    public function setPage($page) {
-        $this->_page = $page;
+    public function setImage($page) {
+        $this->_image = $page;
         return $this;
     }
 
     /**
      * 
      * @return string
-     */    
+     */
     public function getTitle() {
         return $this->_title;
     }
@@ -97,18 +93,9 @@ class Item {
      * 
      * @return string
      */
-    public function getText() {
-        return $this->_text;
-    }
-
-    /**
-     * 
-     * @param string $text
-     * @return \Tutorial\Content\Item
-     */
-    public function setText($text) {
-        $this->_text = $text;
-        return $this;
+    public function getScriptName($page) {
+        $id = $this->_id;
+        return sprintf("%s/%02d/%s_%02d", $this->_folder, $id, $page, $id);
     }
 
     public function getId() {
@@ -117,6 +104,14 @@ class Item {
 
     public function setId($id) {
         $this->_id = $id;
+        if ($id == 1) {
+            $this->setPrevious(\NULL);
+        }
+        else {
+            $this->setPrevious($id - 1);
+        }
+        // if last, will be overwritten by NULL
+        $this->setNext($id + 1);
         return $this;
     }
 
@@ -129,13 +124,10 @@ class Item {
         return $this;
     }
 
-    public function getAudio(){
-        return $this->_audio;
-    }
-
-    public function setAudio($audio) {
-        $this->_audio = $audio;
-        return $this;
+    public function getAudio() {
+        $folder = $this->getFolder();
+        $id = $this->_id;
+        return sprintf('/!documents/file/tutorial/%s/%02d/voice_%02d', $folder, $id, $id);
     }
 
     public function getNext() {
@@ -165,6 +157,23 @@ class Item {
         return $this;
     }
 
+    public function setFolder($folder) {
+        $this->_folder = $folder;
+        return $this;
+    }
+
+    public function getFolder() {
+        return $this->_folder;
+    }
+
+    public function getLanguage() {
+        return $this->_language;
+    }
+
+    public function setLanguage($language) {
+        $this->_language = $language;
+        return $this;
+    }
 
 
 }

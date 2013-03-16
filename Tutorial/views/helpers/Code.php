@@ -31,84 +31,97 @@ namespace Tutorial\views\helpers;
  */
 class Code extends \Dojo\views\helpers\_Animation {
 
-    protected static $_Singleton = \TRUE;
-    
-    private $_previous;
+    const AUTO = \FALSE;
+    const MANAGED = \TRUE;
 
+    protected static $_Singleton = \TRUE;
+    private $_previous;
     private $_tags = ['pre'];
-    
     private $_delay = 500;
 
-    public function help(){
+    /**
+     *
+     * @var type 
+     */
+    private $_mode;
+
+    public function help() {
         return $this;
     }
 
-    public function startRoot($id, $startTime){
+    public function startRoot($id, $startTime, $mode = self::AUTO) {
+        $this->_mode = $mode;
         $this->_previous = $id;
-        return $this->_start($id, $startTime, "shellroot");
+        return $this->_start($id, $startTime, $mode, "shellroot");
     }
-    
-    public function nextRoot($id, $startTime){
+
+    public function nextRoot($id, $startTime) {
         return $this->_next($id, $startTime, "shellroot");
     }
-    
-    public function startUser($id, $startTime){
+
+    public function startUser($id, $startTime, $mode = self::AUTO) {
+        $this->_mode = $mode;
         $this->_previous = $id;
-        return $this->_start($id, $startTime, "shelluser");
+        return $this->_start($id, $startTime, $mode, "shelluser");
     }
-    public function nextUser($id, $startTime){
+
+    public function nextUser($id, $startTime) {
         return $this->_next($id, $startTime, "shelluser");
     }
-    
-    public function end(){
+
+    public function end() {
         return $this->_end(\TRUE);
     }
-    
-    private function _end($clean){
+
+    private function _end($clean) {
         $previous = $this->_previous;
         $tag = $this->getTag($clean);
         $htlm = "</$tag> <!-- $previous -->\n";
         return $htlm;
     }
-    
-    private function _start($id, $startTime, $style){
+
+    private function _start($id, $startTime, $mode, $style) {
         $this->_computeStartTime($startTime);
-        $html = $this->_view->dojo_AutoAnimation()->waitIn($id,$startTime,$this->_delay);
+        if ($mode == self::AUTO) {
+            $html = $this->callViewHelper('dojo_autoAnimation')->waitIn($id, $startTime, $this->_delay);
+        }
+        else {
+            $html = $this->callViewHelper('dojo_turn')->on($id, $startTime, $this->_delay);
+        }
         $tag = $this->getTag(\FALSE);
         $html .= "<$tag class=\"$style\" id=\"$id\">\n";
         return $html;
     }
- 
-    private function _next($id, $startTime, $style){
+
+    private function _next($id, $startTime, $style) {
         $this->_computeStartTime($startTime);
         $htlm = $this->_end(\FALSE);
-        $htlm .= $this->_start($id, $startTime, $style);
+        $htlm .= $this->_start($id, $startTime, $this->_mode, $style);
         return $htlm;
     }
-    
-    private function getTag($clean){
-        if($clean or count($this->_tags)>1){
+
+    private function getTag($clean) {
+        if ($clean or count($this->_tags) > 1) {
             $tag = array_shift($this->_tags);
         }
-        elseif(count($this->_tags)){
+        elseif (count($this->_tags)) {
             $tag = $this->_tags[0];
         }
-        else{
+        else {
             throw new \Iris\Exceptions\InternalException('Incoherent tags in Code helper');
         }
         return $tag;
     }
-    
-    public function setTag($tag){
-        array_unshift($this->_tags,$tag);
+
+    public function setTag($tag) {
+        array_unshift($this->_tags, $tag);
         return $this;
     }
-    
+
     public function setDelay($delay) {
         $this->_delay = $delay;
         return $this;
     }
-
 
 }
 

@@ -55,7 +55,7 @@ class tutoPage extends \Iris\MVC\_Islet implements \Iris\Translation\iTranslatab
             "explanations$id" => $this->_('Explanations'),
         ]);
         $this->__text = $item->getText();
-        $this->__page = $item->getPage();
+        $this->__page = $item->getImage();
         $this->__id = $id;
     }
 }
