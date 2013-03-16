@@ -44,7 +44,7 @@ trait tSystemTranslatable {
      * @return string 
      */
     public function _($message, $system=\FALSE) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
+            $translator = $this->getTranslator();
             return $translator->translate($message);
     }
 
@@ -56,7 +56,7 @@ trait tSystemTranslatable {
     public function getTranslator() {
         static $translator = NULL;
         if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
+            $translator = \Iris\Translation\SystemTranslator::GetInstance();
         }
         return $translator;
     }
