@@ -7,38 +7,50 @@
 </style>
 <div>
     <div id="page">
-        <table class="show">
+        <table class="show center">
             <tr>
-                {php}
-                    $image1 = $this->image('jtleft.jpg')
-                {/php}
                 <td>
-                    {(image1)}
+                    Name alone
                 </td>
                 <td>
-                    {showHtml($image1,\TRUE)}
+                    With label and tooltip <br/>in a special folder
+                </td>
+                <td>
+                    A resource image
+                </td>
+            </tr>
+                <td>
+                    {image('jtleft.jpg')}
+                </td>
+                <td>
+                    {image('jtright.jpg','Portrait','Portrait_of_Jacques_Thoorens','/include')}
+                </td>
+                <td>
+                    {image('/!documents/file/resource/images/construction.png','Icon','In construction')}
                 </td>
             </tr>
             <tr>
-                {php}
-                    $image2 = $this->image('jtright.jpg','Portrait','Portrait_of_Jacques_Thoorens','/include')
-                {/php}
                 <td>
-                    {(image2)}
+                    in a common folder <br/>(this and next)
                 </td>
                 <td>
-                    {showHtml($image2,\TRUE)}
+                    same folder
+                </td>
+                <td>
+                    same folder and special class
                 </td>
             </tr>
             <tr>
-                {php}
-                    $image3 = $this->image('/!documents/file/resource/images/construction.png','Icon','In construction')
-                {/php}
                 <td>
-                    {(image3)}
+                    {php} /* An example of use of terminator ->__  */{/php}
+                    {image()->setFolder('/!documents/file/resource/images/wbicons')->__}
+                    {image('WBIco_0.png')}
                 </td>
                 <td>
-                    {showHtml($image3,\TRUE)}
+                    {image('WBIco_1.png')}
+                </td>
+                <td>
+                    {image('WBIco_2.png','two','A two with shadow','','shadow')}
                 </td>
             </tr>
         </table>
