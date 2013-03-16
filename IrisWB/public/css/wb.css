@@ -157,11 +157,20 @@ table.show tr td.title{
     font-weight: bold;
     text-align: center;
 }
+
+table.center tr td{
+    text-align: center;
+}
 .iris_md5_ok {
     color:#43e680;
 }
 .iris_md5_bad {
     color:#e88;
+}
+
+img.shadow{
+    padding:10px;
+    background-color: #;
 }
 
 ul.crud li a {
