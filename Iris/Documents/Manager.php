@@ -35,6 +35,8 @@ class Manager {
     const BADNUMBER = 2;
     const NOTFOUND = 3;
 
+    protected static $_TutorialDir;
+    
     /**
      *
      * @var Manager
@@ -156,6 +158,19 @@ class Manager {
         }
     }
 
+    
+    public function getTutorial($params) {
+        $tutorialDir = self::$_TutorialDir;
+        $pathName = sprintf("%s/%s/%s", IRIS_ROOT_PATH, $tutorialDir, implode('/', $params));
+        $name = basename($pathName);
+        $mime = $this->_getMime($name);
+        if (file_exists($pathName)) {
+            return $this->_execRead(FALSE, $pathName, $mime);
+        }
+        else {
+            return self::NOTFOUND;
+        }
+    }
     protected function _getMime($fileName) {
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
         if (isset($this->_mimeTypes[$ext])) {
@@ -183,4 +198,8 @@ class Manager {
         return self::GOTIT;
     }
 
+    public static function setTutorialDir($directory){
+        self::$_TutorialDir = $directory;
+    }
+    
 }
