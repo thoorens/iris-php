@@ -29,11 +29,10 @@ namespace Tutorial\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class Image extends \Iris\views\helpers\_ViewHelper {
+class Image extends \Iris\views\helpers\Image {
 
     protected static $_Singleton = \TRUE;
-    private $_folder = "";
-    private $_defaultClass = 'tuto_absolute';
+    protected $_defaultClass = 'tuto_absolute';
 
     /**
      * Creates an image tag with alt and title at a given position 
@@ -55,35 +54,21 @@ class Image extends \Iris\views\helpers\_ViewHelper {
             return $this;
         }
         else
-            return $this->render($id, $top, $left, $file, $alt, $title, $dir, $class, $attributes);
+            return $this->_render($id, $top, $left, $file, $alt, $title, $dir, $class, $attributes);
     }
 
-    public function setFolder($folderName) {
-        $this->_folder = $folderName;
-    }
+    
 
-    public function setDefaultClass($defaultClass) {
-        $this->_defaultClass = $defaultClass;
-    }
-
-    public function render($id, $top, $left, $file, $alt = 'Image', $title = \NULL, $dir = \NULL, $class = '', $attributes = '') {
-        //if(file)
-        if (is_null($alt)) {
-            $alt = "Image $file";
-        }
-        if (is_null($title)) {
-            $title = $alt;
-        }
-        if (is_null($dir) or $dir == '') {
-            $dir = $this->_folder;
-        }
+    protected function _render($id, $top, $left, $file, $alt = 'Image', $title = \NULL, $folder = \NULL, $class = '', $attributes = '') {
         $classAttribute = $class . ' ' . $this->_defaultClass;
         $attributes .= " id=\"$id\"";
         //$image = sprintf('<img id="%s" src="%s%s" title="%s" alt="%s" class="tuto_absolute %s" %s/>' . "\n", $id, $dir, $file, $title, $alt, $class, $attributes);
-        $image = $this->_view->image($file, $alt, $title, $dir, $classAttribute, $attributes);
+        $image = $this->_renderImage($file, $alt, $title, $folder, $classAttribute, $attributes);
         $style = sprintf("<style>img#%s\n{top: %dpx; left: %dpx}\n</style>\n", $id, $top, $left);
         return $image . $style;
     }
 
+    
+    
 }
 
