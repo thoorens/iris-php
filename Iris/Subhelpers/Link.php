@@ -84,15 +84,20 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     /**
      * Realizes a link or a button with an image inside
      * 
-     * @param string $fileName
+     * @param string $fileName or an array of up to five elements
      * @param string/array $label The label of the image or an array of up to four elements
      * @param string $url The URL of the link
      * @param string $tooltip A tooltip to display
      * @param string $class An optional class for the link
      * @return type
      */
-    public function image($fileName, $label, $url = \NULL, $tooltip = \NULL, $class = \NULL) {
-        $args = func_get_args();
+    public function image($fileName, $label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL) {
+        if(is_array($fileName)){
+            $args = $fileName;
+        }
+        else{
+            $args = func_get_args();
+        }
         $fileName = array_shift($args);
         list($label, $url, $tooltip, $class) = $this->_normalize($args);
         $this->callViewHelper('styleLoader', 'nojsbutton', 'span.btnlabel{padding:0 0 20px 20px}');
