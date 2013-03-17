@@ -106,12 +106,12 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         // 
         'Go to administration tools...' => 'Accéder aux outils d\'administration',
         'Quit admin module and return to the site welcome page' => "Quitter le module d'adminstraction et retourner à la page d'accueil",
-        'Role tester|!admin/roles/switch|Switch to a dummy user having a specific role' =>
+        'Role tester|/!admin/roles/switch|Switch to a dummy user having a specific role' =>
         'Test des rôles|!admin/roles/switch|Utiliser un autre utilisateur',
         'ACL management|!admin/roles/acl|Display and edit all Access Control Lists' =>
         "Gestion des droits|!admin/roles/acl|Afficher ou modifier les droits d'accès",
-        'Structure management||Manage modules, controllers and action' =>
-        "Structure de l'application||Gérer modules, contrôleurs et actionManage modules, controllers and action",
+        'Structure management|/!admin/structure/index|Manage modules, controllers and action'=>
+        "Structure de l'application|/!admin/structure|Gérer modules, contrôleurs et actionManage modules, controllers and action",
         'Function 4||Future enhancement' =>
         'Fonction 4||A développer',
         'Function 5||Future enhancement' =>
