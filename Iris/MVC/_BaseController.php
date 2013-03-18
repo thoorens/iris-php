@@ -253,7 +253,7 @@ use \Iris\views\helpers\tViewHelperCaller;
      * @return mixed 
      */
     public function renderFile($scriptName, $echoing = TRUE) {
-        $this->renderNow($scriptName, $echoing, Template::ABSOLUTE);
+        return $this->renderNow($scriptName, $echoing, Template::ABSOLUTE);
     }
     
     public function preRender($scriptName) {
