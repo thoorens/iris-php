@@ -227,7 +227,7 @@ STOP;
                 'CLI/Parameters',
                 'CLI/Analyser',
                 'CLI/_Process',
-                'CLI/_Help', 'CLI/Help/French',
+                'CLI/_Help', 'CLI/Help/French','CLI/Help/English',
                 // Various
                 'Iris/Engine/tSingleton',
                 'Iris/Engine/Memory',
