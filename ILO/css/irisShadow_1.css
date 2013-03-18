@@ -4,7 +4,7 @@
 body {
     margin-left: auto; 
     text-align:center;
-    background: url('/!documents/file/resource/bg/body.jpg') top left repeat-x #dfdfdf;
+    background: url('/!documents/file/bg/body.jpg') top left repeat-x #dfdfdf;
     margin: 0 0 0 0;
     padding: 0;
     min-height: 800px;
@@ -31,7 +31,7 @@ a:link, a:hover, a:visited {
 }
 
 #mainLogo {
-    background: transparent url('/!documents/file/resource/logos/Title114.jpg') no-repeat left;
+    background: transparent url('/!documents/file/logos/Title114.jpg') no-repeat left;
     width: 670px;
     floate: right;
     height: 95px;
@@ -39,7 +39,7 @@ a:link, a:hover, a:visited {
     border-top-right-radius:7px;
 }
 #downloadLogo {
-    background: transparent url('/!documents/file/resource/logos/Download80.jpg') no-repeat left;
+    background: transparent url('/!documents/file/logos/Download80.jpg') no-repeat left;
     width: 670px;
     floate: right;
     height: 95px;
@@ -48,7 +48,7 @@ a:link, a:hover, a:visited {
 }
 
 #title {
-    background: url('/!documents/file/resource/bg/title.jpg') no-repeat left;
+    background: url('/!documents/file/bg/title.jpg') no-repeat left;
     width: 670px;
     floate: left;
     height: 60px;
@@ -70,7 +70,7 @@ a:link, a:hover, a:visited {
 }
 
 #container {
-    background: #eee url('/!documents/file/resource/bg/content.jpg') repeat-y top left;
+    background: #eee url('/!documents/file/bg/content.jpg') repeat-y top left;
     width: 670px;
     margin-left:auto;
     margin-right:auto;
@@ -81,7 +81,7 @@ a:link, a:hover, a:visited {
 }
 
 #contente {
-    background: #eee url('/!documents/file/resource/bg/content.jpg') no-repeat top left;
+    background: #eee url('/!documents/file/bg/content.jpg') no-repeat top left;
     margin-left:auto;
     margin-right:auto;
     margin-top:50px;
@@ -106,7 +106,7 @@ a:link, a:hover, a:visited {
 }
 
 #foot {
-    background: transparent url('/!documents/file/resource/bg/foot.jpg') no-repeat left;
+    background: transparent url('/!documents/file/bg/foot.jpg') no-repeat left;
     height: 65px;
     width: 670px;
     margin: 0;
@@ -118,7 +118,7 @@ a:link, a:hover, a:visited {
 #shadow {
     width: 670px;
     height: 48px;
-    background: transparent url('/!documents/file/resource/bg/shadow.png') no-repeat left;
+    background: transparent url('/!documents/file/bg/shadow.png') no-repeat left;
 
 }
 

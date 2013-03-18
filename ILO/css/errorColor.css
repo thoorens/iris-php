@@ -3,7 +3,7 @@
     specific background color for default error page
 */
 body {
-    background: #FFF url("/!documents/file/resource/bg/error.jpg") repeat-y top left fixed;
+    background: #FFF url("/!documents/file/bg/error.jpg") repeat-y top left fixed;
 }
 
 h1, h2, h3, h4, h5, h6{
