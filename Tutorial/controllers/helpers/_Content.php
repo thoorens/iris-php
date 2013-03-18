@@ -39,9 +39,10 @@ namespace Tutorial\controllers\helpers;
 abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
 
     const VIEW = 1;
-    const IMAGE = 2;
-    const TEXT = 3;
-    
+    const TEXT = 2;
+    const TEXTVIEW = 3;
+    const IMAGE = 4;
+
     /**
      * 
      * @param type $num

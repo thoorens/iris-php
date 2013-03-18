@@ -39,6 +39,7 @@ namespace Tutorial\Content;
 class Item {
 
     private $_title;
+    private $_mainTitle;
     private $_id;
     private $_duration = 10000;
     private $_image;
@@ -105,16 +106,22 @@ class Item {
     public function setId($id) {
         $this->_id = $id;
         if ($id == 1) {
-            $this->setPrevious(\NULL);
+            // no action will be done
+            $this->setPrevious(0);
         }
         else {
             $this->setPrevious($id - 1);
         }
-        // if last, will be overwritten by NULL
+        // if last, must be marked as such by markLast()
         $this->setNext($id + 1);
         return $this;
     }
 
+    public function markLast(){
+        $this->setNext(0);
+        return $this;
+    }
+    
     public function getDuration() {
         return $this->_duration;
     }
@@ -127,7 +134,7 @@ class Item {
     public function getAudio() {
         $folder = $this->getFolder();
         $id = $this->_id;
-        return sprintf('/!documents/file/tutorial/%s/%02d/voice_%02d', $folder, $id, $id);
+        return sprintf('/tutorials/file/resource/%s/%02d/voice_%02d', $folder, $id, $id);
     }
 
     public function getNext() {
@@ -175,7 +182,17 @@ class Item {
         return $this;
     }
 
+    public function getMainTitle() {
+        return $this->_mainTitle;
+    }
 
+    public function setMainTitle($mainTitle) {
+        $this->_mainTitle = $mainTitle;
+        return $this;
+    }
+
+
+    
 }
 
 ?>

@@ -42,6 +42,9 @@ class SystemTranslator extends \Iris\Translation\SystemTranslator {
         'Toggle sound' => 'Couper/rétablir le son',
         'Reduce volume' => 'Diminuer le volume sonore',
         'Increase volume' => 'Augmenter le volume sonore',
+        'Start again' => 'Recommencer',
+        'Next screen' => 'Écran suivant',
+        'Previous screen' => 'Ecran précédent',
     );
 
     public static function GetInstance() {

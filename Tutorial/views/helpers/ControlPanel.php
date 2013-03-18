@@ -6,6 +6,7 @@
  */
 
 namespace Tutorial\views\helpers;
+use Iris\Ajax\_Synchro;
 
 \define('IRIS_CP', 'IrisCPINTERNAL');
 /*
@@ -72,6 +73,8 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper{
      */
     private $_refreshingInterval = 1000;
     private $_sound = \TRUE;
+    
+    private $_context = "/* non context */";
 
     /**
      * The helper returns its reference or starts its rendering 
@@ -98,38 +101,43 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper{
      */
     public function render($duration, $channel = IRIS_CP) {
         /* @var $button \Iris\Subhelpers\Link */
-        $button = $this->_view->button();
+        $button = $this->callViewHelper('button');
         $controlChannel = "C$channel";
         /* @var $synchro \Iris\Ajax\_Synchro */
-        $synchro = $this->_view->synchro();
-
+        $synchro = $this->callViewHelper('synchro');
+        $synchro->setContext($this->_context);
         $synchro->setRefreshingInterval($this->_refreshingInterval)
                 ->setGranularity($this->_granularity)
                 ->setAutostart($this->_autostart)
                 ->send($channel, $duration, $controlChannel);
-        $html = $synchro->start($controlChannel);
-        $html .= $synchro->stop($controlChannel);
-        $html .= $synchro->restart($controlChannel);
-        $html .= $synchro->next($controlChannel);
+        $html = $synchro->previous($controlChannel, $this->_('Previous screen'));
+        $html .= $synchro->start($controlChannel, $this->_('Stop'));
+        $html .= $synchro->stop($controlChannel, $this->_('Stop'));
+        $html .= $synchro->restart($controlChannel, $this->_('Start again'));
+        $html .= $synchro->next($controlChannel, $this->_('Next screen'));
         if ($this->_sound) {
             $html .= $button->setId('Minus')
                     ->addAttribute('onclick', 'iris_dojo.soundminus()')
-                    ->display($this->_('-'), \NULL, $this->_('Reduce volume'), '');
+                    ->image(_Synchro::MediaIcon('minus', $this->_('Reduce volume')));
             //if ($this->_control & self::NOSOUND)
             $html .= $button->setId('Nosound')
                     ->addAttribute('onclick', 'iris_dojo.nosound()')
-                    ->display($this->_('X'), \NULL, $this->_('Toggle sound'), '');
+                    ->image(_Synchro::MediaIcon('mute',$this->_('Increase volume')));
             //if ($this->_control & self::PLUS)
             $html .= $button->setId('Plus')
                     ->addAttribute('onclick', 'iris_dojo.soundplus()')
-                    ->display($this->_('+'), \NULL, $this->_('Increase volume'), '');
+                    ->image(_Synchro::MediaIcon('plus',$this->_('Increase volume')));
             $this->_jsSound();
         }
-        $html .= '<span id="counter1">-</span>';
+        $html .= '<span id="counter1" style="color=#white">-</span>';
         $synchro->counterMaxDisplay($channel, 'counter1');
         return $html;
     }
 
+    public static function getButton($id, $event, $eventManager, $icon, $title){
+        
+    }
+    
     /**
      * Sets the value of autostart
      * 
@@ -174,7 +182,7 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper{
         return $this;
     }
 
-    public function _jsSound() {
+    private function _jsSound() {
         \Dojo\Engine\DNameSpace::addObject('oldVol')
                 ->createVar(0);
         \Dojo\Engine\DNameSpace::addObject('soundController')
@@ -212,4 +220,18 @@ JS
         $this->callViewHelper('javascriptStarter','test', 'iris_dojo.initsound();');
     }
 
+    
+    public function getTranslator() {
+        static $translator = NULL;
+        if (is_null($translator)) {
+            $translator = \Tutorial\Translation\SystemTranslator::GetInstance();
+        }
+        return $translator;
+    }
+
+    public function defineContext($context) {
+        $this->_context = $context;
+    }
+    
+    
 }

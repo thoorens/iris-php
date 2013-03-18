@@ -76,6 +76,10 @@ a:link, a:hover, a:visited {
     margin-right:auto;
     text-align: center;
     margin-top:50px;
+    /*fall back gradient image*/
+    background: url(/!documents/file/resource/bg/bodygrad.png) repeat-y;
+    background: -moz-linear-gradient(left,#B0DDB6,rgba(0,255,0,0));
+    background: -webkit-gradient(linear, left center, right center, from(#B0DDB6), to(rgba(0,255,0,0)));
     background: linear-gradient(to right, #B0DDB6, rgba(0,255,0,0));
 
 }

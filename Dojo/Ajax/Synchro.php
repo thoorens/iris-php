@@ -50,7 +50,7 @@ class Synchro extends \Iris\Ajax\_Synchro {
      * @param int $max Duration of the sender (by default 3600 sec)
      * @param type $externalSignal Optional signal to control the sender
      */
-    public function send($messageName, $max = self::MINUTE, $externalSignal = \NULL) {
+    public function send($messageName, $max = self::MINUTE, $externalSignal = \NULL, $context = \NULL) {
         $this->_max = $max;
         $running = $this->_autostart ? 1 : 0;
         $granularity = $this->_granularity; 
@@ -59,6 +59,8 @@ class Synchro extends \Iris\Ajax\_Synchro {
         $bubble->addModule('dojo/request','request');
         $bubble->addModule('dojo/request/script','script');
         $bubble->addModule('dojo/dom-construct','domConst');
+        $context = $this->_createContext();
+        $noURL = self::NO_URL;
         $controllerCode = $this->_getSignalControlCode($externalSignal);
         $bubble->defFunction(<<<JS
    
@@ -66,29 +68,28 @@ class Synchro extends \Iris\Ajax\_Synchro {
    running = $running;
    old = '';
    max = $max;
-   nextData = {
-        URL :"/tutorials/ajax/test/frInstall/1",
-        max : 20000
-   }
+   
+   $context             
+                
    function restart(){
-        alert('RESTART'); 
+       url= currentData.URL;
+       if(url!='$noURL') 
+           window.location.href=url;       
    }
+                
+   function previous(){
+       url= previousData.URL;
+       if(url!='$noURL')    
+           window.location.href=url;  
+   }
+                
    function next(){
-        request(nextData.URL).then(function(text){
-           domConst.place(text, "twotabs", 'replace');
-           max = nextData.max;
-           ms = 0;
-        });
+       url= nextData.URL;
+       if(url!='$noURL') 
+           window.location.href=url;                
    }
-   function nextjs(){
-        request.script(nextData.URL,{
-      handleAs: "javascript"
-    }).then(function(text){
-           domConst.place(text, "twotabs", 'replace');
-           max = nextData.max;
-           ms = 0;
-        });
-   }
+   
+                
    function innerloop(){ 
 $controllerCode   
         if(running)topic.publish('$messageName',ms,max);
@@ -128,6 +129,22 @@ JS
         );
     }
 
+    protected function _createContext(){
+        list($previous, $current, $next) = $this->_context;
+        return <<<CONTEXT
+currentData ={
+    URL : '$current',
+}
+previousData ={
+    URL : '$previous',
+}
+nextData={
+    URL : '$next',
+}    
+CONTEXT;
+    }
+    
+    
     /**
      * Creates or retrieves a bubble by its name and add it
      * the standard modules (dom, domReady and topic)
@@ -158,21 +175,26 @@ JS
             return<<< CONT
         topic.subscribe('$signal',function(msg){
             if(msg!=old){
+                old = 'none';    
                 switch(msg){
                   case 'stop':
                      running = 0;
+                     old = msg;
                      break;
                   case 'start':
-                     running = 1;
+                     running = 1; 
+                     old = msg;
                      break;
                   case 'restart':
                      restart();
                      break;
                   case 'next':
-                     nextjs();
+                     next();
+                     break;
+                  case 'previous':
+                     previous();
                      break;
                 }
-                old = msg;
             }
         });
 CONT;
