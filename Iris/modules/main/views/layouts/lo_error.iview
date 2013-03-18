@@ -2,9 +2,9 @@
 <html>
     <head>
         {head()}
-        {styleLoader("/!documents/file/resource/css/iris.css")}
-        {styleLoader("/!documents/file/resource/css/irisColor.css")}
-        {styleLoader("/!documents/file/resource/css/errorColor.css")}
+        {styleLoader("/!documents/file/css/iris.css")}
+        {styleLoader("/!documents/file/css/irisColor.css")}
+        {styleLoader("/!documents/file/css/errorColor.css")}
     </head>
     <body {dojo_body()}>
         <div class="page_margins">

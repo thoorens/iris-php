@@ -77,7 +77,7 @@ class DisplayUser extends _ViewHelper {
                 $label = $label;
             }
             else {
-                $label = $this->callViewHelper('image', '/!documents/file/resource/images/icons/user2.png', 'user symbol', $tooltip);
+                $label = $this->callViewHelper('image', '/!documents/file/images/icons/user2.png', 'user symbol', $tooltip);
             }
         }
         else {

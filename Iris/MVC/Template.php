@@ -49,6 +49,11 @@ class Template implements \Iris\Translation\iTranslatable {
     const CACHE_ALWAYS = 3;
 
     /**
+     * Explicit way to require absolute filename for a template
+     */
+    const ABSOLUTE = \TRUE;
+    
+    /**
      * If true, the translation of .phtml is managed through files
      * 
      * @var boolean
@@ -91,7 +96,7 @@ class Template implements \Iris\Translation\iTranslatable {
      */
     private static $_Token = [
         // escaping {
-        ['/%{%(.*)%}%/','{$1}',\TRUE],
+        ['/%{%(.*)%}%/', '{$1}', \TRUE],
         // php tags
         ['{php}', '<?php '],
         ['{/php}', '?>'],
@@ -111,11 +116,11 @@ class Template implements \Iris\Translation\iTranslatable {
         ['{/block}', '<?php break;?>'],
         // special variables
         //@todo better treat them in View
-        ['{ITEM}','<?=$this->ITEM?>'],
-        ['{KEY}','<?=$this->KEY?>'],
-        ['{LOOPKEY}','<?=$this->LOOPKEY?>'],
-        ['{CURRENTLOOPKEY}','<?=$this->CURRENTLOOPKEY?>'],
-        ['{ALLDATA}','<?=$this->ALLDATA?>'],
+        ['{ITEM}', '<?=$this->ITEM?>'],
+        ['{KEY}', '<?=$this->KEY?>'],
+        ['{LOOPKEY}', '<?=$this->LOOPKEY?>'],
+        ['{CURRENTLOOPKEY}', '<?=$this->CURRENTLOOPKEY?>'],
+        ['{ALLDATA}', '<?=$this->ALLDATA?>'],
         // view and local variables
         ['/({)(\w+?)(})/', '<?=\$$2?>'],
         // long expressions (var + method)
@@ -129,11 +134,11 @@ class Template implements \Iris\Translation\iTranslatable {
      * @param String $iViewScriptName the script to parse (NULL in case of quoted views)
      * @param View $view the view associated to the template
      */
-    function __construct($iViewScriptName, $view = \NULL) {
+    function __construct($iViewScriptName, $view = \NULL, $absolute = \FALSE) {
         $this->_iViewScriptName = $iViewScriptName;
         $this->_view = $view;
         if (!is_null($view)) {
-            $this->_loadTemplate();
+            $this->_loadTemplate($absolute);
         }
     }
 
@@ -159,28 +164,33 @@ class Template implements \Iris\Translation\iTranslatable {
      * An interface to the loader to get the content of the template from
      * an .iview file, or if possible, from an existing .phtml translation
      * 
+     * @param boolean $absolute If true, reads a precise file whose name has been given
      * @throws \Iris\Exceptions\LoaderException
      */
-    private function _loadTemplate() {
-        $viewType = $this->_view->getViewType();
-        $loader = ie\Loader::GetInstance();
-        $iviewScriptName = $this->_iViewScriptName;
-        $view = $this->_view;
-        try {
-            // the case where a scriptName has been explicitely required (renderNow)
-            if (!is_null($iviewScriptName)) {
-                $viewFile = $loader->loadView($iviewScriptName, "scripts", $view->getResponse());
-            }
-            else {
-                $viewFile = $loader->loadView($view->getViewScriptName(), $view->viewDirectory(), $view->getResponse());
-            }
+    private function _loadTemplate($absolute) {
+        if ($absolute) {
+            $scriptFileName = IRIS_ROOT_PATH . $this->_iViewScriptName.'.iview';
         }
-        catch (\Iris\Exceptions\LoaderException $l_ex) {
-            throw new \Iris\Exceptions\LoaderException("Problem with $viewType " .
-                    $l_ex->getMessage(), NULL, $l_ex);
+        else{
+            $viewType = $this->_view->getViewType();
+            $loader = ie\Loader::GetInstance();
+            $iviewScriptName = $this->_iViewScriptName;
+            $view = $this->_view;
+            try {
+                // the case where a scriptName has been explicitely required (renderNow)
+                if (!is_null($iviewScriptName)) {
+                    $viewFile = $loader->loadView($iviewScriptName, "scripts", $view->getResponse());
+                }
+                else {
+                    $viewFile = $loader->loadView($view->getViewScriptName(), $view->viewDirectory(), $view->getResponse());
+                }
+            }
+            catch (\Iris\Exceptions\LoaderException $l_ex) {
+                throw new \Iris\Exceptions\LoaderException("Problem with $viewType " .
+                $l_ex->getMessage(), NULL, $l_ex);
+            }
+            $scriptFileName = IRIS_ROOT_PATH . '/' . $viewFile;
         }
-        //////static::$_LastUsedScript = $viewFile; // for debugging purpose
-        $scriptFileName = IRIS_ROOT_PATH . '/' . $viewFile;
         $this->_view->SetLastScriptName($scriptFileName);
         $this->_phtmlScriptFileName = $scriptFileName . '.phtml';
         $read = \FALSE;
@@ -212,13 +222,13 @@ class Template implements \Iris\Translation\iTranslatable {
             foreach ($this->_templateText as &$line) {
                 if (strpos($line, '{literal}') !== FALSE) {
                     $literal = \TRUE;
-                    $line = str_replace('{literal}','', $line);
+                    $line = str_replace('{literal}', '', $line);
                 }
                 elseif (strpos($line, '{/literal}') !== FALSE) {
                     $literal = \FALSE;
-                    $line = str_replace('{/literal}','', $line);
+                    $line = str_replace('{/literal}', '', $line);
                 }
-                elseif(!$literal){
+                elseif (!$literal) {
                     foreach (self::$_Token as $tokens) {
                         if ($tokens[0][0] == '/') {
                             $modLine = preg_replace($tokens[0], $tokens[1], $line);
@@ -226,9 +236,9 @@ class Template implements \Iris\Translation\iTranslatable {
                         else {
                             $modLine = str_replace($tokens[0], $tokens[1], $line);
                         }
-                        if($line!=$modLine){
+                        if ($line != $modLine) {
                             $line = $modLine;
-                            if(isset($tokens[2]))
+                            if (isset($tokens[2]))
                                 break;
                         }
                     }

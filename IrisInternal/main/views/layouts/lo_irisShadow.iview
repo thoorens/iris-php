@@ -2,7 +2,7 @@
 <html>
     <head>
         {head()}
-        {styleLoader("/!documents/file/resource/css/irisShadow.css")}
+        {styleLoader("/!documents/file/css/irisShadow.css")}
     </head>
     <body>
         <div id="main">

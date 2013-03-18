@@ -38,7 +38,7 @@ class ExecutionTime extends _ViewHelper {
     
     public function help($time) {
         $timeComment = $this->_('Execution time');
-        $timeLabel = $this->callViewHelper('image', '/!documents/file/resource/images/icons/stopwatch.png', 
+        $timeLabel = $this->callViewHelper('image', '/!documents/file/images/icons/stopwatch.png', 
                 'stopwatch symbol', $timeComment);
         return "$timeLabel <span id=\"iris_RTD\"><b>$time</b></span>";
     }

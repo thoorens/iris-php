@@ -124,7 +124,7 @@ class Manager implements \Iris\Design\iSingleton{
      * and debug mode (according to server type)
      */
     private function __construct() {
-        $this->addStyle("/!documents/file/resource/css/dojo.css");
+        $this->addStyle("/!documents/file/css/dojo.css");
         if (\Iris\Engine\Mode::IsDevelopment()) {
             $this->setDebug('true');
         }
@@ -132,7 +132,7 @@ class Manager implements \Iris\Design\iSingleton{
             $this->setDebug('false');
         }
         if (!\Iris\Users\Session::JavascriptEnabled()) {
-            $this->addStyle('/!documents/file/resources/css/iris_nojs.css');
+            $this->addStyle('/!documents/files/css/iris_nojs.css');
         }
         // init dojo_head to register it in Iris\Subhelpers\Head
         views\helpers\Head::GetInstance();

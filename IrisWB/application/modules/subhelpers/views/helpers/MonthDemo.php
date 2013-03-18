@@ -50,16 +50,16 @@ class MonthDemo extends \Iris\views\helpers\Month {
     public function eventDisplay($event) {
         switch ($event->getType()) {
             case 1:
-                $image = '<img src="/!documents/file/resource/images/wbicons/WBIco_P.png" alt="Personal icon">';
+                $image = '<img src="/!documents/file/images/wbicons/WBIco_P.png" alt="Personal icon">';
                 break;
             case 2:
-                $image = '<img src="/!documents/file/resource/images/wbicons/WBIco_W.png" alt="Work icon">';
+                $image = '<img src="/!documents/file/images/wbicons/WBIco_W.png" alt="Work icon">';
                 break;
             case 3:
-                $image = '<img src="/!documents/file/resource/images/wbicons/WBIco_F.png" alt="Fun icon">';
+                $image = '<img src="/!documents/file/images/wbicons/WBIco_F.png" alt="Fun icon">';
                 break;
             case 4:
-                $image = '<img src="/!documents/file/resource/images/wbicons/WBIco_H.png" alt="Health icon">';
+                $image = '<img src="/!documents/file/images/wbicons/WBIco_H.png" alt="Health icon">';
                 break;
         }
         return $event->getDate()->toString('<b>d</b>').'&nbsp'.$image;
@@ -73,10 +73,10 @@ class MonthDemo extends \Iris\views\helpers\Month {
     public function collision($events) {
         $counter = $events->eventNumber();
         if ($counter > 5) {
-            return '<img src="/!documents/file/resource/images/wbicons/WBIco_6.png" alt="Personal icon">';
+            return '<img src="/!documents/file/images/wbicons/WBIco_6.png" alt="Personal icon">';
         }
         else {
-            return sprintf('<img src="/!documents/file/resource/images/wbicons/WBIco_%1d.png" alt="Personal icon">', $counter);
+            return sprintf('<img src="/!documents/file/images/wbicons/WBIco_%1d.png" alt="Personal icon">', $counter);
         }
     }
 

@@ -259,7 +259,7 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
                 $image = "media-mute.png";
                 break;
         }
-        $fullImagePath = "/!documents/file/resource/images/mediaicons/$image";
+        $fullImagePath = "/!documents/file/images/mediaicons/$image";
         return [$fullImagePath, $type, \NULL, $tooltip];
     }
 

@@ -32,7 +32,7 @@ namespace Iris\MVC;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class View implements \Iris\Translation\iTranslatable{
+class View implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
 
@@ -112,9 +112,10 @@ class View implements \Iris\Translation\iTranslatable{
      *   
      */
     protected function _copyMainViewProperties() {
+        
     }
 
-        /**
+    /**
      * Adds a text to be prepend to the final rendering
      * 
      * @param string $text
@@ -130,8 +131,8 @@ class View implements \Iris\Translation\iTranslatable{
      * @param string $forcedScriptName (usually NULL)
      * @return string 
      */
-    public function render($forcedScriptName = NULL) {
-        if (strpos($this->_viewScriptName, '/') !== FALSE) {
+    public function render($forcedScriptName = NULL, $absolute = \FALSE) {
+        if (strpos($this->_viewScriptName, '/') !== FALSE and !$absolute) {
             $forcedScriptName = $this->_viewScriptName;
         }
         if ($forcedScriptName == '__AJAX__' or $this->_viewScriptName == '__AJAX__') {
@@ -150,7 +151,12 @@ class View implements \Iris\Translation\iTranslatable{
         }
         // In normal cases, there is a template file to render
         else {
-            $template = $this->_getTemplate($forcedScriptName);
+            if ($absolute) {
+                $template = new Template($forcedScriptName, $this, Template::ABSOLUTE);
+            }
+            else {
+                $template = $this->_getTemplate($forcedScriptName);
+            }
             ob_start();
             echo $this->_prerendering;
             $this->_eval($template);
@@ -292,6 +298,6 @@ class View implements \Iris\Translation\iTranslatable{
     public static function SetLastScriptName($name) {
         static::$_LastUsedScript = $name;
     }
-    
+
 }
 

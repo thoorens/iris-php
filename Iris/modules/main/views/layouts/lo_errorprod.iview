@@ -3,9 +3,9 @@
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         {title()->head()}
-        <link href="/!documents/file/resource/css/iris.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/irisColor.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/resource/css/errorColor.css" rel="stylesheet" type="text/css" />
+        <link href="/!documents/file/css/iris.css" rel="stylesheet" type="text/css" />
+        <link href="/!documents/file/css/irisColor.css" rel="stylesheet" type="text/css" />
+        <link href="/!documents/file/css/errorColor.css" rel="stylesheet" type="text/css" />
         <link href="/images/site.ico" rel="shortcut icon" />
         <!--?= $this->headLink() ?-->
         <!--?= $this->headStyle() ?-->

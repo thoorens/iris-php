@@ -50,7 +50,7 @@ class Logo extends _ViewHelper {
         if ($logo == '#default#') {
            $logo='Title80';
         }
-        return $this->getView()->image("$logo.jpg", 'Logo Iris', NULL, '/!documents/file/resource/logos', 'logoIris');
+        return $this->getView()->image("$logo.jpg", 'Logo Iris', NULL, '/!documents/file/logos', 'logoIris');
     }
 
 }

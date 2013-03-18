@@ -231,10 +231,11 @@ use \Iris\views\helpers\tViewHelperCaller;
      * 
      * @param string $scriptName
      * @param boolean $echoing
+     * @param boolean $absolute If true, the name if an absolute one (relative to project root)
      * @return mixed 
      */
-    public function renderNow($scriptName, $echoing = TRUE) {
-        $rendering = $this->_view->render($scriptName);
+    public function renderNow($scriptName, $echoing = TRUE, $absolute = \FALSE) {
+        $rendering = $this->_view->render($scriptName, $absolute);
         if ($echoing) {
             echo $rendering;
         }
@@ -243,6 +244,17 @@ use \Iris\views\helpers\tViewHelperCaller;
         }
     }
 
+    /**
+     * Offers a way to render a view manually by giving its name. 
+     * By default, it is echoed directly. Here the file name is absolute (starting from project root)
+     * 
+     * @param string $scriptName
+     * @param boolean $echoing
+     * @return mixed 
+     */
+    public function renderFile($scriptName, $echoing = TRUE) {
+        $this->renderNow($scriptName, $echoing, Template::ABSOLUTE);
+    }
     
     public function preRender($scriptName) {
         //$this->_prerendering .= $this->renderNow($scriptName, \FALSE);

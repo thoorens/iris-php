@@ -38,7 +38,7 @@ class ModeIcon extends _ViewHelper {
 
     public function help() {
         if (Settings::GetAdminTollbarAjaxMode()) {
-            $icon = $this->callViewHelper('image', '/!documents/file/resource/images/icons/ajax.png', 'ajax symbol', $this->_('Toolbar managed by Ajax'));
+            $icon = $this->callViewHelper('image', '/!documents/file/images/icons/ajax.png', 'ajax symbol', $this->_('Toolbar managed by Ajax'));
         }
         else {
             $icon = '';

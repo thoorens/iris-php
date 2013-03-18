@@ -40,7 +40,7 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
 
     protected static $_Instance = NULL;
 
-    const ICON_SYSTEM_DIR = '/!documents/file/resource/images/icons';
+    const ICON_SYSTEM_DIR = '/!documents/file/images/icons';
 
     /**
      * The entity name (in user's terminology) with a gender mark
@@ -62,7 +62,7 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
      * 
      * @var string
      */
-    protected $_defaultIconDir = '/!documents/file/resource/images/icons';
+    protected $_defaultIconDir = '/!documents/file/images/icons';
 
     /**
      * The id field in data

@@ -26,7 +26,7 @@
                     {image('jtright.jpg','Portrait','Portrait_of_Jacques_Thoorens','/include')}
                 </td>
                 <td>
-                    {image('/!documents/file/resource/images/construction.png','Icon','In construction')}
+                    {image('/!documents/file/images/construction.png','Icon','In construction')}
                 </td>
             </tr>
             <tr>
@@ -43,7 +43,7 @@
             <tr>
                 <td>
                     {php} /* An example of use of terminator ->__  */{/php}
-                    {image()->setFolder('/!documents/file/resource/images/wbicons')->__}
+                    {image()->setFolder('/!documents/file/images/wbicons')->__}
                     {image('WBIco_0.png')}
                 </td>
                 <td>

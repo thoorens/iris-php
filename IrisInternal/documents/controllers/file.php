@@ -55,9 +55,34 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         $this->_manageFile(\TRUE, \TRUE);
     }
 
-    public function resourceAction() {
+    public function bgAction() {
+        $this->_resource('bg');
+    }
+
+    public function cssAction() {
+        $this->_resource('css');
+    }
+
+    public function githubAction() {
+        $this->_resource('github');
+    }
+
+    public function imagesAction() {
+        $this->_resource('images');
+    }
+
+    public function logosAction() {
+        $this->_resource('logos');
+    }
+
+    public function viewsAction() {
+        $this->_resource('views');
+    }
+
+    private function _resource($base) {
         $manager = Manager::GetInstance();
         $params = $this->_response->getParameters();
+        array_unshift($params, $base);
         $manager->getResource($params);
         exit;
     }
@@ -75,7 +100,6 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
                 header('location:/ERROR/document/notfound');
         }
     }
-
 
     protected function _verifyAcl() {
         
