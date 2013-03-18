@@ -25,7 +25,7 @@
                 <th id="birth">
                     {(data[1][0])}{(tt->setPosition('before')->render("birth","<div class=\"special\">".$data[1][1]."</div>"))}
                 </th>
-                <th>{image('Iris8wiki.png','Iris-Logo','Iris-Logo','/!documents/file/resource/logos')} </th>
+                <th>{image('Iris8wiki.png','Iris-Logo','Iris-Logo','/!documents/file/logos')} </th>
                 <th id="version">{(data[2][0])}{(tt->setPosition('after')->render("version",$data[2][1]))}</th>
             </tr>    
             <tr>
