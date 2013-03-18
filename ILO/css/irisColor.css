@@ -3,9 +3,11 @@
     color scheme for internal modules
 */
 body {
-    background: #ffffb8 /* url(images/yellow_v.png)repeat-x top left fixed*/;
-    /*background: -moz-linear-gradient(top,#fffe87,#fffeb5);*/
-    background: linear-gradient(top,#fffe87,#fffeb5);
+    /*fall back gradient image*/
+    background: #ffffb8 url(!documents/file/resource/bg/bodygrad.png) repeat-y top left fixed;
+    backgrounde: ---moz-linear-gradient(top,#fffe87,#fffeb5);
+    backgrounde: ---webkit-gradient(linear, left center, right center, from(#fffe87), to(#fffeb5));
+    backgrounde: -linear-gradient(top,#fffe87,#fffeb5);
 }
 
 .page_margins {
