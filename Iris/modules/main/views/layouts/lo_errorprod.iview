@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        {title()->head()}
-        <link href="/!documents/file/css/iris.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/css/irisColor.css" rel="stylesheet" type="text/css" />
-        <link href="/!documents/file/css/errorColor.css" rel="stylesheet" type="text/css" />
-        <link href="/images/site.ico" rel="shortcut icon" />
-        <!--?= $this->headLink() ?-->
-        <!--?= $this->headStyle() ?-->
-        <!--?= $this->headScript() ?-->
-        <!--?= $this->headJS() ?-->
+        {head()}
+        {styleLoader("/!documents/file/css/iris.css")}
+        {styleLoader("/!documents/file/css/irisColor.css")}
+        {styleLoader("/!documents/file/css/errorColor.css")}
     </head>
     <body>
         <div class="page_margins">
