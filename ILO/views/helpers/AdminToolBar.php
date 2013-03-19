@@ -88,7 +88,7 @@ class AdminToolBar extends _ViewHelper {
                $html = $this->_ajaxRender();
             }
             else {
-                $html = $this->_view->islet('islToolbar', [$color, $this->_menu], 'index', '!admin');
+                $html = $this->callViewHelper('islet','islToolbar', [$color, $this->_menu], 'index', '!admin');
             }
             return $html;
         }
