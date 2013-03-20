@@ -42,13 +42,7 @@ abstract class _EventManager extends \Iris\Subhelpers\_Subhelper {
     protected static $_Instance = \NULL;
       
 
-    /**
-     * Required by the master class, but not used
-     * @return \Iris\views\helpers\_ViewHelper
-     */
-    protected function _provideRenderer() {
-        return \Iris\MVC\_Helper::HelperCall('eventManager');
-    }
+    
 
    public abstract function onClick($sender, $function, $modules = []);
     

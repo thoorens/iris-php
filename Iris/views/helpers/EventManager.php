@@ -29,16 +29,13 @@ namespace Iris\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class EventManager extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
+class EventManager extends _ViewHelper {
 use \Iris\Subhelpers\tSubhelperLink;
 
     protected function _init() {
         $this->_subhelperName = \Iris\Ajax\_AjaxProvider::GetDefaultAjaxLibrary().'EventManager';
     }
 
-    public function render(array $arg1, $arg2) {
-        return "NOT USED";
-    }
 
 }
 

@@ -33,7 +33,7 @@ namespace Iris\Subhelpers;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Crud extends \Iris\Subhelpers\_Subhelper {
+class Crud extends \Iris\Subhelpers\_LightSubhelper {
     const NOTHING = 0;
     const ID = 1;
     const PARAM = 2;
@@ -395,7 +395,7 @@ class Crud extends \Iris\Subhelpers\_Subhelper {
         return $newFormat;
     }
 
-    protected function _provideRenderer() {
+    protected function _getRenderer() {
         return \Iris\MVC\_Helper::HelperCall('crudIcon');
     }
 

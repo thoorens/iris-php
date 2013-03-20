@@ -24,9 +24,8 @@ namespace Iris\Subhelpers;
 /**
  * A subhelper is a singleton class which realizes all the job for a view helper.
  * The helper returns a link to the subhelper. All the methods of the
- * subhelper are ready for use. When the job is done, calling render()
- * will return the final aspect by using or not the helper. If the 
- * helper is used, it must implement the interface \Iris\Subhelpers\iRenderer.
+ * subhelper are ready for use. The subhelper makes himself the rendering through whatever
+ * method it chooses.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -37,63 +36,16 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
     use \Iris\Translation\tSystemTranslatable;
     use \Iris\views\helpers\tViewHelperCaller;
 
-    /**
-     *
-     * @var \Iris\Subhelpers\iRenderer
-     */
-    protected $_renderer = NULL;
     
-
-    /**
-     * Gives the instance a formal aspect using the renderer provided 
-     * or a default renderer.
-     * 
-     * @param type $arg1
-     * @param type $arg2
-     * @return type 
-     */
-    public final function render($arg1 = \NULL, $arg2 = \NULL) {
-        $renderer = $this->_renderer;
-        if (is_null($renderer)) {
-            $renderer = $this->_provideRenderer();
-        }
-        return $renderer->render($this->prepare($arg1), $arg2);
-    }
-
-    /**
-     * This method must provide a default renderer (only if render() is used)
-     * @return \Iris\Subhelpers\iRenderer 
-     * @throws \Iris\Exceptions\NotSupportedException
-     */
-    protected function _provideRenderer(){
-        throw new \Iris\Exceptions\NotSupportedException('Renderer not defined. Please overwrite _provideRenderer.');
-    }
-
-    /**
-     * @return array
-     */
-    public function prepare($arg1) {
-        if (!is_array($arg1)) {
-            return array($arg1);
-        }
-        else {
-            return $arg1;
-        }
-    }
-
     /**
      * Returns the unique instance of the class and optionally gives it
      * a renderer
      * 
-     * @param \Iris\Subhelpers\iRenderer $renderer
      * @return static 
      */
-    public static function GetInstance($renderer = NULL) {
+    public static function GetInstance() {
         if (is_null(static::$_Instance) or !static::$_Instance instanceof static) {
             static::$_Instance = new static();
-        }
-        if (!is_null($renderer)) {
-            static::$_Instance->_renderer = $renderer;
         }
         return static::$_Instance;
     }

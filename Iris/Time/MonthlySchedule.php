@@ -89,9 +89,6 @@ class MonthlySchedule extends _Schedule {
         //iris_debug($array);
         return $array;
     }
-
-    protected function _provideRenderer() {
-        //return \Iris\views\helpers\MainView::GetInstance();
-    }
+    
 
 }

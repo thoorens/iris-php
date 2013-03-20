@@ -29,7 +29,7 @@ namespace Iris\Subhelpers;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ErrorDisplay extends \Iris\Subhelpers\_Subhelper {
+class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
 
     protected static $_Instance = NULL;
     
@@ -134,8 +134,8 @@ class ErrorDisplay extends \Iris\Subhelpers\_Subhelper {
     public function __call($name, $arguments) {
         call_user_func_array(array($this->_renderer, $name), $arguments);
     }
-
-    protected function _provideRenderer() {
+    
+    protected function _getRenderer() {
         return $this->_renderer;
     }
 

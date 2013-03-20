@@ -37,7 +37,7 @@ namespace Iris\Ajax;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-abstract class _Counter extends \Iris\Subhelpers\_Subhelper {
+abstract class _Counter extends \Iris\Subhelpers\_LightSubhelper {
 
     protected static $_Instance = \NULL;
     
@@ -54,7 +54,7 @@ abstract class _Counter extends \Iris\Subhelpers\_Subhelper {
      * Required by the master class, but not used
      * @return \Iris\views\helpers\_ViewHelper
      */
-    protected function _provideRenderer() {
+    protected function _getRenderer() {
         return \Iris\MVC\_Helper::HelperCall('counter');
     }
 

@@ -71,8 +71,5 @@ class WeeklySchedule extends _Schedule {
         return $array;
     }
 
-    protected function _provideRenderer() {
-        return \Iris\views\helpers\MainView::GetInstance();
-    }
-
+   
 }

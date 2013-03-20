@@ -37,7 +37,7 @@ namespace Iris\Ajax;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
+abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
 
     const BEFORE = 'before';
     const AFTER = 'after';
@@ -95,7 +95,7 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_Subhelper {
         return self::$_DefaultAjaxLibrary;
     }
     
-    protected function _provideRenderer() {
+    protected function _getRenderer() {
         return \Iris\MVC\_Helper::HelperCall('ajax');
     }
 
