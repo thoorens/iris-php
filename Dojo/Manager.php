@@ -288,10 +288,7 @@ class Manager implements \Iris\Design\iSingleton{
             $requisite = $index;
         }
         elseif (is_array($name)) {
-            $requisite = '"';
-            $requisite .= implode('","', $name);
-            $requisite .= '"';
-            //iris_debug($requisite);
+            $requisite = implode('","', $name);
         }
         else {
             $requisite = $name;
@@ -300,7 +297,7 @@ class Manager implements \Iris\Design\iSingleton{
 //            $this->_requisites[$index] = $requisite;
 //        }
         $bubble = \Dojo\Engine\Bubble::getBubble($index);
-        $bubble->addModule($name);
+        $bubble->addModule($requisite);
         return $this;
     }
 
