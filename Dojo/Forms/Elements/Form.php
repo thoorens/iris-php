@@ -35,7 +35,7 @@ class Form extends \Iris\Forms\Elements\Form {
 
     public function __construct($name, $action=NULL, $method='post') {
         parent::__construct($name, $action, $method);
-        \Dojo\Manager::GetInstance()->addRequisite("dojoForm", '"dijit/form/Form"');
+        \Dojo\Manager::GetInstance()->addRequisite("dojoForm", 'dijit/form/Form');
     }
 
     protected function _formTag() {

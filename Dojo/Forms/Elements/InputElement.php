@@ -60,7 +60,7 @@ class InputElement extends \Iris\Forms\Elements\InputElement {
             $dojoName = $this->_equivalence[$type];
             $this->dojoType = "dijit.form.$dojoName";
             $dojoManager = \Dojo\Manager::GetInstance();
-            $dojoManager->addRequisite("$dojoName", '"dijit/form/'.$dojoName.'"');
+            $dojoManager->addRequisite("$dojoName", 'dijit/form/'.$dojoName);
         }
     }
     public function setSize($size){

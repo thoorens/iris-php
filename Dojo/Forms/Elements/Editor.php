@@ -41,12 +41,13 @@ class Editor extends \Iris\Forms\Elements\AreaElement {
         $this->_type = 'div';
         $hiddenCompanion = new \Iris\Forms\Elements\InputElement($name, 'hidden');
         $this->_hiddenCompanion = $hiddenCompanion;
+        /* @var $dojoManager \Dojo\Manager */
         $dojoManager = \Dojo\Manager::GetInstance();
         $this->_dojoManager = $dojoManager;
-        $dojoManager->addRequisite('dojo_editor',[
-        "dijit/Editor",
-        'dojo/domReady!',
-        'dijit/_editor/plugins/AlwaysShowToolbar']);
+        $dojoManager->addRequisite('dojo_editor', [
+            'dijit/Editor',
+            'dojo/domReady!',
+            'dijit/_editor/plugins/AlwaysShowToolbar']);
         $dojoManager->addInitCode('editor_hidden', <<<JSEditor
             dojo.addOnLoad(function() {
             var editor = dijit.byId("$editorName");

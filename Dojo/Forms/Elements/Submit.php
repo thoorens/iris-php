@@ -4,8 +4,6 @@
 
 namespace Dojo\Forms\Elements;
 
-use \Iris\Forms as ifo;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -54,8 +52,8 @@ class Submit extends \Iris\Forms\_Element {
         $this->_canDisable = FALSE;
         $this->_labelPosition = self::NONE;
         $this->_subtype = 'submit';
-        $dojoName = 'dijit.form.Button';
-        \Dojo\Manager::GetInstance()->addRequisite("$dojoName", '"'.$dojoName.'"');
+        $dojoName = 'dijit/form/Button';
+        \Dojo\Manager::GetInstance()->addRequisite("$dojoName", $dojoName);
         $this->setDojoType($dojoName); 
     }
 
