@@ -113,16 +113,6 @@ use tViewHelperCaller;
         return $this->_view;
     }
 
-    /**
-     *
-     * @param string $name
-     * @param type $arguments
-     * @return type 
-     */
-    public function __call($name, $arguments) {
-        throw new \Iris\Exceptions\InternalException('Obsolete syntax: use callViewHelper() instead of $this->'.$name);
-        //return call_user_func_array(array($this->_view, $name), $arguments);
-    }
 
     
     
