@@ -34,13 +34,14 @@ namespace Dojo\views\helpers;
  * by the respective dojo helpers. 
  *
  */
-class Head extends \Iris\views\helpers\_LoaderHelper {
-
-    public function render($mode = \FALSE) {
-        return $this->help($mode);
+class Head extends \Iris\views\helpers\_ViewHelper {
+use \Iris\views\helpers\tLoaderRegister;
+    
+    public function help(){
+        throw new \Iris\Exceptions\DeprecatedException('dojo_head is a loader helper which need no standard help call.');
     }
-
-    public function help($ajaxMode = \FALSE) {
+    
+    public function render($ajaxMode = \FALSE) {
         $manager = \Dojo\Manager::GetInstance();
         if (!$manager->isActive()) {
             return '';

@@ -37,8 +37,10 @@ namespace Iris\views\helpers;
  * <li> ->styleLoader('test',"#test {background-color:white}");
  * </ul>
  */
-class StyleLoader extends _LoaderHelper {
-
+class StyleLoader extends _ViewHelper {
+use tLoaderRegister;
+    protected static $_Singleton = \TRUE;
+    
     private $_styles = array();
     private $_styleFiles = array();
 

@@ -30,20 +30,18 @@ namespace Iris\views\helpers;
  * @version $Id: $ * 
  * 
  */
-abstract class _LoaderHelper extends _ViewHelper {
-
-    protected static $_Singleton = TRUE;
-
+trait tLoaderRegister {
 
     protected function _subclassInit() {
-        $auto = \Iris\Subhelpers\Head::GetInstance();
-        $auto->registerLoader(get_called_class());
+        $this->register();
     }
 
-    protected abstract function render($mode);
 
-    protected function help() {
-        return $this->render();
+    protected abstract function render($mode);
+    
+    public function register() {
+        $head = \Iris\Subhelpers\Head::GetInstance();
+        $head->registerLoader(get_called_class());
     }
 
 }
