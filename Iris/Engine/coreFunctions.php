@@ -80,12 +80,26 @@ function iris_debug($var, $die = \TRUE, $message = \NULL) {
  * @param string $message The message to display in die instruction
  */
 function iris_debug_member($object, $memberName, $die = \TRUE, $message = \NULL){
+    $value = iris_member($object, $memberName);
+    iris_debug($value, $die, $message);
+}
+
+/**
+ * Returns the valeuyr of a member of an objet or class, 
+ * even if it is protected or private. A debugging tool
+ * 
+ * @param Object $object An object to inspect
+ * @param string $memberName A member name (may be not public)
+ * @return mixed
+ */
+function iris_member($object, $memberName){
     $reflectionObject = new \ReflectionObject($object);
     $refProp = $reflectionObject->getProperty($memberName);
     $refProp->setAccessible(\TRUE);
     $value = $refProp->getValue($object);
-    iris_debug($value, $die, $message);
+    return $value;
 }
+
 
 assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'iris_assert');
