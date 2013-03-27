@@ -38,7 +38,7 @@ namespace Iris\views\helpers;
  */
 class JavascriptLoader extends _ViewHelper {
 
-    protected $_Singleton = \TRUE;
+    protected static $_Singleton = \TRUE;
     
     private $_scripts = array();
     private $_scriptFiles = array();
