@@ -37,6 +37,7 @@ namespace Iris\views\helpers;
  * 
  */
 class JavascriptLoader extends _ViewHelper {
+use tLoaderRegister;
 
     protected static $_Singleton = \TRUE;
     
