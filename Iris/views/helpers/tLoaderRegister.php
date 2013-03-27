@@ -22,7 +22,7 @@ namespace Iris\views\helpers;
  */
 
 /**
- * A view helper is a kind of method each view can use
+ * A way to register into Head subhelper.
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
