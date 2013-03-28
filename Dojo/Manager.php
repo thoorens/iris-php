@@ -18,7 +18,7 @@ namespace Dojo;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 define('URL_DOJO_GOOGLE', "https://ajax.googleapis.com/ajax/libs/dojo/");
 define('URL_DOJO_AOL', "http://o.aolcdn.com/dojo/");
@@ -135,7 +135,7 @@ class Manager implements \Iris\Design\iSingleton{
             $this->addStyle('/!documents/files/css/iris_nojs.css');
         }
         // init dojo_head to register it in Iris\Subhelpers\Head
-        views\helpers\Head::GetInstance();
+        Engine\Head::GetInstance();
     }
 
     /**
@@ -157,7 +157,7 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     * Accessor for $_debug
+     * Accessor for $_debug, an intial parameter for Dojo
      * 
      * @return boolean
      */
@@ -167,7 +167,7 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     * Accessor for $_debub
+     * Accessor for $_debub, an intial parameter for Dojo
      * 
      * @param string $debug 
      */
@@ -177,7 +177,7 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     * Accessor for $_parseOnLoad
+     * Accessor for $_parseOnLoad, an intial parameter for Dojo
      * 
      * @param string $parseOnLoad 
      */
@@ -187,7 +187,7 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     * Accessor for $_parseOnLoad
+     * Accessor for $_parseOnLoad, an intial parameter for Dojo
      * 
      * @return string 
      */
@@ -197,7 +197,8 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     *
+     * When set to true, all Dojo stuffs are loaded
+     * 
      * @param type $value 
      */
     public function setActive($value = TRUE) {
@@ -205,7 +206,7 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     *
+     * Tests the necessity to load Dojo
      * @return type 
      */
     public function isActive() {
@@ -213,7 +214,8 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     *
+     * Acessor for the style (CSS file to use)
+     * 
      * @param type $style 
      */
     public function setStyle($style) {
@@ -222,7 +224,8 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     *
+     * Acessor for the style (CSS file to use)
+     * 
      * @return type 
      */
     public function getStyle() {
@@ -230,7 +233,9 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     *
+     * Dojo can be found on local directory or in the Internet. Setting 
+     * source permits to specify where to load it from.
+     * 
      * @param int $source 
      */
     public static function SetSource($source) {
@@ -254,7 +259,9 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     *
+     * Creates the URL from where to load the first file of the
+     * Dojo framework
+     * 
      * @return string 
      */
     public function getURL() {
@@ -293,9 +300,6 @@ class Manager implements \Iris\Design\iSingleton{
         else {
             $requisite = $name;
         }
-//        if (!isset($this->_requisites[$index])) {
-//            $this->_requisites[$index] = $requisite;
-//        }
         $bubble = \Dojo\Engine\Bubble::getBubble($index);
         $bubble->addModule($requisite);
         return $this;

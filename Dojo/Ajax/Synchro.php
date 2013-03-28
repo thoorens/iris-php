@@ -69,24 +69,23 @@ class Synchro extends \Iris\Ajax\_Synchro {
    old = '';
    max = $max;
    
-   $context             
+   $context 
+       
+   function gotoUrl(url){
+        if(url!='$noURL') 
+            window.location.href=url;  
+   }
                 
    function restart(){
-       url= currentData.URL;
-       if(url!='$noURL') 
-           window.location.href=url;       
+       gotoUrl(currentData.URL);
    }
                 
    function previous(){
-       url= previousData.URL;
-       if(url!='$noURL')    
-           window.location.href=url;  
+       gotoUrl(previousData.URL); 
    }
                 
    function next(){
-       url= nextData.URL;
-       if(url!='$noURL') 
-           window.location.href=url;                
+       gotoUrl(nextData.URL);
    }
    
                 

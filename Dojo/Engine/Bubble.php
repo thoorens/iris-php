@@ -18,7 +18,7 @@ namespace Dojo\Engine;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
@@ -135,5 +135,18 @@ class Bubble {
         $this->_internalFunction = $text;
     }
 
+    /**
+     * Renders all objects in repository as a unique string
+     * 
+     * @return string
+     */
+    public static function RenderAll(){
+        $text = '';
+        foreach (self::GetAllObjects() as $bubble) {
+            $text .= $bubble->render();
+        }
+        return $text;
+    }
+    
 }
 
