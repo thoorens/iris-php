@@ -74,10 +74,10 @@ abstract class _Animation extends _DojoHelper implements \Dojo\Engine\iLateScrip
     
 
     /**
-     * This method called by the contructor initialise the Animator subhelper
-     * and its CodeContainer
+     * This method may initialise the Animator subhelper
+     * and its CodeContainer if necessary
      */
-    protected function _init() {
+    protected function _animateSynchro() {
         $this->_animatorSubhelper = \Dojo\Subhelpers\Animator::GetInstance();
         \Dojo\Engine\NameSpaceItem::GetObject('commonAnimation')->createLateFunction($this, 'args');
         $this->_codeContainer = $this->_animatorSubhelper->getCodeContainer();

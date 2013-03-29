@@ -51,7 +51,12 @@ class Turn extends _Sequence {
      */
     protected $_standardDuration = 500;
 
-    
+    /**
+     * For this class, it is necessary to use the Animator
+     */
+    protected function _subclassInit() {
+        $this->_animateSynchro();
+    }
 
     
     /**

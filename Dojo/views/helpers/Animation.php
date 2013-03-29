@@ -51,9 +51,14 @@ class Animation extends _Animation {
      */
     private $_id = 0;
 
-    
-
     /**
+     * For this class, it is necessary to use the Animator
+     */
+    protected function _subclassInit() {
+        $this->_animateSynchro();
+    }
+
+        /**
      * Gets the next id
      * @return type
      */

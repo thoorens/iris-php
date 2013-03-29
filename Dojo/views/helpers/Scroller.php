@@ -59,7 +59,11 @@ class Scroller extends _Sequence {
      * @param type $startTime The moment (if negative relative to previous event)
      */
     public function syncScroll($destination, $startTime) {
-        $this->_init2();
+        static $done = \FALSE;
+        if(! $done){
+            $this->_animateSynchro();
+            $done = \TRUE;
+        }
         $this->_computeStartTime($startTime);
         $this->_eventCreate('scroll', $destination, $startTime, 0, 0);
         $code = <<<CODE
