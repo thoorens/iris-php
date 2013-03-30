@@ -8,7 +8,7 @@
 namespace Tutorial\views\helpers;
 use Iris\Ajax\_Synchro;
 
-\define('IRIS_CP', 'IrisCPINTERNAL');
+//\define('IRIS_CP', 'IrisCPINTERNAL');
 /*
  * This file is part of IRIS-PHP.
  *
@@ -183,33 +183,34 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper{
     }
 
     private function _jsSound() {
-        \Dojo\Engine\DNameSpace::addObject('oldVol')
+        \Dojo\Engine\NameSpaceItem::addObject('oldVol')
                 ->createVar(0);
-        \Dojo\Engine\DNameSpace::addObject('soundController')
+        \Dojo\Engine\NameSpaceItem::addObject('soundController')
                 ->createVar("''");
-        \Dojo\Engine\DNameSpace::addObject('soundminus')
+        \Dojo\Engine\NameSpaceItem::addObject('soundminus')
                 ->createFunction('this.soundController.volume = this.soundController.volume - 0.1');
-        \Dojo\Engine\DNameSpace::addObject('soundplus')
+        \Dojo\Engine\NameSpaceItem::addObject('soundplus')
                 ->createFunction("this.soundController.volume = this.soundController.volume +0.1;");
-        \Dojo\Engine\DNameSpace::addObject('nosound')
+        \Dojo\Engine\NameSpaceItem::addObject('nosound')
                 ->createFunction(<<< NOSOUND
         currentVol = this.soundController.volume;
         this.soundController.volume=this.oldVol;
         this.oldVol = currentVol;
 NOSOUND
         );
-        \Dojo\Engine\DNameSpace::addObject('initsound')
+        \Dojo\Engine\NameSpaceItem::addObject('initsound')
                 ->createFunction(<<< INITSOUND
         require(['dojo'],function(dojo){
             iris_dojo.soundController = dojo.byId('tuto_sound');
         });
 INITSOUND
         );
+        $synchro = 'C'.IRIS_CP;
         \Dojo\Engine\Bubble::GetBubble('soundcontrol')
                 ->addModule('dojo/topic','topic')
                 ->defFunction(<<< JS
    
-        topic.subscribe('CIrisCPINTERNAL',function(value){
+        topic.subscribe('$synchro',function(value){
             if(value=='start')
                iris_dojo.soundController.play()
             else

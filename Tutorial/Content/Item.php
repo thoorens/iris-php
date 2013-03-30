@@ -58,7 +58,8 @@ class Item {
      * @return string
      */
     public function getImage() {
-        $image = \Iris\views\helpers\_ViewHelper::HelperCall('image', $this->_image);
+        $folder = sprintf('/tutorials/file/resource/%s/%02d', $this->_folder, $this->_id);
+        $image = \Iris\views\helpers\_ViewHelper::HelperCall('image', [$this->_image[0],\NULL,$this->_image[1],$folder]);
         return $image;
     }
 

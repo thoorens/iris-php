@@ -27,7 +27,10 @@ namespace Tutorial\controllers\helpers;
  */
 
 /**
- * Description of FrInstall
+ * Generates an Item object with all the informations necessary to
+ * load the resources for one screen : images, text, voice and synchonisation.
+ * The content may a simple image (IMAGE), a simple (VIEW) or a simple text (TEXT)
+ * or both a text and a view, displayed in tabs (TEXTVIEW)
  * 
  * Project IRIS-PHP
  * 
@@ -42,24 +45,21 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
     const TEXT = 2;
     const TEXTVIEW = 3;
     const IMAGE = 4;
+    const TOC = 8;
 
     /**
+     * Returns an new completed item.
      * 
-     * @param type $num
-     * @param int $max
+     * @param int $num
      * @return \Tutorial\Content\Item
      */
-    public function help($num, $ajax = \FALSE) {
+    public function help($num) {
         return $this->getItem($num);
-        
-        
-        
-        
-        
-        return $item;
     }
 
     /**
+     * The method will be overwritten in each concret tutorial
+     * 
      * @return \Tutorial\Content\Item
      */
     protected abstract function getItem($num);
