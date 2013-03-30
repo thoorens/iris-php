@@ -1,5 +1,7 @@
 ![Logo](http://irisphp.org/!documents/file/resource/github/Title80.jpg)
 
+The repository contains now version 1.0 RC2 (ready for tutorial creation).
+
 Discover it:
 
 * [Official site](http://irisphp.org) A presentation (in french), with 
