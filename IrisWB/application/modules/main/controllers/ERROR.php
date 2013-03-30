@@ -36,7 +36,7 @@ class ERROR extends core_ERROR {
 //            if (isset($memory->Exception)) {
 //                die('111');
 //                $exception = $memory->Exception;
-//                $this->__errorMessage = 'Prouta';//$exception->__toString();
+//                $this->__errorMessage = '??????';//$exception->__toString();
 //                if ($exception instanceof \Iris\Exceptions\_Exception) {
 //                    $this->__title = $exception->getExceptionName();
 //                }

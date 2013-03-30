@@ -7,7 +7,7 @@
 \Iris\MVC\Template::setCacheTemplate(\Iris\MVC\Template::CACHE_NEVER);
 
 // Uncomment next to use local Dojo
-\Dojo\Manager::SetSource(0);
+//\Dojo\Manager::SetSource(0);
 // To have an Admintoolbar without Ajax, uncomment the next line
 //\ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
 
