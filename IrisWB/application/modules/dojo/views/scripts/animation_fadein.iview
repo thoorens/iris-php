@@ -3,13 +3,13 @@
         <th colspan="2">Self appearing/disappearing text</th>
     </tr>
     
-    {dojo_autoAnimation()->waitIn('appear3',3000,5000)}
+    {dojo_animation()->waitIn('appear3',3000,5000)}
     <tr>
         <th>Begins to appear after 3 sec</th>
         <td id="appear3">2011 is the year <i>Iris-PHP</i> has been started</td>
     </tr>
     
-    {dojo_autoAnimation()->waitOut('dis3',3000,5000)}
+    {dojo_animation()->waitOut('dis3',3000,5000)}
     <tr>
         <th>Begins to disappear after 3 sec</th>
         <td id="dis3">The developper of the framework is born in 1953</td>
@@ -18,30 +18,32 @@
         <th colspan="2">Manual fadin and fadeout</th>
     </tr>
     
-    {dojo_autoAnimation()->in('in','btnIn',5000)}
+    {dojo_animation()->in('in','btnIn',5000)}
     <tr>
         <th><button id="btnIn">Fade in</button></th>
         <td id="in">5.4 is the <b>minimum version</b> required by Iris-PHP</td>
     </tr>
     
-    {dojo_autoAnimation()->out('out','btnOut',5000,2000)}
+    {dojo_animation()->out('out','btnOut',5000,2000)}
     <tr>
         <th><button id="btnOut">Fade out</button></th>
         <td id="out">There are 4 ways to specify a <i>layout</i> in Iris-PHP</td>
     </tr>
     
-    {dojo_autoAnimation()->inOut('inout','btnInOut',5000,2000)}
+    {dojo_animation()->inOut('inout','btnInOut',5000,2000)}
     <tr>
         <th><button id="btnInOut">Fade in and out</button></th>
         <td id="inout">There are 6 messages displayed in this page</td>
     </tr>
     
-    {dojo_autoAnimation()->outIn('outin','btnOutIn',5000)}
+    {dojo_animation()->outIn('outin','btnOutIn',5000)}
     <tr>
         <th><button id="btnOutIn">Fade out and in</button></th>
         <td id="outin">This is the last message on the page</td>
     </tr>
     
+    
+    {dojo_animation()->render()}
     
     
 </table>

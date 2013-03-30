@@ -2,10 +2,10 @@
 <div id="explication1" >
     {loremIpsum(5,1)}  
 
-    {dojo_autoAnimation()->waitIn('explication1',1000)}
+    {dojo_animation()->waitIn('explication1',1000)}
     <h3 id="special">Suite...</h3>
     <div id="explication2" >
         {loremIpsum(5,1)}  
     </div>
-    {dojo_autoAnimation()->in('explication2','special',5000)}
+    {dojo_animation()->in('explication2','special',5000)}
 </div>

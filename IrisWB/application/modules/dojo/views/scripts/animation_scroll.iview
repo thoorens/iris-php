@@ -1,0 +1,26 @@
+{dojo_scroller()->autoScroll('m1',2000)}
+{dojo_scroller()->autoScroll('m2',-2000)}
+{dojo_scroller()->autoScroll('m3',-2000)}
+<div>
+    <div id="page">
+        <div>
+            {loremIpsum(100)}
+        </div>
+        <h3>Title 1</h3>
+        <div>
+            {loremIpsum(30)}
+        </div>
+        {dojo_scroller()->scrollAnchor('m1')}
+        <h3>Title 2</h3>
+        <div>
+            {loremIpsum(30)}
+        </div>
+        {dojo_scroller()->scrollAnchor('m2')}
+        <h3>Title 3</h3>
+        <div>
+            {loremIpsum(30)}
+        </div>
+        {dojo_scroller()->scrollAnchor('m3')}
+    </div>
+
+</div>

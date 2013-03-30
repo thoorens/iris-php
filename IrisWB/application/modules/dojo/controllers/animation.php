@@ -24,4 +24,8 @@ class animation extends _dojo {
     public function fadeinAction(){
         
     }
+    
+    public function scrollAction() {
+        
+    }
 }
