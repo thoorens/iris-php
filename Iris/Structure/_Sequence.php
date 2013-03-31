@@ -18,7 +18,7 @@ namespace Iris\Structure;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
@@ -32,20 +32,31 @@ namespace Iris\Structure;
  * @version $Id: $ */
 abstract class _Sequence {
 
+    /**
+     * Specifies the type of sequence used in WB (initially an ArraySequence, now a DBSequence
+     * @var string
+     */
     public static $DefaultSequenceType = '\\Iris\\Structure\\DBSequence';
+    
+    /**
+     * Conserves the current URL
+     * @var string
+     */
     protected $_currentURL;
-    protected static $_Instance = NULL;
 
     /**
-     *
+     * Returns the unique instance of the class, after creating it if necessary
+     * 
+     * @staticvar _Sequence $instance
      * @return _Sequence
      */
     public static function GetInstance() {
-        if (is_null(self::$_Instance)) {
+        static $instance = \NULL;
+        if (is_null($instance)) {
             $class = self::$DefaultSequenceType;
-            self::$_Instance = new $class();
+            $instance = new $class();
         }
-        return self::$_Instance;
+        return $instance;
     }
 
     /**

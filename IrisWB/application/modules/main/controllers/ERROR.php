@@ -16,7 +16,7 @@ class ERROR extends core_ERROR {
         $this->_setLayout('error');
         $this->__bodyColor = 'ORANGE2';
         //$url = $this->_prepareExceptionDisplay(3);die($url);
-        $this->_sequence = \workbench\TextSequence::GetInstance();
+        $this->_sequence = \Iris\Structure\_Sequence::GetInstance();
         $this->_sequence->setCurrent("/$this->_url");
         $this->__wbTitle = $this->_sequence->getCurrentDesc();
     }
