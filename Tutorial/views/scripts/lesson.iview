@@ -1,8 +1,0 @@
-<?php // in preAjax version ?>
-{frames->divMaster()}
-<?foreach($content as $key => $item):?>
-<div {frames->item($key)}> 
-     {islet('tutoPage',[$item],'index','#Tutorial')}
-</div>
-<?endforeach?>
-{frames->endMaster()}
