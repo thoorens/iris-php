@@ -1,6 +1,7 @@
 <?php
 
 namespace Tutorial\views\helpers;
+use Iris\System\Stack;
 
 /*
  * This file is part of IRIS-PHP.
@@ -18,48 +19,12 @@ namespace Tutorial\views\helpers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
-/**
- * An internal stack
- */
-class Stack {
-
-    private $_internalArray = [];
-    private $_underflowMessage;
-
-    public function __construct($underflowMessage, $initialValue = \NULL) {
-        $this->_underflowMessage = $underflowMessage;
-        if (!is_null($initialValue)) {
-            $this->_internalArray = [$initialValue];
-        }
-    }
-
-    public function push($element) {
-        array_unshift($this->_internalArray, $element);
-    }
-
-    public function pop() {
-        if (count($this->_internalArray) == 0)
-            throw new \Iris\Exceptions\InternalException($this->_underflowMessage);
-        return array_shift($this->_internalArray);
-    }
-
-    public function peek($level = 0) {
-        if (count($this->_internalArray) < $level + 1)
-            throw new \Iris\Exceptions\InternalException($this->_underflowMessage);
-        return $this->_internalArray[$level];
-    }
-
-    public function isEmpty() {
-        return count($this->_internalArray) == 0;
-    }
-
-}
 
 /**
- * A helper for code display
+ * A helper for code display with animation effects
  *  
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -115,6 +80,10 @@ class Code extends \Dojo\views\helpers\_Sequence {
      */
     private $_mode = self::MANAGEDMODE;
 
+    /**
+     * If not true, specifies that a tag has been opened, but closed
+     * @var boolean
+     */
     private $_closed = \TRUE;
     
     
@@ -131,6 +100,10 @@ class Code extends \Dojo\views\helpers\_Sequence {
         }
     }
 
+    /**
+     * Called by the constructor, initializes three stack: the tags, the previous tag name 
+     * and the user mode
+     */
     protected function _subclassInit() {
         $this->_tags = new Stack('Inconsistency in tag management in a Tutorial_Code helper');
         $this->_previous = new Stack('Inconsistency in sequence management in a Tutorial_Code helper');
@@ -150,11 +123,6 @@ class Code extends \Dojo\views\helpers\_Sequence {
         return $this->_start($id, $startTime, $mode);
     }
 
-    public function startFile($id, $startTime, $mode = \NULL){
-        $this->_userMode->push('filecontent');
-        return $this->_start($id, $startTime, $mode);
-    }
-    
     /**
      * Begins a new fragment of code in user mode
      * 
@@ -168,9 +136,36 @@ class Code extends \Dojo\views\helpers\_Sequence {
         return $this->_start($id, $startTime, $mode);
     }
 
+    /**
+     * Begins a new fragment of code in file mode
+     * 
+     * @param string $id The id of the block to manage
+     * @param int $startTime The absolute or relative (negative) moment
+     * @param boolean $mode if false use tutorial_turn as timing reference 
+     * @return string
+     */
+    public function startFile($id, $startTime, $mode = \NULL){
+        $this->_userMode->push('filecontent');
+        return $this->_start($id, $startTime, $mode);
+    }
     
     /**
+     * Begins a new fragment of code in a special named mode
      * 
+     * @param string $contextName
+     * @param string $id The id of the block to manage
+     * @param int $startTime The absolute or relative (negative) moment
+     * @param boolean $mode if false use tutorial_turn as timing reference 
+     * @return string
+     */
+    public function startNamedContext($contextName, $id, $startTime, $mode = \NULL){
+        $this->_userMode->push($contextName);
+        return $this->_start($id, $startTime, $mode);
+    }
+    
+    
+    /**
+     * Terminates a sequence of code
      * @return type
      */
     public function end() {
@@ -181,9 +176,10 @@ class Code extends \Dojo\views\helpers\_Sequence {
     }
 
     /**
-     * 
-     * @param type $clean
-     * @return type
+     * Close a opened tag (if necessary). If called by _start, a level of 1
+     * is used to take the tag name previously
+     * @param int $level
+     * @return string
      */
     private function _close($level = 0) {
         if($this->_closed){
@@ -202,10 +198,10 @@ class Code extends \Dojo\views\helpers\_Sequence {
      * @param string $id The id of the block to manage
      * @param int $startTime The absolute or relative (negative) moment 
      * @param boolean $mode if false use tutorial_turn as timing reference 
-     * @param type $style
      * @return string
      */
     private function _start($id, $startTime, $mode) {
+        // may be useful to close a previous unclosed tag
         $html = $this->_close(1);
         if ($this->_tags->isEmpty()) {
             $this->_tags->push('pre');
@@ -219,6 +215,13 @@ class Code extends \Dojo\views\helpers\_Sequence {
         return $html.$this->_open($id, $startTime);
     }
 
+    /**
+     * Returns the HTML code for the first tag of a sequence of code
+     * 
+     * @param string $id The id of the block to manage
+     * @param int $startTime The absolute or relative (negative) moment 
+     * @return string
+     */
     private function _open($id, $startTime) {
         $this->_computeStartTime($startTime);
         if ($this->_mode == self::AUTOMODE) {
@@ -237,14 +240,13 @@ class Code extends \Dojo\views\helpers\_Sequence {
     }
 
     /**
+     * Begins a second segment with the same tag
      * 
-     * @param type $id
-     * @param type $startTime
-     * @param type $style
-     * @return type
+     * @param string $id The id of the block to manage
+     * @param int $startTime The absolute or relative (negative) moment 
+     * @return string
      */
     public function next($id, $startTime) {
-        $this->_computeStartTime($startTime);
         $htlm = $this->_close();
         $htlm .= $this->_open($id, $startTime);
         $this->_previous->push($id);
@@ -252,6 +254,7 @@ class Code extends \Dojo\views\helpers\_Sequence {
     }
 
     /**
+     * Specifies the tag to use (by default it is &lt;pre>)
      * 
      * @param type $tag
      * @return \Tutorial\views\helpers\Code for fluent interface
@@ -262,7 +265,7 @@ class Code extends \Dojo\views\helpers\_Sequence {
     }
 
     /**
-     * 
+     * Acessor set for the length of the animation
      * @param type $delay
      * @return \Tutorial\views\helpers\Code for fluent interface
      */
