@@ -1,0 +1,25 @@
+<div>
+    <div id="page">
+        <table class="show">
+            <tr>
+                <td>A local partial</td>
+                <td>{partial('partial1')}</td>
+            </tr>
+            <tr>
+                <td>A partial found in the main module</td>
+                <td>{partial('partial2')}</td>
+            </tr>
+             <tr>
+                <td>
+                    A partial found in a special library<br/>
+                    Its file name has no underscore.
+                </td>
+                <td>{partial('IrisWB#partial3')}</td>
+            </tr>   
+        </table>
+            
+        
+        
+    </div>
+
+</div>

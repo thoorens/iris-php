@@ -67,9 +67,9 @@ class layout extends _testLayout{
     }
     
     public function applayoutAction(){
-        $sequence = \workbench\TextSequence::GetInstance();
+        $sequence = \Iris\Structure\_Sequence::GetInstance();
         $this->__title = $sequence->getCurrentDesc();
     }
 }
 
-?>
+

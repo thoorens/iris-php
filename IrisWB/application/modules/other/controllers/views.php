@@ -48,4 +48,7 @@ class views extends _other {
         $this->__reqPartial = 'commons/pmain';
     }
 
+    public function testLoaderAction(){
+        
+    }
 }
