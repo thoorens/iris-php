@@ -49,7 +49,7 @@ class ERROR extends core_ERROR {
             // Recuperate Log if possible
             \Iris\Log::Recuperate();
             $this->setViewScriptName('details');
-            $this->__tooltip = $this->_view->dojo_toolTip();
+            $this->__tooltip = $this->callViewHelper('dojo_toolTip');
         }
         // Production
         else {

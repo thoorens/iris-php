@@ -162,7 +162,7 @@ abstract class _Container extends _DojoHelper {
                     if ($key == $this->_default) {
                         $item = "<i>$item</i>";
                     }
-                    $html .= $this->_view->button($item, $this->_url . $key, $item, 'tabs');
+                    $html .= $this->callViewHelper('button',$item, $this->_url . $key, $item, 'tabs');
                 }
             }
         }

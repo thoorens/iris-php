@@ -56,7 +56,7 @@ class GoAd extends _ViewHelper {
             $url = "/!iris/index/index/$lang";
         else
             $url = 'http://irisphp.org';
-        return $this->_view->link()->image('/!documents/file/logos/IrisSmall.png',$title,$url,$title);
+        return $this->callViewHelper('view')->link()->image('/!documents/file/logos/IrisSmall.png',$title,$url,$title);
     }
 
 }

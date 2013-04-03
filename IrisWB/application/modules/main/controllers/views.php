@@ -42,8 +42,8 @@ class views extends _main {
         // of $content in the string. This is only an example, the text
         // could come from a database in real life.
         $placeOfContent = '$content';
-        $gibberish1 = $this->_view->loremIpsum([0, 51, 53, 55]);
-        $gibberish2 = $this->_view->loremIpsum([52, 54, 56]);
+        $gibberish1 = $this->callViewHelper('loremIpsum',[0, 51, 53, 55]);
+        $gibberish2 = $this->callViewHelper('loremIpsum',[52, 54, 56]);
         $this->__text = <<<END
    <h3>Test of quoted text</h3>
         <p>$gibberish1
@@ -62,9 +62,9 @@ END;
         // of $content in the string. This is only an example, the text
         // could come from a database in real life.
         $placeOfContent = '$content';
-        $gibberish1 = $this->_view->loremIpsum([0, 61, 63, 65]);
-        $gibberish2 = $this->_view->loremIpsum([62, 64, 66]);
-        $explanation = $this->_view->wbExplain($this->_view);
+        $gibberish1 = $this->callViewHelper('loremIpsum',[0, 61, 63, 65]);
+        $gibberish2 = $this->callViewHelper('loremIpsum',[62, 64, 66]);
+        $explanation = $this->callViewHelper('wbExplain',$this->_view);
         $text = <<<END
    <div>
     <div id="page">

@@ -229,7 +229,7 @@ APACHE;
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destinationMod = "$destination/modules/$moduleName";
         if ($moduleName == 'main' and $controllerName == 'index') {
-            $title = '$this->_view->welcome(1)';
+            $title = '$this->callViewHelper("welcome",1)';
         }
         else {
             $title = "'<h1>$moduleName - $controllerName - $actionName</h1> '";

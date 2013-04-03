@@ -48,14 +48,14 @@ use \Iris\Subhelpers\tSubhelperLink;
         $help = $params['help'];
 
         if ($iconeActive) {
-            $icon = $this->_view->image($operation . ".png", $operation, $help, $dir);
+            $icon = $this->callViewHelper('image',$operation . ".png", $operation, $help, $dir);
             return '<a href="' . $ref . '">' . $icon . '</a>';
         }
         else {
             $file = $operation . "_des.png";
             $help = $this->_("Operation not possible in context", TRUE);
             $desc = "$operation inactive";
-            return $this->_view->image($file, $desc, $help, $dir);
+            return $this->callViewHelper('image',$file, $desc, $help, $dir);
         }
     }
 

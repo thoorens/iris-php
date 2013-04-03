@@ -82,7 +82,7 @@ class read extends _ajax {
         // first way to call a view helper
         $this->callViewHelper('counter')->setId('counter1')->down('mes1',5,'spanseconds1',["hello"]);
         // second way more cryptic
-        $this->_view->counter()->setId('counter2')->up('mes2',10,'spanseconds2',["hello","world"]);
+        $this->callViewHelper('counter')->setId('counter2')->up('mes2',10,'spanseconds2',["hello","world"]);
         
     }
 

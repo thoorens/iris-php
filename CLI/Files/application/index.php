@@ -14,7 +14,7 @@ class {CONTROLLER} extends {MODULECONTROLLER} {
 
     public function indexAction() {
         // this Title var is required by the default layout defined in {MODULECONTROLLER}
-        $this->__Title = $this->_view->welcome(1);
+        $this->__Title = $this->callViewHelper('welcome',1);
     }
     
     

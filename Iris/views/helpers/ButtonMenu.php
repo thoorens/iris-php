@@ -42,7 +42,7 @@ class ButtonMenu extends Menu {
         $uri = $this->_simplifyUri($item['uri']);
         $label = $this->_($item['label']);
         $title = $this->_($item['title']);
-        return $this->_view->button($label,$uri,$title);
+        return $this->callViewHelper('button',$label,$uri,$title);
     }
 
 }

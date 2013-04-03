@@ -55,7 +55,7 @@ class SlideShow extends _DojoHelper {
     public function slides($start=TRUE) {
         if (!\Iris\Users\Session::JavascriptEnabled()) {
             list($name,$alt,$title,$dir,$class) = $this->_AltImage;
-            return $this->_view->image($name,$alt,$title,$dir,$class);
+            return $this->callViewHelper('image',$name,$alt,$title,$dir,$class);
         }
         if (!$start) {
             $doStart = '';

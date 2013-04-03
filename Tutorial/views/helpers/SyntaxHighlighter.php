@@ -60,7 +60,7 @@ class SyntaxHighlighter extends \Iris\views\helpers\_ViewHelper{
         }
         $this->callViewHelper('javascriptLoader','core','/js/sh_scripts/shCore.js');
         foreach($languages as $language){
-            $this->_view->javascriptLoader($language,sprintf("/js/sh_scripts/shBrush%s.js",$language));
+            $this->callViewHelper('javascriptLoader',$language,sprintf("/js/sh_scripts/shBrush%s.js",$language));
         }
         $this->callViewHelper('styleLoader',"sh_styles/shCore.css");
         $this->callViewHelper('styleLoader',sprintf("sh_styles/sh%s.css",$theme));

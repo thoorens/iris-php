@@ -68,7 +68,7 @@ FIN
 
         $height = $this->_height . "px";
         $width = $this->_width . "px";
-        $this->_view->styleLoader("MainStyle$num", <<<FIN2
+        $this->callViewHelper('styleLoader',"MainStyle$num", <<<FIN2
     #mapdiv$num { width:$width; height:$height; }
     div.olControlAttribution { bottom:3px; }
 FIN2

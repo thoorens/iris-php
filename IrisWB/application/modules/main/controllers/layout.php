@@ -44,7 +44,7 @@ class layout extends _main{
         $this->registerSubcontroller(1,'subMain','index');
         $this->registerSubcontroller(2,'subTestLayout','index','testLayout');
         $this->registerSubcontroller(3,'subDemo','index','!workbench');
-        $tooltip =  $this->_view->dojo_toolTip();
+        $tooltip =  $this->callViewHelper('dojo_toolTip');
         
         $this->getSubcontroller(1)->setParameters(array($number));
         $this->getSubcontroller(2)->setParameters(array($number));

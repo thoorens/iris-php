@@ -31,7 +31,7 @@ namespace modules\main\controllers;
 class subMain extends \Iris\MVC\_Subcontroller {
 
     public function indexAction($number = 5) {
-        $this->__tooltip = $this->_view->dojo_toolTip();
+        $this->__tooltip = $this->callViewHelper('dojo_toolTip');
         $this->__result = $this->compute($number,'+');
     }
 
