@@ -167,7 +167,7 @@ class Template implements \Iris\Translation\iTranslatable {
      */
     private function _loadAbsoluteTemplate() {
         $scriptFileName = IRIS_ROOT_PATH . $this->_initialScriptName;
-        if (!file_exists("$scriptFileName.view")) {
+        if (!file_exists("$scriptFileName.iview")) {
             throw new \Iris\Exceptions\LoaderException("Absolute script file $scriptFileName.iview doesn't seem to exist");
         }
         $this->_readTemplateAsArray($scriptFileName);
