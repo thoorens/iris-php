@@ -42,7 +42,7 @@ class islSides extends \Iris\MVC\_Islet {
     }
 
     public function rightAction() {
-       $this->_view->dojo_Mask();
+       $this->callViewHelper('dojo_Mask');
        $this->__sequence = $this->getScreenList();
     }
 

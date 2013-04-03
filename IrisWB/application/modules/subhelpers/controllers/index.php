@@ -24,7 +24,7 @@ class index extends _subhelpers {
 
     public function monthDemoAction($type = \NULL, $offset = 0) {
         $date = \Iris\Time\_Schedule::ParameterAnalysis($type = \NULL, $offset = 0);
-        $monthManager = $this->_view->monthDemo();
+        $monthManager = $this->callViewHelper('monthDemo');
         $monthManager->init($date, 1);
         $i = 0;
 
@@ -37,7 +37,7 @@ class index extends _subhelpers {
 
     public function weekDemoAction($type = \NULL, $offset = 0) {
         $date = \Iris\Time\_Schedule::ParameterAnalysis($type = \NULL, $offset = 0);
-        $weekManager = $this->_view->weekDemo();
+        $weekManager = $this->callViewHelper('weekDemo');
         $weekManager->init($date, 1);
         $i = 0;
 

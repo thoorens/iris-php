@@ -43,7 +43,7 @@ class containers extends _dojo {
     }
 
     private function _tabs($default, $position) {
-        $this->_view->dojo_tabContainer("containers")
+        $this->callViewHelper('dojo_tabContainer',"containers")
                 ->setDefault($default)
                 ->setDim(250, 450)
                 ->setPosition($position)
@@ -60,7 +60,7 @@ class containers extends _dojo {
 
     public function accordionsAction($default = 'first') {
         $this->__title = "Example of accordions";
-        $this->_view->dojo_accordionContainer("containers")
+        $this->callViewHelper('dojo_accordionContainer',"containers")
                 ->setDefault($default)
                 ->setDim(250, 450)
                 ->setItems([
@@ -71,7 +71,7 @@ class containers extends _dojo {
 
     public function splitAction($default = 'first') {
         $this->__title = "Example of split screen";
-        $this->_view->dojo_splitContainer("containers")
+        $this->callViewHelper('dojo_splitContainer',"containers")
                 ->setDefault($default)
                 ->setDim(250, 450)
                 ->setItems([
@@ -82,7 +82,7 @@ class containers extends _dojo {
 
     public function stackAction($default = 'first') {
         $this->__title = "Example of stack";
-        $this->_view->dojo_stackContainer("containers")
+        $this->callViewHelper('dojo_stackContainer',"containers")
                 ->setDefault($default)
                 ->setDim(250, 450)
                 ->setPosition(\Dojo\views\helpers\StackContainer::BOTTOM)
@@ -96,7 +96,7 @@ class containers extends _dojo {
         // reset to default script
         $this->setViewScriptName('');
         $this->__title = "Example of border";
-        $this->_view->dojo_borderContainer("containers")
+        $this->callViewHelper('dojo_borderContainer',"containers")
                 ->setDim(250, 450)
                 ->setLayoutMode(\Dojo\views\helpers\BorderContainer::HEADLINE)
                 ->setItems([
@@ -111,7 +111,7 @@ class containers extends _dojo {
     public function borderSideAction() {
         $this->setViewScriptName('border');
         $this->__title = "Example of border";
-        $this->_view->dojo_borderContainer("containers")
+        $this->callViewHelper('dojo_borderContainer(',"containers")
                 ->setDim(250, 450)
                 ->setLayoutMode(\Dojo\views\helpers\BorderContainer::SIDEBAR)
                 ->setItems([
@@ -127,8 +127,8 @@ class containers extends _dojo {
         // reset to default script
         $this->setViewScriptName('');
         $this->__title = "Example of title pane";
-        $this->_view->dojo_titlePane('titlepane');
-        $this->_view->dojo_titlePane('titlepane2');
+        $this->callViewHelper('dojo_titlePane','titlepane');
+        $this->callViewHelper('dojo_titlePane','titlepane2');
     }
 
     /**
