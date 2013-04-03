@@ -3,7 +3,7 @@
     <div id="page">
         {wbExplain($this)}
     </div>
-    {wbScriptNames($required)}
+    {wbScriptName($required)}
     <p>
         We have no partial here....
     </p>

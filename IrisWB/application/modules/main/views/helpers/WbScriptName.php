@@ -32,7 +32,7 @@ namespace iris\views\helpers;
  * Information about script names in workbench
  * 
  */
-class WbScriptNames extends \Iris\views\helpers\_ViewHelper {
+class WbScriptName extends \Iris\views\helpers\_ViewHelper {
 
 
     public function help($requiredScript,$objectType = "Script"){

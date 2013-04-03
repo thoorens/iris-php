@@ -1,5 +1,5 @@
 <!-- This partial is for demonstration use in WorkBench -->
 <div class="partial">
     <h4>Partial</h4>
-    {wbScriptNames($name,'Partial')}
+    {wbScriptName($name,'Partial')}
 </div>

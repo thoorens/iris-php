@@ -2,6 +2,6 @@
     <div id="page">
         {wbExplain($this)}
     </div>
-    {wbScriptNames($required)}<br/>
+    {wbScriptName($required)}<br/>
     {partial($reqPartial,array('name'=>$reqPartial))}
 </div>
