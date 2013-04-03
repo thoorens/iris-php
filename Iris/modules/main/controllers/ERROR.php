@@ -32,7 +32,9 @@ require_once 'library/Iris/Exceptions/PHPException.php';
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class core_ERROR extends \Iris\MVC\_Controller implements \Iris\Translation\iTranslatable {
+
     use \Iris\Translation\tSystemTranslatable;
+
     /**
      *
      * @var \Iris\Subhelpers\ErrorDisplay
@@ -50,9 +52,14 @@ class core_ERROR extends \Iris\MVC\_Controller implements \Iris\Translation\iTra
         $this->_subHelper = \Iris\Subhelpers\ErrorDisplay::GetInstance();
         if (!$errorInformation->errorDisplayReady($this->_url)) {
             $this->_url = $this->_subHelper->prepareExceptionDisplay();
+            // in case of error in eval
+            if (!\Iris\MVC\View::GetEvalStack()->isEmpty()) {
+                $evaledFile = \Iris\MVC\View::GetEvalStack()->pop()->getReadScriptFileName();
+                $this->_subHelper->addMessage("<br/>See file $evaledFile");
+            }
         }
         $this->_setLayout('error');
-        $this->__tooltip = $this->_view->dojo_toolTip();
+        $this->__tooltip = $this->callViewHelper('dojo_toolTip');
     }
 
     public function errorAction() {
@@ -71,8 +78,6 @@ class core_ERROR extends \Iris\MVC\_Controller implements \Iris\Translation\iTra
             $this->_setLayout('errorprod');
         }
     }
-
-    
 
 //        $errorMessage = 'No message';
 //        $exception = \Iris\Exceptions\_Exception::GetLastException();

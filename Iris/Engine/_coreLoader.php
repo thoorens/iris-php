@@ -49,7 +49,6 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     const PLAIN_CLASS = 0;
     const VIEW_HELPER = 1;
     const CONTROLLER_HELPER = 2;
-    const VIEW_EXT = '.iview';
 
     // Directory patterns for views/layout
     const INTERNAL = '%s/IrisInternal/%s/views/%s%s';
@@ -223,13 +222,6 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @return type 
      */
     public function loadView($scriptName, $controllerDirectory, $response) {
-        if($scriptName == ''){
-            $scriptName = $response->getActionName();
-        }
-        // add extension if necessary
-        if (strpos($scriptName, '.') === FALSE) {
-            $scriptName .= self::VIEW_EXT;
-        }
         $module = $response->getModuleName();
         if (!preg_match('/[\/_]/', $scriptName)) {
             //if (strpos($scriptName, '/') === FALSE) {
@@ -245,7 +237,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         if(strpos($scriptName,'#')){
             list($library,$scriptName) = explode('#',$scriptName);
             $library = $this->library.'/'.substr($library,1);
-            $viewFiles[] = sprintf('%s/views/%s%s',$library,$controllerDirectory,$scriptName);
+            $viewFiles[] = sprintf(self::LIBRARY,$library,$controllerDirectory,$scriptName);
         }
         // views beginning with ! are to take from IrisInternal (notably layouts)
         if ($response->isInternal() or $scriptName[1] == '!') {
@@ -284,7 +276,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $index = 0;
         $this->_loadDebug("Searching view ", $scriptName, \Iris\Engine\Debug::VIEW);
         while ($index < count($viewFiles)) {
-            $pathToViewFile = IRIS_ROOT_PATH . '/' . $viewFiles[$index];
+            $pathToViewFile = IRIS_ROOT_PATH . '/' . $viewFiles[$index].".iview";
             $this->_loadDebug("Testing $pathToViewFile", "", \Iris\Engine\Debug::VIEW);
             if (file_exists($pathToViewFile)) {
                 $this->_loadDebug("Found ", $pathToViewFile, \Iris\Engine\Debug::VIEW);
@@ -299,7 +291,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             $viewFile = basename($scriptName);
             $this->_loadDebug("Unable to find ", "$viewFile", \Iris\Engine\Debug::VIEW);
             $context = implode(' - ', $viewFiles);
-            throw new IX\LoaderException("$controllerDirectory$viewFile" . " : not existing in $context");
+            throw new IX\LoaderException("$controllerDirectory$viewFile.iview" . " : not existing in $context");
         }
         return $foundClass;
     }

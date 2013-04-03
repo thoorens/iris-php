@@ -56,7 +56,7 @@ class Loop extends \Iris\MVC\Partial {
         return "scripts/";
     }
 
-    public function render($dummy=NULL) {
+    public function render($dummy=NULL, $absolute = \FALSE) {
         ob_start();
         $prop = $this->_properties;
         // Normal processing for associative array

@@ -78,6 +78,18 @@ class View implements \Iris\Translation\iTranslatable {
     protected $_prerendering = '';
 
     /**
+     *
+     * @var \Iris\System\Stack
+     */
+    private static $EvalStack = \NULL;
+
+    public static function Initializer() {
+        if (is_null(self::$EvalStack)) {
+            self::$EvalStack = new \Iris\System\Stack('Error in View script stack');
+        }
+    }
+
+    /**
      * Sets an explicit view script file name
      * 
      * @param string $name
@@ -159,7 +171,9 @@ class View implements \Iris\Translation\iTranslatable {
             }
             ob_start();
             echo $this->_prerendering;
+            self::$EvalStack->push($template);
             $this->_eval($template);
+            self::$EvalStack->pop();
             $page = ob_get_clean();
             return $page;
         }
@@ -194,42 +208,40 @@ class View implements \Iris\Translation\iTranslatable {
         foreach ($this->_properties as $name => $_) {
             ${$name} = &$this->_properties[$name];
         }
-        if (\Iris\Engine\Mode::IsDevelopment() and !is_null(\Iris\Engine\Superglobal::GetGet('EvalError'))) {
+
+        try {
+            self::$EvalStack->push($template);
             eval("?>" . $phtml);
+            self::$EvalStack->pop();
         }
-        else {
-            try {
-                eval("?>" . $phtml);
-            }
-            catch (\Iris\Exceptions\LoaderException $l_ex) {
-                throw $l_ex;
-            }
-            catch (\Iris\Exceptions\HelperException $h_ex) {
-                throw $h_ex;
-            }
-            // The layout may receive view exceptions from inside views
-            catch (\Iris\Exceptions\ViewException $ex) {
-                throw $ex;
-            }
-            catch (\Iris\Exceptions\ErrorException $exception) {
-                $errMessage = $exception->getMessage();
-                $viewType = static::$_ViewType;
-                $file = $template->getIViewScriptName();
-                $trace = $exception->getTrace();
-                // take the line number from the trace containing eval()'d error
-                foreach ($trace as $traceItem) {
-                    if (isset($traceItem['file']) and strpos($traceItem['file'], "eval()'d code") !== FALSE) {
-                        $line = $traceItem['line'];
-                        break;
-                    }
+        catch (\Iris\Exceptions\LoaderException $l_ex) {
+            throw $l_ex;
+        }
+        catch (\Iris\Exceptions\HelperException $h_ex) {
+            throw $h_ex;
+        }
+        // The layout may receive view exceptions from inside views
+        catch (\Iris\Exceptions\ViewException $ex) {
+            throw $ex;
+        }
+        catch (\Iris\Exceptions\ErrorException $exception) {
+            $errMessage = $exception->getMessage();
+            $viewType = static::$_ViewType;
+            $fileName = $template->getReadScriptFileName();
+            $trace = $exception->getTrace();
+            // take the line number from the trace containing eval()'d error
+            foreach ($trace as $traceItem) {
+                if (isset($traceItem['file']) and strpos($traceItem['file'], "eval()'d code") !== FALSE) {
+                    $line = $traceItem['line'];
+                    break;
                 }
-                $viewException = new \Iris\Exceptions\ViewException('Error in a view evaluation', NULL, $exception);
-                $viewException->setFileName($file);
-                $viewException->setLineNumber($line);
-                $viewException->setViewType($viewType);
-                $viewException->setErrorMessage($errMessage);
-                throw $viewException;
             }
+            $viewException = new \Iris\Exceptions\ViewException('Error in a view evaluation', NULL, $exception);
+            $viewException->setFileName($fileName);
+            $viewException->setLineNumber($line);
+            $viewException->setViewType($viewType);
+            $viewException->setErrorMessage($errMessage);
+            throw $viewException;
         }
     }
 
@@ -299,5 +311,14 @@ class View implements \Iris\Translation\iTranslatable {
         static::$_LastUsedScript = $name;
     }
 
+    /**
+     * 
+     * @return \Iris\System\Stack;
+     */
+    public static function GetEvalStack() {
+        return self::$EvalStack;
+    }
+
 }
 
+View::Initializer();

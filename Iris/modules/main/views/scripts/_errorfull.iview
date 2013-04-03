@@ -1,5 +1,4 @@
-<?php
-
+{php}
 $this->dojo_tabContainer('tabs');
 $this->tabs->setDefault('desc')
         ->setItems(array('desc' => 'Description', 'stack' => 'Error stack', 'det' => 'Details'));
@@ -7,7 +6,7 @@ $lines = count($this->error()->details);
 for ($n=0;$n<$lines;$n++):
     $this->tabs->addItem("det_$n", "det_$n");
 endfor;
-?>
+{/php}
 {tabs->setDim(NULL,950)->divMaster()}
 <div {tabs->item("desc")}>
     {error()->render()}
@@ -17,24 +16,18 @@ endfor;
         {error()->trace}
     </pre>
 </div>
-    <?php
-    $n = 0;
-  foreach($this->error()->details as $key=>$detail):
-      ?>
+{php}
+$n = 0;
+foreach($this->error()->details as $key=>$detail):
+{/php}
 <div {tabs->item("det_$n")}>
-    <h4><?=$key?></h4>
-  <? print_r($detail) ?> 
+    <h4>{key}</h4>
+    <? print_r($detail) ?> 
 </div>
-<? $n++;
-endforeach;?>
+{php}
+$n++;
+endforeach;
+{/php}
 {tabs->endMaster()}
 
-<?php return;?>
 
-<?$num=0;
-foreach($this->error()->trace as $kt=>$t):
-    $n=$num++;?>
-<div id="t<?=$n?>" class="errortrace" > {tooltip->render("t".$n,$t)}  
-<?=$kt?>
-</div>   
-<?endforeach?>

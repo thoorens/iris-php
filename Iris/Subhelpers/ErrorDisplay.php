@@ -32,7 +32,6 @@ namespace Iris\Subhelpers;
 class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
 
     protected static $_Instance = NULL;
-    
     private $_title = "Fake title";
     private $_message = "Fake error message";
     private $_module = 'Fake module';
@@ -43,6 +42,7 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
     private $_details = array("Fake details");
     private $_comment = 'Fake comment';
     private $_systemTrace = 'Fake SystemTrace';
+    private $_rawTrace;
 
     public function getSystemTrace() {
         return $this->_systemTrace;
@@ -90,7 +90,7 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
      * 
      * @return string
      */
-    public function prepareExceptionDisplay($exception=\NULL) {
+    public function prepareExceptionDisplay($exception = \NULL) {
         $this->_systemTrace = \Iris\Exceptions\ErrorHandler::$_Trace;
         $exception = \Iris\Exceptions\_Exception::GetLastException($exception);
         if (is_null($exception)) {
@@ -104,6 +104,7 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
         }
         else {
             $exception = \Iris\Exceptions\PHPException::Encapsulate($exception);
+            $this->_rawTrace = $exception->getTrace();
             $this->_message = $exception->getMessage();
             if (strpos($this->_message, 'SQL') !== FALSE) {
                 $this->_message.= "<br>" . \Iris\DB\Dialects\MyPDOStatement::$LastSQL;
@@ -134,11 +135,20 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
     public function __call($name, $arguments) {
         call_user_func_array(array($this->_renderer, $name), $arguments);
     }
-    
+
     protected function _getRenderer() {
         return $this->_renderer;
     }
 
-}
+    public function addMessage($fileInfo) {
+        $line = "";
+        $trace = $this->_rawTrace;
+        //iris_debug($trace);
+        if (isset($trace[0]['args'][3])) {
+            $line = " line : ".$trace[0]['args'][3];
+        }
+            $this->_message .= $fileInfo . $line;
+        }
+    }
 
 ?>

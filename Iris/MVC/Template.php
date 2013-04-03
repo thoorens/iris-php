@@ -2,7 +2,7 @@
 
 namespace Iris\MVC;
 
-use Iris\Engine as ie;
+use Iris\Engine\Loader;
 
 // See real class at bottom of file
 
@@ -52,7 +52,7 @@ class Template implements \Iris\Translation\iTranslatable {
      * Explicit way to require absolute filename for a template
      */
     const ABSOLUTE = \TRUE;
-    
+
     /**
      * If true, the translation of .phtml is managed through files
      * 
@@ -66,13 +66,17 @@ class Template implements \Iris\Translation\iTranslatable {
      * @var View
      */
     private $_view;
-    private $_iViewScriptName;
+    /**
+     * The required fileName without extension (may be null)
+     * @var string
+     */
+    private $_initialScriptName;
 
     /**
      * The optional phtml file name
      * @var String 
      */
-    private $_phtmlScriptFileName;
+    private $_readScriptFileName;
 
     /**
      * If false, indicates that the _templateText is already translated to
@@ -86,7 +90,7 @@ class Template implements \Iris\Translation\iTranslatable {
      * 
      * @var array(string)
      */
-    private $_templateText = '';
+    private $_templateArray = '';
 
     /**
      * The template language as an array of array. Each 0 element beginning
@@ -135,10 +139,15 @@ class Template implements \Iris\Translation\iTranslatable {
      * @param View $view the view associated to the template
      */
     function __construct($iViewScriptName, $view = \NULL, $absolute = \FALSE) {
-        $this->_iViewScriptName = $iViewScriptName;
+        $this->_initialScriptName = $iViewScriptName;
         $this->_view = $view;
         if (!is_null($view)) {
-            $this->_loadTemplate($absolute);
+            if ($absolute) {
+                $this->_loadAbsoluteTemplate();
+            }
+            else {
+                $this->_loadTemplate();
+            }
         }
     }
 
@@ -148,16 +157,20 @@ class Template implements \Iris\Translation\iTranslatable {
      * @param string $text
      */
     function setText($text) {
-        $this->_templateText = $text;
+        $this->_templateArray = $text;
     }
 
     /**
-     * The .iview file name
+     * An absolute file name for script must exist exactly as specified
      * 
-     * @return string
+     * @throws \Iris\Exceptions\LoaderException
      */
-    public function getIViewScriptName() {
-        return $this->_iViewScriptName;
+    private function _loadAbsoluteTemplate() {
+        $scriptFileName = IRIS_ROOT_PATH . $this->_initialScriptName;
+        if (!file_exists("$scriptFileName.view")) {
+            throw new \Iris\Exceptions\LoaderException("Absolute script file $scriptFileName.iview doesn't seem to exist");
+        }
+        $this->_readTemplateAsArray($scriptFileName);
     }
 
     /**
@@ -167,46 +180,52 @@ class Template implements \Iris\Translation\iTranslatable {
      * @param boolean $absolute If true, reads a precise file whose name has been given
      * @throws \Iris\Exceptions\LoaderException
      */
-    private function _loadTemplate($absolute) {
-        if ($absolute) {
-            $scriptFileName = IRIS_ROOT_PATH . $this->_iViewScriptName.'.iview';
-            if(!file_exists($scriptFileName)){
-                throw new \Iris\Exceptions\LoaderException("Absolute script file $scriptFileName doesn't seem to exist");
+    private function _loadTemplate() {
+        $viewType = $this->_view->getViewType();
+        $loader = Loader::GetInstance();
+        $iviewScriptName = $this->_initialScriptName;
+        $view = $this->_view;
+        try {
+            // the case where a scriptName has been explicitely required (renderNow)
+            if (!is_null($iviewScriptName)) {
+                $viewFile = $loader->loadView($iviewScriptName, "scripts", $view->getResponse());
+            }
+            else {
+                $scriptName = $view->getViewScriptName();
+                if ($scriptName == '') {
+                    $scriptName = $view->getResponse()->getActionName();
+                }
+                $viewFile = $loader->loadView($scriptName, $view->viewDirectory(), $view->getResponse());
             }
         }
-        else{
-            $viewType = $this->_view->getViewType();
-            $loader = ie\Loader::GetInstance();
-            $iviewScriptName = $this->_iViewScriptName;
-            $view = $this->_view;
-            try {
-                // the case where a scriptName has been explicitely required (renderNow)
-                if (!is_null($iviewScriptName)) {
-                    $viewFile = $loader->loadView($iviewScriptName, "scripts", $view->getResponse());
-                }
-                else {
-                    $viewFile = $loader->loadView($view->getViewScriptName(), $view->viewDirectory(), $view->getResponse());
-                }
-            }
-            catch (\Iris\Exceptions\LoaderException $l_ex) {
-                throw new \Iris\Exceptions\LoaderException("Problem with $viewType " .
-                $l_ex->getMessage(), NULL, $l_ex);
-            }
-            $scriptFileName = IRIS_ROOT_PATH . '/' . $viewFile;
+        catch (\Iris\Exceptions\LoaderException $l_ex) {
+            throw new \Iris\Exceptions\LoaderException("Problem with $viewType " .
+            $l_ex->getMessage(), NULL, $l_ex);
         }
+        $scriptFileName = IRIS_ROOT_PATH . '/' . $viewFile;
+        $this->_readTemplateAsArray($scriptFileName);
+    }
+
+    /**
+     * Reads effectively a template (an iview or a phtml file if it exists)
+     * 
+     * @param string $scriptFileName
+     */
+    private function _readTemplateAsArray($scriptFileName) {
         $this->_view->SetLastScriptName($scriptFileName);
-        $this->_phtmlScriptFileName = $scriptFileName . '.phtml';
         $read = \FALSE;
-        if (self::$_CacheTemplate and file_exists($this->_phtmlScriptFileName)) {
-            $file = file($this->_phtmlScriptFileName);
+        if (self::$_CacheTemplate and file_exists("$scriptFileName.phtml")) {
+            $file = file("$scriptFileName.phtml");
             $this->_toBeParsed = \FALSE;
+            $this->_readScriptFileName = "$scriptFileName.phtml";
             $read = \TRUE;
         }
         if (!$read) {
-            $file = file($scriptFileName);
+            $file = file("$scriptFileName.iview");
+            $this->_readScriptFileName = "$scriptFileName.iview";
             $this->_toBeParsed = \TRUE;
         }
-        $this->_templateText = $file;
+        $this->_templateArray = $file;
     }
 
     /**
@@ -218,12 +237,12 @@ class Template implements \Iris\Translation\iTranslatable {
      */
     public function renderTemplate() {
         if (!$this->_toBeParsed) {
-            $phtml = implode("", $this->_templateText);
+            $phtml = implode("", $this->_templateArray);
         }
         else {
             $literal = FALSE;
-            foreach ($this->_templateText as &$line) {
-                $line = preg_replace('/(.*){REM}(.*)/i', '$1$2', $line); 
+            foreach ($this->_templateArray as &$line) {
+                $line = preg_replace('/(.*){REM}(.*)/i', '$1$2', $line);
                 if (strpos($line, '{literal}') !== FALSE) {
                     $literal = \TRUE;
                     $line = str_replace('{literal}', '', $line);
@@ -248,9 +267,9 @@ class Template implements \Iris\Translation\iTranslatable {
                     }
                 }
             }
-            $phtml = implode("", $this->_templateText);
-            if (self::$_CacheTemplate and is_writable(dirname($this->_phtmlScriptFileName))) {
-                file_put_contents($this->_phtmlScriptFileName, $phtml);
+            $phtml = implode("", $this->_templateArray);
+            if (self::$_CacheTemplate and is_writable(dirname($this->_readScriptFileName))) {
+                file_put_contents($this->_readScriptFileName, $phtml);
             }
         }
         return $phtml;
@@ -278,6 +297,16 @@ class Template implements \Iris\Translation\iTranslatable {
         }
         self::$_CacheTemplate = $value;
     }
+
+    /**
+     * Accessor get for the actual read script file name (with extension)
+     * 
+     * @return string
+     */
+    public function getReadScriptFileName() {
+        return $this->_readScriptFileName;
+    }
+
 
 }
 
