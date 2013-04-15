@@ -38,8 +38,6 @@ class Bubble {
     const JSON = 2;
     const XML = 3;
 
-    
-
     /**
      * A list of requisites for the bubble. 
      * @var array
@@ -51,6 +49,7 @@ class Bubble {
      * @var type 
      */
     private $_internalFunction = \NULL;
+    private $_done = \FALSE;
 
     /**
      * Syntaxic sugar for GetObject
@@ -58,7 +57,7 @@ class Bubble {
      * @param string $objectName
      * @return Bubble
      */
-    public static function GetBubble($objectName){
+    public static function GetBubble($objectName) {
         return self::GetObject($objectName);
     }
 
@@ -97,32 +96,42 @@ class Bubble {
      * 
      * @return string
      */
-    public function render() {
-        $linkedModules = array();
-        $unlinkedModules = array();
-        $parameters = array();
-        foreach ($this->_modules as $name => $linkedVar) {
-            if ($linkedVar !== \FALSE) {
-                $linkedModules[] = $name;
-                $parameters[] = $linkedVar;
+    public function render($closed = \TRUE) {
+        if (!$this->_done) {
+            $linkedModules = array();
+            $unlinkedModules = array();
+            $parameters = array();
+            foreach ($this->_modules as $name => $linkedVar) {
+                if ($linkedVar !== \FALSE) {
+                    $linkedModules[] = $name;
+                    $parameters[] = $linkedVar;
+                }
+                else {
+                    $unlinkedModules[] = $name;
+                }
+            }
+            $allModule = array_merge($linkedModules, $unlinkedModules);
+            $html = CRLF . "/* Dojo code for $this->_objectName */" . CRLF;
+            $html .= 'require(["';
+            $html .= implode('","', $allModule);
+            $html .= '"]';
+            if (count($linkedModules) > 0) {
+                $functionText = $this->_internalFunction;
+                $html .= ',function(';
+                $html .= implode(',', $parameters);
+                if ($closed) {
+                    $html .= "){ $functionText }";
+                }
+            }
+            if ($closed) {
+                $html .= ');' . CRLF;
             }
             else {
-                $unlinkedModules[] = $name;
+                $html .= "){";
             }
+            $this->_done = \TRUE;
+            return $html;
         }
-        $allModule = array_merge($linkedModules, $unlinkedModules);
-        $html = CRLF."/* Dojo code for $this->_objectName */" . CRLF;
-        $html .= 'require(["';
-        $html .= implode('","', $allModule);
-        $html .= '"]';
-        if (count($linkedModules) > 0) {
-            $functionText = $this->_internalFunction;
-            $html .= ',function(';
-            $html .= implode(',', $parameters);
-            $html .= "){ $functionText }";
-        }
-        $html .= ');' . CRLF;
-        return $html;
     }
 
     /**
@@ -140,13 +149,13 @@ class Bubble {
      * 
      * @return string
      */
-    public static function RenderAll(){
+    public static function RenderAll() {
         $text = '';
         foreach (self::GetAllObjects() as $bubble) {
             $text .= $bubble->render();
         }
         return $text;
     }
-    
+
 }
 

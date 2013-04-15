@@ -57,7 +57,7 @@ abstract class _Animation extends _DojoHelper implements \Dojo\Engine\iLateScrip
 
     /**
      *
-     * @var \Dojo\Subhelpers\CodeContainer
+     * @var \Dojo\Engine\CodeContainer
      */
     protected $_codeContainer = \NULL;
     

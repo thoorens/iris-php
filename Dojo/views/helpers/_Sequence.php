@@ -68,7 +68,7 @@ abstract class _Sequence extends _Animation {
         $json = json_encode(self::$_Events);
         /* @var $namespace \Dojo\Engine\NameSpaceItem */
         $namespace = \Dojo\Engine\NameSpaceItem::GetObject('sequenceEvents');
-        $namespace->createVar(CRLF.$json.CRLF);
+        $namespace->createVar(CRLF . $json . CRLF);
     }
 
     /**
@@ -143,6 +143,9 @@ TAIL;
      * @param int $opacity The initial opacity (1 or 0)
      */
     protected function _eventCreate($cmd, $target, $time, $duration, $opacity) {
+        $this->_animatorSubhelper->addModule('dojo/topic', 'topic');
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", "fx");
+        $this->_animatorSubhelper->addModule("dojo/dom-style",'style');
         if (is_null($duration)) {
             $duration = $this->_standardDuration;
         }
@@ -158,4 +161,5 @@ TAIL;
         }
         self::$_Events[] = $event;
     }
+
 }

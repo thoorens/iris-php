@@ -64,6 +64,7 @@ class Scroller extends _Sequence {
             $this->_animateSynchro();
             $done = \TRUE;
         }
+        $this->_animatorSubhelper->addModule('dojo/window', 'win');
         $this->_computeStartTime($startTime);
         $this->_eventCreate('scroll', $destination, $startTime, 0, 0);
         $code = <<<CODE

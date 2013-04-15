@@ -1,6 +1,7 @@
 <?php
 
 namespace Dojo\Subhelpers;
+use Dojo\Engine\CodeContainer;
 
 /*
  * This file is part of IRIS-PHP.
@@ -57,6 +58,12 @@ use \Iris\Engine\tSingleton;
     private $_codeContainer;
 
     /**
+     *
+     * @var \Dojo\Engine\Bubble
+     */
+    private $_header;
+    
+    /**
      * Initializes a code container <ul>
      * <li>header (here)
      * <li>body <ol>
@@ -66,17 +73,20 @@ use \Iris\Engine\tSingleton;
      * </ol>
      * <li>tail
      * </ul>
-     * @return \Dojo\Subhelpers\CodeContainer
+     * @return \Dojo\Engine\CodeContainer
      * @todo The head will contain all possible dojo modules. Find a way to use only the required ones
      */
     public function __construct() {
-        $codeContainer = new \Dojo\Subhelpers\CodeContainer();
-        $header = <<< SCRIPT
-    require(["dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style","dojo/fx", "dojo/topic", 
-        "dojo/window", "dojo/domReady!"],
-    function(dom, fx, on, style, coreFx, topic, win){
-   
-SCRIPT;
+        $codeContainer = new \Dojo\Engine\CodeContainer();
+        $header = \Dojo\Engine\Bubble::GetBubble('Animation code');
+        $header->addModule('dojo/domReady!');
+        $this->_header = $header;
+//        $header = <<< SCRIPT
+//    require(["dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style","dojo/fx", "dojo/topic", 
+//        "dojo/window", "dojo/domReady!"],
+//    function(dom, fx, on, style, coreFx, topic, win){
+//   
+//SCRIPT;
         $codeContainer->setHeader($header);
         $prefixes = new CodeContainer();
         $codeContainer->addPieceOfCode(0, $prefixes);
@@ -140,7 +150,9 @@ SCRIPT
         return $this->_codeContainer;
     }
 
-    
+    public function addModule($moduleName, $linkedVar){
+        $this->_header->addModule($moduleName, $linkedVar);
+    }
 
     
 

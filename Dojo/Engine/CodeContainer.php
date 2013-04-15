@@ -1,6 +1,6 @@
 <?php
 
-namespace Dojo\Subhelpers;
+namespace Dojo\Engine;
 
 /*
  * This file is part of IRIS-PHP.
@@ -53,7 +53,7 @@ class CodeContainer {
     /**
      * Initializes the head part of the container
      * @param mixed $header
-     * @return \Dojo\Subhelpers\CodeContainer for fluent interface
+     * @return \Dojo\Engine\CodeContainer for fluent interface
      */
     public function setHeader($header) {
         $this->_header = $header;
@@ -64,7 +64,7 @@ class CodeContainer {
      * Initializes the tail part of the container
      * 
      * @param string/mixed $tail
-     * @return \Dojo\Subhelpers\CodeContainer
+     * @return \Dojo\Engine\CodeContainer
      */
     public function setTail($tail) {
         $this->_tail = $tail;
@@ -139,6 +139,9 @@ class CodeContainer {
             foreach ($component as $part) {
                 $code .= $this->_renderComponent($part);
             }
+        }
+        elseif($component instanceof Bubble){
+            $code = $component->render(\FALSE);
         }
         else {
             $code = $this->_renderContainer($component);

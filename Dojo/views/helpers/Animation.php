@@ -43,7 +43,7 @@ class Animation extends _Animation {
      * @var int
      */
     protected $_standardDuration = 5000;
-    
+
     /**
      * A marker for distinguish each animation effects
      * 
@@ -58,7 +58,7 @@ class Animation extends _Animation {
         $this->_animateSynchro();
     }
 
-        /**
+    /**
      * Gets the next id
      * @return type
      */
@@ -79,6 +79,9 @@ class Animation extends _Animation {
         if (is_null($duration)) {
             $duration = $this->_standardDuration;
         }
+        $this->_animatorSubhelper->addModule("dojo/dom-geometry", 'domGeometry');
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", 'fx');
+        $this->_animatorSubhelper->addModule('dojo/topic', 'topic');
         $this->_animatorSubhelper->addToAnimationManager('controlledIn', <<<SCRIPT
                 
        if(args.dojofunction=='controlledIn'){
@@ -119,6 +122,9 @@ SCRIPT
         if (is_null($duration)) {
             $duration = $this->_standardDuration;
         }
+        $this->_animatorSubhelper->addModule("dojo/dom-geometry", 'domGeometry');
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", 'fx');
+        $this->_animatorSubhelper->addModule('dojo/topic', 'topic');
         $this->_animatorSubhelper->addToAnimationManager('controlledOut', <<<SCRIPT
                 
             if(args.dojofunction=='controlledOut'){
@@ -159,6 +165,8 @@ SCRIPT
             $duration = $this->_standardDuration;
         }
         $this->_registerFadeIn();
+        $this->_animatorSubhelper->addModule('dojo/on', 'on');
+        $this->_animatorSubhelper->addModule('dojo/dom', 'dom');
         $this->_createBubble('fadeIn' . $this->_getId())
                 ->defFunction(<<< SCRIPT
    
@@ -207,6 +215,8 @@ SCRIPT
      * Puts the code for fadeIn in animation manager
      */
     private function _registerFadeIn() {
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", 'fx');
+        $this->_animatorSubhelper->addModule('dojo/dom-style', 'style');
         $this->_animatorSubhelper->addToAnimationManager('fadeIn', <<<SCRIPT
                 
             if(args.dojofunction=='fadeIn'){
@@ -257,6 +267,8 @@ SCRIPT
             $duration = $this->_standardDuration;
         }
         $this->_registerFadeOut();
+        $this->_animatorSubhelper->addModule('dojo/on', 'on');
+        $this->_animatorSubhelper->addModule('dojo/dom', 'dom');
         $this->_createBubble('fadeOut' . $this->_getId())
                 ->defFunction(<<< SCRIPT
     
@@ -276,6 +288,7 @@ SCRIPT
      * Puts the code for fade out in animation manager
      */
     private function _registerFadeOut() {
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", 'fx');
         $this->_animatorSubhelper->addToAnimationManager('fadeOut', <<<SCRIPT
                 
             if(args.dojofunction=='fadeOut'){
@@ -300,6 +313,8 @@ SCRIPT
         }
         if (is_null($duration2))
             $duration2 = $duration;
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", 'fx');
+        $this->_animatorSubhelper->addModule("dojo/fx", 'coreFx');
         $this->_animatorSubhelper->addToAnimationManager('fadeInOut', <<<SCRIPT
                 
             if(args.dojofunction=='fadeInOut'){
@@ -334,11 +349,14 @@ SCRIPT
      * @param int $duration2 the duration of the fading in
      */
     public function outIn($node, $button, $duration = \NULL, $duration2 = \NULL) {
-        $this->_initialOpacity();          if (is_null($duration)) {
+        $this->_initialOpacity();
+        if (is_null($duration)) {
             $duration = $this->_standardDuration;
         }
         if (is_null($duration2))
             $duration2 = $duration;
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", 'fx');
+        $this->_animatorSubhelper->addModule("dojo/fx", 'coreFx');
         $this->_animatorSubhelper->addToAnimationManager('fadeOutIn', <<<SCRIPT
                 
             if(args.dojofunction=='fadeOutIn'){

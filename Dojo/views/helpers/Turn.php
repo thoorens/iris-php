@@ -39,12 +39,6 @@ class Turn extends _Sequence {
     protected static $_Singleton = \TRUE;
 
     /**
-     * The collection of distinct events to memorize
-     * @var array
-     */
-    private $_events = array();
-
-    /**
      * The standard transition time between two states (redefined)
      * 
      * @var int
@@ -56,9 +50,10 @@ class Turn extends _Sequence {
      */
     protected function _subclassInit() {
         $this->_animateSynchro();
+        $this->_animatorSubhelper->addModule("dojo/_base/fx", "fx");
+        $this->_animatorSubhelper->addModule("dojo/dom-style", "style");
     }
 
-    
     /**
      * Creates a ON event for an object at a given time, with an optional transition duration
      * 
@@ -100,11 +95,6 @@ CODE;
 CODE;
         $this->_insertSequenceCode('turnout', $code);
     }
-
-    
-
-
-    
 
 }
 
