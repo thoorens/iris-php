@@ -4,9 +4,9 @@
     </div>
 
 </div>
- <!-- In real life, there is no sense to put the sender and the receiver in the same file.
+<!-- In real life, there is no sense to put the sender and the receiver in the same file.
 This is just a test -->       
-        
+
 
 
 {ajax()->onMessage('mes1','/ajax/get/message6','message1')}
@@ -16,12 +16,14 @@ This is just a test -->
         <p>
             A message will appear in <span id="spanseconds1">6</span> seconds.
         </p>
-        <p>
-            A message will appear after 10 seconds (<span id="spanseconds2">6</span> elapsed).
-        </p>
         <div class="example">
             <p id="message1">
             </p>
+        </div>
+        <p>
+            A second message will appear after 10 seconds (<span id="spanseconds2">6</span> elapsed).
+        </p>
+        <div class="example">
             <p id="message2">
             </p>
         </div>
