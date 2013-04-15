@@ -242,7 +242,7 @@ class Template implements \Iris\Translation\iTranslatable {
         else {
             $literal = FALSE;
             foreach ($this->_templateArray as &$line) {
-                $line = preg_replace('/(.*){REM}(.*)/i', '$1$2', $line);
+                $line = preg_replace('$(.*){REM}.*{/REM}(.*)$i', '$1$2', $line);
                 if (strpos($line, '{literal}') !== FALSE) {
                     $literal = \TRUE;
                     $line = str_replace('{literal}', '', $line);
