@@ -149,15 +149,7 @@ class ArraySequence extends _Sequence {
         return $maptable[$this->_currentURL];
     }
 
-    /**
-     * Gets the current value 
-     * ( an array of label - url - description)
-     * 
-     * @return array
-     */
-    public function getCurrent() {
-        return $this->_getURL3($this->_currentURL, 'Current');
-    }
+    
 
     /**
      * Sets the current index
