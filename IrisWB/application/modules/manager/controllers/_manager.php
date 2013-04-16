@@ -21,6 +21,7 @@ class _manager extends \modules\_application {
         // You should modify this demo layout
         $this->_setLayout('manager');
         $this->__bodyColor = 'ORANGE3';
+        $this->_noMd5();
     }
 
 }

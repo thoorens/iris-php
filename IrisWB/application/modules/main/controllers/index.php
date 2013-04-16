@@ -13,7 +13,8 @@ class index extends _main {
 
     public function indexAction() {
         $this->_setLayout('color');
-        $this->__bodyColor = 'ORANGE1';
+        $this->__bodyColor = 'BLUE3';
+        $this->_noMd5();
     }
 
     public function errorAction($number) {
@@ -24,7 +25,9 @@ class index extends _main {
     }
 
     public function endAction() {
-        
+        $this->_setLayout('color');
+        $this->__bodyColor = 'BLUE3';
+        $this->_noMd5();
     }
 
     public function dojoAction() {
@@ -32,8 +35,11 @@ class index extends _main {
     }
 
     public function tocAction() {
+        $this->_setLayout('color');
         $this->callViewHelper('dojo_Mask');
         $this->__sequence = $this->getScreenList();
+        $this->__bodyColor = 'BLUE3';
+        $this->_noMd5();
     }
 
     
