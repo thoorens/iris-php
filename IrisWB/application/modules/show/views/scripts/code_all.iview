@@ -1,0 +1,6 @@
+<div>
+    <h1>Show code</h1>
+    <h3>{module}/{controller}/{action}</h3>
+    {underConstruction()}
+</div>
+{button('Return to page',"/$module/$controller/$action", 'Go back to example page')}
