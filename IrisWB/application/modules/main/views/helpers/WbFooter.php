@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace iris\views\helpers;
 
 /*
@@ -33,21 +31,38 @@ namespace iris\views\helpers;
  * 
  */
 class WbFooter extends _ViewHelper {
-    
-    public function help($layoutName,$buttons = 5){
+
+    public function help($layoutName, $buttons = 5) {
         $html = "<b>Layout :</b> $layoutName";
-        $html .= " - ".$this->callViewHelper('signature')->display();
+        if (\Iris\Engine\Memory::Get('hasSignature', \FALSE)) {
+            $html .= " - " . $this->callViewHelper('signature')->display();
+        }
         $html .= '<br/>';
-        $html .= $this->callViewHelper('ILO_goInternal',$buttons);
-        $html .= $this->callViewHelper('signature')->saveButton();
+        $html .= $this->callViewHelper('ILO_goInternal', $buttons);
         $sequence = \Iris\Structure\DBSequence::GetInstance();
+        if (\Iris\Engine\Memory::Get('hasSignature', \FALSE)) {
+            $html .= $this->callViewHelper('signature')->saveButton();
+            $html .= $this->callViewHelper('button', $this->_codeButton($sequence));
+        }
         $previous = $sequence->getPrevious();
-        $html .= $this->callViewHelper('button',$previous);
-        $html .= $this->callViewHelper('button','TOC','/index/toc','Table of tests');
+        $html .= $this->callViewHelper('button', $previous);
+        $html .= $this->callViewHelper('button', 'TOC', '/index/toc', 'Table of tests');
         $next = $sequence->getNext();
-        $html .= $this->callViewHelper('button',$next);
+        $html .= $this->callViewHelper('button', $next);
         return $html;
     }
-    
+
+    /**
+     * 
+     * @param \Iris\Structure\_Sequence $sequence
+     * @return array
+     */
+    private function _codeButton($sequence){
+        $current = $sequence->getCurrent();
+        $current[0] = 'Show code';
+        $current[1] = '/show/code'.$current[1];
+        $current[2] = 'See the code for '. $current[2];
+        return $current;
+    }
 }
 
