@@ -221,8 +221,9 @@ class Template implements \Iris\Translation\iTranslatable {
             $read = \TRUE;
         }
         if (!$read) {
-            $file = file("$scriptFileName.iview");
-            $this->_readScriptFileName = "$scriptFileName.iview";
+            $extension = (strpos(basename($scriptFileName), '.') === FALSE) ? '.iview' : '';
+            $file = file($scriptFileName.$extension);
+            $this->_readScriptFileName = $scriptFileName.$extension;
             $this->_toBeParsed = \TRUE;
         }
         $this->_templateArray = $file;

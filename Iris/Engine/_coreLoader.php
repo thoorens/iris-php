@@ -234,10 +234,10 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $libraryList = $this->_extensionLibraries; // may be 0 element
         $libraryList[] = $this->library;
         // partials or views may be in system libraries
-        if(strpos($scriptName,'#')){
-            list($library,$scriptName) = explode('#',$scriptName);
-            $library = $this->library.'/'.substr($library,1);
-            $viewFiles[] = sprintf(self::LIBRARY,$library,$controllerDirectory,$scriptName);
+        if (strpos($scriptName, '#')) {
+            list($library, $scriptName) = explode('#', $scriptName);
+            $library = $this->library . '/' . substr($library, 1);
+            $viewFiles[] = sprintf(self::LIBRARY, $library, $controllerDirectory, $scriptName);
         }
         // views beginning with ! are to take from IrisInternal (notably layouts)
         if ($response->isInternal() or $scriptName[1] == '!') {
@@ -276,11 +276,13 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $index = 0;
         $this->_loadDebug("Searching view ", $scriptName, \Iris\Engine\Debug::VIEW);
         while ($index < count($viewFiles)) {
-            $pathToViewFile = IRIS_ROOT_PATH . '/' . $viewFiles[$index].".iview";
+            $file = $viewFiles[$index];
+            $extension = (strpos(basename($file), '.') === FALSE) ? '.iview' : '';
+            $pathToViewFile = IRIS_ROOT_PATH . '/' . $file . $extension;
             $this->_loadDebug("Testing $pathToViewFile", "", \Iris\Engine\Debug::VIEW);
             if (file_exists($pathToViewFile)) {
                 $this->_loadDebug("Found ", $pathToViewFile, \Iris\Engine\Debug::VIEW);
-                $foundClass = $viewFiles[$index];
+                $foundClassFile = $file;
                 $found = TRUE;
                 break;
             }
@@ -293,7 +295,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             $context = implode(' - ', $viewFiles);
             throw new IX\LoaderException("$controllerDirectory$viewFile.iview" . " : not existing in $context");
         }
-        return $foundClass;
+        return $foundClassFile;
     }
 
     /**
@@ -306,7 +308,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $path = str_replace('\\', '/', $className);
         $pathComponents = explode('/', $path);
         // Overriden classes may only occur in standard libraries
-        if ($pathComponents[0]=='' or strpos(self::STANDARD_LIBRARIES, $pathComponents[0]) === \FALSE) {
+        if ($pathComponents[0] == '' or strpos(self::STANDARD_LIBRARIES, $pathComponents[0]) === \FALSE) {
             return \FALSE;
         }
         else {
