@@ -1,21 +1,12 @@
-<div{wbColors()}>
-    <div>
-        {wbExplain($this)}
-    </div>
-
-</div>
-
+{wbHeader()}
 {ajax()->onMessage('MSG1','/ajax/get/message5','message1')}
+<div id="content" {wbBG()}>
+    <p>
+        A message will appear in <span id="spanseconds">5</span> seconds.
 
-<div>
-    <div id="page">
-        <p>
-            A message will appear in <span id="spanseconds">5</span> seconds.
-            
-        </p>
-        <div class="example">
+    </p>
+    <div class="example">
         <p id="message1">
         </p>
-        </div>
     </div>
 </div>

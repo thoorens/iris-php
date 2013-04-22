@@ -19,8 +19,9 @@ class _errors extends \modules\_application {
      */
     protected function _moduleInit() {
         
-        $this->_setLayout('app');
+        $this->_setLayout('application');
         $this->__bodyColor = 'ORANGE3';
+        $this->_noMd5();
 
     }
 

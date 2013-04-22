@@ -1,7 +1,5 @@
-<div>
-    <div id="page">
-        {wbExplain($this)}
-    </div>
+{wbHeader($this)}
+<div id="content" {wbBG()}>
     {wbScriptName($required)}
     <br/>
     {partial($reqPartial,array('name'=>$reqPartial))}

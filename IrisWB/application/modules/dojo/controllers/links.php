@@ -25,7 +25,8 @@ class links extends _dojo {
             'link_title' => 'This is a link to page 2',
             'image' => 'button_p2.png',
             'icon' => 'icon_page2.png',
-            'link_array' => ['Dojo Link to page 2', '/dojo/links/link2', 'This is a link to page 2']
+            'link_array' => ['Dojo Link to page 2', '/dojo/links/link2', 'This is a link to page 2'],
+            'warning' => '',
                 ]
         );
     }
@@ -37,7 +38,9 @@ class links extends _dojo {
             'link_title' => 'This is a link to page 1',
             'image' => 'button_p1.png',
             'icon' => 'icon_page1.png',
-            'link_array' => ['Dojo Link to page 1', '/dojo/links/link1', 'This is a link to page 1']
+            'link_array' => ['Dojo Link to page 1', '/dojo/links/link1', 'This is a link to page 1'],
+            'warning' => '<b>This page does not belong to the test serie. So, it has no standard header nor MD5 fingerprint.
+                Use one of the links to page 1 to return to the test sequence.</b>',
         ]);
     }
     

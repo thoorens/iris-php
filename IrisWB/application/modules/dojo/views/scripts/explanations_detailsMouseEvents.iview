@@ -9,27 +9,25 @@
 $det1 = $this->details1->setAspectClass('dojoIrisMask2')->setId('det1');
 $det2 = $this->details2->setAspectClass('dojoIrisMask2')->setId('det2');
 {/php}
-<div>
-    <div id="page">
-        {wbExplain($this)}
-        <div class="example">
+{wbHeader()}
+<div id="content" {wbBG()}>
+    <div class="example">
         <h3>Iris-PHP and numbers (mouseover version)</h3>
         <p>Put mouse on "Details" to show or hide more text.</p>
         <ul>
             {foreach(data,item)}
                 <li>{(det1->details($item[0],$item[1]))}</li>
-            {/foreach}
-       </ul>
-            {(det1->connectEvent('mouseover'))}
-
-            <h3>Iris-PHP and numbers (mouseover/out version)</h3>
-            <p>Place mouse on "Details" to read more text.</p>
-            <ul>
-                {foreach(data,item)}
-                    <li>{(det2->details($item[0],$item[1]))}</li>
                 {/foreach}
-            </ul>
-            {(det2->connectEvents(['mouseover','mouseout']))}
-        </div>
+        </ul>
+        {(det1->connectEvent('mouseover'))}
+
+        <h3>Iris-PHP and numbers (mouseover/out version)</h3>
+        <p>Place mouse on "Details" to read more text.</p>
+        <ul>
+            {foreach(data,item)}
+                <li>{(det2->details($item[0],$item[1]))}</li>
+                {/foreach}
+        </ul>
+        {(det2->connectEvents(['mouseover','mouseout']))}
     </div>
 </div>

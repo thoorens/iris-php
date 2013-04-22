@@ -14,6 +14,7 @@ class containers extends _dojo {
 
     protected function _init() {
         $this->setViewScriptName('all');
+        $this->__finishedOrNot = '';
     }
 
     public function tabsAction($default = 'first') {
@@ -90,6 +91,7 @@ class containers extends _dojo {
                     "first" => 'First tab',
                     "second" => 'Second tab',
                 ]);
+        $this->__finishedOrNot = $this->callViewHelper('underConstruction');
     }
 
     public function borderAction() {
@@ -111,7 +113,7 @@ class containers extends _dojo {
     public function borderSideAction() {
         $this->setViewScriptName('border');
         $this->__title = "Example of border";
-        $this->callViewHelper('dojo_borderContainer(',"containers")
+        $this->callViewHelper('dojo_borderContainer',"containers")
                 ->setDim(250, 450)
                 ->setLayoutMode(\Dojo\views\helpers\BorderContainer::SIDEBAR)
                 ->setItems([

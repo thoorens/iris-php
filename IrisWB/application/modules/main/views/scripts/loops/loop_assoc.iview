@@ -1,11 +1,11 @@
-<?php
+{php}
 /*
  * In a loop based on an associative array, 
  * - {KEY} is the current key
  * - {ITEM} is the corresponding value   
  */
+{/php}
 
-?>
 <div class="oldscreen">
     {KEY} - {ITEM}
 </div>

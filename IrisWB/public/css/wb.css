@@ -94,8 +94,9 @@ div.example{
 
 .smallcolumn3{
     padding-left:10px;
-    width:155px;
-    float: left
+    width:140px;
+    float: left;
+    font-size:0.8em;
 }
 
 .oldscreen{
@@ -114,7 +115,14 @@ div#wbexplain{
     padding: 2px 10px 2px 10px;
     margin: 1px 0px 10px 0px;
     border-radius: 10px;
-    background-color: #cfc;
+    background-color: #cff;
+}
+
+#content{
+    font-size: 0.9em;
+    padding: 2px 10px 2px 10px;
+    margin: 1px 0px 10px 0px;
+    border-radius: 10px;
 }
 
 li.loop{
@@ -170,7 +178,7 @@ table.center tr td{
 
 img.shadow{
     padding:10px;
-    background-color: #;
+    box-shadow: 5px 5px 5px #888;
 }
 
 ul.crud li a {

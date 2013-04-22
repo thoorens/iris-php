@@ -25,9 +25,6 @@ Reduce column width for error display
     padding:10px;
 }
 
-body{
-    background-image: none;
-}
 
 pre{
     font-size: 0.7em;

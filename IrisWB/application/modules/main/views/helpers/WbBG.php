@@ -2,7 +2,7 @@
 
 
 
-namespace modules\testLayout\controllers;
+namespace iris\views\helpers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -21,32 +21,24 @@ namespace modules\testLayout\controllers;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
- */
-
-/**
- * In work bench tests some layout configurations
+ *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class css extends _testLayout{
-    
-    protected function _init() {
-        $this->_setLayout('module2');
+
+/**
+ * Color for background in WB
+ * 
+ */
+class wbBG extends \Iris\views\helpers\_ViewHelper {
+
+    static $_singleton = FALSE;
+
+    public function help() {
+        return $this->callViewHelper('wbColors','GRAY1');
     }
 
-
-
-    public function indexAction($left = 5, $middle = 5, $right = 5){
-        $this->__left = $left;
-        $this->__middle = $middle;
-        $this->__right = $right;
-    }
-    
-    public function yaml3ColAction(){
-        $this->_setLayout('yaml3col');
-    }
 }
 
-?>

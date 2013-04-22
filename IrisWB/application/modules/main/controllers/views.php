@@ -64,23 +64,19 @@ END;
         $placeOfContent = '$content';
         $gibberish1 = $this->callViewHelper('loremIpsum',[0, 61, 63, 65]);
         $gibberish2 = $this->callViewHelper('loremIpsum',[62, 64, 66]);
-        $explanation = $this->callViewHelper('wbExplain',$this->_view);
+        $explanation = $this->callViewHelper('wbHeader',$this->_view);
+        $color = $this->callViewHelper('wbColors','GRAY1');
         $text = <<<END
-   <div>
-    <div id="page">
     $explanation
-    <div class="quoted2">
-        <h3>Test of quoted text</h3>
-        <p>$gibberish1
-        </p>
-        <?=$placeOfContent?>
-        <p>$gibberish2
-        </p>
-        {another}
+    <div id="content" $color>            
+        <div class="quoted2">
+            <h3>Test of quoted text</h3>
+            <p>$gibberish1</p>
+            <?=$placeOfContent?>
+            <p>$gibberish2</p>
+            {another}
+        </div>
     </div>
-    </div>
-</div>
-   
 END;
         $this->quote($text);
     }

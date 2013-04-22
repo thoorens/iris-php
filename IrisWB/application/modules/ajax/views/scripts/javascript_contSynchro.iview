@@ -1,11 +1,5 @@
-<div{wbColors()}>
-    <div>
-        {wbExplain($this)}
-    </div>
-
-</div>
-<h3>A list managed by a controlled synchro</h3>
-<div>
+{wbHeader()}
+<div id="content" {wbBG()}>
     {synchro()->start('CMESS')}
     {synchro()->stop('CMESS')}
     <table class="show">

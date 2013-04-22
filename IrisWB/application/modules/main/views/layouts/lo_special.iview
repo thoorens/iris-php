@@ -16,24 +16,25 @@
                     {loremIpsum([0,5,10,15])}
                 </div><!-- 1 -->
                 <div class="column two"><!-- Write directly in layout without mainview-->
-                    {wbExplain($this)}
+                    {wbHeader($this)}
                     <p/>
-                    <table class="show">
-                        <tr>
-                            <td class="title" colspan="2">Initial value</td>
-                        </tr>
-                        <tr>
-                            <th><?=$this->descVar1[0]?></th>
-                            <td><?=$this->var1?></td>
-                        </tr>
-                        <tr>
-                            <th><?=$this->descVar1[1]?></th>
-                            <td>{var1}</td>
-                        </tr>
-                        <tr>
-                            <th><?=$this->descVar1[2]?></th>
-                            <td><?=$var1?></td>
-                        </tr> 
+                    <div id="content" {wbBG()}>
+                        <table class="show">
+                            <tr>
+                                <td class="title" colspan="2">Initial value</td>
+                            </tr>
+                            <tr>
+                                <th><?=$this->descVar1[0]?></th>
+                                <td><?=$this->var1?></td>
+                            </tr>
+                            <tr>
+                                <th><?=$this->descVar1[1]?></th>
+                                <td>{var1}</td>
+                            </tr>
+                            <tr>
+                                <th><?=$this->descVar1[2]?></th>
+                                <td><?=$var1?></td>
+                            </tr> 
                         {php}$this->var1 = 'Modified'{/php}
                         <tr>
                             <td class="title" colspan="2">After modifying <tt>$this->var1</tt></td>
@@ -50,32 +51,33 @@
                             <th><?=$this->descVar1[2]?></th>
                             <td><?=$var1?></td>
                         </tr> 
-                        {php}$var1 = 'Modified again'{/php}
-                        <tr>
-                            <td class="title" colspan="2">After modifying the copy <tt>$var1</tt></td>
-                        </tr>
-                        <tr>
-                            <th><?=$this->descVar1[0]?></th>
-                            <td><?=$this->var1?></td>
-                        </tr>
-                        <tr>
-                            <th><?=$this->descVar1[1]?></th>
-                            <td>{var1}</td>
-                        </tr>
-                        <tr>
-                            <th><?=$this->descVar1[2]?></th>
-                            <td><?=$var1?></td>
-                        </tr>  
-                    </table>
-                </div><!-- 2 -->
-                <div class="column three ">
-                    <h2>Column 3</h2>
-                    {loremIpsum([4,8,12,16,20])}
-                </div><!-- 3 -->
-            </div><!-- container -->
-            <div id="foot">
-                {wbFooter('modules/main/views/scripts/lo_main.iview')}
-            </div><!--foot-->
-        </div><!--main-->  
-    </body>
+                    {php}$var1 = 'Modified again'{/php}
+                    <tr>
+                        <td class="title" colspan="2">After modifying the copy <tt>$var1</tt></td>
+                    </tr>
+                    <tr>
+                        <th><?=$this->descVar1[0]?></th>
+                        <td><?=$this->var1?></td>
+                    </tr>
+                    <tr>
+                        <th><?=$this->descVar1[1]?></th>
+                        <td>{var1}</td>
+                    </tr>
+                    <tr>
+                        <th><?=$this->descVar1[2]?></th>
+                        <td><?=$var1?></td>
+                    </tr>  
+                </table>
+            </div>
+        </div><!-- 2 -->
+        <div class="column three ">
+            <h2>Column 3</h2>
+            {loremIpsum([4,8,12,16,20])}
+        </div><!-- 3 -->
+    </div><!-- container -->
+    <div id="foot">
+        {wbFooter('modules/main/views/layouts/lo_special.iview')}
+    </div><!--foot-->
+</div><!--main-->  
+</body>
 </html>

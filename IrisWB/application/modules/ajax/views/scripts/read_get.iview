@@ -1,21 +1,13 @@
-<div{wbColors()}>
-    <div>
-        {wbExplain($this)}
-    </div>
-
-</div>
+{wbHeader()}
 {ajax()->get('/ajax/get/message1','message1')}
 
-<div>
-    <div>
-        <p>
-            This message was no parts of the initial content of the page. 
-            It has been sent by the server after an Ajax request.
-        </p>
-        <div class="example">
+<div id="content" {wbBG()}>
+    <p>
+        This message was no parts of the initial content of the page. 
+        It has been sent by the server after an Ajax request.
+    </p>
+    <div class="example">
         <p id="message1">
         </p>
-        </div>
     </div>
-
 </div>

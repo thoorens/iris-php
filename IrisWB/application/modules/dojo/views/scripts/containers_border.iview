@@ -6,38 +6,39 @@
     $left = \Dojo\views\Helpers\BorderContainer::LEFT; //4
     $center = \Dojo\views\Helpers\BorderContainer::CENTER; //5
 {/php}
+{wbHeader()}
 
-{wbExplain($this)}
-{containers->divMaster()}
-<!--TOP -->
-<div {containers->item($top)}> 
-    <h4>Title of the example</h4>
+<div class="content" {wbBG()}>
+    {containers->divMaster()}
+    <!--TOP -->
+    <div {containers->item($top)}> 
+        <h4>Title of the example</h4>
+    </div>
+    <!--RIGHT-->    
+    <div {containers->item($right)}> 
+        <ul>
+            <li>uno</li>
+            <li>dos</li>
+            <li>tres</li>
+        </ul>
+    </div>
+    <!--BOTTOM-->
+    <div {containers->item($bottom)}> 
+        Here we have some data
+    </div>
+    <!--LEFT-->    
+    <div {containers->item($left)}> 
+        <ul>
+            <li>one</li>
+            <li>two</li>
+            <li>three</li>
+            <li>four</li>
+        </ul>
+    </div>
+    <!--CENTER-->    
+    <div {containers->item($center)}> 
+        {loremIpsum([0,81,82,83,84,85])}
+    </div>
+    {containers->endMaster()}
 </div>
-<!--RIGHT-->    
-<div {containers->item($right)}> 
-    <ul>
-        <li>uno</li>
-        <li>dos</li>
-        <li>tres</li>
-    </ul>
-</div>
-<!--BOTTOM-->
-<div {containers->item($bottom)}> 
-    Here we have some data
-</div>
-<!--LEFT-->    
-<div {containers->item($left)}> 
-    <ul>
-        <li>one</li>
-        <li>two</li>
-        <li>three</li>
-        <li>four</li>
-    </ul>
-</div>
-<!--CENTER-->    
-<div {containers->item($center)}> 
-    {loremIpsum([0,81,82,83,84,85])}
-</div>
-{containers->endMaster()}
-
 

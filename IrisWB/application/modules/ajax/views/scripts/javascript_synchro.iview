@@ -1,6 +1,6 @@
 {wbHeader()}
 {synchro()->send('MESS', 10000)}
-<div>
+<div id="content" {wbBG()}>
     <h3>A list</h3>
     <ul id='zone1'>
         {synchro()->liDisplay('MESS','zone1')}

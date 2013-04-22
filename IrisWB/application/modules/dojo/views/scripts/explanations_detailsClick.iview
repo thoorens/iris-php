@@ -7,17 +7,15 @@
 ];
 $det = $this->details->setAspectClass('dojoIrisMask2');
 {/php}
-<div>
-    <div id="page">
-        {wbExplain($this)}
-        <div class="example">
-            <p>Clic on "Details" to see more text.</p>
-            <ul>
-                {foreach(data,item)}
-                    <li>{(det->details($item[0],$item[1]))}</li>
+{wbHeader()}
+<div id="content" {wbBG()}>
+    <div class="example">
+        <p>Clic on "Details" to see more text.</p>
+        <ul>
+            {foreach(data,item)}
+                <li>{(det->details($item[0],$item[1]))}</li>
                 {/foreach}
-            </ul>
-            {(det->connectEvent('onclick'))}
-        </div>
+        </ul>
+        {(det->connectEvent('onclick'))}
     </div>
 </div>

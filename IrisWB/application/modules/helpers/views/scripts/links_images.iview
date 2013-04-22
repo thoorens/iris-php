@@ -5,55 +5,53 @@
         font-size: .6em;
     }
 </style>
-<div>
-    <div id="page">
-        <table class="show center">
-            <tr>
-                <td>
-                    Name alone
-                </td>
-                <td>
-                    With label and tooltip <br/>in a special folder
-                </td>
-                <td>
-                    A resource image
-                </td>
-            </tr>
-                <td>
-                    {image('jtleft.jpg')}
-                </td>
-                <td>
-                    {image('jtright.jpg','Portrait','Portrait_of_Jacques_Thoorens','/include')}
-                </td>
-                <td>
-                    {image('/!documents/file/images/construction.png','Icon','In construction')}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    in a common folder <br/>(this and next)
-                </td>
-                <td>
-                    same folder
-                </td>
-                <td>
-                    same folder and special class
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {php} /* An example of use of terminator ->__  */{/php}
-                    {image()->setFolder('/!documents/file/images/wbicons')->__}
-                    {image('WBIco_0.png')}
-                </td>
-                <td>
-                    {image('WBIco_1.png')}
-                </td>
-                <td>
-                    {image('WBIco_2.png','two','A two with shadow','','shadow')}
-                </td>
-            </tr>
-        </table>
-    </div>
-
+<div id="content" {wbBG()}>
+    <table class="show center">
+        <tr>
+            <td>
+                Name alone
+            </td>
+            <td>
+                With label and tooltip <br/>in a special folder
+            </td>
+            <td>
+                A resource image
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {image('jtleft.jpg')}
+            </td>
+            <td>
+                {image('jtright.jpg','Portrait','Portrait_of_Jacques_Thoorens','/include')}
+            </td>
+            <td>
+                {image('/!documents/file/images/construction.png','Icon','In construction')}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                in a common folder <br/>(this and next)
+            </td>
+            <td>
+                same folder
+            </td>
+            <td>
+                same folder and special class
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {rem} An example of use of terminator ->__  {/rem}
+                {image()->setFolder('/!documents/file/images/wbicons')->__}
+                {image('WBIco_0.png')}
+            </td>
+            <td>
+                {image('WBIco_1.png')}
+            </td>
+            <td>
+                {image('WBIco_2.png','two','A two with shadow','','shadow')}
+            </td>
+        </tr>
+    </table>
 </div>

@@ -1,24 +1,15 @@
-{php}
-    $data = [
-    '2011'=>'2011 is the year <i>Iris-PHP</i> has been started',
-    '1953'=>'The developper of the framework is born in 1953',
-    '5.4'=>'5.4 is the <b>minimum version</b> required by Iris-PHP',
-    '4'=>'There are 4 ways to specify a <i>layout</i> in Iris-PHP',
-];
-{/php}
-<div>
-    <div id="page">
-        {wbExplain($this)}
-        <div class="example">
-            <h3>Iris-PHP and numbers</h3>
-            <p>Clic on each title to see more information.</p>
-            <ul>
+{wbHeader()}
+
+<div id="content" {wbBG()}>
+    <div class="example">
+        <h3>Iris-PHP and numbers</h3>
+        <p>Clic on each title to see more information.</p>
+        <ul>
             {foreach(data,titre,details)}
                 {panes->setClass('show')->divTitle($titre)}
                 {details}
                 {panes->endDiv()}
             {/foreach}
-            </ul>
-        </div>
+        </ul>
     </div>
 </div>

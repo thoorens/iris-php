@@ -2,7 +2,7 @@
 <div>
 {warning}
 </div>
-<div>
+<div id="content" {wbBG()}>
     <table class="show">
         <tr>
             <th>HTML &lt;a> links</th>

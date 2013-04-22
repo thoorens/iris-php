@@ -9,14 +9,8 @@
         background:lightyellow;
     }
 </style>
-
-<div{wbColors()}>
-    <div>
-        {wbExplain($this)}
-    </div>
-
-</div>
-<div>
+{wbHeader($this)}
+<div id="content" {wbBG()}>
     <h3>This zone is pink (through a new class) added by javascript</h3>
     <div id="zone1">
         {loremIpsum([0,71,72,73])}

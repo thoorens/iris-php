@@ -1,11 +1,10 @@
-<h1>Demo of animation</h1>
-<div id="explication1" >
-    {loremIpsum(5,1)}  
-
-    {dojo_animation()->waitIn('explication1',1000)}
+{wbHeader($this)}
+<div id="explication1" class="example" >
+    {loremIpsum([0,51,52,53,54])} 
+    {dojo_animation()->waitIn('explication1',3000)}
     <h3 id="special">Suite...</h3>
     <div id="explication2" >
-        {loremIpsum(5,1)}  
+        {loremIpsum([55,56,57,58])}  
     </div>
-    {dojo_animation()->in('explication2','special',5000)}
+    {dojo_animation()->waitIn('explication2',6000)}
 </div>

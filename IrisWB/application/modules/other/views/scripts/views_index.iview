@@ -1,8 +1,6 @@
-<div>
-    <div id="page">
-        {wbExplain($this)}
-        {wbScriptName($required)}
-    </div>
+{wbHeader($this)}
+<div id="content" {wbBG()}>
+    {wbScriptName($required)}
     <p>
         We have no partial here....
     </p>

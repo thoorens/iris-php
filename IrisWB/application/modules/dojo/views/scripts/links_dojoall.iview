@@ -1,4 +1,7 @@
-<div>
+{REM}Common script for all link demo{/REM}
+{wbHeader()}
+{warning}
+<div id="content" {wbBG()}>
     <table class="show">
         <tr>
             <th>Javascript buttons</th>
@@ -57,4 +60,4 @@
 </div>
 {php}
     \Iris\SubHelpers\Link::$NoJavaForce = \FALSE;
-{/php}       
+{/php} 

@@ -1,6 +1,5 @@
-<div>
-    <div id="page">
-        {wbExplain($this)}
+{wbHeader($this)}
+<div id="content" {wbBG()}>
         <p/>
         <table class="show">
             <tr>
@@ -37,5 +36,3 @@
         {php}$test = "This is a test"{/php}
         {test}
     </div>
-
-</div>

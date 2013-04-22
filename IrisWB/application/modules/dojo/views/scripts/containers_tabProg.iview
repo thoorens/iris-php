@@ -1,6 +1,7 @@
 {wbHeader()}
 {dojo_tabContainer()->jsrender("tc1-prog", $data)}
-<h1>Test of containter programmatically</h1>
-<div style="width: 350px; height: 290px">
-    <div id="tc1-prog"></div>
+<div id="content" {wbBG()}>
+    <div style="width: 350px; height: 290px">
+        <div id="tc1-prog"></div>
+    </div>
 </div>

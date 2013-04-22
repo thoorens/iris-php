@@ -1,7 +1,8 @@
-<div>
-    <div id="page{wbColors()}">
-        {wbExplain($this)}
+{wbHeader($this)}
+
+<div id="content" {wbBG()}>
+    <p>
         {partial('colorlevels')}
-    </div>
+    </p>
 
 </div>

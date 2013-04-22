@@ -1,4 +1,6 @@
+{REM} This partial is used by /dojo/containers/tabProg {/REM}
+
 <h4>New text</h4>
-<i>See Tab2 and Tab3 to understant potential problems</i>
+<i>See Tab3 and Tab4 to understand potential problems</i>
 <br/>
 {loremIpsum([0,1,2,3,4])}

@@ -1,8 +1,7 @@
- <div id="mainpage" {wbColors()}>
+{wbHeader($this)}
+
+<div id="content" {wbBG()}>
     {(tooltip->render('mainpage',$this->welcome(2)))}
-    <p class="main">
-        {wbExplain($this)}
-    </p>
     {partial('colors')}
 </div>
 

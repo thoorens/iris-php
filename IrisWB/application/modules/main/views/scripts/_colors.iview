@@ -2,7 +2,7 @@
 <div {wbColors('WHITE')}>
     <table border="3">
         <tr>
-            <td {wbColors('GRAY1')}>main windows</td>
+            <td {wbBG()}>main windows</td>
             <td> ---- </td>
         </tr>
         <tr>

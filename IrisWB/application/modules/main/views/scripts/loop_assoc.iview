@@ -1,5 +1,7 @@
-{wbExplain($this)}
-<h4>Numbers</h4>
-<div>
-    {loop('loops/loop_assoc',$numberTranslations)}
+{wbHeader($this)}
+<div id="content" {wbBG()}>
+    <h4>Numbers</h4>
+    <div>
+        {loop('loops/loop_assoc',$numberTranslations)}
+    </div>
 </div>

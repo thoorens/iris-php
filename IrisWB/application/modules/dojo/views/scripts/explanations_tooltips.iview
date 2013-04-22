@@ -1,8 +1,6 @@
-
-<div>
-    <div id="page">
-        {wbExplain($this)}
-        {php}
+{wbHeader()}
+<div id="content" {wbBG()}>
+    {php}
             $tt = $this->toolTips;
             $this->styleLoader('special','.special%{%color:#DDF; background-color:black%}%');
             $data = [
@@ -11,27 +9,23 @@
                 ['5.4','5.4 is the <b>minimum version</b> required by Iris-PHP'],
                 ['4','There are 4 ways to specify a <i>layout</i> in Iris-PHP'],
             ];
-        {/php}
-        <p/>
-    </div>
-        <p>
+    {/php}
+    <p>
         Put the mouse on each of the number below to know what they mean.
-        </p>
-        <table class="show">
-            <tr>
-                <th colspan="3" id="projectstart">{(data[0][0])}{(tt->render("projectstart",$data[0][1]))}</th>
-            </tr>    
-            <tr>
-                <th id="birth">
-                    {(data[1][0])}{(tt->setPosition('before')->render("birth","<div class=\"special\">".$data[1][1]."</div>"))}
-                </th>
-                <th>{image('Iris8wiki.png','Iris-Logo','Iris-Logo','/!documents/file/logos')} </th>
-                <th id="version">{(data[2][0])}{(tt->setPosition('after')->render("version",$data[2][1]))}</th>
-            </tr>    
-            <tr>
-                <th id="layout" colspan="3">{(data[3][0])}{(tt->setPosition('below')->render("layout",$data[3][1]))}</th>
-            </tr>    
-        </table>
-            
-
+    </p>
+    <table class="show">
+        <tr>
+            <th colspan="3" id="projectstart">{(data[0][0])}{(tt->render("projectstart",$data[0][1]))}</th>
+        </tr>    
+        <tr>
+            <th id="birth">
+                {(data[1][0])}{(tt->setPosition('before')->render("birth","<div class=\"special\">".$data[1][1]."</div>"))}
+            </th>
+            <th>{image('Iris8wiki.png','Iris-Logo','Iris-Logo','/!documents/file/logos')} </th>
+            <th id="version">{(data[2][0])}{(tt->setPosition('after')->render("version",$data[2][1]))}</th>
+        </tr>    
+        <tr>
+            <th id="layout" colspan="3">{(data[3][0])}{(tt->setPosition('below')->render("layout",$data[3][1]))}</th>
+        </tr>    
+    </table>
 </div>

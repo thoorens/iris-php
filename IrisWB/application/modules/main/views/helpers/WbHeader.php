@@ -37,13 +37,9 @@ class WbHeader extends \Iris\views\helpers\_ViewHelper {
     static $_singleton = FALSE;
 
     public function help() {
-        $html = "<div";
-        $html .= '>' . CRLF;
-        $html .= '<div id="wbexplain">' . CRLF;
+        $html = '<div id="wbexplain">' . CRLF;
         $html .= $this->callViewHelper('wbExplain',$this);
         $html .= '</div>' . CRLF;
-        $html .= '</div>' . CRLF;
-        //$html = "<h1>Stop</h1>";
         return $html;
     }
 
