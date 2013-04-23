@@ -44,11 +44,12 @@ class WbFooter extends _ViewHelper {
             $html .= $this->callViewHelper('signature')->saveButton();
             $html .= $this->callViewHelper('button', $this->_codeButton($sequence));
         }
-        $previous = $sequence->getPrevious();
-        $html .= $this->callViewHelper('button', $previous);
+        return $html;
+        //$previous = $sequence->getPrevious();
+        //$html .= $this->callViewHelper('button', $previous);
         $html .= $this->callViewHelper('button', 'TOC', '/index/toc', 'Table of tests');
-        $next = $sequence->getNext();
-        $html .= $this->callViewHelper('button', $next);
+        //$next = $sequence->getNext();
+        //$html .= $this->callViewHelper('button', $next);
         return $html;
     }
 
@@ -59,6 +60,9 @@ class WbFooter extends _ViewHelper {
      */
     private function _codeButton($sequence){
         $current = $sequence->getCurrent();
+        if(is_null($current)){
+            return \Iris\Subhelpers\Link::$NoLink;
+        }
         $current[0] = 'Show code';
         $current[1] = '/show/code'.$current[1];
         $current[2] = 'See the code for '. $current[2];
