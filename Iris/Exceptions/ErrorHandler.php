@@ -2,8 +2,7 @@
 
 namespace Iris\Exceptions;
 
-use Iris\Engine\Memory,
-    Iris\Engine\Program;
+use Iris\Engine\Memory;
 
 /*
  * This file is part of IRIS-PHP.
@@ -95,7 +94,19 @@ class ErrorHandler implements \Iris\Design\iSingleton {
      */
     public function error2Exception($no, $mes, $file, $line) {
         $errorExc = new ErrorException($mes, $no, E_ERROR, $file, $line, $previous = NULL);
-        throw $errorExc;
+        if (\Iris\Engine\Mode::IsProduction()) {
+            $throw = TRUE;
+        }
+        else {
+            $error = \Iris\Engine\Superglobal::GetGet('ERROR', 0);
+            $throw = !$error;
+        }
+        if ($throw) {
+            throw $errorExc;
+        }
+        else {
+            $errorExc->getMessage();
+        }
     }
 
     /**
