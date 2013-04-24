@@ -44,12 +44,11 @@ class WbFooter extends _ViewHelper {
             $html .= $this->callViewHelper('signature')->saveButton();
             $html .= $this->callViewHelper('button', $this->_codeButton($sequence));
         }
-        return $html;
-        //$previous = $sequence->getPrevious();
-        //$html .= $this->callViewHelper('button', $previous);
+        $previous = $sequence->getPrevious();
+        $html .= $this->callViewHelper('button', $previous);
         $html .= $this->callViewHelper('button', 'TOC', '/index/toc', 'Table of tests');
-        //$next = $sequence->getNext();
-        //$html .= $this->callViewHelper('button', $next);
+        $next = $sequence->getNext();
+        $html .= $this->callViewHelper('button', $next);
         return $html;
     }
 
