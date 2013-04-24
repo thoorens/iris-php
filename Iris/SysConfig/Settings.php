@@ -36,7 +36,13 @@ class Settings implements \Iris\Design\iSingleton {
 
     use \Iris\Engine\tSingleton;
 
+    /**
+     * By default, the admin tool bar is displayed by an Ajax request
+     */
     const DEF_ATB_AJAXMODE = \TRUE;
+    /**
+     * By default, the run time display is enabled (only effective in development)
+     */
     const DEF_DISPLAY_RTD = \TRUE;
     
     /**
@@ -59,17 +65,17 @@ class Settings implements \Iris\Design\iSingleton {
      * @var boolean 
      */
     public static function GetAdminTollbarAjaxMode() {
-        $instance = self::Instance();
+        $instance = self::GetInstance();
         return $instance->_getValue('adminToolbarAjaxMode', self::DEF_ATB_AJAXMODE);
     }
 
     public static function SetAdminToolbarAjaxMode($value = \TRUE){
-        $instance = self::Instance();
+        $instance = self::GetInstance();
         $instance->_data['adminToolbarAjaxMode'] = $value;
     } 
     
     public static function GetDisplayRuntimeDisplay(){
-        $instance = self::Instance();
+        $instance = self::GetInstance();
         return $instance->_getValue('displayRuntimeDuration', self::DEF_DISPLAY_RTD);
     }
     
@@ -80,7 +86,7 @@ class Settings implements \Iris\Design\iSingleton {
      * 
      */
     public static function EnableDisplayRuntimeDuration(){
-        $instance = self::Instance();
+        $instance = self::GetInstance();
         $instance->_data['displayRuntimeDuration'] = \TRUE;
     }
     /**
@@ -90,10 +96,36 @@ class Settings implements \Iris\Design\iSingleton {
      * 
      */
     public static function DisableDisplayRuntimeDuration(){
-        $instance = self::Instance();
+        $instance = self::GetInstance();
         $instance->_data['displayRuntimeDuration'] = \FALSE;
     }
     
+    /**
+     * An MD5 signature may be calculated for a page and
+     * placed in a field (used by WB)
+     * By default, not used.
+     */
+    public static function EnableMD5Signature(){
+       $instance = self::GetInstance();
+       $instance->_data['md5'] = \TRUE;
+    }
+    
+    /**
+     * Disables the MD5 signature after it has been enabled
+     */
+    public static function DisableMD5Signature(){
+       $instance = self::GetInstance();
+       $instance->_data['md5'] = \FALSE;
+    }
+    
+    /**
+     * Returns true if MD5 signature is enabled
+     * @return boolean
+     */
+    public static function HasMD5Signature(){
+        $instance = self::GetInstance();
+        return $instance->_getValue('md5', \FALSE);
+    }
     
     private function _getValue($name,$default){
         if(!isset($this->_data[$name])){
@@ -102,12 +134,6 @@ class Settings implements \Iris\Design\iSingleton {
         return $this->_data[$name];
     }
 
-    /**
-     * 
-     * @return self
-     */
-    private static function Instance(){
-        return self::GetInstance();
-    }
+    
 }
 
