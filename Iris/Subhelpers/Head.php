@@ -36,6 +36,8 @@ class Head implements \Iris\Design\iSingleton {
 
     use \Iris\Engine\tSingleton;
 
+
+
     /**
      * A place holder for all the loader
      */
@@ -212,24 +214,31 @@ class Head implements \Iris\Design\iSingleton {
      * @param string $componentId The id of the component to write into 
      */
     private static function _MakeTuning($ajaxMode, &$text, $runtimeDuration, $componentId) {
-        $auto = self::GetInstance();
-        $loaders = $auto->_render();
-        foreach ($auto->_additionalHeadLoader as $loaderName) {
-            $loader = $loaderName::getInstance();
-            $loaders .= $loader->render($ajaxMode);
-        }
-        $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
-        if ($ajaxMode) {
-            $text = str_replace(self::AJAXMARK, $loaders, $text);
-        }
-        else {
-            $text = str_replace(self::LOADERMARK, $loaders, $text);
-            $starter .= \Iris\views\helpers\Signature::computeMD5($text);
-            \iris\views\helpers\Signature::computeMD5($loaders);
-            if (!is_null($runtimeDuration)) {
-                $starter .= $runtimeDuration->jsDisplay($componentId);
+        try {
+            $auto = self::GetInstance();
+            $loaders = $auto->_render();
+            foreach ($auto->_additionalHeadLoader as $loaderName) {
+                $loader = $loaderName::getInstance();
+                $loaders .= $loader->render($ajaxMode);
             }
-            $text = str_replace('</body>', $starter . "\n</body>", $text);
+            $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
+            if ($ajaxMode) {
+                $text = str_replace(self::AJAXMARK, $loaders, $text);
+            }
+            else {
+                $text = \str_replace(self::LOADERMARK, $loaders, $text);
+                if (\Iris\SysConfig\Settings::HasMD5Signature()) {
+                    $starter .= \Iris\views\helpers\Signature::computeMD5($text);
+                    \Iris\views\helpers\Signature::computeMD5($loaders);
+                }
+                if (\Iris\SysConfig\Settings::GetDisplayRuntimeDisplay() and !is_null($runtimeDuration)) {
+                    $starter .= $runtimeDuration->jsDisplay($componentId);
+                }
+                $text = \str_replace('</body>', $starter . "\n</body>", $text);
+            }
+        }
+        catch (\Exception $exception) {
+            \Iris\Engine\Debug::Kill(\Iris\Engine\Program::ErrorBox($exception->__toString(), 'Fatal error during final tuning'));
         }
     }
 
