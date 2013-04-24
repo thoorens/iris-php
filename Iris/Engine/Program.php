@@ -63,44 +63,43 @@ class Program {
      * as a recursive entry in the process. In case of an error in the
      * error treatment, no recursive call is done.
      */
-    public function run($errorURI = NULL) {
-        try {
-            ob_start();
-            $dispatcher = new Dispatcher();
-            echo $dispatcher->analyseRoute($errorURI)
-                    ->prepareResponse()
-                    ->preDispatch()
-                    ->dispatch(); // pre and post in dispatch ??????
-            $dispatcher->postDispatch();
-            $text = ob_get_clean();
-            \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->_runtimeDuration);
-            echo $text;
-        }
-        catch (\Exception $exception) {
-            // RedirectException is a way to escape from the initial run method end
-            if ($exception instanceof \Iris\Exceptions\RedirectException) {
-                $text = ob_get_clean();
-                \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->_runtimeDuration);
-                echo $text;
+    public function run() {
+        $done = \FALSE;
+        $URI = \NULL;
+        while (!$done) {
+            try {
+                ob_start();
+                $dispatcher = new Dispatcher();
+                echo $dispatcher->analyseRoute($URI)
+                        ->prepareResponse()
+                        ->preDispatch()
+                        ->dispatch(); // pre and post in dispatch ??????
+                $dispatcher->postDispatch();
+                $done = \TRUE;
             }
-            // true error
-            else {
-                $this->_errorInformation($exception);
-                // Clean all message in 
-                \Iris\Exceptions\ErrorHandler::WipeAllText();
-                // in case of error in error trapping, simple error box
-                if (!is_null($errorURI)) {
-                    \Iris\Engine\Debug::Kill($this->_errorBox($exception->__toString(), 'Fatal error'));
-                }
-                else {
-                    \Iris\MVC\Layout::GetInstance()->setViewScriptName(\NULL);
-                    Memory::Set('Exception', $exception);
-                    Memory::Set('Log', \Iris\Log::GetInstance());
-                    //Memory::SystemTrace();
-                    $this->run('/ERROR');
+            catch (\Exception $exception) {
+                // RedirectException is a way to escape from the initial run method end
+                if (!$exception instanceof \Iris\Exceptions\RedirectException) {
+                    $this->_errorInformation($exception);
+                    // Clean all message in 
+                    \Iris\Exceptions\ErrorHandler::WipeAllText();
+                    // in case of error in error trapping, simple error box
+                    if (!is_null($URI)) {
+                        \Iris\Engine\Debug::Kill(self::ErrorBox($exception->__toString(), 'Fatal error'));
+                    }
+                    else {
+                        \Iris\MVC\Layout::GetInstance()->setViewScriptName(\NULL);
+                        Memory::Set('Exception', $exception);
+                        Memory::Set('Log', \Iris\Log::GetInstance());
+                        //Memory::SystemTrace();
+                        $URI = "/ERROR";
+                    }
                 }
             }
         }
+        $text = ob_get_clean();
+        \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->_runtimeDuration);
+        echo $text;
     }
 
     /**
@@ -123,7 +122,7 @@ class Program {
      * @param string $title : box title
      * @return string 
      */
-    protected function _errorBox($message, $title = "Unkown class") {
+    public static function ErrorBox($message, $title = "Unkown class") {
         $text = '<div style="background-color:#979; color:#FFFFFF; margin:10px; padding:5px\">';
         $text .= "&nbsp;<strong>ERROR : $title</strong><hr>";
         $text .= '<pre style="background-color:#DDD;color:#008;margin:10px;font-size:0.8em;">';
