@@ -1,0 +1,31 @@
+{wbHeader()}
+
+<div id="content" {wbBG()}>
+    <table class="show">
+        <tr>
+            <td>A controller helper in main module</td>
+            <th>{computeVar}</th>
+        </tr>
+
+        <tr>
+            <td>A local controller helper in current module</td>
+            <th>{localComputeVar}</th>
+        </tr>
+
+        <tr>
+            <td>A local controller helper will override a helper situated in main module</td>
+            <th>{localCompute2Var}</th>
+        </tr>
+
+        <tr>
+            <td>A system defined controller helper may be used everywhere.</td>
+            <th>{systemComputeVar}</th>
+        </tr>
+
+        <tr>
+            <td>A library defined controller helper will use a prefix</td>
+            <th>{libComputeVar}</th>
+        </tr>
+
+    </table>
+</div>

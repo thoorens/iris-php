@@ -4,7 +4,7 @@
  * Put a comment marker // before "return" to enable the debugging facilities,
  * otherwise the reste of this file will be ignored
  */
-//return;
+return;
 
 /*
  * uncomment next line to enable debugging possibilities in development (ignored in production)
@@ -30,9 +30,9 @@ define('IRIS_DEBUG', TRUE);
 /*                 (view classes) */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
 /*                 (helper classes) */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
+\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
 /* You can precise here what class to trace when \Debug::LOADER is set */
-//\Iris\Engine\Loader::AddTrace(array('test'));
+//\Iris\Engine\Loader::AddTrace(array('Compute'));
 
 /* router messages */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
