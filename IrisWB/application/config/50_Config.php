@@ -12,3 +12,6 @@
 //\ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
 
 \Iris\Subhelpers\Head::GetInstance()->title('Site officiel d\'Iris-PHP');
+
+// MD5 signature is an important feature of Work Bench
+\Iris\SysConfig\Settings::EnableMD5Signature();
