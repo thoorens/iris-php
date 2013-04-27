@@ -379,6 +379,8 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         if (!is_array($modules)) {
             $modules = array($modules);
         }
+        // reverse the array because its elements will be prepended
+        $modules = array_reverse($modules);
         if (strpos($modules[0], 'library/IrisInternal') === 0) {
             $programName = $transapplicationName = '';
         }
