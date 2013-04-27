@@ -32,7 +32,7 @@ namespace iris\views\helpers;
  * Color for background in WB
  * 
  */
-class wbBG extends \Iris\views\helpers\_ViewHelper {
+class WbBG extends \Iris\views\helpers\_ViewHelper {
 
     static $_singleton = FALSE;
 
