@@ -1,0 +1,31 @@
+{wbHeader()}
+
+<div id="content" {wbBG()}>
+    <table class="show">
+        <tr>
+            <td>A view helper in main module</td>
+            <th>{aspect('This is a text with a style')}</th>
+        </tr>
+
+        <tr>
+            <td>A local view helper in current module</td>
+            <th>{localAspect('This is a text with a style')}</th>
+        </tr>
+
+        <tr>
+            <td>A local view helper will override a helper situated in main module</td>
+            <th>{Aspect2('This is a text with a style')}</th>
+        </tr>
+
+        <tr>
+            <td>A system defined view helper may be used everywhere.</td>
+            <th>{demo('This is a text with a style')}</th>
+        </tr>
+
+        <tr>
+            <td>A library defined view helper will use a prefix</td>
+            <th>{dojo_demo('This is a text with a style')}</th>
+        </tr>
+
+    </table>
+</div>
