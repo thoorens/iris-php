@@ -80,23 +80,22 @@ abstract class _AjaxController extends \Iris\MVC\_Controller {
      */
     protected final function _setLayout($layoutName) {
         throw new \Iris\Exceptions\ControllerException('Ajax controllers can\'t have a layout.');
-        ;
     }
 
     /**
      * The Ajax controller can produce an output from a view script (which is a partial and follows
      * the partial naming convention).
      * 
-     * @param type $scriptName
+     * @param type $scriptName The name of the script (begins by _ or has a complex path
      */
     protected function _renderScript($scriptName) {
         $this->_text .= $this->callViewHelper('partial', $scriptName, $this->_view);
     }
 
     /**
-     * A way to send text as a litteral
+     * The Ajax controller can produce an output from a simple text
      * 
-     * @param string $text
+     * @param string $text The text to send by the ajax controller
      */
     protected function _renderLiteral($text) {
         $this->_text .= $text;
