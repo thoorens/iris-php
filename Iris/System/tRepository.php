@@ -69,6 +69,12 @@ trait tRepository{
         return self::$_Repository[$objectName];
     }
     
+    /**
+     * To override for most sophisticated constructor management (e.g. subhelper _SlideShowManager)
+     * 
+     * @param type $objectName The name of the object to create
+     * @return \static
+     */
     protected static function _New($objectName){
         return new static($objectName);
     }
