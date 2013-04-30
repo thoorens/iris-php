@@ -1,6 +1,6 @@
 <?php
 
-namespace Dojo\Engine;
+namespace Iris\System;
 
 
 defined('CRLF') or define('CRLF',"\n");
@@ -20,19 +20,17 @@ defined('CRLF') or define('CRLF',"\n");
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-13 Jacques THOORENS
  */
 
 /**
- * This class is used internally by all Dojo helpers to manage the
- * components to load. Each bubble has its proper environment, prerequisites and
- * internal function. It includes the Ajax functions.
+ * Implements an internal repository for a class having named instances
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-trait tRepository{ // NameSpace is reserved
+trait tRepository{
 
     /**
      * All the object are placed in a repository
@@ -64,10 +62,7 @@ trait tRepository{ // NameSpace is reserved
      * @param string $objectName The name of the object to create/retrieve
      * @return static
      */
-    public static function GetObject($objectName) {
-        if(count(self::$_Repository)==0){
-            \Dojo\Manager::GetInstance()->setActive();
-        }
+    protected static function _GetObject($objectName) {
         if (!isset(self::$_Repository[$objectName])) {
             self::$_Repository[$objectName] = new static($objectName);
         }
@@ -92,6 +87,10 @@ trait tRepository{ // NameSpace is reserved
         if (isset(self::$_Repository[$objectName])) {
             unset(self::$_Repository[$objectName]);
         }
+    }
+    
+    public static function InstanceNumber(){
+        return count(self::$_Repository);
     }
 }
 

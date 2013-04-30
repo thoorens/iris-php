@@ -1,6 +1,7 @@
 <?php
 
 namespace Dojo\Engine;
+use Iris\System\tRepository;
 
 /*
  * This file is part of IRIS-PHP.
@@ -91,8 +92,8 @@ class NameSpaceItem {
      * @param type $objectName
      * @return NameSpaceItem
      */
-    public static function addObject($objectName) {
-        return self::GetObject($objectName);
+    public static function AddObject($objectName) {
+        return self::_GetObject($objectName);
     }
 
     /**

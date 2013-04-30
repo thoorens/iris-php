@@ -79,7 +79,7 @@ abstract class _Animation extends _DojoHelper implements \Dojo\Engine\iLateScrip
      */
     protected function _animateSynchro() {
         $this->_animatorSubhelper = \Dojo\Subhelpers\Animator::GetInstance();
-        \Dojo\Engine\NameSpaceItem::GetObject('commonAnimation')->createLateFunction($this, 'args');
+        \Dojo\Engine\NameSpaceItem::AddObject('commonAnimation')->createLateFunction($this, 'args');
         $this->_codeContainer = $this->_animatorSubhelper->getCodeContainer();
     }
 

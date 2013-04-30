@@ -67,7 +67,7 @@ abstract class _Sequence extends _Animation {
     private function _jsRender() {
         $json = json_encode(self::$_Events);
         /* @var $namespace \Dojo\Engine\NameSpaceItem */
-        $namespace = \Dojo\Engine\NameSpaceItem::GetObject('sequenceEvents');
+        $namespace = \Dojo\Engine\NameSpaceItem::AddObject('sequenceEvents');
         $namespace->createVar(CRLF . $json . CRLF);
     }
 

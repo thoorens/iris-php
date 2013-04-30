@@ -1,6 +1,7 @@
 <?php
 
 namespace Dojo\Engine;
+use Iris\System\tRepository;
 
 /*
  * This file is part of IRIS-PHP.
@@ -58,7 +59,10 @@ class Bubble {
      * @return Bubble
      */
     public static function GetBubble($objectName) {
-        return self::GetObject($objectName);
+        if(self::InstanceNumber()==0){
+            \Dojo\Manager::GetInstance()->setActive();
+        }
+        return self::_GetObject($objectName);
     }
 
     /**
