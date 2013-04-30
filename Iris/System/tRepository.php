@@ -64,9 +64,13 @@ trait tRepository{
      */
     protected static function _GetObject($objectName) {
         if (!isset(self::$_Repository[$objectName])) {
-            self::$_Repository[$objectName] = new static($objectName);
+            self::$_Repository[$objectName] = self::_New($objectName);
         }
         return self::$_Repository[$objectName];
+    }
+    
+    protected static function _New($objectName){
+        return new static($objectName);
     }
     
     /**
