@@ -183,22 +183,22 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper{
     }
 
     private function _jsSound() {
-        \Dojo\Engine\NameSpaceItem::addObject('oldVol')
+        \Dojo\Engine\NameSpaceItem::AddObject('oldVol')
                 ->createVar(0);
-        \Dojo\Engine\NameSpaceItem::addObject('soundController')
+        \Dojo\Engine\NameSpaceItem::AddObject('soundController')
                 ->createVar("''");
-        \Dojo\Engine\NameSpaceItem::addObject('soundminus')
+        \Dojo\Engine\NameSpaceItem::AddObject('soundminus')
                 ->createFunction('this.soundController.volume = this.soundController.volume - 0.1');
-        \Dojo\Engine\NameSpaceItem::addObject('soundplus')
+        \Dojo\Engine\NameSpaceItem::AddObject('soundplus')
                 ->createFunction("this.soundController.volume = this.soundController.volume +0.1;");
-        \Dojo\Engine\NameSpaceItem::addObject('nosound')
+        \Dojo\Engine\NameSpaceItem::AddObject('nosound')
                 ->createFunction(<<< NOSOUND
         currentVol = this.soundController.volume;
         this.soundController.volume=this.oldVol;
         this.oldVol = currentVol;
 NOSOUND
         );
-        \Dojo\Engine\NameSpaceItem::addObject('initsound')
+        \Dojo\Engine\NameSpaceItem::AddObject('initsound')
                 ->createFunction(<<< INITSOUND
         require(['dojo'],function(dojo){
             iris_dojo.soundController = dojo.byId('tuto_sound');

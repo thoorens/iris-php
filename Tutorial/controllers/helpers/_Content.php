@@ -1,9 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 namespace Tutorial\controllers\helpers;
 
@@ -23,11 +19,11 @@ namespace Tutorial\controllers\helpers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
- * Generates an Item object with all the informations necessary to
+ * Generates a Screen object with all the informations necessary to
  * load the resources for one screen : images, text, voice and synchonisation.
  * The content may a simple image (IMAGE), a simple (VIEW) or a simple text (TEXT)
  * or both a text and a view, displayed in tabs (TEXTVIEW)
@@ -41,17 +37,13 @@ namespace Tutorial\controllers\helpers;
  */
 abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
 
-    const VIEW = 1;
-    const TEXT = 2;
-    const TEXTVIEW = 3;
-    const IMAGE = 4;
-    const TOC = 8;
+    
 
     /**
      * Returns an new completed item.
      * 
      * @param int $num
-     * @return \Tutorial\Content\Item
+     * @return \Tutorial\Content\Screen
      */
     public function help($num) {
         return $this->getItem($num);
@@ -60,7 +52,7 @@ abstract class _Content extends \Iris\controllers\helpers\_ControllerHelper {
     /**
      * The method will be overwritten in each concret tutorial
      * 
-     * @return \Tutorial\Content\Item
+     * @return \Tutorial\Content\Screen
      */
     protected abstract function getItem($num);
 }

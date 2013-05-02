@@ -23,7 +23,8 @@ namespace Tutorial\Translation;
  * @copyright 2012 Jacques THOORENS
  */
 /**
- * Adds a few message translation proper to Dojo library
+ * Adds a few message translations proper to Tutorial library
+ * It is implemented as an array.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
