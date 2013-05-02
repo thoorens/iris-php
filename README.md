@@ -1,4 +1,4 @@
-![Logo](http://irisphp.org/!documents/file/resource/github/Title80.jpg)
+![Logo](http://irisphp.org/!documents/file/github/Title80.jpg)
 
 The repository contains now version 1.0 RC2 (ready for tutorial creation).
 
@@ -12,10 +12,10 @@ Discover it:
     ![irisorg] (http://irisphp.org/!documents/file/resource/github/Irisorg.png)
 * [Author's site](http://thoorens.net) The author's site
 
-    ![irisorg] (http://irisphp.org/!documents/file/resource/github/Thoorens.png)
+    ![irisorg] (http://irisphp.org/!documents/file/github/Thoorens.png)
 * [A true site realized with Iris-PHP] (http://eci-liege.info) A high school in Liège (Belgium)
 
-    ![irisorg] (http://irisphp.org/!documents/file/resource/github/Eci.png)
+    ![irisorg] (http://irisphp.org/!documents/file/github/Eci.png)
 * A brand new site, realized with the simple command `iris.php -c /srv/tutoriel1`
 
-    ![irisorg] (http://irisphp.org/!documents/file/resource/github/New.png)
+    ![irisorg] (http://irisphp.org/!documents/file/github/New.png)
