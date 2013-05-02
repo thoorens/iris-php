@@ -1,3 +1,5 @@
+{REM} This script is for demonstration use in WorkBench {/REM}
+
 <div class="partial">
     <h4>Partial</h4>
     {wbScriptName($name,'Partial')}
