@@ -9,7 +9,7 @@ Discover it:
   * a wiki explaining how to use it and full details about tips and tricks
   * a serie of tutorials
   
-    ![irisorg] (http://irisphp.org/!documents/file/resource/github/Irisorg.png)
+    ![irisorg] (http://irisphp.org/!documents/file/github/Irisorg.png)
 * [Author's site](http://thoorens.net) The author's site
 
     ![irisorg] (http://irisphp.org/!documents/file/github/Thoorens.png)
