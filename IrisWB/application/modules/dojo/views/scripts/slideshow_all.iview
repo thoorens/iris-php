@@ -1,0 +1,6 @@
+{wbHeader()}
+<div id="content" {wbBG()}>
+    <div class="photo">
+        {slideShow()->render()}
+    </div>
+</div>
