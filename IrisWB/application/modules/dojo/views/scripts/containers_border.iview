@@ -9,13 +9,13 @@
 {wbHeader()}
 
 <div class="content" {wbBG()}>
-    {containers->divMaster()}
+    {container->divMaster()}
     <!--TOP -->
-    <div {containers->item($top)}> 
+    <div {container->item($top)}> 
         <h4>Title of the example</h4>
     </div>
     <!--RIGHT-->    
-    <div {containers->item($right)}> 
+    <div {container->item($right)}> 
         <ul>
             <li>uno</li>
             <li>dos</li>
@@ -23,11 +23,11 @@
         </ul>
     </div>
     <!--BOTTOM-->
-    <div {containers->item($bottom)}> 
+    <div {container->item($bottom)}> 
         Here we have some data
     </div>
     <!--LEFT-->    
-    <div {containers->item($left)}> 
+    <div {container->item($left)}> 
         <ul>
             <li>one</li>
             <li>two</li>
@@ -36,9 +36,9 @@
         </ul>
     </div>
     <!--CENTER-->    
-    <div {containers->item($center)}> 
+    <div {container->item($center)}> 
         {loremIpsum([0,81,82,83,84,85])}
     </div>
-    {containers->endMaster()}
+    {container->endMaster()}
 </div>
 

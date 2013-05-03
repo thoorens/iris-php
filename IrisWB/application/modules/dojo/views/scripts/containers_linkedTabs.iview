@@ -1,9 +1,9 @@
 {wbHeader($this)}
 <div id="content" {wbBG()}>
-    {containers->divMaster()}
-    <div {containers->linkedItem("first",'/include/content1.html')}> 
+    {container->divMaster()}
+    <div {container->linkedItem("first",'/include/content1.html')}> 
     </div>
-    <div {containers->linkedItem("second",'/include/content2.html')}> 
+    <div {container->linkedItem("second",'/include/content2.html')}> 
     </div>
-    {containers->endMaster()}
+    {container->endMaster()}
 </div>
