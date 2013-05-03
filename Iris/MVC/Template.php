@@ -66,6 +66,7 @@ class Template implements \Iris\Translation\iTranslatable {
      * @var View
      */
     private $_view;
+
     /**
      * The required fileName without extension (may be null)
      * @var string
@@ -74,9 +75,15 @@ class Template implements \Iris\Translation\iTranslatable {
 
     /**
      * The optional phtml file name
-     * @var String 
+     * @var string 
      */
     private $_readScriptFileName;
+
+    /**
+     * The PHTML equivalent file name
+     * @var string
+     */
+    private $_phtmlFilename;
 
     /**
      * If false, indicates that the _templateText is already translated to
@@ -101,6 +108,8 @@ class Template implements \Iris\Translation\iTranslatable {
     private static $_Token = [
         // escaping {
         ['/%{%(.*)%}%/', '{$1}', \TRUE],
+        // assign a new variable shortcut for {php} $var = 'value' {/php}
+        ['/{assign\((\w+),(.*)\)}/', '<?php $$1 = $2;/*TEST*/?>'],
         // php tags
         ['{php}', '<?php '],
         ['{/php}', '?>'],
@@ -222,8 +231,9 @@ class Template implements \Iris\Translation\iTranslatable {
         }
         if (!$read) {
             $extension = (strpos(basename($scriptFileName), '.') === FALSE) ? '.iview' : '';
-            $file = file($scriptFileName.$extension);
-            $this->_readScriptFileName = $scriptFileName.$extension;
+            $file = file($scriptFileName . $extension);
+            $this->_phtmlFilename = "$scriptFileName.phtml";
+            $this->_readScriptFileName = $scriptFileName . $extension;
             $this->_toBeParsed = \TRUE;
         }
         $this->_templateArray = $file;
@@ -269,8 +279,8 @@ class Template implements \Iris\Translation\iTranslatable {
                 }
             }
             $phtml = implode("", $this->_templateArray);
-            if (self::$_CacheTemplate and is_writable(dirname($this->_readScriptFileName))) {
-                file_put_contents($this->_readScriptFileName, $phtml);
+            if (self::$_CacheTemplate and is_writable(dirname($this->_phtmlFilename))) {
+                file_put_contents($this->_phtmlFilename, $phtml);
             }
         }
         return $phtml;
@@ -307,7 +317,6 @@ class Template implements \Iris\Translation\iTranslatable {
     public function getReadScriptFileName() {
         return $this->_readScriptFileName;
     }
-
 
 }
 
