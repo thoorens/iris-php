@@ -36,7 +36,12 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
     use \Iris\Translation\tSystemTranslatable;
     use \Iris\views\helpers\tViewHelperCaller;
 
-    
+    /**
+     * A terminator for using fluent methods in {(  )} context
+     * @var string
+     */
+    public $__ = '';
+
     /**
      * Returns the unique instance of the class and optionally gives it
      * a renderer
