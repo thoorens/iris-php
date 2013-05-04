@@ -79,7 +79,10 @@ class Program {
             }
             catch (\Exception $exception) {
                 // RedirectException is a way to escape from the initial run method end
-                if (!$exception instanceof \Iris\Exceptions\RedirectException) {
+                if ($exception instanceof \Iris\Exceptions\RedirectException) {
+                    $done = \TRUE;
+                }
+                else{
                     $this->_errorInformation($exception);
                     // Clean all message in 
                     \Iris\Exceptions\ErrorHandler::WipeAllText();
