@@ -36,6 +36,10 @@ use tViewHelperCaller;
 // Par défaut les aides de vue ne sont pas des singletons
 // protected static $_Singleton = FALSE;
 
+    /**
+     * A terminator for using fluent methods in {(  )} context
+     * @var string
+     */
     public $__ = '';
     
     /**
