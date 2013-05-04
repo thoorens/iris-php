@@ -96,6 +96,13 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
     protected $_subType = '';
 
     /**
+     * May force a language for explanations
+     * 
+     * @var string
+     */
+    protected $_language = '';
+    
+    /**
      *
      * @var array An associative array to provide format and parameter status
      */
@@ -201,12 +208,24 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * Permits to change the default icon dir (in ILO)
      * 
      * @param string $defaultIconDir 
+     * @return \Iris\Subhelpers\Crud for fluent interface
      */
     public function setDefaultIconDir($defaultIconDir) {
         $this->_defaultIconDir = $defaultIconDir;
+        return $this;
     }
 
     /**
+     * 
+     * @param type $language
+     * @return \Iris\Subhelpers\Crud for fluent interface
+     */
+    public function setLanguage($language) {
+        $this->_language = $language;
+        return $this;
+    }
+
+        /**
      *
      * @param string $name
      * @param string $commentFormat
@@ -399,6 +418,15 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         return \Iris\MVC\_Helper::HelperCall('crudIcon');
     }
 
+    public function _($message, $system = \FALSE){
+        if($this->_language=='english'){
+            return $message;
+        }
+        else{
+            return parent::_($message);
+        }
+    }
+    
 }
 
 ?>
