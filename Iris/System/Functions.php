@@ -18,7 +18,7 @@ namespace Iris\System;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /**
@@ -30,6 +30,25 @@ namespace Iris\System;
  * @version $Id: $ */
 class Functions {
 
+    /**
+     * A human readable version number for the framework
+     * 
+     * @var string
+     */
+    private static $_IrisVersion = "1.0 RC2";
+    /**
+     * A numeric version number (for comparison)
+     *  
+     * @var float
+     */
+    private static $Version = 100.02;
+
+    /**
+     * Computes the complementary color from a given color
+     * 
+     * @param string $color The color in HTML format (# + 3 or 6 digits)
+     * @return string
+     */
     public static function GetComplementaryColor($color) {
         if (strlen($color) == 4) {
             $max = 4095;
@@ -42,6 +61,24 @@ class Functions {
         $colorValue = hexdec(substr($color, 1));
         $complement = $max - $colorValue;
         return (sprintf($format, $complement));
+    }
+
+    /**
+     * Returns the version of the framework. The numeric version is
+     * meant to be used in comparison. It is computed this way <ul>
+     * <li> the version number * 100
+     * <li> the subversion number (from 0 to 99)
+     * <li> the release number (from 0.000 to 0.99)
+     * </ul>
+     * 
+     * @param boolean $numeric If true, returns a float number
+     * @return string/float
+     */
+    public static function IrisVersion($numeric = \FALSE) {
+        if ($numeric)
+            return self::$Version;
+        else
+            return self::$_IrisVersion;
     }
 
 }
