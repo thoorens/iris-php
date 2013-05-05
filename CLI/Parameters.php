@@ -103,6 +103,27 @@ class Parameters {
         }
     }
 
+    /**
+     * A quick way to access a internal parameter value (for special purposes)
+     * If it does not exist, return false
+     * 
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name) {
+        return $this->_getParameter($name, \FALSE);
+    }
+
+    /**
+     * A quick way to define a internal parameter
+     * 
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set($name, $value) {
+        $this->_parameters[$name] = $value;
+    }
+
     
     /**
      * Reads an ini file and analyses its content in a array of configs
