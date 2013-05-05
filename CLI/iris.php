@@ -26,7 +26,6 @@
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $
  */
-define('IRISVERSION', '0.9 - beta');
 define('BADINI', "Your param file does not seem to be a valid one. Please check your configuration according to the manual instructions.\n");
 
 /**
@@ -245,6 +244,8 @@ STOP;
                 'Iris/OS/Unix',
                 'Iris/OS/Windows',
                 'Iris/OS/XP',
+                // System
+                'Iris/System/Functions',
             ];
         }
         foreach ($classes as $classe) {
@@ -253,7 +254,7 @@ STOP;
     }
 
     public function displayException(\Exception $ex, $type) {
-        echo "IRIS-PHP " . IRISVERSION . " CLI error:\n";
+        echo "IRIS-PHP " . \Iris\System\Functions::IrisVersion() . " CLI error:\n";
         if ($type == 1) {
             echo "Exception during parameters reading\n";
         }

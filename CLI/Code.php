@@ -22,7 +22,7 @@ namespace CLI;
  *
 
 
-}/**
+  }/**
  * This class creates piece of code: action scripts, controllers,
  * modules and application.
  * 
@@ -30,7 +30,9 @@ namespace CLI;
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ * 
  */
+
 class Code extends _Process {
+
     const MODULE = 1;
     const CONTROLLER = 2;
     const ACTION = 4;
@@ -46,13 +48,15 @@ class Code extends _Process {
         $projectDir = $parameters->getProjectDir();
         $projectName = $parameters->getProjectName();
         $virtualFile = "$projectDir/$projectName.virtual";
-        if(!$display)echo "Creating $virtualFile for httpd-virtual.conf.\n";
+        if (!$display)
+            echo "Creating $virtualFile for httpd-virtual.conf.\n";
         $url = $parameters->getUrl();
         $publicDir = $parameters->getPublicDir();
         $docRoot = "$projectDir/$publicDir";
-        if(strpos($url,'.')!==FALSE){
+        if (strpos($url, '.') !== FALSE) {
             $text = $this->_virtualApache($docRoot, $url, \TRUE);
-        }else{
+        }
+        else {
             $text = $this->_virtualApache($docRoot, "$url.local", \TRUE);
             $text .= $this->_virtualApache($docRoot, "$url.prod", \FALSE);
         }
@@ -71,7 +75,7 @@ class Code extends _Process {
      * @param string $url
      * @param boolean $development 
      */
-    private function _virtualApache($docRoot, $url, $development=\TRUE) {
+    private function _virtualApache($docRoot, $url, $development = \TRUE) {
         $setEnv = "SetEnv APPLICATION_ENV development";
         $devEnv = $development ? $setEnv : "# $setEnv";
         $text = <<<APACHE
@@ -141,7 +145,7 @@ APACHE;
             '00_debug.php' => "config/00_debug.php",
             '20_settings.php' => "config/20_settings.php",
         ];
-        $parameters = Parameters::GetInstance();    
+        $parameters = Parameters::GetInstance();
         $programName = $parameters->getApplicationName();
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destination = "$projectDir/$programName";
@@ -238,7 +242,11 @@ APACHE;
         if (file_exists($controllerPath)) {
             throw new \Iris\Exceptions\CLIException("Controller $controllerName already exists.");
         }
-        $this->_createFile("$source/index.php", $controllerPath, array(
+        if (\CLI\Parameters::GetInstance()->workbench)
+            $template = 'systemindex.php';
+        else
+            $template = 'index.php';
+        $this->_createFile("$source/$template", $controllerPath, array(
             '{TYPE}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
             '{MODULECONTROLLER}' => "_$moduleName",

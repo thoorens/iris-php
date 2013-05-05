@@ -116,7 +116,7 @@ abstract class _Process {
         $replacement['{PROJECTNAME}'] = $parameters->getDetailedProjectName();
         $replacement['{LICENSE}'] = $parameters->getLicense();
         $replacement['{AUTHOR}'] = $parameters->getAuthor();
-        $replacement['{IRISVERSION}'] = IRISVERSION;
+        $replacement['{IRISVERSION}'] = \Iris\System\Functions::IrisVersion();
         $replacement['{COMMENT}'] = $parameters->getComment();
         $this->_os->createFromTemplate($source, $destination, $replacement);
     }

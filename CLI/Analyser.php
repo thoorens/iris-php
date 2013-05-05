@@ -98,6 +98,7 @@ class Analyser {
         'C:' => 'controller:',
         'A:' => 'action:',
         'M:' => 'module:',
+        'W' => 'workbench',
         // menus
         'N:' => 'menuname',
         'n:' => 'makemenu',
@@ -210,6 +211,11 @@ class Analyser {
                     $this->_option = $option;
                     break;
 
+                // generates portions of work bench
+                case 'W': case 'workbench':
+                    $parameters->workbench = \TRUE;
+                    break;
+                
                 // option "interactive" in project creation : metadata are request through
                 // a dialog in console
                 case 'i': case 'interactive':
