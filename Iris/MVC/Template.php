@@ -114,8 +114,8 @@ class Template implements \Iris\Translation\iTranslatable {
         ['{php}', '<?php '],
         ['{/php}', '?>'],
         // foreach with and without key
-        ['/{foreach\((\w+),(\w+),(\w+)\)}/i', '<?php foreach($$1 as $$2=>$$3):?>'],
-        ['/{foreach\((\w+),(\w+)\)}/i', '<?php foreach($$1 as $$2):?>'],
+        ['/{foreach\((\w+), ?(\w+), ?(\w+)\)}/i', '<?php foreach($$1 as $$2=>$$3):?>'],
+        ['/{foreach\((\w+), ?(\w+)\)}/i', '<?php foreach($$1 as $$2):?>'],
         ['{/foreach}', '<?php endforeach;?>'],
         // if then else
         ['/{if\((.+?)\)}/', '<?php if($1):?>'],
