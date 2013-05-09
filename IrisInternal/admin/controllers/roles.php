@@ -82,7 +82,7 @@ class roles extends _admin {
             throw new \Iris\Exceptions\InternalException('To switch user, you need to define "\Iris\Users\TUsers::$systemUserEntity".');
         }
         $entity = u\TUsers::$systemUserEntity;
-        $users = new $entity();
+        $users = $entity::GetEntity();
         $user = $users->find($newUser);
         $name = $user->getName();
         $role = $user->getRole();
@@ -121,7 +121,7 @@ class roles extends _admin {
             return \NULL;
         }
         $entity = u\TUsers::$systemUserEntity;
-        $users = new $entity();
+        $users = $entity::GetEntity();
 
         $list = $users->userList();
         $ff = new \Iris\Forms\StandardFormFactory();

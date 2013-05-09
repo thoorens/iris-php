@@ -1,18 +1,18 @@
 <!--A tool bar for administration during development-->
 
 <div id="iris_admintoolbar">
-    {ILO_colorStyle($color)}
-    {if($MENU)}
+    <?=$this->ILO_colorStyle($color)?>
+    <?php if($MENU):?>
         <div id="menu_admin">
-            &nbsp;{ILO_menu()}
+            &nbsp;<?=$this->ILO_menu()?>
         </div><!-- menu_admin -->
-    {/if}
+    <?php endif;?>
     <div id="menu_admin2">
-        &nbsp; {ILO_executionTime($time)}
-        &nbsp;{ILO_goInternal('admin',TRUE)}
-        &nbsp;{ILO_displayUser()}
-        &nbsp;{ILO_goInternal('reset',TRUE)} 
-        &nbsp;{ILO_modeIcon()}
+        &nbsp; <?=$this->ILO_executionTime($time)?>
+        &nbsp;<?=$this->ILO_goInternal('admin',TRUE)?>
+        &nbsp;<?=$this->ILO_displayUser()?>
+        &nbsp;<?=$this->ILO_goInternal('reset',TRUE)?> 
+        &nbsp;<?=$this->ILO_modeIcon()?>
     </div> <!-- menuadmin2 -->
     <div class="reset"></div>
 </div><!-- iris_admintoolbar -->

@@ -11,7 +11,7 @@
             <li>éditer les fichiers de paramétrage</li>
         </ul>
         <p>
-            Ces fonctionnalités seront étendues dans les prochaines versions du framework.
+            Ces fonctionalités seront étendues dans les prochaines versions du framework.
         </p>
     {/block}
     {block('EN')}

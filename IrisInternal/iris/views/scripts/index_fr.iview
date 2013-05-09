@@ -6,7 +6,7 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
 </h1>
 <p>
     Ce site est réalisé à l'aide du nouveau framework IRIS-PHP, encore en cours de développement. Dans l'état actuel,
-    il dispose déjà d'un module exécutable reprenant les principales fonctionnalités d'un site simple, avec
+    il dispose déjà d'un module exécutable reprenant les principales fonctionalités d'un site simple, avec
     base de données mySQL ou SQLite.
 </p>
 
@@ -49,7 +49,7 @@ $det = $this->dojo_details()->setAspectClass('dojoIrisMask2');
     </li>
     <li>
         <a href="https://github.com/thoorens/iris-php">https://github.com/thoorens/iris-php</a> est un dépôt GIT contenant
-        les sources complètes du projet. Il sera régulièrement mis à jour et bénéficiera de toutes les fonctionnalités
+        les sources complètes du projet. Il sera régulièrement mis à jour et bénéficiera de toutes les fonctionalités
         du gestionnaire de version (historique, branching et possibilité de fork). Dans l'état actuel, les modifications seront
         réservées à l'auteur, mais les utilisateurs enthousiastes peuvent créer un fork personnel pour expérimenter leurs changements.
         Ces changements pourraient être intégrés par la suite au projet principal.
