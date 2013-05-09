@@ -339,7 +339,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
     }
 
     /**
-     * The value is rendered from the stored value, optionnally modified
+     * The value is rendered from the stored value, optionally modified
      * by a validator method.
      * 
      * @return string (html) 
