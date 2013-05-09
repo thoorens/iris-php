@@ -113,7 +113,7 @@ class Object {
                 else {
                     $this->_data[] = $value;
                     $this->_newData[] = NULL;
-                    $entity->getEntityManager()->registerObject($entity->getEntityName(), $idValues, $this);
+                    $entity->registerObject($idValues, $this);
                 }
             }
         }
@@ -186,15 +186,14 @@ class Object {
                 return \NULL;
             }
         }
-        $EM = $this->_entity->getEntityManager();
+        $entityManager = $this->_entity->getEntityManager();
         $links = substr($field, $type);
         // get parent
         if ($type == self::DATAROW) {
             list($parentEntityName, $fromKeyNames) = $this->_entity->getMetadata()->getParentRowParams($links);
-            
             if (!isset($this->_parents[$parentEntityName])) {
-                
-                $parentEntity = $EM::GetEntity($parentEntityName, $EM);
+                $parentClassName = $this->_entity->getExternalClassName($parentEntityName);
+                $parentEntity = $entityManager->retrieveEntity($parentEntityName, $parentClassName);
                 $i = 0;
                 $primaryKey = $parentEntity->getIdNames();
                 foreach ($fromKeyNames as $keyName) {
@@ -209,7 +208,8 @@ class Object {
         else {
             $fKeys = explode('__', $links);
             $chldName = array_shift($fKeys);
-            $chldEntity = $EM->getEntity($chldName, $EM);
+            $chldClassName = $this->_entity->getExternalClassName($chldName);
+            $chldEntity = $entityManager->retrieveEntity($chldName, $chldClassName);
             list($parentFields, $childFields) =
                     $chldEntity->getMetadata()->getChildrenParams($this->_entity->getEntityName(), $fKeys);
             // placer ici les valeurs et non les noms de champ
@@ -222,7 +222,7 @@ class Object {
             $chldId = implode('__', $childValues) . "@$chldName";
             if (!isset($this->_children[$chldId])) {
                 $chldEntity->wherePairs($conditions);
-                $children = $chldEntity->fetchall();
+                $children = $chldEntity->fetchAll();
                 $this->_children[$chldId] = $children;
             }
             return $this->_children[$chldId];
@@ -244,10 +244,10 @@ class Object {
         if (isset($this->_children[$chldID])) {
             return $this->_children[$chldID];
         }
-        $EM = $this->_entity->getEntityManager();
-        $chldEntity = $EM->getEntity($chldName, $EM);
+        $entityManager = $this->_entity->getEntityManager();
+        $chldClassName = $this->_entity->getExternalClassName($chldName);
+        $chldEntity = $entityManager->retrievetEntity($chldName, $chldClassName);
         $chldMetadata = $chldEntity->getMetadata();
-        //iris_debug($chldMetadata);
         $chldForeigns = $chldMetadata->getForeigns();
         /*         * @var \Iris\DB\ForeignKey chldForeign */
         foreach ($chldForeigns as $chldForeign) {
@@ -259,7 +259,7 @@ class Object {
         $chldToParent = $chldForeign->getFromKeys();
         $condition = array_combine($chldToParent, $this->primaryKeyValue());
         $chldEntity->wherePairs($condition);
-        $result = $chldEntity->fetchall();
+        $result = $chldEntity->fetchAll();
         $this->_children[$chldID] = $result;
         return $result;
     }
@@ -356,7 +356,7 @@ class Object {
                 }
             }
             $idValues = $this->primaryKeyValue();
-            $this->_entity->getEntityManager()->registerObject($this->_entity->getEntityName(), $idValues, $this);
+            $this->_entity->registerObject($idValues, $this);
         }
         return $done;
     }

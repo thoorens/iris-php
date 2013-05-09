@@ -38,7 +38,7 @@ class ViewEntity extends _Entity {
      * @param array $idNames
      * @param _EntityManager $EM 
      */
-    public function __construct($entityName, $reflectionEntity, array $idNames, $EM=NULL) {
+    protected function __construct($entityName, $reflectionEntity, array $idNames, $EM=NULL) {
         $this->_view = TRUE;
         $this->_entityName = $entityName;
         $this->_reflectionEntity = $reflectionEntity;
@@ -51,6 +51,7 @@ class ViewEntity extends _Entity {
      * @return Metadata
      */
     protected function _readMetadata() {
+        die('ViewEntity need fixing');
         $reflectionName = "\\models\\T".ucfirst($this->_reflectionEntity);
         $reflexion = new $reflectionName();
         $metadata = $reflexion->_readMetadata();

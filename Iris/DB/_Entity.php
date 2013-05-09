@@ -25,11 +25,9 @@ use Iris\Exceptions as ie;
 
 /**
  * A persistent object class. It has a relation with a table or a view.
- * As an abstract class, it has no instance. Three way to create entities:<ul>
- * <li> an explicit model derived from it (in the case special methods are needed)
- * <li> an AutotEntity (much simpler)
- * <li> an ViewEntity
- * </ul>
+ * It is abstract, so it has no direct instances. The instance
+ * are created or retrieved by the static method GetEntity and 
+ * are all explicit model classes or instances of InnerEntity
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -42,6 +40,16 @@ abstract class _Entity {
     const PREVIOUS = 1;
     const NEXT = 2;
     const LAST = 3;
+    const ENTITYNAME = 0;
+    const CLASSNAME = 1;
+    const ENTITYMANAGER = 2;
+
+    /**
+     * An array repository with all objects
+     * 
+     * @var array 
+     */
+    private $_objectRepository = array();
 
     /**
      *
@@ -56,6 +64,13 @@ abstract class _Entity {
     protected $_entityName = NULL;
 
     /**
+     * A way to identify related entities when they have special names
+     * 
+     * @var array
+     */
+    protected $_externalEntities = [];
+
+    /**
      * 
      * @var string
      */
@@ -68,7 +83,6 @@ abstract class _Entity {
      * @var \Iris\DB\_EntityManager
      */
     private $_entityManager = NULL;
-    protected static $_EMProviderClass = \FALSE;
 
     /**
      * By default, the row are of type Object
@@ -113,50 +127,184 @@ abstract class _Entity {
      */
     protected $_lastInsertedId = NULL;
 
-    /**
-     * The constructor of "normal" entities makes the initialisation himself 
-     * 
-     * @param _EntityManager $EM : a special entity manager for that class
+    /* =======================================================================================================
+     * C O N S T R U C T O R    A N D  F A C T O R Y   M E T H O D S
+     * =======================================================================================================
      */
-    public function __construct($EM = NULL) {
-        $this->_initialize($EM);
+
+    /**
+     * Finds an entity from possible 3 parameters : entityName, className and entity Manager.
+     * The entity is taken from the repository or created if necessary.
+     * 
+     * @return _Entity
+     * @throws \Iris\Exceptions\DBException
+     */
+    public static function GetEntity() {
+        list($entityName, $alternativeClassName, $entityManager) = static::_AnalyseParameters(func_get_args());
+        if (is_null($entityManager)) {
+            $entityManager = static::_DefaultEntityManager();
+        }
+        return \Iris\DB\_EntityManager::GetEntity($entityName, $entityManager, $alternativeClassName);
     }
 
     /**
-     * The initializer does 2 tasks:<ul>
-     * <li>provide a entity manager for the entity if it has none specified
-     * in constructor parameter </li>
-     * <li>prepare a statemant SELECT * with no WHERE nor ORDER clause</li>
-     * </ul>
-     * It is separated from constructor to permit AutoEntity to do some task
-     * before initialisation.
+     * The constructor of an entity is protected and final
      * 
-     * @param _EntityManager $EM : a special entity manager for that class
      */
-    protected function _initialize($EM) {
-        if (is_null($EM)) {
-            // tests the existence of an alternative EM
-            if (static::$_EMProviderClass!=\FALSE) {
-                $EMAwareClass = static::$_EMProviderClass;
-                $EM = $EMAwareClass::GetEM();
-            }
-            // otherwise take the default one
-            else {
-                $EM = _EntityManager::GetInstance();
-            }
+    protected final function __construct() {
+        $this->_init();
+    }
+
+    /**
+     * As the constructor is final, this methods offers a way to add special treatment after the new
+     */
+    protected function _init() {
+        
+    }
+
+    /**
+     * A substitute for "new" applied on entity. Should never be called directly. GetEntity
+     * will do the same job but will first try to find an existing instance
+     * 
+     * @param string $entityName
+     * @param string $className
+     * @param _EntityManager $entityManager
+     * @param string $defaultPath
+     * @return \Iris\DB\_Entity
+     */
+    public static function CreateEntity($entityName, $className, $entityManager = \NULL, $defaultPath = \NULL) {
+        $classFile = \Iris\System\Functions::Class2File($className);
+        $simpleFile = IRIS_PROGRAM_PATH . "/$classFile";
+        $specialFile = IRIS_ROOT_PATH . '/' . IRIS_LIBRARY . "/$classFile";
+        // creates a new entity
+        if (file_exists($simpleFile)) {
+            $entity = new $className();
         }
-        $this->_entityManager = $EM;
-        if (is_null($this->_entityName)) {
-            $className = basename(str_replace('\\', '/', get_class($this)));
-            $this->_entityName = strtolower(substr($className, 1));
+        elseif (file_exists($specialFile)) {
+            $entity = new $className();
+        }
+        else {
+            $entity = new InnerEntity();
+            $entity->_entityName = $entityName;
+        }
+        $entity->_entityManager = $entityManager;
+        if (is_null($entity->_entityName)) {
+            $className = basename(str_replace('\\', '/', get_class($entity)));
+            $entity->_entityName = strtolower(substr($className, 1));
         }
         // reflection entities are only used for views
-        if (is_null($this->_reflectionEntity)) {
-            $this->_reflectionEntity = $this->_entityName;
+        if (is_null($entity->_reflectionEntity)) {
+            $entity->_reflectionEntity = $entity->_entityName;
         }
-        $this->getMetadata();
-        $this->_query = new Query();
-        $EM->registerEntity($this);
+        $entity->getMetadata();
+        $entity->_query = new Query();
+        $entityManager->registerEntity($entity);
+        return $entity;
+    }
+
+    /**
+     * By default, the entity manager is defined by the system. This methods can
+     * be overwritten in subclasses
+     * 
+     * @return _EntityManager
+     */
+    protected static function _DefaultEntityManager() {
+        return _EntityManager::GetInstance();
+    }
+
+    /**
+     * Analyses parameters to find an entityManager if possible, a plausible
+     * entityName and a className and the gets the corresponding entity.
+     * from 0 to 3 parameters are expected.
+     * 
+     * @param array $params
+     * @return array
+     * @throws \Iris\Exceptions\DBException
+     */
+    protected static function _AnalyseParameters($params) {
+        if (count($params) > 3) {
+            throw new \Iris\Exceptions\DBException('To much parameters for GetEntity().');
+        }
+        $strings = 0;
+        $entityName = \NULL;
+        $entityManager = \NULL;
+        $alternativeClassName = get_called_class();
+        foreach ($params as $param) {
+            if ($param instanceof \Iris\DB\_EntityManager) {
+                $entityManager = $param;
+            }
+            elseif (is_string($param)) {
+                // the first string will be a entity name
+                if (is_null($entityName)) {
+                    $entityName = $param;
+                    $strings++;
+                }
+                elseif ($strings++ == 1) {
+                    $alternativeClassName = $param;
+                }
+                else {
+                    throw new \Iris\Exceptions\DBException('3 strings parameters given for GetEntity');
+                }
+            }
+        }
+        if ($alternativeClassName == 'Iris\DB\_Entity') {
+            $alternativeClassName = "\\models\\T" . ucfirst($entityName);
+        }
+        if ((is_null($entityName)) or ($entityName == $alternativeClassName)) {
+            $entityName = strtolower(substr(basename(\Iris\System\Functions::Class2File($alternativeClassName), '.php'), 1));
+        }
+        return [$entityName, $alternativeClassName, $entityManager];
+    }
+
+    /**
+     * Forces an specific class file for the parent or children
+     * 
+     * @param string $entityName
+     * @return string
+     * @todo see if that trick is necessary
+     */
+    public function getExternalClassName($entityName) {
+        if (isset($this->_externalEntities[$entityName])) {
+            $className = $this->_externalEntities[$entityName];
+        }
+        else {
+            $className = 'T' . ucfirst($entityName);
+        }
+        return "\\$className";
+    }
+
+    /* =======================================================================================================
+     * O B J E C T   M A N A G E M E N T
+     * =======================================================================================================
+     */
+
+    /**
+     * Put an object in the repository
+     * 
+     * @param string $entityName
+     * @param array $idValues
+     * @param Object $object 
+     */
+    public function registerObject($idValues, $object) {
+        $id = implode('|', $idValues);
+        $this->_objectRepository[$id] = $object;
+    }
+
+    /**
+     * Retrieve an object from the repository (if possible, NULL otherwise)
+     * 
+     * @param  string $entityName
+     * @param array $idValues
+     * @return Object 
+     */
+    public function retrieveObject($idValues) {
+        $id = implode('|', $idValues);
+        if (isset($this->_objectRepository[$id])) {
+            return $this->_objectRepository[$id];
+        }
+        else {
+            return NULL;
+        }
     }
 
     /**
@@ -235,18 +383,23 @@ abstract class _Entity {
      * @param boolean $array if true returns an array of array instead of array of objects
      * @return miexed 
      */
-    public function fetchall($array = FALSE) {
+    public function fetchAll($array = FALSE) {
         $sql = sprintf('SELECT %s FROM %s', $this->_query->renderSelectFields(), $this->_entityName);
         $sql .= $this->_query->renderWhere();
         $sql .= $this->_query->renderOrder();
         $sql .= ';';
         //die($sql);
-        $all = $this->_entityManager->fetchall($this, $sql, $this->_query->getPlaceHolders());
+        $data = $this->_entityManager->fetchAll($this, $sql, $this->_query->getPlaceHolders());
         $this->_query->reset();
         if ($array) {
-            $all = self::AsArray($all);
+            foreach ($data as $object) {
+                $finalData[] = $object->asArray();
+            }
         }
-        return $all;
+        else {
+            $finalData = $data;
+        }
+        return $finalData;
     }
 
     /**
@@ -256,9 +409,11 @@ abstract class _Entity {
      * @return Object 
      */
     public function find($idValues) {
-        $idValues = \is_array($idValues) ? $idValues : array($this->_idNames[0] => $idValues);
+        if (!\is_array($idValues)) {
+            $idValues = [$this->_idNames[0] => $idValues];
+        }
         // try to find object in repository
-        $object = $this->_entityManager->retrieveObject($this->_entityName, $idValues);
+        $object = $this->retrieveObject($idValues);
         if (is_null($object)) {
             $this->wherePairs($idValues);
             $object = $this->fetchRow();
@@ -322,12 +477,12 @@ abstract class _Entity {
                 $this->where($condition, $value);
             }
         }
-        $all = $this->fetchall();
+        $all = $this->fetchAll();
         return count($all) ? $all[0] : NULL;
     }
 
     /* ======================================================================== 
-     * WHERE 
+     * W H E R E   M E T H O D S
      * ========================================================================
      */
 
@@ -378,33 +533,6 @@ abstract class _Entity {
      */
     public function whereLike($field, $value, $mode = Query::LIKE) {
         $this->_query->whereLike($field, $value, $mode);
-        return $this;
-    }
-
-    /**
-     *
-     * @return _Entity (fluent interface) 
-     */
-    public function _AND_() {
-        $this->_query->_And_();
-        return $this;
-    }
-
-    /**
-     *
-     * @return _Entity  (fluent interface)
-     */
-    public function _OR_() {
-        $this->_query->_Or_();
-        return $this;
-    }
-
-    /**
-     *
-     * @return _Entity  (fluent interface)
-     */
-    public function _NOT_() {
-        $this->_query->_Not_();
         return $this;
     }
 
@@ -485,6 +613,43 @@ abstract class _Entity {
         $this->_query->whereIn($field, $values);
         return $this;
     }
+
+    /* =========================================================================================
+     * L O G I C A L   O P E R A T O R S
+     * =========================================================================================
+     */
+
+    /**
+     * 
+     * @return _Entity (fluent interface) 
+     */
+    public function _AND_() {
+        $this->_query->_And_();
+        return $this;
+    }
+
+    /**
+     *
+     * @return _Entity  (fluent interface)
+     */
+    public function _OR_() {
+        $this->_query->_Or_();
+        return $this;
+    }
+
+    /**
+     *
+     * @return _Entity  (fluent interface)
+     */
+    public function _NOT_() {
+        $this->_query->_Not_();
+        return $this;
+    }
+
+    /* =======================================================================================================
+     * S Q L   E Q U I V A L E N T S
+     * =======================================================================================================
+     */
 
     /**
      * Record a order clause for the sql statement
@@ -612,6 +777,11 @@ abstract class _Entity {
         }
     }
 
+    /* ==========================================================================================================
+     * M E T A D A T A    M A N A G E M E N T
+     * ==========================================================================================================
+     */
+
     /**
      * Obtain the metadata from either <ul>
      * <li> the result stored after a precedent analysis or
@@ -670,50 +840,6 @@ abstract class _Entity {
             }
         }
         return $metadata;
-    }
-
-    public static function AsArray($data) {
-        foreach ($data as $object) {
-            $array[] = $object->asArray();
-        }
-        return $array;
-    }
-
-    /* ================================================================
-     * Depracated
-     */
-
-    /**
-     *
-     * @deprecated
-     * @var array 
-     */
-    protected static $_FieldDesc = array();
-
-    /**
-     * @deprecated
-     * @return array 
-     */
-    public function fillContent() {
-        throw new ie\DeprecatedException('fillcontent is deprecated');
-    }
-
-    /**
-     *
-     * @return array
-     * @depracated 
-     */
-    public static function GetFieldDesc() {
-        throw new ie\DeprecatedException('GetFieldDesc is deprecated');
-    }
-
-    /**
-     *
-     * @return _Entity 
-     * @deprecated
-     */
-    public function makeWhere() {
-        throw new ie\DeprecatedException('makeWhere is deprecated');
     }
 
 }

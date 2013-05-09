@@ -44,11 +44,17 @@ abstract class _TSequence extends \Iris\DB\_Entity {
      * @return \Iris\DB\Object 
      */
     public static function GetItem($url) {
-        $tSequence = new static();
+        //$tSequence = \Iris\DB\_EntityManager::GetEntity($entityName)
+        $tSequence = static::NewStatic();
         $tSequence->where('URL=', $url);
         return $tSequence->fetchRow();
     }
 
+    public static function NewStatic(){
+        return static::GetEntity();
+        
+    }
+    
     /**
      * Returns the first
      * 
@@ -91,7 +97,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
      * @return string/array the URL or an array for a Button helper 
      */
     private static function _GetURL($position, $url = NULL, $array = \FALSE) {
-        $tSequence = new static();
+        $tSequence = static::NewStatic();
         switch ($position) {
             case self::FIRST:
                 $tSequence->order('id');
@@ -139,8 +145,8 @@ abstract class _TSequence extends \Iris\DB\_Entity {
         $level2 = array();
         $oldSection = 1234567;
         //$tSections = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder('sections');
-        $tSequence = new static();
-        $sequence = $tSequence->fetchall();
+        $tSequence = static::NewStatic();
+        $sequence = $tSequence->fetchAll();
         foreach ($sequence as $item) {
             $section_id = $item->section_id;
             if ($oldSection != $section_id) {

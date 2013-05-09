@@ -49,7 +49,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      * @param String $username : user login name
      * @param String $passwd : user password
      * @param boolean $default : if TRUE store this EM as default
-     * @param array $options additionnal options
+     * @param array $options additional options
      */
     protected function __construct($dsn, $username, $passwd, &$options = \NULL) {
         parent::__construct($dsn, $username, $passwd, $options);

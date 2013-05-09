@@ -112,11 +112,11 @@ class Query {
      * @param mixed $value
      */
     public function where($condition, $value=NULL) {
-// in case of multiple primary key (compatibility)
+    // in case of multiple primary key (compatibility)
         if (is_array($condition)) {
             return $this->wherePairs($condition);
         }
-// textual where (compatibility)
+    // textual where (compatibility)
         if (is_null($value)) {
             return $this->whereClause($condition);
         }
@@ -128,6 +128,9 @@ class Query {
      * @param string $condition
      */
     public function whereClause($condition) {
+        if($this->_extended){
+            throw new \Iris\Exceptions\DBException('WhereClause is not compatible with logical operators NOT, AND and OR.');
+        }
         $this->_preparedFields[] = $condition;
     }
 
@@ -231,7 +234,7 @@ class Query {
                 if (count($stack) < 1)
                     throw New \Iris\Exceptions\DBException('Unbalanced NOT in Where expression');
                 $operand = array_pop($stack);
-                array_push($stack, "NOT($operand");
+                array_push($stack, "NOT($operand)");
             }
             elseif ($top == 'AND') {
                 if (count($stack) < 2)

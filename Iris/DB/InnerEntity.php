@@ -1,6 +1,8 @@
 <?php
 
-namespace Iris\Documents;
+
+
+namespace Iris\DB;
 
 
 /*
@@ -23,30 +25,16 @@ namespace Iris\Documents;
  */
 
 /**
- * An entity whose object are File. Each line in the table
- * has a file associated to it.
+ * Permits to create an instance of _Entity without the need of an explicit class
+ * and class file through the static method GetEntity
  * 
- * @author Jacques THOORENS (jacques@thoorens.net)
- * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
- * @version $Id: $ *
- */
+ * @author Jacques THOORENS (irisphp@thoorens.net)
+ * @see http://irisphp.org
+ * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id: $ */
+class InnerEntity extends _Entity {
 
-/**
- * An entity whose object are File. Each line in the table
- * has a file associated to it.
- * 
- */
-class FileEntity extends \Iris\DB\_Entity {
-
-
-    /**
-     *
-     * @param type $EM 
-     */
-    protected function init() {
-        $this->setRowType('\Iris\Documents\File');
-    }
-
+    
 
 }
 

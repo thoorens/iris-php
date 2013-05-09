@@ -105,16 +105,16 @@ class AutoForm extends Elements\Form {
         $element = $this->_formFactory->createSelect($metaItem->getFieldName());
         $element->setLabel($this->_getLabelText($metaItem));
         $element->addTo($this);
-        $EM = $this->_entity->getEntityManager();
+        $entityManager = $this->_entity->getEntityManager();
         $tableName = $foreign->getTargetTable();
-        /* @var $targetTable \Iris\DB\AutoEntity */
-        $targetTable = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder($tableName, $foreign->getToKeys(), $EM);
+        /* @var $targetTable \Iris\DB\_Entity */
+        $targetTable = \Iris\DB\_Entity::GetEntity($tableName, $entityManager);
         $idNames = $foreign->getToKeys();
         $idName = $idNames[0];
         $descField = $this->getDescriptionField($targetTable);
         $targetTable->select($idName);
         $targetTable->select($descField);
-        $data = $targetTable->fetchall();
+        $data = $targetTable->fetchAll();
         foreach ($data as $ligne) {
             $data2[$ligne->$idName] = $ligne->$descField;
         }

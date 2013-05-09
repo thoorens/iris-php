@@ -63,9 +63,9 @@ class Scanner {
     }
 
     public function __construct() {
-        $this->_tModules = new models\TModules;
-        $this->_tControllers = new models\TControllers;
-        $this->_tActions = new models\TActions;
+        $this->_tModules = \Iris\Admin\models\TModules::GetEntity();
+        $this->_tControllers = \Iris\Admin\models\TControllers::GetEntity();
+        $this->_tActions = models\TActions::GetEntity();
     }
 
 //    public function collect() {
@@ -83,7 +83,7 @@ class Scanner {
     public function getModules() {
         $tModules = $this->_tModules;
         $tModules->where('Deleted=', 0)->order('Name');
-        return $tModules->fetchall();
+        return $tModules->fetchAll();
     }
 
     public function getControllers($moduleId) {
@@ -91,7 +91,7 @@ class Scanner {
         $tControllers->where('Deleted=', 0)
                 ->where('module_id=',$moduleId)
                 ->order('Name');
-        return $tControllers->fetchall();
+        return $tControllers->fetchAll();
     }
 
     public function getActions($controllerId) {
@@ -99,7 +99,7 @@ class Scanner {
         $tActions->where('Deleted=', 0)
                 ->where('controller_id=',$controllerId)
                 ->order('Name');
-        return $tActions->fetchall();
+        return $tActions->fetchAll();
     }
 
     /**

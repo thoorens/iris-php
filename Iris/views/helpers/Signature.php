@@ -147,10 +147,9 @@ JS;
      */
     private static function _OldMd5() {
         $model = "\\models\\".self::$_Model;
-        $tSequences = new $model();
+        $tSequences = $model::GetEntity();
         $urlField = self::$_Fields[self::URL];
         $screen = $tSequences->fetchRow("$urlField=", self::_URL());
-        //iris_debug($screen);
         if (is_null($screen)) {
             return '';
         }

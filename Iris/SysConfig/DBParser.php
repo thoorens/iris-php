@@ -40,7 +40,7 @@ class TSections extends \Iris\DB\_Entity{
  * Projet IRIS-PHP
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * 
- * @todo not functionnal
+ * @todo not functional
  */
 class DBParser extends _Parser {
 
@@ -52,7 +52,7 @@ class DBParser extends _Parser {
         $dataConfig = new TConfig();
         $sections = new TSections();
         
-        $results = $sections->fetchall();
+        $results = $sections->fetchAll();
         $sectionList = array();
         $configs = array();
         foreach($results as $line){
@@ -65,7 +65,7 @@ class DBParser extends _Parser {
                 $config->setParent($parent,$inheritance);
             }
             $props = $dataConfig->where('section_id =',$line->id)
-                    ->fetchall();
+                    ->fetchAll();
             foreach($props as $cline){
                 $key = $cline->Key;
                 $value = $cline->Value;

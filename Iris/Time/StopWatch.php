@@ -72,7 +72,7 @@ class StopWatch {
     }
     
     /**
-     * reads the duration between start and stop time, optionnaly stopping
+     * reads the duration between start and stop time, optionaly stopping
      * the watch.
      * 
      * @param boolean $stop If TRUE, stops the watch before calculating the elapsed time

@@ -84,7 +84,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
         //@todo find a better way to do it !!!!
         $pdo = $this->_connexion;
         $results = $pdo->query("SHOW CREATE TABLE $tableName");
-        $ligne = $results->fetchall(\PDO::FETCH_ASSOC);
+        $ligne = $results->fetchAll(\PDO::FETCH_ASSOC);
         $def = explode("\n", $ligne[0]['Create Table']);
         $tab = preg_grep('/FOREIGN KEY/i', $def);
         $foreignKeys = array();
@@ -104,7 +104,11 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
         }
         return $foreignKeys;
     }
-
+/**
+     * Returns the table list of the database
+     * 
+     * @return array
+     */
     public function listTables() {
         
     }

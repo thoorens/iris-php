@@ -47,7 +47,7 @@ class TAvertising {
         $client = new \Iris\System\Client();
         self::$_Language = $client->getLanguage();
         $em = \Iris\DB\_EntityManager::EMFactory('sqlite:/library/IrisInternal/iris/irisad.sqlite');
-        self::$_Model = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder('advertising', 'id', $em);
+        self::$_Model = \Iris\DB\_Entity::GetEntity('advertising', $em);
     }
 
     /**
@@ -61,10 +61,10 @@ class TAvertising {
     private static function getLines($selector){
         $modele = self::$_Model;
         $modele->whereLike('id', self::$_Language . $selector);
-        $ads = $modele->fetchall();
+        $ads = $modele->fetchAll();
         if (count($ads) == 0) {
             $modele->whereLike('id', self::DEFLANGUAGE.$selector);
-            $ads = $modele->fetchall();
+            $ads = $modele->fetchAll();
         }
         return $ads;
     }

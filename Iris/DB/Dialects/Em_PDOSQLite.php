@@ -52,7 +52,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      * @param String $username : user login name
      * @param String $passwd : user password
      * @param boolean $default : if TRUE store this EM as default
-     * @param array $options additionnal options
+     * @param array $options additional options
      */
     protected function __construct($dsn, $username=\NULL, $passwd=\NULL, &$options = \NULL) {
         list($adapter,$filename) = explode(':',$dsn);
@@ -173,6 +173,11 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
         return $tables;
     }
 
+    /**
+     * 
+     * @param type $entity
+     * @return mixed
+     */
     public function lastInsertedId($entity) {
         return $this->_connexion->lastInsertId();
     }

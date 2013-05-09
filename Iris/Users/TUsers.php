@@ -72,7 +72,7 @@ abstract class TUsers extends \Iris\DB\_Entity {
         $tusers = new static();
         $tusers->select(array($tusers->getIdField(),$tusers->getNameField()));
         $tusers->whereClause('TRUE');
-        $users = $tusers->fetchall();
+        $users = $tusers->fetchAll();
         $nameField = $tusers->getNameField();
         foreach($users as $user){
             $list[$user->id]=$user->$nameField;

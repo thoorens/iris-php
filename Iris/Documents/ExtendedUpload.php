@@ -107,7 +107,7 @@ class ExtendedUpload extends \Iris\DB\DataBrowser\Upload {
         $this->setCreateMissingDir(TRUE);
         parent::__construct();
         $this->setForm($this->_newForm($categories));
-        $this->setEntity(new \models\TDocuments());
+        $this->setEntity(\models\TDocuments::GetEntity());
         $this->setReplaceExistentFile(\Iris\FileSystem\File::MOVEMODE_RENAME);
     }
 

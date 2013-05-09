@@ -40,26 +40,20 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
     protected static $_TableDefinition =
             'PRAGMA foreign_keys = ON;';
 
-    /**
-     * The constructor tries to create the database if necessary
-     * 
-     * @param \Iris\DB\_EntityManager $EM 
-     */
-    public function __construct($EM = NULL) {
-        if (is_null($EM)) {
-            $EM = $this->_getSystemEM();
-        }
-        parent::__construct($EM);
-    }
+//    protected static function _AnalyseParameters($params) {
+//        die('ToolBar ?');
+//        $params = parent::_AnalyseParameters($params);
+//        $params[self::ENTITYMANAGER] = $this->_getSystemEM();
+//    }
 
+        
     /**
      * Returns the EM for the system table database.
      * Its is in /application/config/admin/params.sqlite
      * 
      * @return \Iris\DB\_EntityManager 
      */
-    protected function _getSystemEM() {
-        //die('get em');
+    protected static function _DefaultEntityManager() {
         $dbFile = IRIS_PROGRAM_PATH .self::DB_PARAM_FILE;
         $newBase = FALSE;
         if (!file_exists($dbFile)) {
@@ -82,6 +76,9 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
         return $EM;
     }
 
+    
+    
+    
     /**
      * Marks all the records of a table as deleted 
      * 

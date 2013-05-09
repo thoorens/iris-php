@@ -42,7 +42,7 @@ SQL2;
 
     public static function LastUpdate() {
         $date = new \Iris\Time\TimeDate;
-        $tAdmin = new \Iris\Admin\models\TAdmin();
+        $tAdmin =  \Iris\Admin\models\TAdmin::GetEntity();
         $admin = $tAdmin->fetchRow();
         if (is_null($admin)) {
             $admin = $tAdmin->createRow();
@@ -52,7 +52,7 @@ SQL2;
     }
 
     public static function GetLastUpdate($formated = \TRUE) {
-        $tAdmin = new \Iris\Admin\models\TAdmin();
+        $tAdmin = \Iris\Admin\models\TAdmin::GetEntity();
         $admin = $tAdmin->fetchRow();
         if (is_null($admin)) {
             $date = "Never";

@@ -33,6 +33,7 @@ namespace Iris\DB;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _EntityManager {
+
     const FK_TABLE = 0;
     const FK_FROM = 1;
     const FK_TO = 2;
@@ -60,81 +61,53 @@ abstract class _EntityManager {
     protected static $_Options = array();
 
     /**
-     * An array repository with all entities and objects
-     * 
-     * EN# = entity Name
-     * OK# = object ID (with _ separating parts)
-     * 
-     * array[EN1]['@'] -> entity1
-     * array[EN1][OK1] -> object1
-     * array[EN1][OK2] -> object2
-     * array[EN2]['@'] -> entity2
-     * array[EN2][OK3] -> object3
+     * An array repository with all entities 
      * 
      * @var array 
      */
-    private $_objectRepository = array();
+    private $_entityRepository = array();
 
     /**
      * Only first instance is registred
      * @param _Entity $entity 
      */
-    public function registerEntity(_Entity $entity) {
+    public function registerEntity($entity) {
         $entityName = $entity->getEntityName();
-        if (!isset($this->_objectRepository[$entityName])) {
-            $this->_objectRepository[$entityName]['@'] = $entity;
+        if (!isset($this->_entityRepository[$entityName])) {
+            $this->_entityRepository[$entityName] = $entity;
         }
     }
 
     /**
      *
      * @param string $entityName
-     * @param _EntityManager $EM
+     * @param string $alternativeClassName
      * @return _Entity 
      */
-    public static function GetEntity($entityName, _EntityManager $EM=NULL) {
-        if (is_null($EM)) {
-            $EM = self::$_Instance;
-        }
-        if (isset($EM->_objectRepository[$entityName]['@'])) {
-            return $EM->_objectRepository[$entityName]['@'];
+    public function retrieveEntity($entityName, $alternativeClassName = NULL) {
+        if (isset($this->_entityRepository[$entityName])) {
+            return $this->_entityRepository[$entityName];
         }
         else {
-            $entityFullPath = self::$entityPath . '\\T' . ucfirst($entityName);
-            // Caution : auto registering !  
-            return new $entityFullPath();
+            return _Entity::CreateEntity($entityName, $alternativeClassName, $this, self::$entityPath);
         }
     }
 
     /**
-     * Put an object in the repository
      * 
-     * @param string $entityName
-     * @param array $idValues
-     * @param Object $object 
+     * @param string $entityName The name of the entity
+     * @param _EntityManager $entityManager
+     * @param string $alternativeClassName
+     * @return _Entity
      */
-    public function registerObject($entityName, $idValues, $object) {
-        $id = implode('|', $idValues);
-        $this->_objectRepository[$entityName][$id] = $object;
+    public static function GetEntity($entityName, $entityManager = \NULL, $alternativeClassName = NULL) {
+        if (is_null($entityManager)) {
+            $entityManager = self::GetInstance();
+        }
+        return $entityManager->retrieveEntity($entityName, $alternativeClassName);
     }
 
-    /**
-     * Retrieve an object from the repository (if possible, NULL otherwise)
-     * 
-     * @param  string $entityName
-     * @param array $idValues
-     * @return Object 
-     */
-    public function retrieveObject($entityName, $idValues) {
-        $id = implode('|', $idValues);
-        if (isset($this->_objectRepository[$entityName][$id])) {
-            return $this->_objectRepository[$entityName][$id];
-        }
-        else {
-            return NULL;
-        }
-    }
-
+    
     /**
      * The constructor mustn't be used except in a factory
      * 
@@ -142,9 +115,9 @@ abstract class _EntityManager {
      * @param String $username : user login name
      * @param String $passwd : user password
      * @param boolean $default : if TRUE store this EM as default
-     * @param array $options additionnal options
+     * @param array $options additional options
      */
-    protected function __construct($dsn, $username, $passwd, &$options=\NULL) {
+    protected function __construct($dsn, $username, $passwd, &$options = \NULL) {
         if (!is_null($options)) {
             $options = array_merge(static::$_Options, $options);
         }
@@ -166,17 +139,28 @@ abstract class _EntityManager {
     }
 
     /**
+     * Sets a default instance, by bypassing the global parameters.
+     * Use with caution!
+     * 
+     * @param _EntityManager $instance
+     */
+    public static function SetInstance($instance){
+        self::$_Instance = $instance;
+    }
+    
+    /**
      * Create the default entity manager as defined in Memory (by means
      * of a parameter file)
+     * 
      * @return _EntityManager 
      */
     protected static function _AutoInstance() {
         $memory = \Iris\Engine\Memory::GetInstance();
-//        if (!isset($memory->param_database)) {
-//            throw new \Iris\Exceptions\DBException('No parameter defined');
-//        }
         $mode = \Iris\Engine\Mode::GetSiteMode();
-        $params = $memory->param_database;
+        $params = $memory->Get('param_database',\NULL);
+        if(is_null($params)){
+            throw new \Iris\Exceptions\DBException('No database parameters found');
+        }
         $param = $params[$mode];
         $dsn = self::_DsnFormater($param);
         $username = $param->database_username;
@@ -212,21 +196,21 @@ abstract class _EntityManager {
      * @param mixed $options
      * @return _EntityManager 
      */
-    public static function EMFactory($dsn, $username=NULL, $passwd=NULL, $options = array()) {
+    public static function EMFactory($dsn, $username = NULL, $passwd = NULL, $options = array()) {
         if (!is_string($dsn)) {
             throw new \Iris\Exceptions\NotSupportedException('No analyse written of config');
             //@todo extraire le dsn, username et password
         }
         $manager = '\\Iris\\DB\\Dialects\\' . self::_GetDBType($dsn);
         try {
-            $em = new $manager($dsn, $username, $passwd, $default, $options);
+            $entityManager = new $manager($dsn, $username, $passwd, $default, $options);
         }
         catch (Exception $exc) {
             $message = $exc->getMessage();
             $code = $exc->getCode();
             throw new \Iris\Exceptions\DBException('Error opening the database. Check parameters');
         }
-        return $em;
+        return $entityManager;
     }
 
     /**
@@ -281,7 +265,7 @@ abstract class _EntityManager {
      * @param type $fieldsPH
      * @return array(Object) 
      */
-    public function fetchall(_Entity $entity, $sql, $fieldsPH=array()) {
+    public function fetchAll(_Entity $entity, $sql, $fieldsPH = array()) {
         $results = $this->getResults($sql, $fieldsPH);
         $objects = array();
         $objectType = $entity->getRowType();
@@ -290,7 +274,7 @@ abstract class _EntityManager {
             foreach ($entity->getIdNames() as $id) {
                 $idValues[$id] = $result[$id];
             }
-            $object = $this->retrieveObject($entity->getEntityName(), $idValues);
+            $object = $entity->retrieveObject($idValues);
             if (is_null($object)) {
                 $object = new $objectType($entity, $idValues, $result);
             }
@@ -302,7 +286,7 @@ abstract class _EntityManager {
     /**
      * @return array 
      */
-    abstract public function getResults($sql, $fieldsPH=array());
+    abstract public function getResults($sql, $fieldsPH = array());
 
     abstract public function exec($sql, $value);
 
@@ -317,6 +301,11 @@ abstract class _EntityManager {
      */
     public abstract function getForeignKeys($tableName);
 
+    /**
+     * Returns the table list of the database
+     * 
+     * @return array
+     */
     public abstract function listTables();
 
     public abstract function lastInsertedId($entity);
