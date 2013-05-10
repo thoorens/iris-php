@@ -1,0 +1,5 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {dbWarning()}
+</div>
+{button('Recreate the database',"/db/crud/init","Recreates all the tables of the example database")}

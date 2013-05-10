@@ -18,7 +18,8 @@ class _db extends \modules\_application {
      * settings
      */
     protected function _moduleInit() {
-        
+        $this->_setLayout('database');
+        $this->registerSubcontroller(1, 'menu');
     }
 
     

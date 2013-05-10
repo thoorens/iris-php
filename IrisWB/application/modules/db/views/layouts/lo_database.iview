@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+    <!-- This layout is used only as an exemple of an application defined layout -->
+    <head>
+        {head()}
+        {styleLoader("wb.css")}
+    </head>
+    <body {dojo_body()}{bodyOnload()}{wbColors('GREEN2')}>
+        <div id="main">
+            {ILO_adminToolBar()}
+            <div id="container">
+                <div id='Title'>
+                    <h1>{Title}</h1>
+                </div><!-- Title -->
+                <div class="column one">
+                    {subView(1)}
+                </div><!-- 1 -->
+                <div class="column two2">
+                    {mainView()}
+                </div><!-- 2 -->
+                
+            </div><!-- container -->
+            <div id="foot">
+                {wbFooter('modules/main/views/scripts/lo_database.iview')}
+            </div><!--foot-->
+        </div><!--main-->
+    </body>
+</html>

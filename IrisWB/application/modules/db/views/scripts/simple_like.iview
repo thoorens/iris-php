@@ -1,0 +1,19 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <ul>
+        <li>
+    Searching with a template ('<tt>An% S_nchez</tt>') : <b>{(like1->Name)}</b>
+        </li>
+        <li>
+            Searching with beginning ('<tt>Anto</tt>'): <b>{(like2->Name)}</b>
+        </li>
+        <li>
+            Searching with end ('<tt>chez</tt>'): <b>{(like3->Name)}</b>
+        </li>
+        <li>
+            Searching with middle ('<tt>nio San</tt>'): <b>{(like4->Name)}</b>
+        </li>
+    </ul>
+    {dbWarning()}    
+</div>
+    

@@ -33,32 +33,61 @@ namespace modules\db\controllers;
  * @version $Id: $ */
 class crud extends _dbCrud {
 
-    /**
-     * Creates the tables from scratch (deleting an existing database if necessary)
+    
+    protected function _init() {
+        $action = $this->getActionName();
+        if($action != 'init' and $action != 'delete'){
+            $this->dbState()->validateDB();
+        }
+        
+    }
+        /**
+     * Deletes the database (and optionally creates new data)
      * 
      * @param string $dbType  the rdbms type
-     * @param boolean $data if true creates the data
+     * @param boolean $data if false does not create the data
      */
-    public function initAction($dbType='sqlite', $data = \FALSE) {
-        \Iris\Users\Session::GetInstance()->dbType = $dbType;
-        \models\_invoiceManager::Reset($dbType);
-        $this->prepareInvoices()->createCustomers($dbType, $data);
-        $this->prepareInvoices()->createInvoices($dbType, $data);
-        $this->redirect('customers');
+    public function initAction($dbType='sqlite', $data = \TRUE) {
+        $this->__tables = $this->prepareInvoices()->createAll($dbType, $data);
+        if($data){
+            $this->dbState()->setCreated();
+        }
+        else{
+            $this->dbState()->setDeleted();
+        }
     }
-
+    
+    /**
+     * Deletes the example database
+     * 
+     * @param string $dbType the rdbms type
+     */
+    public function deleteallAction($dbType='sqlite'){
+        $this->__Title = 'Database deleted';
+        $this->setViewScriptName('init');
+        $this->initAction($dbType,\FALSE);
+    }
+    
     /**
      * 
      * @param string $type 
      */
     public function customersAction() {
-        $tCustomers = new \models\TCustomers();
-        $this->__customers = $tCustomers->fetchall();
+        $tCustomers = \models\TCustomers2::GetEntity();
+        $this->__customers = $tCustomers->fetchAll();
     }
 
     public function invoicesAction() {
-        $tInvoices = new \models\TInvoices();
-        $this->__invoices = $tInvoices->fetchall();
+        $tInvoices = \models\TInvoices::GetEntity();
+        $this->__invoices = $tInvoices->fetchAll();
     }
 
+    /**
+     * In case of a broken database, the action is redirected here
+     * 
+     * @param int $num
+     */
+    public function errorAction($num) {
+        $this->setViewScriptName('commons/error');
+    }
 }

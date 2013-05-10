@@ -1,9 +1,0 @@
-<? foreach ($custs as $cust): ?>
-<h3><?= $cust['Name'] ?></h3>
-<ul>
-        <? foreach ($cust['Inv'] as $inv): ?>
-    <li><?= $inv['Number'] . ' ' . $inv['Date'] ?></li>
-        <? endforeach ?>
-</ul>
-    <?
-endforeach?>

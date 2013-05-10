@@ -10,7 +10,7 @@ namespace modules\db\controllers;
  * @author jacques
  * @license not defined
  */
-class _dbCrud extends \modules\_application {
+class _dbCrud extends \modules\db\controllers\_db {
 
     private $_entityDescription = array(
         'customer' => 'M_customer',
@@ -24,9 +24,9 @@ class _dbCrud extends \modules\_application {
         $entity = $arEntity[0];
         $subhelper->setActionName($action);
         $subhelper->setEntity($this->_entityDescription[$entity]);
-        $subhelper->setController($entity);
+        $subhelper->setController($entity)->setLanguage('english');
         $presentation = $subhelper->prepare($action);
-        $this->__function = $presentation['help'];
+        $this->__crudFunction = $presentation['help'];
         $this->__title = ucfirst($entity) . " management";
 //        }
 

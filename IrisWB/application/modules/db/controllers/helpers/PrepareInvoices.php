@@ -33,18 +33,18 @@ namespace Iris\controllers\helpers;
 class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
 
     protected $_singleton = TRUE;
+    
+    /**
+     *
+     * @var \Iris\DB\_EntityManager
+     */
+    private $_entityManager;
 
     public function help() {
         return $this;
     }
 
-    /**
-     * Set the entity manager for the test (by default it will be sqlite)
-     * @param string $type  the rdbms type
-     */
-    public function setEM($type) {
-        \models\_invoiceManager::getEM($type);
-    }
+    
 
     /**
      * Creates all 5 tables with data in them and returns an array
@@ -53,15 +53,15 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      * @param string $type the rdbms type
      * @return array
      */
-    public function createAll($type) {
+    public function createAll($type, $data = \TRUE) {
         \models\_invoiceManager::Reset($type);
-        return array(
-            "Customers" => $this->createCustomers($type),
-            "Products" => $this->createProducts($type),
-            "Invoices" => $this->createInvoices($type),
-            "Orders" => $this->createOrders($type),
-            "Events" => $this->createEvents($type),
-        );
+        return [
+            "Customers" => $this->createCustomers($type, $data),
+            "Products" => $this->createProducts($type, $data),
+            "Invoices" => $this->createInvoices($type, $data),
+            "Orders" => $this->createOrders($type, $data),
+            "Events" => $this->createEvents($type, $data),
+        ];
     }
 
     /**
@@ -72,20 +72,20 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      * @return int Number of rows created
      */
     public function createCustomers($type, $withData = \TRUE) {
-        \models\TCustomers::Create($type);
-        $tCustomers = new \models\TCustomers();
-
-        $customerList = array(
-            'Jacques Thoorens' => 'rue Villette',
-            'John Smith' => 'Bourbon street',
-            'Antonio Sanchez' => 'Gran Via',
-        );
+        \models\TCustomers2::Create($type);
+        $tCustomers = \models\TCustomers2::GetEntity();
+        $customerList = [
+            ['Jacques Thoorens', 'rue Villette', 'irisphp@thoorens.net'],
+            ['John Smith' , 'Bourbon street', 'john@smith.eu'],
+            ['Antonio Sanchez' , 'Gran Via', \NULL]
+        ];
         $elements = 0;
         if ($withData) {
-            foreach ($customerList as $name => $address) {
+            foreach ($customerList as $items) {
                 $customer = $tCustomers->createRow();
-                $customer->Name = $name;
-                $customer->Address = $address;
+                $customer->Name = $items[0];
+                $customer->Address = $items[1];
+                $customer->Email = $items[2];
                 $customer->save();
                 $elements++;
             }
@@ -102,13 +102,13 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      */
     public function createProducts($type, $withData = \TRUE) {
         \models\TProducts::Create($type);
-        $tProducts = new \models\TProducts();
+        $tProducts = \models\TProducts::GetEntity();
 
-        $productList = array(
+        $productList = [
             'orange' => 0.50,
             'banana' => 0.60,
             'apple' => 0.30,
-        );
+        ];
         $elements = 0;
         if ($withData) {
             foreach ($productList as $description => $price) {
@@ -131,17 +131,17 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      */
     public function createInvoices($type, $withData = \TRUE) {
         \models\TInvoices::Create($type);
-        $tInvoices = new \models\TInvoices();
+        $tInvoices = \models\TInvoices::GetEntity();
 
-        $invoiceList = array(
-            // array(customer_id,date)
-            array(1, '2012-01-05'), // id=1
-            array(2, '2012-01-05'), // id=2
-            array(3, '2012-01-05'), // id=3
-            array(1, '2012-02-13'), // id=4
-            array(1, '2012-02-21'), // id=5
-            array(3, '2012-03-05'), // id=6
-        );
+        $invoiceList = [
+            // [customer_id,date]
+            [1, '2012-01-05'], // id=1
+            [2, '2012-01-05'], // id=2
+            [3, '2012-01-05'], // id=3
+            [1, '2012-02-13'], // id=4
+            [1, '2012-02-21'], // id=5
+            [3, '2012-03-05'], // id=6
+        ];
         $elements = 0;
         if ($withData) {
             foreach ($invoiceList as $item) {
@@ -165,21 +165,21 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      */
     public function createOrders($type, $withData = \TRUE) {
         \models\TOrders::Create($type);
-        $tOrders = new \models\TOrders();
-        $orderList = array(
-            //array(invoice_id,product_id,quantity)
-            array(1, 1, 1),
-            array(1, 2, 1),
-            array(1, 3, 2),
-            array(2, 2, 1),
-            array(3, 3, 1),
-            array(3, 2, 2),
-            array(4, 1, 3),
-            array(4, 2, 1),
-            array(5, 1, 5),
-            array(5, 3, 2),
-            array(6, 3, 1),
-        );
+        $tOrders = \models\TOrders::GetEntity();
+        $orderList = [
+            //[invoice_id,product_id,quantity)
+            [1, 1, 1],
+            [1, 2, 1],
+            [1, 3, 2],
+            [2, 2, 1],
+            [3, 3, 1],
+            [3, 2, 2],
+            [4, 1, 3],
+            [4, 2, 1],
+            [5, 1, 5],
+            [5, 3, 2],
+            [6, 3, 1],
+        ];
         $elements = 0;
         if ($withData) {
             foreach ($orderList as $item) {
@@ -204,23 +204,23 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      */
     public function createEvents($type, $withData = \TRUE) {
         \models\TEvents::Create($type);
-        $tEvents = new \models\TEvents();
-        $eventList = array(
-            // array(invoice_id,product_id, Description)
-            array(1, 1, 'Order to wholesaler', '2011-12-27 12:00'),
-            array(1, 1, 'Shipment', '2012-01-05 08:00'),
-            array(1, 2, 'Shipment', '2012-01-05 07:30'),
-            array(1, 3, 'Shipment', '2012-01-05 08:00'),
-            array(2, 2, 'Shipment', '2012-01-05 09:00'),
-            array(3, 3, 'Shipment', '2012-01-05 09:05'),
-            array(3, 2, 'Shipment', '2012-01-05 09:10'),
-            array(4, 1, 'Shipment', '2012-02-13 11:00'),
-            array(4, 2, 'Shipment', '2012-02-13 11:00'),
-            array(5, 1, 'Order to wholesaler', '2012-01-18 13:00'),
-            array(5, 1, 'Shipment', '2012-02-21 14:00'),
-            array(5, 3, 'Shipment', '2012-02-21 15:00'),
-            array(6, 3, 'Shipment', '2012-03-04 23:00'),
-        );
+        $tEvents = \models\TEvents::GetEntity();
+        $eventList = [
+            // [invoice_id,product_id, Description, Moment)
+            [1, 1, 'Order to wholesaler', '2011-12-27 12:00'],
+            [1, 1, 'Shipment', '2012-01-05 08:00'],
+            [1, 2, 'Shipment', '2012-01-05 07:30'],
+            [1, 3, 'Shipment', '2012-01-05 08:00'],
+            [2, 2, 'Shipment', '2012-01-05 09:00'],
+            [3, 3, 'Shipment', '2012-01-05 09:05'],
+            [3, 2, 'Shipment', '2012-01-05 09:10'],
+            [4, 1, 'Shipment', '2012-02-13 11:00'],
+            [4, 2, 'Shipment', '2012-02-13 11:00'],
+            [5, 1, 'Order to wholesaler', '2012-01-18 13:00'],
+            [5, 1, 'Shipment', '2012-02-21 14:00'],
+            [5, 3, 'Shipment', '2012-02-21 15:00'],
+            [6, 3, 'Shipment', '2012-03-04 23:00'],
+        ];
         $elements = 0;
         if ($withData) {
             foreach ($eventList as $item) {

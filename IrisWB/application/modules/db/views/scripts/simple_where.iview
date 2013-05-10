@@ -1,0 +1,41 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>February invoices</h3>
+    <ul>
+        {foreach(invoices, invoice)}
+            <li>
+                Invoice #{(invoice->id)} : <b>{(invoice->InvoiceDate)}</b>
+            </li>
+        {/foreach}
+    </ul>
+    <hr/>
+    <h3>Order with Qty = 3, 4, 5</h3>
+     <ul>
+        {foreach(orders, order)}
+            <li>
+                Invoice #{(order->_at_invoice_id->id)} : <b>{(order->Quantity)}</b> {(order->_at_product_id->Description)}s
+            </li>
+        {/foreach}
+    </ul>
+    <hr/>
+    <h3>Customers who have no email address</h3>
+    <ul>
+        {foreach(noMails,customer)}
+            <li> 
+                {(customer->Name)}
+            </li>
+        {/foreach}
+    </ul>
+    <hr/>
+    <h3>Customers who have an email address</h3>
+    <ul>
+        {foreach(withMail,customer)}
+            <li> 
+                {(customer->Name)} : <b>{(customer->Email)}</b>
+            </li>
+        {/foreach}
+    </ul>
+    </p>
+    <hr/>
+    {dbWarning()}
+</div>

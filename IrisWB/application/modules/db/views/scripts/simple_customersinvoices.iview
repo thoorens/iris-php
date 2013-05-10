@@ -1,0 +1,18 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {(customer->id)} - 
+    {(customer->Name)}
+    ({(customer->Address)})
+    <h5>
+        Invoices:
+    </h5>
+    <ul>
+        {foreach(invoices, invoice)}
+            <li>
+                {(invoice->id)} :
+                {(invoice->InvoiceDate)}
+            </li>
+        {/foreach}
+    </ul>
+    {dbWarning()}
+</div>

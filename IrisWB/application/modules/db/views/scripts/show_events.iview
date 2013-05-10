@@ -1,0 +1,25 @@
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Invoice #</th>
+            <th>Date</th>
+            <th>Qty</th>
+            <th>Description</th>
+            <th>Event</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach(events,event)}
+            <tr>
+                <td>{(event['Order']['Invoice'])}</td>
+                <td>{(event['Moment'])}</td>
+                <td>{(event['Order']['Qty'])}</td>
+                <td>{(event['Order']['Product'])} </td>
+                <td>{(event['Description'])}</td>
+            </tr>
+        {/foreach}
+    </tbody>
+</table>
+

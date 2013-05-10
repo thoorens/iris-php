@@ -1,0 +1,15 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {foreach(customers,customer)}
+        <h3>{(customer['Name'])}</h3>
+        <ul>
+            {assign(invoices,$customer['Inv'])}
+            {foreach(invoices,invoice)}
+                <li>
+                    {(invoice['Number'])} {(invoice['Date'])}
+                </li>
+            {/foreach}
+        </ul>
+    {/foreach}
+    {dbWarning()}
+</div>
