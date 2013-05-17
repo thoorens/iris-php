@@ -15,7 +15,7 @@
         </p>
     {/block}
     {block('EN')}
-        Brol
+        The text is to be written
     {/block}
 {/section}
 <p style="color:red;font-size: 0.7em;text-align: center">
