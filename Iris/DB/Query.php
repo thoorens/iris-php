@@ -127,8 +127,8 @@ class Query {
      * Add an explicit part to where clause
      * @param string $condition
      */
-    public function whereClause($condition) {
-        if($this->_extended){
+    public function whereClause($condition, $direct = \FALSE) {
+        if($this->_extended and $direct){
             throw new \Iris\Exceptions\DBException('WhereClause is not compatible with logical operators NOT, AND and OR.');
         }
         $this->_preparedFields[] = $condition;

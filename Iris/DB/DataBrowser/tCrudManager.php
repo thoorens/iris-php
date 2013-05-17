@@ -73,7 +73,8 @@ trait tCrudManager {
 
     /**
      * By overwriting this method, one can modify one or many implicit methods of the
-     * CRUD manager
+     * CRUD manager or do whatever else (e.g. /IrisWB/application/modules/manager/controllers/screens.php)
+     * 
      * 
      * @param string $actionName one among create/read/update/delete
      */

@@ -22,21 +22,14 @@ namespace Iris\DB;
  */
 
 /**
- * A special entity for a database view. It can automatically
- * gets its metadata from another table. 
+ * A special entity for a database table. 
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ViewEntity extends _Entity {
+class TableEntity extends _Entity {
 
-    protected $_reflectionEntity = \NULL;
-
-    
-    public function getReflectionEntity(){
-        return $this->_reflectionEntity;
-    }
     
 
 }

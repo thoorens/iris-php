@@ -2,6 +2,19 @@
 
 namespace Iris\DB;
 
+/**
+ * IRIS_PARENT, IRIS_CHILDREN and IRIS_FILESEP are used to detect pseudo fields. They
+ * can be changed in case of field naming convention problems with an existing
+ * database. The change must be done as soon as possible (in index.php or
+ * in Bootstrap class) and has a global scope in all the application.
+ * For new databases, it is better to avoid field names containing these
+ * patterns. 
+ */
+defined('IRIS_PARENT') or define('IRIS_PARENT', '_at_');
+defined('IRIS_CHILDREN') or define('IRIS_CHILDREN', '_children_');
+defined('IRIS_FIELDSEP') or define('IRIS_FIELDSEP', '__');
+
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -80,34 +93,34 @@ abstract class _EntityManager {
 
     /**
      *
-     * @param string $entityName
+     * @param string $param1
      * @param string $alternativeClassName
+     * @param Metadata $metadata
      * @return _Entity 
      */
-    public function retrieveEntity($entityName, $alternativeClassName = NULL) {
+    public function retrieveEntity($param1, $alternativeClassName = NULL, $metadata = \NULL) {
+        if(! $param1 instanceof EntityParams){
+            $param1 = new EntityParams($param1, $alternativeClassName, $metadata);
+        }
+        $entityName = $param1->getEntityName();
         if (isset($this->_entityRepository[$entityName])) {
             return $this->_entityRepository[$entityName];
         }
         else {
-            return _Entity::CreateEntity($entityName, $alternativeClassName, $this, self::$entityPath);
+            return _Entity::CreateEntity($param1, $this);
         }
     }
 
     /**
      * 
-     * @param string $entityName The name of the entity
-     * @param _EntityManager $entityManager
-     * @param string $alternativeClassName
+     * @param EntityParams $params
      * @return _Entity
      */
-    public static function GetEntity($entityName, $entityManager = \NULL, $alternativeClassName = NULL) {
-        if (is_null($entityManager)) {
-            $entityManager = self::GetInstance();
-        }
-        return $entityManager->retrieveEntity($entityName, $alternativeClassName);
+    public static function GetEntity($params) {
+        $entityManager = $params->getEntityManager();
+        return $entityManager->retrieveEntity($params);
     }
 
-    
     /**
      * The constructor mustn't be used except in a factory
      * 
@@ -144,10 +157,10 @@ abstract class _EntityManager {
      * 
      * @param _EntityManager $instance
      */
-    public static function SetInstance($instance){
+    public static function SetInstance($instance) {
         self::$_Instance = $instance;
     }
-    
+
     /**
      * Create the default entity manager as defined in Memory (by means
      * of a parameter file)
@@ -157,8 +170,8 @@ abstract class _EntityManager {
     protected static function _AutoInstance() {
         $memory = \Iris\Engine\Memory::GetInstance();
         $mode = \Iris\Engine\Mode::GetSiteMode();
-        $params = $memory->Get('param_database',\NULL);
-        if(is_null($params)){
+        $params = $memory->Get('param_database', \NULL);
+        if (is_null($params)) {
             throw new \Iris\Exceptions\DBException('No database parameters found');
         }
         $param = $params[$mode];

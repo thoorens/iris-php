@@ -2,8 +2,6 @@
 
 namespace Iris\DB;
 
-use Iris\Exceptions as ie;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -40,9 +38,8 @@ abstract class _Entity {
     const PREVIOUS = 1;
     const NEXT = 2;
     const LAST = 3;
-    const ENTITYNAME = 0;
-    const CLASSNAME = 1;
-    const ENTITYMANAGER = 2;
+
+    private static $_DebugLevel;
 
     /**
      * An array repository with all objects
@@ -140,11 +137,28 @@ abstract class _Entity {
      * @throws \Iris\Exceptions\DBException
      */
     public static function GetEntity() {
-        list($entityName, $alternativeClassName, $entityManager) = static::_AnalyseParameters(func_get_args());
-        if (is_null($entityManager)) {
-            $entityManager = static::_DefaultEntityManager();
+        $params = new EntityParams(get_called_class());
+        $params->analyseParams(func_get_args());
+        return \Iris\DB\_EntityManager::GetEntity($params);
+
+        $params->analyseParams(func_get_args());
+        if (get_called_class() == "Iris\\DB\\_Entity") {
+            throw new \Iris\Exceptions\DBException('\\Iris\\DB\_Entity is abstract.');
         }
-        return \Iris\DB\_EntityManager::GetEntity($entityName, $entityManager, $alternativeClassName);
+        $params = func_get_args();
+        if (isset($params[0])) {
+            if (is_array($params[0])) {
+                $params = $params[0];
+            }
+        }
+        else {
+            $params = static::_AnalyseParameters(func_get_args());
+        }
+        list($entityName, $alternativeClassName, $entityManager, $metadata) = $params;
+        if (is_null($entityManager)) {
+            $entityManager = static::DefaultEntityManager();
+        }
+        return \Iris\DB\_EntityManager::GetEntity($entityName, $entityManager, $alternativeClassName, $metadata);
     }
 
     /**
@@ -166,26 +180,35 @@ abstract class _Entity {
      * A substitute for "new" applied on entity. Should never be called directly. GetEntity
      * will do the same job but will first try to find an existing instance
      * 
-     * @param string $entityName
-     * @param string $className
+     * @param EntityParams $params
      * @param _EntityManager $entityManager
-     * @param string $defaultPath
      * @return \Iris\DB\_Entity
      */
-    public static function CreateEntity($entityName, $className, $entityManager = \NULL, $defaultPath = \NULL) {
+    public static function CreateEntity($params, $entityManager) {
+        if (self::$_DebugLevel == 1) {
+            $params->show();
+            return;
+        }
+        $className = $params->getEntityClass();
         $classFile = \Iris\System\Functions::Class2File($className);
         $simpleFile = IRIS_PROGRAM_PATH . "/$classFile";
         $specialFile = IRIS_ROOT_PATH . '/' . IRIS_LIBRARY . "/$classFile";
         // creates a new entity
         if (file_exists($simpleFile)) {
             $entity = new $className();
+            $params->updateParams($entity);
         }
         elseif (file_exists($specialFile)) {
             $entity = new $className();
+            $params->updateParams($entity);
         }
         else {
             $entity = new InnerEntity();
-            $entity->_entityName = $entityName;
+            $entity->_entityName = $params->getEntityName();
+        }
+        if (self::$_DebugLevel == 2) {
+            $params->show();
+            return;
         }
         $entity->_entityManager = $entityManager;
         if (is_null($entity->_entityName)) {
@@ -196,9 +219,15 @@ abstract class _Entity {
         if (is_null($entity->_reflectionEntity)) {
             $entity->_reflectionEntity = $entity->_entityName;
         }
-        $entity->getMetadata();
+        $entity->getMetadata($params->getMetadata());
+        if (self::$_DebugLevel == 3) {
+            $params->setEntityName($entity->getEntityName());
+            $params->show();
+            return;
+        }
         $entity->_query = new Query();
-        $entityManager->registerEntity($entity);
+        if (self::$_DebugLevel)
+            $entityManager->registerEntity($entity);
         return $entity;
     }
 
@@ -208,7 +237,7 @@ abstract class _Entity {
      * 
      * @return _EntityManager
      */
-    protected static function _DefaultEntityManager() {
+    public static function DefaultEntityManager() {
         return _EntityManager::GetInstance();
     }
 
@@ -229,9 +258,13 @@ abstract class _Entity {
         $entityName = \NULL;
         $entityManager = \NULL;
         $alternativeClassName = get_called_class();
+        $metadata = \NULL;
         foreach ($params as $param) {
             if ($param instanceof \Iris\DB\_EntityManager) {
                 $entityManager = $param;
+            }
+            elseif ($param instanceof \Iris\DB\Metadata) {
+                $metadata = $param;
             }
             elseif (is_string($param)) {
                 // the first string will be a entity name
@@ -247,13 +280,23 @@ abstract class _Entity {
                 }
             }
         }
+        static::_SpecificPlugIn($entityName, $alternativeClassName, $entityManager);
+        return [$entityName, $alternativeClassName, $entityManager, $metadata];
+    }
+
+    protected static function _SpecificPlugIn(&$entityName, &$alternativeClassName) {
         if ($alternativeClassName == 'Iris\DB\_Entity') {
-            $alternativeClassName = "\\models\\T" . ucfirst($entityName);
+            if ($entityName[0] != '\\') {
+
+                $alternativeClassName = "\\models\\T" . ucfirst($entityName);
+            }
+            else {
+                $alternativeClassName = $entityName;
+            }
         }
         if ((is_null($entityName)) or ($entityName == $alternativeClassName)) {
             $entityName = strtolower(substr(basename(\Iris\System\Functions::Class2File($alternativeClassName), '.php'), 1));
         }
-        return [$entityName, $alternativeClassName, $entityManager];
     }
 
     /**
@@ -271,6 +314,10 @@ abstract class _Entity {
             $className = 'T' . ucfirst($entityName);
         }
         return "\\$className";
+    }
+
+    public static function SetDebugLevel($level) {
+        self::$_DebugLevel = $level;
     }
 
     /* =======================================================================================================
@@ -519,7 +566,7 @@ abstract class _Entity {
      * @return _Entity (fluent interface) 
      */
     public function whereClause($condition) {
-        $this->_query->whereClause($condition);
+        $this->_query->whereClause($condition, \TRUE);
         return $this;
     }
 
@@ -791,9 +838,9 @@ abstract class _Entity {
      * 
      * @return MetaData 
      */
-    public function getMetadata() {
+    public function getMetadata($metadata = \NULL) {
         if (is_null($this->_metadata)) {
-            $this->_metadata = $this->_readMetadata();
+            $this->_metadata = $this->_readMetadata($metadata);
             // add optional form properties
             foreach ($this->_formProperties as $field => $property) {
                 list($name, $value) = $property;
@@ -814,29 +861,31 @@ abstract class _Entity {
 
     /**
      * Reads the metadata for a table using the suitable entity manager
-     * 
+     * @param Metadata $metadata
      * @return Metadata 
      */
-    protected function _readMetadata() {
-        /* @var $metadata Metadata */
-        $metadata = $this->_entityManager->readFields($this->_entityName);
-        foreach ($this->_entityManager->getForeignKeys($this->_reflectionEntity) as $foreignKey) {
-            $metadata->addForeign($foreignKey);
-        }
-        foreach ($this->_idNames as $field) {
-            $metadata->addPrimary($field);
-        }
-        // optionaly reads manually added foreign keys
-        foreach ($this->_foreignKeyDescriptions as $key => $description) {
-            if (is_string($description)) {
-                $metadata->unserialize($description);
+    protected function _readMetadata($metadata) {
+        if (is_null($metadata)) {
+            /* @var $metadata Metadata */
+            $metadata = $this->_entityManager->readFields($this->_entityName);
+            foreach ($this->_entityManager->getForeignKeys($this->_reflectionEntity) as $foreignKey) {
+                $metadata->addForeign($foreignKey);
             }
-            else {
-                $foreignKey = new ForeignKey();
-                $foreignKey->setNumber($key);
-                $foreignKey->setFromKeys($description[0]);
-                $foreignKey->setTargetTable($description[1]);
-                $foreignKey->setToKeys($description[2]);
+            foreach ($this->_idNames as $field) {
+                $metadata->addPrimary($field);
+            }
+            // optionaly reads manually added foreign keys
+            foreach ($this->_foreignKeyDescriptions as $key => $description) {
+                if (is_string($description)) {
+                    $metadata->unserialize($description);
+                }
+                else {
+                    $foreignKey = new ForeignKey();
+                    $foreignKey->setNumber($key);
+                    $foreignKey->setFromKeys($description[0]);
+                    $foreignKey->setTargetTable($description[1]);
+                    $foreignKey->setToKeys($description[2]);
+                }
             }
         }
         return $metadata;

@@ -163,7 +163,7 @@ class Metadata implements \Serializable, \Countable {
         $found = \FALSE;
         /*         * @var ForeignKey $foreign */
         foreach ($foreigns as $foreign) {
-            $fk = implode('__', $foreign->getFromKeys());
+            $fk = implode(IRIS_FIELDSEP, $foreign->getFromKeys());
             if ($fk == $links) {
                 $found = \TRUE;
                 // sorry Dijkstra, but each(), current() and other stuffs suck.
@@ -171,7 +171,7 @@ class Metadata implements \Serializable, \Countable {
             }
         }
         if (!$found) {
-            $links = str_replace('__', ' and ', $links);
+            $links = str_replace(IRIS_FIELDSEP, ' and ', $links);
             throw new \Iris\Exceptions\DBException("A parent record from field(s) $links doesn't exist.");
         }
         $entityName = $foreign->getTargetTable();
@@ -185,7 +185,7 @@ class Metadata implements \Serializable, \Countable {
                 if (count($fkeys) == 0) {
                     $found = \TRUE;
                 }
-                elseif (implode('__', $fkeys) == implode('__', $foreign->getFromKeys())) {
+                elseif (implode(IRIS_FIELDSEP, $fkeys) == implode(IRIS_FIELDSEP, $foreign->getFromKeys())) {
                     $found = \TRUE;
                 }
             }

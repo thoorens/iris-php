@@ -2,6 +2,7 @@
 
 namespace Iris\DB;
 
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -30,12 +31,24 @@ namespace Iris\DB;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Object {
-    const ORM_TRANSIENT = 1;
-    const ORM_PERSISTENT = 2;
-    const ORM_DELETED = 3;
-    const ORM_UNLINKED = 4;
+    /**
+     * The object exists in memory, but has no relation to the database
+     */
 
-    // The value are linked to the prefixe lengths
+    const ORM_TRANSIENT = 1;
+
+    /**
+     * The object has been inited from data in the database
+     */
+    const ORM_PERSISTENT = 2;
+
+    /**
+     * The object taken from the database, has been deleted
+     */
+    const ORM_DELETED = 3;
+
+
+// The value are linked to the prefixe lengths
     const DATAROW = 4;
     const DATAROWSET = 10;
 
@@ -58,19 +71,46 @@ class Object {
     protected $_fields = array();
 
     /**
-     * 
+     * The current content of the fields 
      * @var array 
      */
-    protected $_data = array();
-    protected $_newData = array();
+    protected $_currentContent = array();
+
+    /**
+     * The modified content of the field
+     * 
+     * @var array
+     */
+    protected $_modifiedContent = array();
+
+    /**
+     * If TRUE, indicates that the object has been modified
+     * 
+     * @var boolean
+     */
     protected $_dirty = FALSE;
+
+    /**
+     * The state of the object relative to the database
+     * 
+     * @var int
+     */
     protected $_ORMState;
 
     /**
-     *
-     * @var 
+     * An object may have various parents : each one has the foreign field(s)
+     * as an index
+     * 
+     * @var array
      */
     private $_parents = array();
+
+    /**
+     * An object may have various series of children : each one has the table
+     * name + index(es) as index and an array of object as value.
+     * 
+     * @var array
+     */
     protected $_children = array();
 
     /**
@@ -102,17 +142,17 @@ class Object {
             if (count($metadata) == 0 OR isset($metadata->$fieldName)) {
                 $fields[] = $fieldName;
                 if ($new) {
-                    $this->_data[] = NULL;
+                    $this->_currentContent[] = NULL;
                     if (count($metadata) != 0) {
                         $item = $metadataFields[$fieldName];
                         $value = $item->initialize($value);
                     }
-                    $this->_newData[] = $value;
+                    $this->_modifiedContent[] = $value;
                     $this->_dirty = TRUE;
                 }
                 else {
-                    $this->_data[] = $value;
-                    $this->_newData[] = NULL;
+                    $this->_currentContent[] = $value;
+//$this->_newData[] = NULL;
                     $entity->registerObject($idValues, $this);
                 }
             }
@@ -135,7 +175,7 @@ class Object {
      */
     public function asArray() {
         foreach ($this->_fields as $field => $dummy) {
-            $array[$field] = $this->$field;
+            $array[$field] = $this->__get($field);
         }
         return $array;
     }
@@ -151,82 +191,74 @@ class Object {
         // treat an normal field
         if (isset($this->_fields[$field])) {
             $offset = $this->_fields[$field];
-            if ($this->_dirty and isset($this->_newData[$offset])) {
-                return $this->_newData[$offset];
+            if ($this->_dirty and isset($this->_modifiedContent[$offset])) {
+                return $this->_modifiedContent[$offset];
             }
             else {
-                return $this->_data[$offset];
+                return $this->_currentContent[$offset];
             }
         }
-        // may be an object or an array of objects (or NULL)
-        return $this->_getPseudoField($field);
+        // try to use a pseudo field
+        if (strpos($field, IRIS_PARENT) === 0) {
+            return $this->_getParent(substr($field, strlen(IRIS_PARENT)));
+        }
+        if (strpos($field, IRIS_CHILDREN) === 0) {
+            return $this->_getChildren(substr($field, strlen(IRIS_CHILDREN)));
+        }
+        return \NULL;
+    }
+    
+    /**
+     * Gets the parent accessible from a foreign key in the object
+     * 
+     * @param string $keyFields
+     * @return Object
+     */
+    private function _getParent($keyFields) {
+        $entityManager = $this->_entity->getEntityManager();
+        list($parentEntityName, $fromKeyNames) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
+        if (!isset($this->_parents[$parentEntityName])) {
+            $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
+            $i = 0;
+            $primaryKey = $parentEntity->getIdNames();
+            foreach ($fromKeyNames as $keyName) {
+                $primaryKeys[$primaryKey[$i++]] = $this->$keyName;
+            }
+            $parent = $parentEntity->find($primaryKeys);
+            $this->_parents[$parentEntityName] = $parent;
+        }
+        return $this->_parents[$parentEntityName];
     }
 
     /**
-     * Two pseudo fields are defined <ul>
-     * <li> _at_parent_id : returns an object corresponding to the parent
-     * <li> _children_entity_id : returns an array corresponding to the children
-     * </ul>
+     * Gets the children whose object is the parent
      * 
-     * @param string $field The pseudo field name
-     * @return mixed
+     * @param string $keyFields
+     * @return array
      */
-    private function _getPseudoField($field) {
-        $offset = strpos($field, self::CHILDREN);
-        if ($offset === 0) {
-            $type = self::DATAROWSET;
-        }
-        else {
-            $offset = strpos($field, self::AT);
-            if ($offset === 0) {
-                $type = self::DATAROW;
-            }
-            else {
-                // Unknown field
-                return \NULL;
-            }
-        }
+    private function _getChildren($keyFields) {
         $entityManager = $this->_entity->getEntityManager();
-        $links = substr($field, $type);
-        // get parent
-        if ($type == self::DATAROW) {
-            list($parentEntityName, $fromKeyNames) = $this->_entity->getMetadata()->getParentRowParams($links);
-            if (!isset($this->_parents[$parentEntityName])) {
-                $parentClassName = $this->_entity->getExternalClassName($parentEntityName);
-                $parentEntity = $entityManager->retrieveEntity($parentEntityName, $parentClassName);
-                $i = 0;
-                $primaryKey = $parentEntity->getIdNames();
-                foreach ($fromKeyNames as $keyName) {
-                    $primaryKeys[$primaryKey[$i++]] = $this->$keyName;
-                }
-                $parent = $parentEntity->find($primaryKeys);
-                $this->_parents[$parentEntityName] = $parent;
-            }
-            return $this->_parents[$parentEntityName];
+        $fKeys = explode(IRIS_FIELDSEP, $keyFields);
+        $chldName = array_shift($fKeys);
+//        $chldClassName = $this->_entity->getExternalClassName($chldName);
+//        $chldEntity = $entityManager->retrieveEntity($chldName, $chldClassName);
+        $chldEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $chldName);
+        list($parentFields, $childFields) =
+                $chldEntity->getMetadata()->getChildrenParams($this->_entity->getEntityName(), $fKeys);
+// placer ici les valeurs et non les noms de champ
+        $i = 0;
+        foreach ($parentFields as $pField) {
+            $value = $this->$pField;
+            $conditions[$childFields[$i++]] = $value;
+            $childValues[] = $value;
         }
-        // get children
-        else {
-            $fKeys = explode('__', $links);
-            $chldName = array_shift($fKeys);
-            $chldClassName = $this->_entity->getExternalClassName($chldName);
-            $chldEntity = $entityManager->retrieveEntity($chldName, $chldClassName);
-            list($parentFields, $childFields) =
-                    $chldEntity->getMetadata()->getChildrenParams($this->_entity->getEntityName(), $fKeys);
-            // placer ici les valeurs et non les noms de champ
-            $i = 0;
-            foreach ($parentFields as $pField) {
-                $value = $this->$pField;
-                $conditions[$childFields[$i++]] = $value;
-                $childValues[] = $value;
-            }
-            $chldId = implode('__', $childValues) . "@$chldName";
-            if (!isset($this->_children[$chldId])) {
-                $chldEntity->wherePairs($conditions);
-                $children = $chldEntity->fetchAll();
-                $this->_children[$chldId] = $children;
-            }
-            return $this->_children[$chldId];
+        $chldId = implode(IRIS_FIELDSEP, $childValues) . "@$chldName";
+        if (!isset($this->_children[$chldId])) {
+            $chldEntity->wherePairs($conditions);
+            $children = $chldEntity->fetchAll();
+            $this->_children[$chldId] = $children;
         }
+        return $this->_children[$chldId];
     }
 
     /**
@@ -234,35 +266,35 @@ class Object {
      * @param type $pseudoField
      * @return type 
      */
-    protected function _getChildren($pseudoField) {
-        $fKey = substr($pseudoField, strlen(self::CHILDREN));
-        $fKeys = explode('__', $fKey);
-        $chldName = array_shift($fKeys);
-        $parentName = $this->_entity->getEntityName();
-        $foreignKey = implode('_', $fKeys);
-        $chldID = $chldName . '_' . $foreignKey;
-        if (isset($this->_children[$chldID])) {
-            return $this->_children[$chldID];
-        }
-        $entityManager = $this->_entity->getEntityManager();
-        $chldClassName = $this->_entity->getExternalClassName($chldName);
-        $chldEntity = $entityManager->retrievetEntity($chldName, $chldClassName);
-        $chldMetadata = $chldEntity->getMetadata();
-        $chldForeigns = $chldMetadata->getForeigns();
-        /*         * @var \Iris\DB\ForeignKey chldForeign */
-        foreach ($chldForeigns as $chldForeign) {
-            if ($chldForeign->getTargetTable() == $parentName and
-                    implode('_', $chldForeign->getFromKeys()) == $foreignKey) {
-                break;
-            }
-        }
-        $chldToParent = $chldForeign->getFromKeys();
-        $condition = array_combine($chldToParent, $this->primaryKeyValue());
-        $chldEntity->wherePairs($condition);
-        $result = $chldEntity->fetchAll();
-        $this->_children[$chldID] = $result;
-        return $result;
-    }
+//    protected function _getChildren($pseudoField) {
+//        $fKey = substr($pseudoField, strlen(self::CHILDREN));
+//        $fKeys = explode(IRIS_FIELDSEP, $fKey);
+//        $chldName = array_shift($fKeys);
+//        $parentName = $this->_entity->getEntityName();
+//        $foreignKey = implode('_', $fKeys);
+//        $chldID = $chldName . '_' . $foreignKey;
+//        if (isset($this->_children[$chldID])) {
+//            return $this->_children[$chldID];
+//        }
+//        $entityManager = $this->_entity->getEntityManager();
+//        $chldClassName = $this->_entity->getExternalClassName($chldName);
+//        $chldEntity = $entityManager->retrievetEntity($chldName, $chldClassName);
+//        $chldMetadata = $chldEntity->getMetadata();
+//        $chldForeigns = $chldMetadata->getForeigns();
+//        /*         * @var \Iris\DB\ForeignKey chldForeign */
+//        foreach ($chldForeigns as $chldForeign) {
+//            if ($chldForeign->getTargetTable() == $parentName and
+//                    implode('_', $chldForeign->getFromKeys()) == $foreignKey) {
+//                break;
+//            }
+//        }
+//        $chldToParent = $chldForeign->getFromKeys();
+//        $condition = array_combine($chldToParent, $this->primaryKeyValue());
+//        $chldEntity->wherePairs($condition);
+//        $result = $chldEntity->fetchAll();
+//        $this->_children[$chldID] = $result;
+//        return $result;
+//    }
 
     /**
      * Change a field value if necessary, marking the object
@@ -273,23 +305,20 @@ class Object {
      * @todo Verify if some RDBMS wants to manage true boolean
      */
     public function __set($field, $value) {
-//        if(is_null($value)){
-//            $value = 'null';
-//        }
         if (is_bool($value)) {
             $value = $value ? 1 : 0;
         }
         $offset = $this->_fields[$field];
-        if ($this->_data[$offset] != $value) {
-            $this->_newData[$offset] = $value;
+        if ($this->_currentContent[$offset] != $value) {
+            $this->_modifiedContent[$offset] = $value;
             $this->_dirty = TRUE;
         }
     }
 
     public function extraField($fieldName, $value) {
-        $nextNumber = count($this->_data);
-        $this->_data[$nextNumber] = $value;
-        $this->_newData[$nextNumber] = NULL;
+        $nextNumber = count($this->_currentContent);
+        $this->_currentContent[$nextNumber] = $value;
+        $this->_modifiedContent[$nextNumber] = NULL;
         $this->_fields[$fieldName] = $nextNumber;
     }
 
@@ -297,15 +326,15 @@ class Object {
      * Save an object in the database, if necessary
      */
     public function save() {
-        // Deleted object can't be saved
+// Deleted object can't be saved
         if ($this->_ORMState == self::ORM_DELETED) {
             throw new \Iris\Exceptions\ORMException('Trying to save a deleted object');
         }
 
         if ($this->_ORMState == self::ORM_TRANSIENT) {
             $done = $this->_insert();
-            $newId = $this->_entity->lastInsertedId();
-            //@todo manage AUTOINCREMENT instead
+            $this->_entity->lastInsertedId();
+//@todo manage AUTOINCREMENT instead
 //            if(is_numeric($newId) and count($this->_entity->getIdNames())==1){
 //                $idFields =$this->_entity->getIdNames(); 
 //                $idField = $idFields[0];
@@ -321,24 +350,26 @@ class Object {
         }
         if ($done) {
             $this->_dirty = FALSE;
-            //@todo : mettre à jour les objets dépendants.....
+//@todo : mettre à jour les objets dépendants.....
         }
         return $done;
     }
 
     /**
-     * Create a new object in the database
+     * Creates a new object in the database
+     * 
+     * @return boolean If TRUE, insertion has been successfully done
      */
     protected function _insert() {
         $insert = array();
         $values = array();
         foreach ($this->_fields as $field => $dummy) {
             $offset = $this->_fields[$field];
-            if (!is_null($this->_newData[$offset])) {
+            if (isset($this->_modifiedContent[$offset])) {
                 $insert[] = $field;
-                $values[] = $this->_newData[$offset];
-                $this->_data[$offset] = $this->_newData[$offset];
-                $this->_newData[$offset] = NULL;
+                $values[] = $this->_modifiedContent[$offset];
+                $this->_currentContent[$offset] = $this->_modifiedContent[$offset];
+                unset($this->_modifiedContent[$offset]);
             }
         }
         $done = $this->_entity->insert($insert, $values);
@@ -352,7 +383,7 @@ class Object {
                 if ($primaryKeyField->isAutoincrement()) {
                     $EM = $this->_entity->getEntityManager();
                     $newId = $EM->lastInsertedId(NULL);
-                    $this->_data[$this->_fields[$pkName]] = $newId;
+                    $this->_currentContent[$this->_fields[$pkName]] = $newId;
                 }
             }
             $idValues = $this->primaryKeyValue();
@@ -361,21 +392,33 @@ class Object {
         return $done;
     }
 
+    /**
+     * Updates an object in the database
+     * 
+     * @return boolean If TRUE, update has been successfully done
+     */
     protected function _update() {
         $setFields = array();
         $values = array();
         foreach ($this->_fields as $field => $dummy) {
             $offset = $this->_fields[$field];
-            if (!is_null($this->_newData[$offset]) and
-                    $this->_data[$offset] != $this->_newData[$offset]) {
+            if (isset($this->_modifiedContent[$offset])) {
                 $setFields[] = $field;
-                $values[] = $this->_newData[$offset];
+                $values[] = $this->_modifiedContent[$offset];
+                $this->_currentContent[$offset] = $this->_modifiedContent[$offset];
+                unset($this->_modifiedContent[$offset]);
             }
         }
         $idValues = $this->primaryKeyValue();
         return $this->_entity->update($setFields, $values, $idValues); // need to update
     }
 
+    /**
+     * Deletes an object out of the database
+     * 
+     * @return booelan If TRUE, deletion has been successfully done
+     * @throws \Iris\Exceptions\DBException
+     */
     public function delete() {
         if ($this->_ORMState != self::ORM_PERSISTENT) {
             throw new \Iris\Exceptions\DBException('A not persistent object cannot be deleted');
@@ -396,7 +439,7 @@ class Object {
         $idValues = array();
         foreach ($this->_entity->getMetadata()->getPrimary() as $idN) {
             if (isset($this->_fields[$idN])) {
-                $idValues[$idN] = $this->_data[$this->_fields[$idN]];
+                $idValues[$idN] = $this->_currentContent[$this->_fields[$idN]];
             }
         }
         return $idValues;
@@ -412,5 +455,4 @@ class Object {
     }
 
 }
-
 ?>
