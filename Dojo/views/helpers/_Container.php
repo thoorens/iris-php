@@ -115,7 +115,7 @@ abstract class _Container extends _DojoHelper {
      * 
      * @param string $varName the name of the container seen by the view containing it
      * @param string $type the type of the container (by default Tab)
-     * @return Container 
+     * @return static 
      */
     public function help($varName = NULL) {
         $this->_type = static::$_Type;
@@ -225,17 +225,21 @@ SCRIPTEND;
     }
 
     /**
-     * 
+     * Gets an 
      * @param type $name
      * @return \Dojo\Engine\Item
      */
     public function getItem($name) {
+        if(!isset($this->_items[$name])){
+            $this->addItem($name,$name);
+        }
         return $this->_items[$name];
     }
 
     /**
      * Add an item and label
      * 
+     * @staticvar int $number a defaut number for auto naming
      * @param string $name
      * @param string $label 
      * @return Container (fluent interface)
@@ -260,6 +264,7 @@ SCRIPTEND;
         return $item->render($this->_JS);
     }
 
+    
     public function linkedItem($itemIndex, $url) {
         $item = $this->getItem($itemIndex);
         $item->setLink($url);
