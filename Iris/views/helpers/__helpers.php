@@ -3,4 +3,4 @@
 /**
  * A set of view helpers
  */
-namespace iris\views\helpers;
+namespace Iris\views\helpers;

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace iris\views\helpers;
+namespace Iris\views\helpers;
 
 /*
  * This file is part of IRIS-PHP.

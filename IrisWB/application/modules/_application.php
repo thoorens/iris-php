@@ -46,7 +46,7 @@ class _application extends \Iris\MVC\_Controller {
         $this->_sequence = $sequence;
         $this->__Title = $this->_sequence->getCurrentDesc();
         // set the model for MD5
-        \Iris\views\helpers\Signature::SetModel('TSequence', 'URL', 'Md5');
+        \iris\views\helpers\Signature::SetModel('TSequence', 'URL', 'Md5');
         \ILO\views\helpers\AdminToolBar::GetInstance()->setMenu(\TRUE);
     }
 

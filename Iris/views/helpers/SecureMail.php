@@ -25,7 +25,7 @@
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-namespace iris\views\helpers;
+namespace Iris\views\helpers;
 
 /**
  * This helper returns "mailto" link in which all characters are

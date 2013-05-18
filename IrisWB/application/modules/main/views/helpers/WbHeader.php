@@ -1,6 +1,6 @@
 <?php
 
-namespace iris\views\helpers;
+namespace Iris\views\helpers;
 
 defined('CRLF') or define('CRLF', "\n");
 
