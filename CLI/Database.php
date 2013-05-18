@@ -361,6 +361,7 @@ END;
                 $settings[self::EXTERNAL] = "protected static \$_EMProviderClass = '\\models\\crud\\$entityName';";
             }
         }
+        iris_debug('Since modification in _Entity, this part is obsolete. Modify it');
         return $settings[$settingId];
     }
 

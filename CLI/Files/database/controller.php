@@ -25,8 +25,8 @@ use \Iris\DB\DataBrowser\tCrudManager;
                 // primary key field
                 ->setIdField({ID});
         // Get all the data in {ENTITY}
-        $tEntity = new \models\T{ENTITY}();
-        $this->__lines = $tEntity->fetchall();
+        $tEntity = \models\T{ENTITY}::GetEntity();
+        $this->__lines = $tEntity->fetchAll();
         // A proposal for the title
         $this->__Title = "{ENTITY} manager"; 
     }
