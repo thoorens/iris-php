@@ -53,7 +53,7 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
      * 
      * @return \Iris\DB\_EntityManager 
      */
-    protected static function _DefaultEntityManager() {
+    public static function DefaultEntityManager() {
         $dbFile = IRIS_PROGRAM_PATH .self::DB_PARAM_FILE;
         $newBase = FALSE;
         if (!file_exists($dbFile)) {
