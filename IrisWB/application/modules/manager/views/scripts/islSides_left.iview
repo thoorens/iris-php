@@ -1,6 +1,9 @@
 <h2>Available categories</h2>
 <ul>
-{foreach(sections,sec)}
-    <li><a href="/manager/screens/index/{(sec->id)}">{(sec->GroupName)}</a></li>
-{/foreach}
+    {foreach(sections,sec)}
+        <li>
+            <a href="/manager/screens/index/{(sec->id)}">{(sec->GroupName)}</a>
+        </li>
+    {/foreach}
 </ul>
+{button('Manage the sections','/manager/sections','Modify the sections containing the screens')}
