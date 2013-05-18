@@ -36,9 +36,9 @@ namespace modules\manager\controllers;
 class islSides extends \Iris\MVC\_Islet {
 
     public function leftAction() {
-        $tSections = new \models\TSections();
+        $tSections = \Iris\DB\_Entity::GetEntity('sections');
         $tSections->where('id>', 0);
-        $this->__sections = $tSections->fetchall();
+        $this->__sections = $tSections->fetchAll();
     }
 
     public function rightAction() {

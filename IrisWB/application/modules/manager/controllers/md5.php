@@ -45,7 +45,7 @@ class md5 extends _manager {
      */
     public function saveAction($module, $controller, $action, $md5) {
         $url = "/$module/$controller/$action";
-        $tSequences = new \models\TSequence();
+        $tSequences = \Iris\DB\_EntityManager::GetEntity('sequence');
         $screen = $tSequences->fetchRow('URL=', $url);
         $screen->Md5 = $md5;
         $screen->save();

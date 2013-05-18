@@ -53,9 +53,9 @@ use \Iris\DB\DataBrowser\tCrudManager;
                 ->setDescField('GroupName')
                 // champ constituant la clé primaire
                 ->setIdField('id');
-        $tSection = new \models\TSections();
+        $tSection = \Iris\DB\_Entity::GetEntity('sections');
         $tSection->where('id<>', 0);
-        $this->__data = $tSection->fetchall();
+        $this->__data = $tSection->fetchAll();
     }
 
     

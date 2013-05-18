@@ -30,7 +30,8 @@ namespace modules\manager\controllers;
  * 
  */
 class screens extends _manager {
-use \Iris\DB\DataBrowser\tCrudManager;
+
+    use \Iris\DB\DataBrowser\tCrudManager;
 
     public function indexAction($section = 10) {
         $icons = \Iris\Subhelpers\Crud::getInstance();
@@ -46,11 +47,21 @@ use \Iris\DB\DataBrowser\tCrudManager;
                 ->setDescField('Description')
                 // champ constituant la clé primaire
                 ->setIdField('id');
-        $tSection = new \models\TSequence();
-        $tSection->where('section_id=',$section);
-        $screens = $tSection->fetchall();
+        $tSequence = \Iris\DB\_Entity::GetEntity('sequence');
+        $tSequence->where('section_id=', $section);
+        $screens = $tSequence->fetchAll();
         $this->__screens = $screens;
         $this->__category = $screens[0]->_at_section_id->GroupName;
+    }
+
+    protected function _customize($actionName) {
+        $parameters = $this->getResponse()->getParameters();
+        $tSequence = \Iris\DB\_EntityManager::GetEntity('sequence');
+        $section = $tSequence->find($parameters[0])->section_id;
+        if (!is_null($section))
+            $this->__section = $section;
+        else
+            $this->__section = 0;
     }
 
 }
