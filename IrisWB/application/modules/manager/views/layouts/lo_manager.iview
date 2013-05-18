@@ -4,7 +4,7 @@
         {head()}
         {styleLoader("wb.css")}
     </head>
-    <body {dojo_body()}{bodyOnload()}{wbColors($bodyColor)}>
+    <body {dojo_body()}{bodyOnload()}{wbColors('YELLOW1')}>
         <div id="main">
             {ILO_adminToolBar()}
             <div id="container">
