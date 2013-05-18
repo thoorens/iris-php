@@ -1,6 +1,7 @@
 <?php
 
 namespace models\crud;
+use modules\db\controllers\helpers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -31,24 +32,49 @@ namespace models\crud;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Invoice extends \Iris\DB\DataBrowser\_Crud {
+abstract class _localCrud extends \Iris\DB\DataBrowser\_Crud {
  
-    protected $_formProperties = array(
-        'customer_id' => array('LABEL','Customer:'),
-    );
     /**
      * The name of the table
      * 
      * @var string
      */
-    protected static $_TableName = 'Invoices';
+    protected static $_TableName;
     /**
      * The list of fields in primary key
      * 
      * @var array
      */
-    protected static $_IdName = ['id'];
-
-
+    protected static $_IdName;
     
+    public function __construct($param = NULL) {
+        die('CRUD problem');
+        parent::__construct($param);
+        $dbType = \Iris\Users\Session::GetInstance()->getValue('dbType', 'sqlite');
+        $entity = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder(static::$_TableName, [static::$_IdName],
+                \models\_invoiceManager::getEM($dbType));
+        $this->setEntity($entity);
+        $this->setActions("error", static::$_TableName);
+   
+    }
+
+    private function _test(){
+        iris_debug(static::$_TableName);
+    }
+    
+    protected function _postUpdate($object) {
+        $this->_setModified();
+    }
+
+    protected function _postDelete(&$object) {
+        $this->_setModified();
+    }
+    
+    protected function _postCreate($object) {
+        $this->_setModified();
+    }
+    
+    private function _setModified(){
+        \Iris\controllers\helpers\_ControllerHelper::HelperCall('dbState', [],\NULL)->setModified();
+    }
 }

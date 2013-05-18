@@ -32,17 +32,32 @@ namespace models\crud;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Screen extends \Iris\DB\DataBrowser\_Crud {
- 
-    
+
     public function __construct($param = NULL) {
         parent::__construct($param);
-        $dbType = \Iris\Users\Session::GetInstance()->getValue('dbType', 'sqlite');
-        $entity = \Iris\DB\DataBrowser\AutoEntity::entityBuilder('sequence', array('id'),
-                \models\_invoiceManager::getEM($dbType));
+        $entity = \Iris\DB\_Entity::GetEntity('sequence');
         $this->setEntity($entity);
         $this->setActions("erreur", "index");
     }
 
+    protected function _preCreate($formData, &$object) {
+        $this->_setSection($object);
+    }
 
-    
+    protected function _preDelete(&$object) {
+        $this->_setSection($object);
+    }
+
+    protected function _preDisplay(&$data) {
+        $this->_setSection($data);
+    }
+
+    protected function _preUpdate($formData, &$object) {
+        $this->_setSection($object);
+    }
+
+    private function _setSection($object) {
+        $section = $object->section_id;
+    }
+
 }

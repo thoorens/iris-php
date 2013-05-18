@@ -1,6 +1,6 @@
 <?php
 
-namespace models;
+namespace models\crud;
 
 /*
  * This file is part of IRIS-PHP.
@@ -19,38 +19,33 @@ namespace models;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
+ *
+ * 
  */
 
 /**
- * This class is used in the TOC of the workbench to get
- * the parent section of each item of the sequence (through the 
- * use of the _at_ pseudo field
+ * 
+ * Test of basic crud operations
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.thoorens.net
+ * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TSections extends \Iris\DB\_Entity {
+class Event extends _localCrud {
+ 
+    /**
+     * The name of the table
+     * 
+     * @var string
+     */
+    protected static $_TableName = 'events';
+    /**
+     * The list of fields in primary key
+     * 
+     * @var array
+     */
+    protected static $_IdName = ['id'];
 
-//    /**
-//     * This method illustrates how to get the children records
-//     * in a n to 1 relation
-//     */
-//    public static function Test() {
-//        $tsections = new TSections;
-//        $sections = $tsections->fetchall();
-//
-//        /* @var $section \Iris\DB\Object */
-//        foreach ($sections as $section) {
-//            echo "<h5>" . $section->GroupName . '</h5>';
-//            $seqs = $section->_children_sequence_section_id;
-//            foreach ($seqs as $seq) {
-//                echo $seq->URL . '<br>';
-//            }
-//        }
-//        die('ok');
-//    }
 
+    
 }
-
-?>

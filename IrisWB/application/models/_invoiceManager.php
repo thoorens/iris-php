@@ -22,7 +22,9 @@ namespace models;
  */
 
 /**
- * Small invoice manager for test purpose: abstract class
+ * Small invoice manager for test purpose: abstract class implemented in
+ * 3 concretes classes corresponding to the 3 tables involved in incoice
+ * management. In the present state, only SQlite is taken into account.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net
@@ -30,11 +32,22 @@ namespace models;
  * @version $Id: $ */
 abstract class _invoiceManager extends \Iris\DB\_Entity {
 
+    /**
+     * Eachs subclasses will have its proper SQL DDL string to create a table
+     * @var array
+     */
     protected static $_SQLCreate = array();
     private static $_Em = \NULL;
     private static $_File = '/library/IrisWB/application/config/base/invoice.sqlite';
 
-    public static function getEM($dbType='sqlite') {
+    /**
+     * Gets the current entity manager (if necessary, creates it according to
+     * the mentionned type, by defaut SQLite)
+     * 
+     * @param string $dbType The type of database (by default sqlite)
+     * @return \Iris\DB\_EntityManager
+     */
+    public static function GetEM($dbType='sqlite') {
         if (is_null(self::$_Em)) {
             switch ($dbType) {
                 case 'sqlite':
@@ -45,28 +58,44 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
         return self::$_Em;
     }
 
-    public static function Reset($type) {
-        switch ($type) {
+    
+    public static function DefaultEntityManager() {
+        return self::GetEM();
+    }
+
+    /**
+     * Resets the database to an initial state (no table).
+     * 
+     * @param string $dbType The type of database (by default sqlite)
+     */
+    /**
+     * 
+     * @param type $dbType
+     * @return \Iris\DB\_EntityManager
+     */
+    public static function Reset($dbType) {
+        switch ($dbType) {
             case 'sqlite':
+                // in SQlite, only delete the database file
                 if (file_exists(IRIS_ROOT_PATH . self::$_File)) {
                     unlink(IRIS_ROOT_PATH . self::$_File);
                 }
                 break;
         }
+        return self::GetEM($dbType);
     }
 
-    public static function Create($type) {
-        $em = self::getEM($type);
-        $sql = static::$_SQLCreate[$type];
+    /**
+     * Creates un new table in the database
+     * @param string $dbType The type of database (by default sqlite)
+     */
+    public static function Create($dbType) {
+        $em = self::GetEM($dbType);
+        $sql = static::$_SQLCreate[$dbType];
         $em->directSQL($sql);
     }
 
-    public function __construct($EM = NULL) {
-        if (is_null($EM)) {
-            $EM = self::getEM();
-        }
-        parent::__construct($EM);
-    }
+    
 
 }
 

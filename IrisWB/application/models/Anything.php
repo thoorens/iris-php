@@ -28,25 +28,11 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TCustomers extends _invoiceManager {
+class Anything extends \Iris\DB\_Entity {
 
-    // TCostumers is used for demonstration purpose elsewhere, so we must
-    // specify the table name, which would be customers2 if not explicitely
-    // defined
     protected $_entityName = 'customers';
     
-    protected static $_SQLCreate = [
-        'sqlite' =>
-        'CREATE TABLE customers(
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
-    Name TEXT  NOT NULL,
-    Address TEXT,
-    Email TEXT)',
-        'mysql' => '',
-        'oracle' =>'
-            
-',
-    ];
+    
 
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace models;
+namespace models\crud;
 
 /*
  * This file is part of IRIS-PHP.
@@ -19,35 +19,33 @@ namespace models;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
+ *
+ * 
  */
 
 /**
- * Small invoice manager for test purpose: the Customers table
+ * 
+ * Test of basic crud operations
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.thoorens.net
+ * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TCustomers extends _invoiceManager {
+class Order extends _localCrud {
+ 
+    /**
+     * The name of the table
+     * 
+     * @var string
+     */
+    protected static $_TableName = 'orders';
+    /**
+     * The list of fields in primary key
+     * 
+     * @var array
+     */
+    protected static $_IdName = ['id'];
 
-    // TCostumers is used for demonstration purpose elsewhere, so we must
-    // specify the table name, which would be customers2 if not explicitely
-    // defined
-    protected $_entityName = 'customers';
+
     
-    protected static $_SQLCreate = [
-        'sqlite' =>
-        'CREATE TABLE customers(
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
-    Name TEXT  NOT NULL,
-    Address TEXT,
-    Email TEXT)',
-        'mysql' => '',
-        'oracle' =>'
-            
-',
-    ];
-
 }
-
-?>

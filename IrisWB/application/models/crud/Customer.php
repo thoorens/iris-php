@@ -31,18 +31,20 @@ namespace models\crud;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Customer extends \Iris\DB\DataBrowser\_Crud {
- 
-    
-    public function __construct($param = NULL) {
-        parent::__construct($param);
-        $dbType = \Iris\Users\Session::GetInstance()->getValue('dbType', 'sqlite');
-        $entity = \Iris\DB\DataBrowser\AutoEntity::entityBuilder('customers', array('id'),
-                \models\_invoiceManager::getEM($dbType));
-        $this->setEntity($entity);
-        $this->setActions("erreur", "customers");
-    }
+class Customer extends _localCrud {
 
+    /**
+     * The name of the table
+     * 
+     * @var string
+     */
+    protected static $_TableName = 'customers';
 
-    
+    /**
+     * The list of fields in primary key
+     * 
+     * @var array
+     */
+    protected static $_IdName = ['id'];
+
 }

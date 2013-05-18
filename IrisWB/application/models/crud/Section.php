@@ -36,9 +36,7 @@ class Section extends \Iris\DB\DataBrowser\_Crud {
     
     public function __construct($param = NULL) {
         parent::__construct($param);
-        $dbType = \Iris\Users\Session::GetInstance()->getValue('dbType', 'sqlite');
-        $entity = \Iris\DB\DataBrowser\AutoEntity::entityBuilder('sections', array('id'),
-                \models\_invoiceManager::getEM($dbType));
+        $entity = \Iris\DB\_Entity::GetEntity('sections');
         $this->setEntity($entity);
         $this->setActions("erreur", "index");
     }
