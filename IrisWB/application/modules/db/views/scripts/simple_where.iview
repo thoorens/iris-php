@@ -13,11 +13,12 @@
      <ul>
         {foreach(orders, order)}
             <li>
-                Invoice #{(order->_at_invoice_id->id)} : <b>{(order->Quantity)}</b> {(order->_at_product_id->Description)}s
+                Invoice #{(order->_at_invoice_id->id)} : 
+                <b>{(order->Quantity)}</b> {(order->_at_product_id->Description)}s
             </li>
         {/foreach}
     </ul>
-    <hr/>
+<hr/>
     <h3>Customers who have no email address</h3>
     <ul>
         {foreach(noMails,customer)}
@@ -37,5 +38,5 @@
     </ul>
     </p>
     <hr/>
-    {dbWarning()}
+{dbWarning()}
 </div>

@@ -1,0 +1,10 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <p>
+        The customer #1 has been found : <b>{(customer->Name)}</b>.
+    </p>
+    <p>
+        A second "new \models\TCostumer()" has thrown an expected exception with message:
+        <b>{warning}</b>
+    </p>
+</div>

@@ -34,12 +34,7 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
 
     protected $_singleton = TRUE;
     
-    /**
-     *
-     * @var \Iris\DB\_EntityManager
-     */
-    private $_entityManager;
-
+    
     public function help() {
         return $this;
     }
@@ -54,14 +49,16 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      * @return array
      */
     public function createAll($type, $data = \TRUE) {
-        \models\_invoiceManager::Reset($type);
-        return [
+        $entityManager = \models\_invoiceManager::Reset($type);
+        $results =  [
             "Customers" => $this->createCustomers($type, $data),
             "Products" => $this->createProducts($type, $data),
             "Invoices" => $this->createInvoices($type, $data),
             "Orders" => $this->createOrders($type, $data),
             "Events" => $this->createEvents($type, $data),
         ];
+        \models\VVcustomers::Create($type, $entityManager);
+        return $results;
     }
 
     /**
@@ -72,8 +69,8 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
      * @return int Number of rows created
      */
     public function createCustomers($type, $withData = \TRUE) {
-        \models\TCustomers2::Create($type);
-        $tCustomers = \models\TCustomers2::GetEntity();
+        \models\TCustomers::Create($type);
+        $tCustomers = \models\TCustomers::GetEntity();
         $customerList = [
             ['Jacques Thoorens', 'rue Villette', 'irisphp@thoorens.net'],
             ['John Smith' , 'Bourbon street', 'john@smith.eu'],
@@ -236,4 +233,5 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
         return $elements;
     }
 
+    
 }

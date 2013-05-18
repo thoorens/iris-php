@@ -1,7 +1,8 @@
 <?php
 
 namespace modules\db\controllers;
-    use Iris\DB\Query;
+
+use Iris\DB\Query;
 
 /*
  * This file is part of IRIS-PHP.
@@ -32,10 +33,10 @@ namespace modules\db\controllers;
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ */
 class simple extends _db {
-
-    /* 
+    /*
      * This portion of code is repeated in entities.php for readability
      */
+
     private $_entityManager;
 
     public function _init() {
@@ -46,18 +47,24 @@ class simple extends _db {
     }
 
     /* end of repeated code */
-    
+
+    /**
+     * Access to table through a table name
+     */
     public function customersAction() {
         // see _init for entity manager definition
-        $eCustomer = \Iris\DB\_Entity::GetEntity('customers',$this->_entityManager);
+        $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', $this->_entityManager);
         $this->__customer2 = $eCustomer->find(2);
         $eCustomer->where('Name =', 'Antonio Sanchez');
         $this->__customer3 = $eCustomer->fetchRow();
         $this->__customers = $eCustomer->fetchAll();
     }
 
+    /**
+     * Access to table through an entity class name
+     */
     public function customers2Action() {
-        $eCustomer = \Iris\DB\_Entity::GetEntity('\\models\TCustomers',$this->_entityManager);
+        $eCustomer = \Iris\DB\TableEntity::GetEntity('customers','\\models\TCustomers', $this->_entityManager);
         $this->__customer2 = $eCustomer->find(2);
         $eCustomer->where('Name =', 'Antonio Sanchez');
         $this->__customer3 = $eCustomer->fetchRow();
@@ -65,14 +72,54 @@ class simple extends _db {
         $this->setViewScriptName('customers');
     }
 
+    /**
+     * Access to table through an entity class static method
+     */
     public function customers3Action() {
-        $eCustomer = \models\TCustomers::GetEntity($this->_entityManager);
+        $eCustomer = \models\Anything::GetEntity($this->_entityManager);
         $this->__customer2 = $eCustomer->find(2);
         $eCustomer->where('Name =', 'Antonio Sanchez');
         $this->__customer3 = $eCustomer->fetchRow();
         $this->__customers = $eCustomer->fetchAll();
         $this->setViewScriptName('customers');
     }
+
+    /**
+     * Access to view through its name and associated table
+     */
+    public function viewAction() {
+        $eCustomer = \Iris\DB\ViewEntity::CreateView('vcustomers', 'customers', $this->_entityManager);
+        $this->__customer2 = $eCustomer->find(2);
+        $eCustomer->where('Name =', 'John Smith');
+        $this->__customer3 = $eCustomer->fetchRow();
+        $this->__customers = $eCustomer->fetchAll();
+        $this->setViewScriptName('customers');
+    }
+
+    /**
+     * Access to view through its name
+     */
+    public function view2Action() {
+        $eCustomer = \models\ViewCustomers::CreateView($this->_entityManager);
+        $this->__customer2 = $eCustomer->find(2);
+        $eCustomer->where('Name =', 'John Smith');
+        $this->__customer3 = $eCustomer->fetchRow();
+        $this->__customers = $eCustomer->fetchAll();
+        $this->setViewScriptName('customers');
+    }
+
+    /**
+     * Access to view through its name
+     */
+    public function view3Action() {
+        $eCustomer = \models\TVcustomers::CreateView($this->_entityManager);
+        $this->__customer2 = $eCustomer->find(2);
+        $eCustomer->where('Name =', 'John Smith');
+        $this->__customer3 = $eCustomer->fetchRow();
+        $this->__customers = $eCustomer->fetchAll();
+        $this->setViewScriptName('customers');
+    }
+    
     public function invoicesAction() {
         $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
         $this->__invoice2 = $eInvoices->find(2);
@@ -121,17 +168,18 @@ class simple extends _db {
         $this->__like4 = $eCustomers->fetchRow();
     }
 
-    public function invoicesproductsAction($invoice_id=1, $product_id = 1) {
+    public function invoicesproductsAction($invoice_id = 1, $product_id = 1) {
         $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
         $invoice = $eInvoices->find($invoice_id);
         $this->__invoice = $invoice;
         $this->__orders = $invoice->_children_orders__invoice_id;
-        
+
         $eProduct = \models\TProducts::GetEntity($this->_entityManager);
         $product = $eProduct->find($product_id);
         $this->__product = $product;
         $this->__orders2 = $product->_children_orders__product_id;
     }
+
     public function whereAction() {
         // Invoices in January
         $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
@@ -139,7 +187,7 @@ class simple extends _db {
         $this->__invoices = $eInvoices->fetchAll();
         // Order with quantity 3, 4 or 5 
         $eOrders = \models\TOrders::GetEntity($this->_entityManager);
-        $eOrders->whereIn('Quantity',[3,4,5]);
+        $eOrders->whereIn('Quantity', [3, 4, 5]);
         $this->__orders = $eOrders->fetchAll();
         // Customers with no email
         $eCustomers = \models\TCustomers::GetEntity($this->_entityManager);
@@ -147,6 +195,7 @@ class simple extends _db {
         $this->__noMails = $eCustomers->fetchAll();
         // Customers with email
         $eCustomers->whereNotNull('Email');
-        $this->__withMail =$eCustomers->fetchAll();
+        $this->__withMail = $eCustomers->fetchAll();
     }
+
 }
