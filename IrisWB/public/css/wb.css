@@ -182,7 +182,7 @@ img.shadow{
 }
 
 ul.crud li a {
-    
+
     text-decoration: none;
 }
 
@@ -192,4 +192,32 @@ ul.crud li a {
 
 .quoted2{
     color: #00A;
+}
+
+p.dbWarning{
+    font-size:0.8em;
+    border-style: double;
+    padding:5px;
+}
+
+.warningUnknown{
+    color: #800;
+    border-color:  #800;
+    background-color: white;
+}
+
+.warningCreated{
+    color:#080;
+    border-color:  #080;
+}
+
+.warningModified{
+    color:#FF0;
+    border-color:  #FF0;
+    background-color: #AAA;
+}
+
+.warningDeleted{
+    color:#F00;
+    border-color:  #F00;
 }
