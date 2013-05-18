@@ -18,4 +18,8 @@ class views extends _helpers {
     
     
 
+    public function paypalAction() {
+       $this->__object1 ="XSTHWA5RYXRBU"; 
+       $this->__object2 = "";
+    }
 }
