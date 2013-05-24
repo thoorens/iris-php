@@ -864,7 +864,7 @@ abstract class _Entity {
      * @param Metadata $metadata
      * @return Metadata 
      */
-    protected function _readMetadata($metadata) {
+    protected function _readMetadata($metadata = \NULL) {
         if (is_null($metadata)) {
             /* @var $metadata Metadata */
             $metadata = $this->_entityManager->readFields($this->_entityName);
