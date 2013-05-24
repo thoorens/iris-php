@@ -61,6 +61,8 @@ class Menu extends _ViewHelper{
      * @return string
      */
     public function help($name = '#def#', $recursive = \FALSE) {
+        if($name == '')
+            return '';
         if ($name == \NULL)
             return $this;
         $menu = is\MenuCollection::GetInstance()->getMenu($name);
