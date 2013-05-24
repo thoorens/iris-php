@@ -93,7 +93,8 @@ class ErrorHandler implements \Iris\Design\iSingleton {
      * @param type $line 
      */
     public function error2Exception($no, $mes, $file, $line) {
-        $errorExc = new ErrorException($mes, $no, E_ERROR, $file, $line, $previous = NULL);
+        $errorExc = new ErrorException($mes, $no, E_ERROR, $file, $line);
+        //$errorExc = new \Iris\Exceptions\ErrorException($mes, $no, \E_ERROR, $file, $line, \NULL);
         if (\Iris\Engine\Mode::IsProduction()) {
             $throw = TRUE;
         }
@@ -126,7 +127,7 @@ class ErrorHandler implements \Iris\Design\iSingleton {
                 $errorExc = new ErrorException($error['message'], \NULL, $error['type'], $error['file'], $error['line']);
                 Memory::Set('Exception', $errorExc);
                 Memory::Set('Log', \Iris\Log::GetInstance());
-                $program = new \Iris\Engine\Program(\Iris\Engine\Mode::$ProgramName);
+                $program = new \Iris\Engine\Program(\Iris\Engine\Program::$ProgramName);
                 $program->run('/ERROR');
             }
             else {
