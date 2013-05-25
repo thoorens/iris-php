@@ -74,16 +74,15 @@ abstract class _FormFactory {
      * @return Element 
      */
     public function __call($function, $params) {
-
         // createElementtype
-        if (strpos($function, 'create') === 0) {
+        if (strpos(strtolower($function), 'create') === 0) {
             $subtype = strtolower(substr($function, 6));
             $name = $params[0];
             $options = count($params) > 1 ? $params[1] : array();
             return $this->_createInput($name, $subtype, $options);
         }
         // validatorValidatortype
-        if (strpos($function, 'validator') === 0) {
+        if (strpos(strtolower($function), 'validator') === 0) {
             $type = substr($function, 9);
             return $this->_validator($type, $params);
         }
