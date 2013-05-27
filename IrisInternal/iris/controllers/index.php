@@ -45,9 +45,9 @@ class index extends \IrisInternal\main\controllers\_SecureInternal {
         }
         $this->setViewScriptName($language);
         $this->_setLayout('add');
-        $features = \Iris\models\TAvertising::getFeatures();
+        $features = \Iris\models\TAdvertising::getFeatures();
         $this->__features = $features;
-        $plans = \Iris\models\TAvertising::getPlans();
+        $plans = \Iris\models\TAdvertising::getPlans();
         $this->__plans = $plans;
         $this->__image1 =  'logoV.jpg';
         $this->__comment1 =  'Iris-PHP logo';

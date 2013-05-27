@@ -29,7 +29,7 @@ namespace Iris\models;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class TAvertising {
+class TAdvertising extends \Iris\DB\_Entity{
 
     /**
      * The default language
@@ -47,7 +47,7 @@ class TAvertising {
         $client = new \Iris\System\Client();
         self::$_Language = $client->getLanguage();
         $em = \Iris\DB\_EntityManager::EMFactory('sqlite:/library/IrisInternal/iris/irisad.sqlite');
-        self::$_Model = \Iris\DB\_Entity::GetEntity('advertising', $em);
+        self::$_Model = self::GetEntity($em);
     }
 
     /**
@@ -76,4 +76,4 @@ class TAvertising {
 }
 
 // Start initializer at loading time
-TAvertising::__Init();
+TAdvertising::__Init();
