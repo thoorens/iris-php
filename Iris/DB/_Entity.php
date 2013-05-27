@@ -140,25 +140,6 @@ abstract class _Entity {
         $params = new EntityParams(get_called_class());
         $params->analyseParams(func_get_args());
         return \Iris\DB\_EntityManager::GetEntity($params);
-
-        $params->analyseParams(func_get_args());
-        if (get_called_class() == "Iris\\DB\\_Entity") {
-            throw new \Iris\Exceptions\DBException('\\Iris\\DB\_Entity is abstract.');
-        }
-        $params = func_get_args();
-        if (isset($params[0])) {
-            if (is_array($params[0])) {
-                $params = $params[0];
-            }
-        }
-        else {
-            $params = static::_AnalyseParameters(func_get_args());
-        }
-        list($entityName, $alternativeClassName, $entityManager, $metadata) = $params;
-        if (is_null($entityManager)) {
-            $entityManager = static::DefaultEntityManager();
-        }
-        return \Iris\DB\_EntityManager::GetEntity($entityName, $entityManager, $alternativeClassName, $metadata);
     }
 
     /**
