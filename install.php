@@ -125,6 +125,8 @@ else:
         rcopy('IrisWB', "$target/IrisWB");
         echo "  -Tutorial internal library (Tutorial)\n";
         rcopy('Tutorial', "$target/Tutorial");
+        echo "  -Payoff library (Tutorial)\n";
+        rcopy('Tutorial', "$target/Payoff");
         echo "  -Special folders Extensions and Core (for class customisation)\n";
         rcopy('Extensions', "$target/Extensions");
         rcopy('Core', "$target/Core");
