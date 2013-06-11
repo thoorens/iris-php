@@ -2,7 +2,7 @@
 <html>
     <head>
         {head()}
-        {styleLoader("wb.css",1)->load("/!documents/file/css/errorColor.css",1)->load("/wberror.css")}
+        {styleLoader("/!documents/file/css/wb.css",1)->load("/!documents/file/css/errorColor.css",1)->load("/wberror.css")}
     </head>
     <body {dojo_body()}{bodyOnload()}>
         <div id="main">

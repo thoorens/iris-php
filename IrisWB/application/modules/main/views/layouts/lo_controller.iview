@@ -3,7 +3,7 @@
     <!-- This layout is used only as an exemple of a controller application defined layout -->
     <head>
         {head()}
-        {styleLoader("wb.css")}
+        {wbCSS()}
     </head>
     <body {dojo_body()}{bodyOnload()}{wbColors('ORANGE2')}>
         <div id="main">

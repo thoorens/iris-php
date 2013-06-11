@@ -2,7 +2,7 @@
 <html>
     <head>
         {head()}
-        {styleLoader("wb.css")}
+        {wbCSS()}
     </head>
     <body {dojo_body()}{bodyOnload()}{wbColors('YELLOW1')}>
         <div id="main">
