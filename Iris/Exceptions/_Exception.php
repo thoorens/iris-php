@@ -36,6 +36,7 @@ abstract class _Exception extends \Exception {
     /**
      * This mode corresponds to getTraceAsString from \Exception
      */
+
     const MODE_STRING = 1;
     /**
      * In this mode, each trace is placed as a string in an array
@@ -47,12 +48,18 @@ abstract class _Exception extends \Exception {
     const MODE_BOTH = 3;
 
     /**
+     * To avoid memory problems, the size of the trace string is limited
+     * to 5 000 characters (only the beginning is interesting)
+     */
+    const MAX_TRACE_STRING_SIZE = 5000;
+
+    /**
      *
      * @param string $message
      * @param int $code
      * @param \Exception $previous 
      */
-    public function __construct($message, $code=0, $previous=NULL) {
+    public function __construct($message, $code = 0, $previous = NULL) {
         \Iris\Log::Save(); // all output are going to be wiped out
         parent::__construct($message, NULL, $previous);
     }
@@ -62,7 +69,7 @@ abstract class _Exception extends \Exception {
      * @param int $mode
      * @return type 
      */
-    public function getIrisTrace($mode,$lineTitle=FALSE) {
+    public function getIrisTrace($mode, $lineTitle = FALSE) {
         switch ($mode) {
             // in this mode, we have a single string prepared by the
             // classical method
@@ -92,7 +99,7 @@ abstract class _Exception extends \Exception {
      * @param boolean $lineTitle
      * @return array
      */
-    private function _formatedTrace($lineTitle=FALSE) {
+    private function _formatedTrace($lineTitle = FALSE) {
         $trace = $this->getTrace();
         array_walk($trace, array($this, '_format'), $lineTitle);
         return $trace;
@@ -107,12 +114,14 @@ abstract class _Exception extends \Exception {
      * @param boolean $lineTitle 
      */
     private function _format(&$value, $key, $lineTitle) {
-        if($lineTitle){
-            $title ="<h6>Line $key</h6>";
-        }else{
+        if ($lineTitle) {
+            $title = "<h6>Line $key</h6>";
+        }
+        else {
             $title = '';
         }
         $format = print_r($value, TRUE);
+        $format = strlen($format) > self::MAX_TRACE_STRING_SIZE ? substr($format, 0, self::MAX_TRACE_STRING_SIZE) . CRLF . '[the rest has been skipped]' : $format;
         $value = $title . '<pre>' . htmlentities($format) . '</pre>';
     }
 
