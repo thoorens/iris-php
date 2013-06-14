@@ -46,7 +46,7 @@ class MultiByte implements \Iterator {
      * @param type $string
      * @param type $encoding 
      */
-    public function __construct($string, $encoding) {
+    public function __construct($string, $encoding='utf-8') {
         $this->_string = $string;
         $this->_encoding = $encoding;
     }
@@ -84,11 +84,11 @@ class MultiByte implements \Iterator {
      * Removes any accent from a string
      * 
      * @param string $str
-     * @param string $charset
+     * @param string $encoding
      * @return Multibyte for fluent interfac
      */
-    public static function No_Accent($str, $charset='utf-8') {
-        $str = htmlentities($str, ENT_NOQUOTES, $charset);
+    public static function No_Accent($str, $encoding='utf-8') {
+        $str = htmlentities($str, ENT_NOQUOTES, $encoding);
 
         $str = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
         $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
@@ -109,13 +109,17 @@ class MultiByte implements \Iterator {
     /**
      * 
      * @param type $string
-     * @param type $charset
+     * @param type $encoding
      * @return type
      */
-    public static function StrLen($string, $charset='utf-8') {
-        return mb_strlen($string, $charset);
+    public static function Str_Len($string, $encoding='utf-8') {
+        return mb_strlen($string, $encoding);
     }
 
+    public function strLen(){
+        return mb_strlen($this->_string, $this->_encoding);
+    }
+    
     /**
      * 
      * @param type $str
@@ -140,6 +144,13 @@ class MultiByte implements \Iterator {
         return $this;
     }
 
+    public static function To_Upper($string, $encoding='utf-8'){
+        return mb_strtoupper($string, $encoding);
+    }
+    
+    public static function To_Lower($string, $encoding='utf-8'){
+        return mb_strtolower($string, $encoding);
+    }
     /**
      * 
      * @return \Iris\Translation\MultiByte
