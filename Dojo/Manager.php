@@ -21,7 +21,6 @@ namespace Dojo;
  * @copyright 2011-2013 Jacques THOORENS
  */
 define('URL_DOJO_GOOGLE', "https://ajax.googleapis.com/ajax/libs/dojo/");
-define('URL_DOJO_AOL', "http://o.aolcdn.com/dojo/");
 define('URL_DOJO_YANDEX', "http://yandex.st/dojo");
 
 /**
@@ -117,7 +116,7 @@ class Manager implements \Iris\Design\iSingleton{
      * 
      * @var string 
      */
-    protected $_version = '1.8.0';
+    protected $_version = '1.9.0';
 
     /**
      * The constructor is private (singleton). It inits the basic CSS
