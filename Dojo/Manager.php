@@ -22,6 +22,8 @@ namespace Dojo;
  */
 define('URL_DOJO_GOOGLE', "https://ajax.googleapis.com/ajax/libs/dojo/");
 define('URL_DOJO_YANDEX', "http://yandex.st/dojo");
+// AOL disappeared
+//define('URL_DOJO_AOL', "http://o.aolcdn.com/dojo/");
 
 /**
  * This class is used internally by all Dojo helpers to manage the
@@ -37,7 +39,7 @@ class Manager implements \Iris\Design\iSingleton{
 
     const LOCAL = 0;
     const GOOGLE = 1;
-    const AOL = 2;
+    //const AOL = 2; disappeared
     const YANDEX = 3;
 
     /**
@@ -91,7 +93,7 @@ class Manager implements \Iris\Design\iSingleton{
      * 
      * @var string 
      */
-    protected $_source = self::GOOGLE;
+    protected static $_Source = self::GOOGLE;
 
     
 
@@ -238,7 +240,7 @@ class Manager implements \Iris\Design\iSingleton{
      * @param int $source 
      */
     public static function SetSource($source) {
-        self::GetInstance()->_source = $source;
+        self::$_Source = $source;
     }
 
     /**
@@ -265,13 +267,14 @@ class Manager implements \Iris\Design\iSingleton{
      */
     public function getURL() {
         $version = $this->getVersion();
-        switch ($this->_source) {
+        switch (self::$_Source) {
             case self::GOOGLE:
                 $source = URL_DOJO_GOOGLE . $version;
                 break;
-            case self::AOL:
-                $source = URL_DOJO_AOL . $version;
-                break;
+//            AOL disappeared            
+//            case self::AOL:
+//                $source = URL_DOJO_AOL . $version;
+//                break;
             case self::YANDEX:
                 $source = URL_DOJO_YANDEX . $version;
                 break;
