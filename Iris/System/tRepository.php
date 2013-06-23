@@ -102,5 +102,9 @@ trait tRepository{
     public static function InstanceNumber(){
         return count(self::$_Repository);
     }
+    
+    public function getName(){
+        return $this->_objectName;
+    }
 }
 
