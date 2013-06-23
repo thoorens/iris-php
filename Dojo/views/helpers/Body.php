@@ -35,7 +35,7 @@ class Body extends \Iris\views\helpers\_ViewHelper {
 
     
     /**
-     * The style of dojo widget may be set in body tag
+     * The theme of dojo widget may be set in body tag
      * No effect if no Dojo tool is used in the page.
      * 
      * @return string 
@@ -44,8 +44,8 @@ class Body extends \Iris\views\helpers\_ViewHelper {
         $manager = \Dojo\Manager::GetInstance();
         if (!$manager->isActive())
             return '';
-        $style = $manager->getStyle();
-        return " class=\"$style\"";
+        $theme = $manager->getTheme();
+        return " class=\"$theme\"";
     }
 
 }

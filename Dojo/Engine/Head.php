@@ -70,7 +70,7 @@ class Head {
         }
         $source = $manager->getURL();
         $script = $manager->getScript();
-        $style = $manager->getStyle();
+        $theme = $manager->getTheme();
         $parseOnLoad = $manager->getParseOnLoad();
         $debug = $manager->getDebug();
 
@@ -81,7 +81,7 @@ class Head {
                 $text .= sprintf('<link rel="stylesheet" type="text/css" href="%s">' . "\n", $file);
             }
             $text .= <<< BASE
-<link rel="stylesheet" type="text/css" href="$source/dijit/themes/$style/$style.css">
+<link rel="stylesheet" type="text/css" href="$source/dijit/themes/$theme/$theme.css">
 <script>
     dojoConfig = {parseOnLoad: $parseOnLoad, debug:$debug}
 </script>

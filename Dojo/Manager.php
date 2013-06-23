@@ -86,7 +86,7 @@ class Manager implements \Iris\Design\iSingleton{
      * </ul>
      * @var string
      */
-    protected $_style = 'nihilo'; // soria/tundra/claro/nihilo
+    protected $_theme = 'nihilo'; // soria/tundra/claro/nihilo
 
     /**
      * the source directory/url where dojo can be find
@@ -219,9 +219,9 @@ class Manager implements \Iris\Design\iSingleton{
      * 
      * @param type $style 
      */
-    public function setStyle($style) {
+    public function setTheme($style) {
         $this->setActive();
-        $this->_style = $style;
+        $this->_theme = $style;
     }
 
     /**
@@ -229,8 +229,8 @@ class Manager implements \Iris\Design\iSingleton{
      * 
      * @return type 
      */
-    public function getStyle() {
-        return $this->_style;
+    public function getTheme() {
+        return $this->_theme;
     }
 
     /**
