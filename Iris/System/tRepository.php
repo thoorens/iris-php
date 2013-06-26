@@ -32,6 +32,8 @@ defined('CRLF') or define('CRLF',"\n");
  * @version $Id: $ */
 trait tRepository{
 
+    private static $_NextObjectNumber = 0;
+    
     /**
      * All the object are placed in a repository
      * @var array(static)
@@ -67,6 +69,14 @@ trait tRepository{
             self::$_Repository[$objectName] = self::_New($objectName);
         }
         return self::$_Repository[$objectName];
+    }
+    
+    
+    public static function NewObjectName($prefix = ''){
+        if($prefix == ''){
+            $prefix = 'Object_';
+        } 
+        return $prefix.++self::$_NextObjectNumber;
     }
     
     /**
