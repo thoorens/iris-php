@@ -43,7 +43,7 @@ class FileEntity extends \Iris\DB\_Entity {
      *
      * @param type $EM 
      */
-    protected function init() {
+    protected function _init() {
         $this->setRowType('\Iris\Documents\File');
     }
 
