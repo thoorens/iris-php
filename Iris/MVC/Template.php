@@ -109,18 +109,30 @@ class Template implements \Iris\Translation\iTranslatable {
         // escaping {
         ['/%{%(.*)%}%/', '{$1}', \TRUE],
         // assign a new variable shortcut for {php} $var = 'value' {/php}
-        ['/{assign\((\w+),(.*)\)}/', '<?php $$1 = $2;/*TEST*/?>'],
+        ['/{assign\((\w+), ?(.*)\)}/', '<?php $$1 = $2;?>'],
+        // a single print
+        ['/{=(.*)}/','<?= $1?>'],
         // php tags
         ['{php}', '<?php '],
         ['{/php}', '?>'],
-        // foreach with and without key
+        ['/{\?(.*)\?}/','<?php $1; ?>'],
+        // for
+        ['/{for\((.+), ?(.+), ?(.+)\)}/i', '<?php for($1; $2; $3):?>'],
+        ['{/for}', '<?php endfor;?>'],
+        // foreach with key
+        ['/{foreach\((\.+): ?(\w+), ?(\w+)\)}/i', '<?php foreach($1 as $$2=>$$3):?>'],
         ['/{foreach\((\w+), ?(\w+), ?(\w+)\)}/i', '<?php foreach($$1 as $$2=>$$3):?>'],
+        // foreach without key
+        ['/{foreach\((.+): ?(\w+)\)}/i', '<?php foreach($1 as $$2):?>'],
         ['/{foreach\((\w+), ?(\w+)\)}/i', '<?php foreach($$1 as $$2):?>'],
         ['{/foreach}', '<?php endforeach;?>'],
         // if then else
         ['/{if\((.+?)\)}/', '<?php if($1):?>'],
         ['{else}', '<?php else: ?>'],
         ['{/if}', '<?php endif;?>'],
+        // while
+        ['/{while\((.+?)\)}/', '<?php while($1):?>'],
+        ['{/while}', '<?php endwhile;?>'],
         // switch equivalence (the dummy "c"ase '':" is required to avoid a PHP error.
         // A PHP closing tag followed by an opening tag is not accepted in this context).
         ['/{section\((.+?)\)}/', "<?php switch($$1): case '':?>"],
@@ -140,6 +152,7 @@ class Template implements \Iris\Translation\iTranslatable {
         ['/({\()(.*?)(\)})/', '<?=\$$2?>'],
         // view helpers
         ['/({)(.*?)(})/', '<?=\$this->$2?>'],
+        
     ];
 
     /**
