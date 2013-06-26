@@ -157,6 +157,7 @@ class Menu {
 //    }
 
     public function asArray() {
+        $data = [];
         foreach ($this->_items as $item) {
             if ($this->_defaultUri == $item->getUri()) {
                 $item->setDefault();
