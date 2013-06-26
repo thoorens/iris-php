@@ -20,7 +20,7 @@ namespace Iris\SysConfig;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  */
 
 /** 
@@ -117,13 +117,27 @@ class IniParser extends _Parser {
         }
     }
 
+    /**
+     * Exports an array of configs to a text file
+     * 
+     * @param string $filename file name to write
+     * @param array $configs the configs to write to the file
+     * @param int $inheritance copy inherited values (or ref to parent)
+     */
     public function exportFile($fileName, $configs,$inheritance=self::LINK_TO_PARENT) {
-        $data = $this->makeIniText($configs,$inheritance);
+        $data = $this->_makeIniText($configs,$inheritance);
         $text = implode("\n", $data);
         file_put_contents($fileName, $text);
     }
 
-    protected function makeIniText($configs,$inheritance) {
+    /**
+     * Transforms a config or an array of configs in an array of line of text
+     * 
+     * @param mixed $configs
+     * @param int $inheritance
+     * @return string
+     */
+    protected function _makeIniText($configs,$inheritance) {
         $results = array();
         if (is_array($configs)) {
             foreach ($configs as $section => $config) {
@@ -136,7 +150,7 @@ class IniParser extends _Parser {
                     $parentName = $config->getParent()->getName();
                     $results[] = "[$section:$parentName]";
                 }
-                $resSection = $this->makeIniText($config,$inheritance);
+                $resSection = $this->_makeIniText($config,$inheritance);
                 $results = array_merge($results, $resSection);
                 $results[] = '';
             }
