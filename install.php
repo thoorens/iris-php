@@ -1,26 +1,13 @@
 #! /usr/bin/env php
 <?php
 
-function makedir($dir) {
-    //echo "Making dir $dir\n";
-    mkdir($dir);
-}
 
-function kopy($src, $dst) {
-    //echo "Copying $src to $dst\n";
-    copy($src, $dst);
-}
 
-function removedir($dir) {
-    //echo "Removing $dir\n";
-    rmdir($dir);
-}
-
-function erase($file) {
-    //echo "Erasing $file\n";
-    unlink($file);
-}
-
+/**
+ * 
+ * @param type $var
+ * @return type
+ */
 function shellvar($var) {
     return str_replace("\n", "", shell_exec("echo %$var%"));
 }
@@ -35,10 +22,10 @@ function rrmdir($dir) {
         foreach ($files as $file)
             if ($file != "." && $file != "..")
                 rrmdir("$dir/$file");
-        removedir($dir);
+        rmdir($dir);
     }
     else if (file_exists($dir))
-        erase($dir);
+        unlink($dir);
 }
 
 // copies files and non-empty directories
@@ -46,14 +33,14 @@ function rcopy($src, $dst) {
     if (file_exists($dst))
         rrmdir($dst);
     if (is_dir($src)) {
-        makedir($dst);
+        mkdir($dst);
         $files = scandir($src);
         foreach ($files as $file)
             if ($file != "." && $file != "..")
                 rcopy("$src/$file", "$dst/$file");
     }
     else if (file_exists($src))
-        kopy($src, $dst);
+        copy($src, $dst);
 }
 
 // end of borrowing
