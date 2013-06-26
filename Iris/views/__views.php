@@ -1,6 +1,6 @@
 <?php
 
 /**
- * A container for system views, layouts and helpers
+ * A container for system view helpers
  */
 namespace Iris\views;
