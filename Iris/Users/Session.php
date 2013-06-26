@@ -52,7 +52,7 @@ final class Session implements \Iris\Design\iSingleton{
             else {
                 $identity = NULL;
             }
-            new Identity($identity);
+            Identity::CreateInstance($identity);
         }
         return self::$_Instance;
     }

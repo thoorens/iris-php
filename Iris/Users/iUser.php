@@ -33,13 +33,57 @@ namespace Iris\Users;
  * @version $Id: $ */
 interface iUser {
     
+    /**
+     * Accessor get for the id
+     * @return string
+     */
     public function getId();
+    /**
+     * Accessor get for the name
+     * 
+     * @return string 
+     */
     public function getName();
+    
+    /**
+     * Accessor get for the email address
+     * 
+     * @return string 
+     */
     public function getEmailAddress();
+   
+    /**
+     * Acessor get for the role
+     * 
+     * @return string
+     */
     public function getRole();
+    
+    /**
+     * Determines if the connected user has a role (strickly or by inheritance)
+     * The alias playRole and hasRole_Strict methods may be used for more clarity.
+     * 
+     * @param string $expectedRole the role concerned by the test
+     * @param boolean $strict true if no inheritance accepted
+     * @return boolean
+     */
     public function hasRole($role,$strict=TRUE);
     
+     /**
+     * Test a role accepting inheritance
+     * 
+     * @param string $expectedRoleName the role concerned by the test
+     * @return boolean 
+     */
+    public function playRole($expectedRoleName);
     
+    /**
+     * Test a role strictly
+     * 
+     * @param string $expectedRoleName the role concerned by the test
+     * @return boolean 
+     */
+    public function hasRole_Strict($expectedRoleName);
+    
+ 
 }
-
-?>

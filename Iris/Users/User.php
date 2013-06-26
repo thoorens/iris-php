@@ -22,13 +22,16 @@ namespace Iris\Users;
  */
 
 /**
- * A concrete implementation of iUser interface
+ * A concrete implementation of iUser interface based on a database
+ * with a TUsers special entity.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class User extends \Iris\DB\Object implements iUser {
+    use tUser;
+    
 
     public function getEmailAddress() {
         $emailField = $this->_entity->getEmailField();
@@ -44,10 +47,6 @@ class User extends \Iris\DB\Object implements iUser {
         $roleField = $this->_entity->getRoleField();
         $role = $this->$roleField;
         return $role;
-    }
-
-    public function hasRole($role, $stric=TRUE) {
-        return $role == $this->getRole();
     }
 
     public function getId() {

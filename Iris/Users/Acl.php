@@ -34,18 +34,37 @@ namespace Iris\Users;
 class Acl implements \Iris\Design\iSingleton {
 
     /**
-     * Implements a privilege management by using a Config found in Memory.
-     * It can be used to know if a role has a privilege (directly or
-     * by inheritance). If neither role nor acl are defined, everything is
-     * permited.
+     * The unique instance of the ACL
      * 
      * @var Acl
      */
     private static $_Instance = NULL;
-    private $_roles = array();
+
+    /**
+     * The list of allowed priveleges (for each role)
+     * 
+     * @var array
+     */
     private $_allowed = array();
+
+    /**
+     * The list of denied privileges (for each role)
+     * 
+     * @var array
+     */
     private $_denied = array();
+
+    /**
+     * If true, non acl in the application: everything is permited
+     * 
+     * @var boolean
+     */
     private $_noAcl = FALSE;
+
+    /**
+     * The name of ACL in Memory (can be changed)
+     * @var string 
+     */
     public static $ParamName = 'param_acl';
 
     /**
@@ -61,24 +80,24 @@ class Acl implements \Iris\Design\iSingleton {
     }
 
     /**
-     * Private constructor for singleton
+     * Private constructor for singleton. Fills the lists of allowed and
+     * denied privileges
      */
     private function __construct() {
-// try to find a param_acl in memory (readed in config files)
+        // try to find a param_acl in memory (readed in config files)
         $paramAcl = \Iris\Engine\Memory::Get(self::$ParamName);
         if (is_null($paramAcl)) {
-// if not found, everything is allowed
+            // if not found, everything is allowed
             $this->_noAcl = TRUE;
         }
         else {
             Role::Init($paramAcl['roles']);
             // Using the effective user role
             $activeRoleName = Identity::GetInstance()->getRole();
+            // ifthe current user has a non existent role, the session is reset to Somebody (no privileges)
+            // and an exception is throuwn
             if (!isset($paramAcl[$activeRoleName])) {
                 $user = Identity::GetInstance()->getName();
-//                if (Session::IsSessionActive()) {
-//                    session_destroy();
-//                }
                 $identity = Identity::GetInstance();
                 $identity->setRole(Somebody::GetDefaultRole());
                 $identity->sessionSave();
@@ -92,6 +111,56 @@ class Acl implements \Iris\Design\iSingleton {
                 $this->_addPrivileges($paramAcl, $ancestor);
             }
         }
+    }
+
+    /**
+     * Test if a resource is allowed for the current user and
+     * if necessary test a specific action
+     * 
+     * @param string $resource a module/controller string
+     * @param string $action a specific action (not always taken into account)
+     * @return boolean
+     */
+    public function hasPrivilege($resource, $action) {
+// in site without ACL, evry page is visible
+        if ($this->_noAcl) {
+            return TRUE;
+        }
+
+        if ($resource == '//') {
+            return TRUE;
+        }
+        // error display is allowed 
+        if ($resource == '/main/ERROR') {
+            return TRUE;
+        }
+        if (\Iris\Engine\Response::GetDefaultInstance()->isInternal()) {
+            return TRUE;
+        }
+        $activeRole = \Iris\Users\Identity::GetInstance()->getRole();
+        $role = \Iris\Users\Role::GetRole($activeRole);
+        $ownedRoles = $role->getAncestors();
+        array_unshift($ownedRoles, $activeRole);
+        foreach ($ownedRoles as $testedRole) {
+            // explicit prohibition
+            if (isset($this->_denied[$testedRole][$resource])) {
+                $denied = $this->_denied[$testedRole][$resource];
+                if ($denied == 'ALL' or in_array($action, explode(',', $denied))) {
+                    $roleDesc = $role->getName() . '(acting as ' . $testedRole . ')';
+                    return FALSE;
+                }
+            }
+            // explicit permission
+            if (isset($this->_allowed[$testedRole][$resource])) {
+                $allowed = $this->_allowed[$testedRole][$resource];
+                if ($allowed == 'ALL' or in_array($action, explode(',', $allowed))) {
+                    $roleDesc = $role->getName() . '(acting as ' . $testedRole . ')';
+                    return TRUE;
+                }
+            }
+        }
+        // what is not allowed is prohibited
+        return FALSE;
     }
 
     /**
@@ -125,53 +194,4 @@ class Acl implements \Iris\Design\iSingleton {
         }
     }
 
-    /**
-     *
-     * @param \Iris\Engine\Response $response
-     * @return boolean
-     */
-    function hasPrivilege($resource, $action) {
-// in site without ACL, evry page is visible
-        if ($this->_noAcl) {
-            return TRUE;
-        }
-
-        if ($resource == '//') {
-            return TRUE;
-        }
-// error display is allowed 
-        if ($resource == '/main/ERROR') {
-            return TRUE;
-        }
-        if (\Iris\Engine\Response::GetDefaultInstance()->isInternal()) {
-            return TRUE;
-        }
-        $activeRole = \Iris\Users\Identity::GetInstance()->getRole();
-        $role = \Iris\Users\Role::GetRole($activeRole);
-        $ownedRoles = $role->getAncestors();
-        array_unshift($ownedRoles, $activeRole);
-        foreach ($ownedRoles as $testedRole) {
-// explicit prohibition
-            if (isset($this->_denied[$testedRole][$resource])) {
-                $denied = $this->_denied[$testedRole][$resource];
-                if ($denied == 'ALL' or in_array($action, explode(',', $denied))) {
-                    $roleDesc = $role->getName() . '(acting as ' . $testedRole . ')';
-                    return FALSE;
-                }
-            }
-// explicit permission
-            if (isset($this->_allowed[$testedRole][$resource])) {
-                $allowed = $this->_allowed[$testedRole][$resource];
-                if ($allowed == 'ALL' or in_array($action, explode(',', $allowed))) {
-                    $roleDesc = $role->getName() . '(acting as ' . $testedRole . ')';
-                    return TRUE;
-                }
-            }
-        }
-// what is not allowed is prohibited
-        return FALSE;
-    }
-
 }
-
-?>

@@ -22,7 +22,7 @@ namespace Iris\Users;
  */
 
 /**
- * A dummy user having no right. Can serve to recrate a user
+ * A dummy user having no right. Can also serve to recrate a user
  * serialized in a session variable.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -30,13 +30,12 @@ namespace Iris\Users;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Somebody implements iUser {
-
+    use tUser;
+    
     protected static $_DefaultName = 'somebody';
     protected static $_DefaultRole = 'browse';
-    private $_name;
-    private $_emailAddress = 'info@irisphp.org';
-    public $_role = 'browse';
-    protected $_id = 0;
+    
+    protected $_emailAddress = 'info@irisphp.org';
 
     /**
      *
@@ -54,28 +53,7 @@ class Somebody implements iUser {
         }
     }
 
-    public function getEmailAddress() {
-        return $this->_emailAddress;
-    }
-
-    public function getName() {
-        return $this->_name;
-    }
-
-    public function getRole() {
-        return $this->_role;
-    }
-
-    /**
-     *
-     * @param string $role
-     * @param boolean $strict
-     * @return boolean
-     * @todo Gérer l'héritage
-     */
-    public function hasRole($role, $strict = TRUE) {
-        return $role == $this->role;
-    }
+    
 
     public static function SetDefaultName($name) {
         self::$_DefaultName = $name;
@@ -97,9 +75,7 @@ class Somebody implements iUser {
         return "$propName of " . $this->getName();
     }
 
-    public function getId() {
-        return $this->_id;
-    }
+
 
 }
 

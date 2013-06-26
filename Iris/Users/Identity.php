@@ -34,23 +34,27 @@ use Iris\Engine as ie;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Identity implements iUser, \Serializable {
+    use tUser;
+    /**
+     * The default time out for development (4 hours)
+     */
     const DEFAULT_TIMEOUT = 14400;
+    /**
+     * The default time out for production (10 minutes)
+     */
     const DEFAULT_PRODUCTION_TIMEOUT = 600;
 
-    const NAME = 0;
-    const MAIL = 1;
-    const ROLE = 2;
-    const ID = 3;
-    const TIMER = 4;
 
-
-    private $_mailAddress;
-    private $_name;
-    private $_role;
-    private $_id;
-    private $_timer;
     private static $_Timeout = self::DEFAULT_TIMEOUT;
+    /**
+     *
+     * @var type 
+     */
     private static $_ProductionTimeout = self::DEFAULT_PRODUCTION_TIMEOUT;
+    /**
+     *
+     * @var type 
+     */
     private static $_Instance = NULL;
 
     /**
@@ -67,11 +71,26 @@ class Identity implements iUser, \Serializable {
     }
 
     /**
-     * May be called once by the session object
+     * Should be called once by session singleton (another call would be identical to GetInstance())
      * 
-     * @param Somebody $user 
+     * @staticvar type $created
+     * @return Identiy
      */
-    public function __construct($user = NULL) {
+    public static function CreateInstance($identity){
+        static $created = \FALSE;
+        if(! $created){
+            self::$_Instance = new Identity($identity);
+            $created = \TRUE;
+        }
+        return self::$_Instance;
+    }
+    
+    /**
+     * The private constructor
+     * 
+     * @param iUser $user 
+     */
+    private function __construct($user = NULL) {
         // no multiple instances of Identity
         if (!is_null(self::$_Instance)) {
             throw new \Iris\Exceptions\SessionException('Identity must be instanciated only once.');
@@ -110,6 +129,16 @@ class Identity implements iUser, \Serializable {
         $this->sessionSave();
     }
 
+    /**
+     * Changes the timeout duration:<ul>
+     * <li> SetTimeOut(X,Y) : changes runtime to X, production to Y
+     * <li> SetTimeOut(X) : changes only runtime to X
+     * <li> SetTimeOut(\NULL, Y) : changes only production to Y
+     * </ul>
+     * 
+     * @param type $duration
+     * @param type $prodDuration
+     */
     public static function SetTImeOut($duration, $prodDuration=NULL) {
         if (!is_null($duration)) {
             self::$_Timeout = $duration;
@@ -119,71 +148,10 @@ class Identity implements iUser, \Serializable {
         }
     }
 
+   
     /**
-     *
-     * @return string 
-     */
-    public function getEmailAddress() {
-        return $this->_mailAddress;
-    }
-
-    /**
-     *
-     * @return string 
-     */
-    public function getName() {
-        return $this->_name;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getRole() {
-        return $this->_role;
-    }
-
-    /**
-     * Test a role accepting inheritance
+     * Copies all data (except itmeout) from a user to the current identity object.
      * 
-     * @param string $expectedRoleName the role concerned by the test
-     * @return boolean 
-     */
-    public function playRole($expectedRoleName){
-        return $this->hasRole($expectedRoleName, FALSE);
-    }
-    
-    /**
-     * Test a role strictly
-     * 
-     * @param string $expectedRoleName the role concerned by the test
-     * @return boolean 
-     */
-    public function hasRole_Strict($expectedRoleName){
-        return $this->hasRole($expectedRoleName, TRUE);
-    }
-    
-    /**
-     * Determines if the connected user has a role (strickly or by inheritance)
-     * The alias playRole and hasRole_Strict methods may be used for more clarity.
-     * 
-     * @param string $expectedRole the role concerned by the test
-     * @param boolean $strict true if no inheritance accepted
-     * @return boolean
-     */
-    public function hasRole($expectedRoleName, $strict=TRUE) {
-        $roleName = $this->getRole();
-        $hasIt = $expectedRoleName == $roleName;
-        if (($strict or $hasIt)) {
-            return $hasIt;
-        }
-        $role = \Iris\Users\Role::GetRole($roleName);
-        $ancetres = $role->getAncestors();
-        return array_search($expectedRoleName, $ancetres) !== FALSE;
-    }
-
-    /**
-     *
      * @param iUser $user 
      */
     public function userClone(iUser $user) {
@@ -193,61 +161,115 @@ class Identity implements iUser, \Serializable {
         $this->_id = $user->getId();
     }
 
+    /**
+     * Serializes the current object to a string containing field values
+     * separated by &
+     * @return string
+     */
     public function serialize() {
-        $data[self::NAME] = $this->getName();
-        $data[self::MAIL] = $this->getEmailAddress();
-        $data[self::ROLE] = $this->getRole();
-        $data[self::ID] = $this->getId();
-        $data[self::TIMER] = $this->_timer;
+        $data[0] = $this->getName();
+        $data[1] = $this->getEmailAddress();
+        $data[2] = $this->getRole();
+        $data[3] = $this->getId();
+        $data[4] = $this->_timer;
         return implode('&', $data);
     }
 
+    /**
+     * Recovers data from a string containing field values
+     * separated by &
+     * 
+     * @param string $serialized
+     */
     public function unserialize($serialized) {
         $data = explode('&', $serialized);
-        $this->_name = $data[self::NAME];
-        $this->_mailAddress = $data[self::MAIL];
-        $this->_role = $data[self::ROLE];
-        $this->_id = $data[self::ID];
-        $this->_timer = $data[self::TIMER];
+        $this->_name = $data[0];
+        $this->_mailAddress = $data[1];
+        $this->_role = $data[2];
+        $this->_id = $data[3];
+        $this->_timer = $data[4];
     }
 
+    /**
+     * Saves the serialized present object to session array
+     */
     public function sessionSave() {
         $_SESSION['identity'] = $this->serialize();
     }
 
+    /**
+     * Clears all values of the current identity object, resets them
+     * to Somedy defaults and clears the current session identity var
+     */
     public function reset() {
         $this->userClone(new Somebody);
         unset($_SESSION['identity']);
     }
 
+    /**
+     * Accessor set for email address
+     * 
+     * @param type $mailAddress
+     * @return \Iris\Users\Identity for fluent interface
+     */
     public function setEmailAddress($mailAddress) {
         $this->_mailAddress = $mailAddress;
         return $this;
     }
 
+    /**
+     * Accessor set for name
+     * 
+     * @param string $name
+     * @return \Iris\Users\Identity for fluent interface
+     */
     public function setName($name) {
         $this->_name = $name;
         return $this;
     }
 
+    /**
+     * Accessor set for role
+     * 
+     * @param string $role
+     * @return \Iris\Users\Identity for fluent interface
+     */
     public function setRole($role) {
         $this->_role = $role;
         return $this;
     }
 
+    /**
+     * Accessor set for id
+     * 
+     * @param string $id
+     * @return \Iris\Users\Identity for fluent interface
+     */
     public function setId($id){
         $this->_id = $id;
         return $this;
     }
     
+    /**
+     * Accessor set for timer
+     * 
+     * @param type $_timer
+     * @return \Iris\Users\Identity for fluent interface 
+     */
     public function setTimer($_timer) {
         $this->_timer = $_timer;
+        return $this;
     }
 
-    public function getId() {
-        return $this->_id;
-    }
+    
 
+    /**
+     * A static syntax for playRole and hasRole_Strict
+     * 
+     * @param string $expectedRole
+     * @param boolean $strict (by default, manages inheritance)
+     * @return boolean
+     */
     public static function IsA($expectedRole,$strict=FALSE){
         if($strict)
             return self::GetInstance()->hasRole_Strict ($expectedRole);
