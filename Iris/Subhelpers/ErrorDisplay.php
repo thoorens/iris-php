@@ -94,12 +94,12 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
         $this->_systemTrace = \Iris\Exceptions\ErrorHandler::$_Trace;
         $exception = \Iris\Exceptions\_Exception::GetLastException($exception);
         if (is_null($exception)) {
-            $this->__errorMessage = 'No message';
-            $this->__title = $this->_("Unkwown fatal error");
-            $this->__trace = array();
+            $this->_errorMessage = 'No message';
+            $this->_title = $this->_("Unkwown fatal error");
+            $this->_trace = array();
             // the remaining variables are empty
-            $this->__errorComment = $this->__firstModule = $this->__firstController =
-                    $this->__firstAction = $this->__firstParameters = $this->__systemTrace = '';
+            $this->_errorComment = $this->_firstModule = $this->_firstController =
+                    $this->_firstAction = $this->_firstParameters = $this->_systemTrace = '';
             $firstURL = '???';
         }
         else {
@@ -143,7 +143,6 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
     public function addMessage($fileInfo) {
         $line = "";
         $trace = $this->_rawTrace;
-        //iris_debug($trace);
         if (isset($trace[0]['args'][3])) {
             $line = " line : ".$trace[0]['args'][3];
         }
