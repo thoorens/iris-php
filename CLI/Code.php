@@ -85,7 +85,7 @@ class Code extends _Process {
    ServerName $url
 
    <Directory "$docRoot">
-       Options Indexes MultiViews FollowSymLinks
+       Options Indexes -MultiViews FollowSymLinks
        AllowOverride All
        Order allow,deny
        Allow from all
@@ -221,12 +221,14 @@ APACHE;
         $destinationMod = "$destination/modules/$moduleName";
         // module controller file
         $this->_createFile("$source/module.php", "$destinationMod/controllers/_$moduleName.php", array(
-            '{TYPE}' => '<?php', // To avoid syntactic validation by IDE
+            '{PHP_TAG}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
             '{MODULECONTROLLER}' => "_$moduleName"
                 )
         );
-        $this->_newController($destination, $moduleName, $controllerName, $actionName);
+        if (!is_null($controllerName)) {
+            $this->_newController($destination, $moduleName, $controllerName, $actionName);
+        }
     }
 
     private function _newController($destination, $moduleName, $controllerName, $actionName = 'index') {
@@ -247,7 +249,7 @@ APACHE;
         else
             $template = 'index.php';
         $this->_createFile("$source/$template", $controllerPath, array(
-            '{TYPE}' => '<?php', // To avoid syntactic validation by IDE
+            '{PHP_TAG}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
             '{MODULECONTROLLER}' => "_$moduleName",
             '{CONTROLLER}' => $controllerName,

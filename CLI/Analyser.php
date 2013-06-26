@@ -47,7 +47,6 @@ class Analyser {
 
     private $_windows;
     private $_linux;
-    
 
     /**
      * The choiced processor after analysis
@@ -108,7 +107,7 @@ class Analyser {
         // watermaking
         'o:' => 'copyright:',
         'w:' => 'password:',
-        // database
+        // database 
         'B:' => 'database:',
         'b:' => 'selectbase:',
         'I' => 'makedbini',
@@ -116,7 +115,6 @@ class Analyser {
         'e:' => 'entitygenerate:'
     ];
 
-    
     /**
      * The choiced action for the processor.
      * 
@@ -124,7 +122,6 @@ class Analyser {
      */
     private $_option;
 
-    
     /**
      * The Iris system directory name
      * 
@@ -147,7 +144,7 @@ class Analyser {
         }
         $this->_windows = !$this->_linux;
         self::$_LibraryDir = $libraryDir;
-        
+
         $this->_AnalyseCmdLine();
     }
 
@@ -158,7 +155,7 @@ class Analyser {
     private function _AnalyseCmdLine() {
         $parameters = Parameters::GetInstance();
         // Read options
-        $options = $this->cli_options();
+        $options = $this->cliOptions();
         foreach ($options as $option => $value) {
             switch ($option) {
                 // -------------------
@@ -166,8 +163,7 @@ class Analyser {
                 // -------------------
                 case 'c': case 'createproject':
                     // special requirement for createproject
-                    if (($this->_linux and $value[0] != '/')
-                            or ($this->_windows and $value[1] != ':')) {
+                    if (($this->_linux and $value[0] != '/') or ($this->_windows and $value[1] != ':')) {
                         throw new \Iris\Exceptions\CLIException('The path to project must be absolue');
                     }
                 // NO BREAK HERE createproject continues
@@ -215,7 +211,7 @@ class Analyser {
                 case 'W': case 'workbench':
                     $parameters->workbench = \TRUE;
                     break;
-                
+
                 // option "interactive" in project creation : metadata are request through
                 // a dialog in console
                 case 'i': case 'interactive':
@@ -403,8 +399,6 @@ class Analyser {
         }
     }
 
-    
-
     public function _treatMetadata($value) {
 
         if (is_array($value)) {
@@ -425,7 +419,6 @@ class Analyser {
         }
     }
 
-    
     public static function GetIrisLibraryDir() {
         return self::$_LibraryDir;
     }
@@ -444,25 +437,34 @@ class Analyser {
      * 
      * @return array
      */
-    public function cli_options() {
+    public function cliOptions() {
         $shorts = '';
         foreach (self::$Functions as $short => $long) {
             $shorts.=$short;
             $longs[] = $long;
         }
-        $options_array = \getopt($shorts, $longs);
-        // a piece of code borrowed from http://php.net/manual/en/function.getopt.php (
+        $optionsAarray = \getopt($shorts, $longs);
+        // a piece of code adapted from http://php.net/manual/en/function.getopt.php (
         // by François Hill
-        foreach ($options_array as $o => $a) {
+        foreach ($optionsAarray as $option => $argument) {
+            // François Hill does not consider long options, I substitute $dash where he has '-'
+            $dash = strlen($option) == 1 ? '-' : '--'; 
             // Look for all occurrences of option in argv and remove if found :
             // ----------------------------------------------------------------
             // Look for occurrences of -o (simple option with no value) or -o<val> (no space in between):
-            while ($k = array_search("-" . $o . $a, $GLOBALS['argv'])) {    // If found remove from argv:
-                if ($k)
+            while ($k = array_search($dash . $option . $argument, $GLOBALS['argv'])) {    // If found remove from argv:
+                if ($k) {
                     unset($GLOBALS['argv'][$k]);
+                }
+            }
+            // Look for occurrences of -o=<val> (added in 5.3 after François Hill code publication):
+            while ($k = array_search($dash . "$option=" . $argument, $GLOBALS['argv'])) {    // If found remove from argv:
+                if ($k) {
+                    unset($GLOBALS['argv'][$k]);
+                }
             }
             // Look for remaining occurrences of -o <val> (space in between):
-            while ($k = array_search("-" . $o, $GLOBALS['argv'])) {    // If found remove both option and value from argv:
+            while ($k = array_search($dash . $option, $GLOBALS['argv'])) {    // If found remove both option and value from argv:
                 if ($k) {
                     unset($GLOBALS['argv'][$k]);
                     unset($GLOBALS['argv'][$k + 1]);
@@ -471,12 +473,10 @@ class Analyser {
         }
         // Reindex :
         $GLOBALS['argv'] = array_merge($GLOBALS['argv']);
-        // end of code from php.net 
-        return $options_array;
+        // end of code adapted from php.net 
+        return $optionsAarray;
     }
 
-    
-    
     /**
      *
      * @param type $command 
@@ -488,7 +488,6 @@ class Analyser {
         $help->display($command);
     }
 
-    
     /*
      * Function: Prompt user and get user input, returns value input by user.
      *            Or if return pressed returns a default if used e.g usage
@@ -522,7 +521,7 @@ class Analyser {
             return $userVal;                              // return value
         }
     }
-    
+
     /**
      * 
      * @param string $promptStr the message for the user
@@ -530,16 +529,13 @@ class Analyser {
      * @param string $local localised strings synonymous to TRUE (by def in French)
      * @return boolean the value returned (may be the default)
      */
-    public function  promptUserLogical($promptStr, $defaultVal = 'FALSE', $local = 'ouivrai'){
-        if(is_bool($defaultVal)){
+    public function promptUserLogical($promptStr, $defaultVal = 'FALSE', $local = 'ouivrai') {
+        if (is_bool($defaultVal)) {
             $defaultVal = $defaultVal ? 'TRUE' : 'FALSE';
         }
         $value = $this->promptUser($promptStr, $defaultVal);
-        return strpos("1\\trueyes".$local, strtolower($value)) === \FALSE ? \FALSE : \TRUE;
+        return strpos("1\\trueyes" . $local, strtolower($value)) === \FALSE ? \FALSE : \TRUE;
     }
-
-    
-    
 
 }
 

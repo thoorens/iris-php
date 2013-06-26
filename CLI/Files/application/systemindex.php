@@ -1,4 +1,4 @@
-{TYPE}
+{PHP_TAG}
 
 namespace modules\{MODULE}\controllers;
 

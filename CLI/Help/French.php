@@ -34,6 +34,8 @@ class French extends \CLI\_Help {
     
 
     protected function _general() {
+        $userConfigDir = IRIS_USER_PARAMFOLDER;
+        $script = 'iris.php';
         echo <<<HELP
 iris.php
 ========
@@ -46,7 +48,7 @@ Fonctions:
 
 Première invocation du programme et mémorisation du répertoire contenant une
 version fonctionnelle du frameworks Iris-PHP. Ce chemin est mémorisé dans
-le fichier de paramétrage (~/.iris/iris.php sous Linux)
+le fichier de paramétrage (~$userConfigDir$script sous Linux)
 
     iris.php -h ou --help
 

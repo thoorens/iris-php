@@ -1,4 +1,4 @@
-{TYPE}
+{PHP_TAG}
 
 namespace models;
 
@@ -29,4 +29,4 @@ class T{ENTITY} extends \Iris\DB\_Entity {
     {EXTERNALEM}
 }
 
-?>
+

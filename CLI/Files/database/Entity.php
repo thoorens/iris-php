@@ -1,4 +1,4 @@
-{TYPE}
+{PHP_TAG}
 
 namespace models\crud;
 
@@ -38,7 +38,7 @@ class {ENTITY} extends \Iris\DB\DataBrowser\_Crud {
     
     public function __construct($param = NULL) {
         parent::__construct($param);
-        $entity = \Iris\DB\DataBrowser\AutoEntity::entityBuilder('{ENTITY}', array({ID}){GETEMCALL});
+        $entity = \Iris\DB\TableEntity::GetEntity('{ENTITY}'{GETEMCALL});
         $this->setEntity($entity);
         $this->setActions("erreur", "index");
     }

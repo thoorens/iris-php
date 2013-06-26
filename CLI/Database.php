@@ -2,6 +2,11 @@
 
 namespace CLI;
 
+define('IRIS_DB_FOLDER', '/config/base/');
+define('IRIS_DB_DEMOFILE', 'demo.sqlite');
+define('IRIS_DB_INIFILE', '10_database.ini');
+define('IRIS_DB_PARAMFILE', 'db.ini');
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -22,8 +27,6 @@ namespace CLI;
  *
  */
 
-
-
 /**
  * This class manage the code creation for the database management:<ul>
  * <li>database definition and selection
@@ -35,16 +38,15 @@ namespace CLI;
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ * 
  */
-
 class Database extends _Process {
-
     /**
      * Symbolic names for the database settings
      */
+
     const DEF = 0;
     const CALL = 1;
     const EXTERNAL = 2;
-    
+
     /**
      * Symbolic names for the crudicon settings
      */
@@ -82,25 +84,27 @@ or create it before whith 'iris.php -B create $baseId'.");
     protected function _makedbini() {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/10_database.ini';
+        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/' . IRIS_DB_INIFILE;
         $base = $this->_getDBConfig();
         if ($base->maindb == 0) {
             $name = $parameters->getDatabase();
             throw new \Iris\Exceptions\CLIException("The database $name is not managed by an INI file.\n");
         }
         $destination = $parameters->getProjectDir() . '/' . $parameters->getApplicationName();
-        $destination .= '/config/10_database.ini';
+        $destination .= '/config/' . IRIS_DB_INIFILE;
         if (file_exists($destination)) {
             throw new \Iris\Exceptions\CLIException("A file $destination already exists.
 Would you please edit it by hand according to your database settings?
 You can also delete it and rerun 'iris.php --makedbini'.\n");
         }
         if ($base->adapter == 'sqlite') {
+            $finalFileName = str_replace('%application%', $parameters->getApplicationName(), $base->dbname);
             $pairs = [
                 '{HOSTNAME}' => 'some_data_base_name',
                 '{USER}' => 'some_user_name',
                 '{PASSWORD}' => 'some_password',
                 '{COM}' => ';',
+                '{NAME}' => $finalFileName,
             ];
         }
         else {
@@ -109,15 +113,14 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
                 '{USER}' => $base->username,
                 '{PASSWORD}' => $base->password,
                 '{COM}' => '',
+                '{NAME}' => $base->dbname,
             ];
         }
         $pairs['{ADAPTER}'] = $base->adapter;
-        $pairs['{NAME}'] = $base->dbname;
         \Iris\OS\_OS::GetInstance()->createFromTemplate($source, $destination, $pairs);
         echo "File $destination now contains all your settings.\n";
     }
 
-    
     /**
      * Creates all the necessary files for managing a table in the default
      * database. Existing files are backed up. 5 files are created:<ul>
@@ -135,8 +138,15 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $applicationDir = $parameters->getApplicationName();
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/';
         $destination = $projectDir . '/' . $applicationDir;
-        $module = $parameters->getModuleName();
-        $controller = $parameters->getControllerName();
+        $controller = $this->_analyser->promptUser(
+                "Choose the controller which will manage the CRUD operations", $parameters->getControllerName());
+        $module = $this->_analyser->promptUser(
+                "Choose the module into which $controller will be inserted", $parameters->getModuleName());
+        if($module != $parameters->getModuleName()){
+            \FrontEnd::GetInstance()->preloadClasses(['CLI/Code']);
+            $code = new Code($this->_analyser);
+            $code->makeNewCode($module, \NULL,\NULL);
+        }
         $entityName = ucfirst($parameters->getEntityName());
         // files to copy
         $files = [
@@ -148,6 +158,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         ];
         // 
         $pairs = [
+            '{PHP_TAG}' => '<?php',
             '{ENTITY}' => $entityName,
             '{entity}' => strtolower($entityName),
             '{MODULE}' => $module,
@@ -242,8 +253,8 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $config->adapter = $analyser->promptUser('Adapter name ', 'sqlite');
         if ($config->adapter == 'sqlite') {
             $applicationDir = $parameters->getApplicationName();
-            $dbdir = $analyser->promptUser('Directory ', "/$applicationDir/config/base/");
-            $dbfile = $analyser->promptUser('Database file ', 'demo.sqlite');
+            $dbdir = $analyser->promptUser('Directory ', "/$applicationDir" . IRIS_DB_FOLDER);
+            $dbfile = $analyser->promptUser('Database file ', IRIS_DB_DEMOFILE);
             $config->dbname = $dbdir . $dbfile;
             if (!file_exists($parameters->getProjectDir() . $config->dbname)) {
                 echo "Warning {$parameters->getProjectDir()}$config->dbname does not exist.\n";
@@ -321,8 +332,8 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
      */
     private function _getParamFileName() {
         $os = \Iris\OS\_OS::GetInstance();
-        $paramDir = $os->getUserHomeDirectory() . "/.iris";
-        $paramFile = $paramDir . "/db.ini";
+        $paramDir = $os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
+        $paramFile = $paramDir . IRIS_DB_PARAMFILE;
         return $paramFile;
     }
 
@@ -361,7 +372,7 @@ END;
                 $settings[self::EXTERNAL] = "protected static \$_EMProviderClass = '\\models\\crud\\$entityName';";
             }
         }
-        iris_debug('Since modification in _Entity, this part is obsolete. Modify it');
+        //iris_debug('Since modification in _Entity, this part is obsolete. Modify it');
         return $settings[$settingId];
     }
 
@@ -386,13 +397,16 @@ END;
                 //@todo suppress dependency from translation implementation
                 $classes = [
                     '/Iris/Translation/tSystemTranslatable',
+                    '/Iris/Translation/iTranslatable',
+                    '/Iris/views/helpers/tViewHelperCaller',
                     '/Iris/Design/iSingleton',
                     '/Iris/Subhelpers/_Subhelper',
+                    '/Iris/Subhelpers/_LightSubhelper',
                     '/Iris/Subhelpers/Crud',
                     '/Iris/Translation/_Translator',
                     '/Iris/Translation/SystemTranslator',
                 ];
-                $front = new \FrontEnd();
+                $front = \FrontEnd::GetInstance();
                 $front->preloadClasses($classes);
 
                 $settings[self::ID] = $analyser->promptUser('Primary key name ', $settings[self::ID]);

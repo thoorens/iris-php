@@ -81,8 +81,8 @@ abstract class _Process {
      * @param array $configs 
      */
     protected function _updateConfig($configs) {
-        $paramDir = $this->_os->getUserHomeDirectory() . "/.iris";
-        Parameters::GetInstance()->writeParams($paramDir . "/projects.ini", $configs);
+        $paramDir = $this->_os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
+        Parameters::GetInstance()->writeParams($paramDir . IRIS_PROJECT_INI, $configs);
     }
 
     protected function _createDir($directories, $base) {

@@ -127,11 +127,18 @@ class Parameters {
     
     /**
      * Reads an ini file and analyses its content in a array of configs
+     * If file does not exist, creates a config array with an initial 'Iris' element 
      * 
      * @param string $paramFile the ini file to parse
      * @return array(\Iris\SysConfig\Config)
      */
     public function readParams($paramFile) {
+        if(!file_exists($paramFile)){
+            $config0 = new \Iris\SysConfig\Config('Iris');
+            $config0->PathIris= \FrontEnd::GetInstance()->getIrisInstallationDir();
+            $config0->defaultProject = \NULL;
+            return ['Iris'=>$config0];
+        }
         $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
         return $parser->processFile($paramFile);
     }
@@ -158,7 +165,7 @@ class Parameters {
     public function requireProjects($error = \TRUE) {
         if (is_null($this->_projects)) {
             $userDir = \Iris\OS\_OS::GetInstance()->getUserHomeDirectory();
-            $iniFile = "$userDir/.iris/projects.ini";
+            $iniFile = "$userDir".IRIS_USER_PARAMFOLDER.IRIS_PROJECT_INI;
             if (!file_exists($iniFile) and $error) {
                 throw new \Iris\Exceptions\CLIException("
 You seem to have no project in your environment.
@@ -430,8 +437,8 @@ or create one with 'iris.php --createproject'.");
      */
     public function saveProject() {
         $os = \Iris\OS\_OS::GetInstance();
-        $paramDir = $os->getUserHomeDirectory() . '/.iris';
-        $this->writeParams("$paramDir/projects.ini", $this->_projects);
+        $paramDir = $os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
+        $this->writeParams("$paramDir".IRIS_PROJECT_INI, $this->_projects);
     }
 
 }

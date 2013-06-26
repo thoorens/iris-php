@@ -27,6 +27,9 @@
  * @version $Id: $
  */
 define('BADINI', "Your param file does not seem to be a valid one. Please check your configuration according to the manual instructions.\n");
+define('IRIS_USER_PARAMFOLDER', '/.iris/');
+define('IRIS_USER_INI', 'iris.ini');
+define('IRIS_PROJECT_INI', 'projects.ini');
 
 /**
  * To prevent a loading of Loader which contains \Iris\Engine\Debug
@@ -107,7 +110,15 @@ class FrontEnd {
     private $_paramFileName;
     private $_irisInstallationDir;
 
-    public function __construct() {
+    public static function GetInstance() {
+        static $instance = \NULL;
+        if(is_null($instance)){
+            $instance = new FrontEnd();
+        }
+        return $instance;
+    }
+
+    private function __construct() {
         $this->_osDetect();
         $this->_detectUserDir();
         $this->readIni();
@@ -189,12 +200,12 @@ class FrontEnd {
             echo "iris.php is not able to find where to read or write your parameter files.\n";
             die("IRIS PHP CLI will not be functional on your system, sorry.\n");
         }
-        $paramDir = "$userDir/.iris";
+        $paramDir = "$userDir" . IRIS_USER_PARAMFOLDER;
         if (!file_exists($paramDir)) {
             echo "Creating $paramDir\n";
             mkdir($paramDir);
         }
-        $this->_paramFileName = "$paramDir/iris.ini";
+        $this->_paramFileName = "$paramDir" . IRIS_USER_INI;
         // if not parameter file, create it
         if (!file_exists($this->_paramFileName)) {
             if ($GLOBALS['argc'] == 1) {
@@ -226,7 +237,7 @@ STOP;
                 'CLI/Parameters',
                 'CLI/Analyser',
                 'CLI/_Process',
-                'CLI/_Help', 'CLI/Help/French','CLI/Help/English',
+                'CLI/_Help', 'CLI/Help/French', 'CLI/Help/English',
                 // Various
                 'Iris/Engine/tSingleton',
                 'Iris/Engine/Memory',
@@ -264,7 +275,7 @@ STOP;
 
 }
 
-$frontEnd = new FrontEnd();
+$frontEnd = FrontEnd::GetInstance();
 $frontEnd->PreloadClasses();
 \Iris\OS\_OS::GetInstance();
 
@@ -281,9 +292,6 @@ catch (Exception $ex) {
 
 // process commands
 try {
-//    if (file_exists($homeDotIris . "/projects.ini")) {
-//        $analyser->readProjects($homeDotIris);
-//    }
     $analyser->process();
 }
 catch (Exception $ex) {
