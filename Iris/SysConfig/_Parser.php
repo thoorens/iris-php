@@ -73,7 +73,10 @@ abstract class _Parser {
      * @param array $configs the configs to write to the file
      * @param int $inheritance copy inherited values (or ref to parent)
      */
-    public abstract function exportFile($fileName, $configs);
+    public function exportFile($fileName, $configs,  $inheritance=self::LINK_TO_PARENT) {
+        throw new \Iris\Exceptions\NotSupportedException('Export not yet supported');
+    }
+
 }
 
-?>
+

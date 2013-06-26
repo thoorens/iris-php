@@ -124,7 +124,7 @@ class IniParser extends _Parser {
      * @param array $configs the configs to write to the file
      * @param int $inheritance copy inherited values (or ref to parent)
      */
-    public function exportFile($fileName, $configs,$inheritance=self::LINK_TO_PARENT) {
+    public function exportFile($fileName, $configs, $inheritance=self::LINK_TO_PARENT) {
         $data = $this->_makeIniText($configs,$inheritance);
         $text = implode("\n", $data);
         file_put_contents($fileName, $text);

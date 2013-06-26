@@ -78,10 +78,7 @@ class DBParser extends _Parser {
             return $configs[$sectionName];
         }
     }
-
-    public function exportFile($fileName, $configs) {
-        
-    }
+    
 
    
 
