@@ -38,6 +38,11 @@ class Bubble {
     const TEXT = 1;
     const JSON = 2;
     const XML = 3;
+    
+    const DOM = 11;
+    const QUERY = 12;
+    const DOMREADY = 13;
+    const PARSER = 14;
 
     /**
      * A list of requisites for the bubble. 
@@ -89,6 +94,19 @@ class Bubble {
         switch ($type) {
             case self::JSON:
                 $this->addModule('dojo/JSON', 'json');
+                break;
+            
+            case self::DOM:
+                $this->addModule('dojo/dom', 'dom');
+                break;
+            case self::QUERY:
+                $this->addModule('dojo/query', 'query');
+                break;
+            case self::DOMREADY:
+                $this->addModule('dojo/domReady');
+                break;
+            case self::PARSER:
+                $this->addModule('dojo/parser', 'parser');
                 break;
             default:
         }
