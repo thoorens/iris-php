@@ -2,8 +2,6 @@
 
 namespace Iris\SysConfig;
 
-
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -32,6 +30,7 @@ namespace Iris\SysConfig;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _Parser {
+
     const NO_INHERITANCE = 0;
     const COPY_INHERITED_VALUES = 1;
     const LINK_TO_PARENT = 2;
@@ -56,8 +55,24 @@ abstract class _Parser {
     /**
      * 
      */
-    public abstract function processFile($fileName, $sectionName=FALSE, $inheritance = self::COPY_AND_LINK);
 
+    /**
+     * Reads a file into a new config or array of configs
+     * 
+     * @param type $filename file name to scan
+     * @param type $sectionName section to consider (or FALSE for all)
+     * @param int $inheritance copy inherited values (or ref to parent)
+     * @return Config (object or array)
+     */
+    public abstract function processFile($fileName, $sectionName = FALSE, $inheritance = self::COPY_AND_LINK);
+
+    /**
+     * Exports an array of configs to a text file
+     * 
+     * @param string $filename file name to write
+     * @param array $configs the configs to write to the file
+     * @param int $inheritance copy inherited values (or ref to parent)
+     */
     public abstract function exportFile($fileName, $configs);
 }
 
