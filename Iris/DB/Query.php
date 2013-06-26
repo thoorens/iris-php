@@ -30,6 +30,7 @@ namespace Iris\DB;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Query {
+
     const LIKE = 1;
     const BEGINS = 2;
     const ENDS = 3;
@@ -111,12 +112,12 @@ class Query {
      * @param mixde $condition
      * @param mixed $value
      */
-    public function where($condition, $value=NULL) {
-    // in case of multiple primary key (compatibility)
+    public function where($condition, $value = NULL) {
+        // in case of multiple primary key (compatibility)
         if (is_array($condition)) {
             return $this->wherePairs($condition);
         }
-    // textual where (compatibility)
+        // textual where (compatibility)
         if (is_null($value)) {
             return $this->whereClause($condition);
         }
@@ -128,7 +129,7 @@ class Query {
      * @param string $condition
      */
     public function whereClause($condition, $direct = \FALSE) {
-        if($this->_extended and $direct){
+        if ($this->_extended and $direct) {
             throw new \Iris\Exceptions\DBException('WhereClause is not compatible with logical operators NOT, AND and OR.');
         }
         $this->_preparedFields[] = $condition;
@@ -165,9 +166,9 @@ class Query {
     }
 
     public function whereIn($field, $values) {
-        $index = 0;
+        $index = ++$this->_tokenNumber;
         foreach ($values as $value) {
-            $tokenNumber[] = ":P$index";
+            $tokenNumber[$index] = ":P$index";
             $this->_fieldPlaceHolders[$tokenNumber[$index++]] = $value;
         }
         $list = implode(',', $tokenNumber);
@@ -249,7 +250,8 @@ class Query {
                 $operand1 = array_pop($stack);
                 $operand2 = array_pop($stack);
                 array_push($stack, "($operand2)OR($operand1)");
-            }else {
+            }
+            else {
                 array_push($stack, $top);
             }
         }
@@ -312,13 +314,13 @@ class Query {
      * @param type $condition
      * @return _Entity 
      */
-    protected function _prepareField($value, $condition='') {
+    protected function _prepareField($value, $condition = '') {
         $tokenNumber = ++$this->_tokenNumber;
         $this->_preparedFields[] = "$condition :P$tokenNumber";
         $this->_fieldPlaceHolders[":P$tokenNumber"] = $value;
     }
 
-    private function _tokenList($sep=',') {
+    private function _tokenList($sep = ',') {
         $where = $this->_preparedFields;
 // Reset values for multi use
         $this->_preparedFields = array();
