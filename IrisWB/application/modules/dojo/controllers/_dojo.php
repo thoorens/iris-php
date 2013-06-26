@@ -12,7 +12,6 @@ namespace modules\dojo\controllers;
  */
 class _dojo extends \modules\_application {
 
-    
     /**
      * This method can contain module level
      * settings
@@ -20,6 +19,8 @@ class _dojo extends \modules\_application {
     protected function _moduleInit() {
         $this->_setLayout('main');
         $this->__bodyColor = 'ORANGE3';
+        $ff = new \Dojo\Forms\FormFactory();
+        $ff->setDefault();
     }
 
 }

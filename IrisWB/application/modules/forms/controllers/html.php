@@ -10,25 +10,24 @@ namespace modules\forms\controllers;
  * @author jacques
  * @license not defined
  */
-class index extends _forms {
+class html extends _forms {
 
     protected function _init(){
-        $this->setViewScriptName('all');
+        $this->setViewScriptName('common/all');
         
     }
     
     public function indexAction() {
         // these parameters are only for demonstration purpose
         /* @var $form \Iris\Forms\_Form */
-        $form = $this->makeForm(array());
+        $form = $this->makeForm(new \Iris\Forms\StandardFormFactory());
         //$form->getComponent($name)
         $this->__form = $form->render();
     }
 
     public function groupsAction() {
-        // these parameters are only for demonstration purpose
-        $form = $this->makeForm(array('groups'));
-        $this->__title = 'Test element groups';
+        $form = $this->makeGroupForm(new \Iris\Forms\StandardFormFactory());
         $this->__form = $form->render();
+        $this->__other = ['Dojo form','/forms/dojo/groups','Goto Dojo form'];
     }
 }

@@ -1,9 +1,0 @@
-<div>
-    <h1>{title}</h1>
-    <h2>Content of <tt>$_POST</tt></h2>
-    <pre>
-        <?print_r($_POST)?>
-    </pre>
-    {form}
-
-</div>

@@ -1,0 +1,5 @@
+<div id="page">
+    <p>
+        {colorPaletteD()}
+    </p>
+</div>

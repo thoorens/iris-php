@@ -15,11 +15,12 @@ class views extends _helpers {
     public function indexAction() {
         
     }
-    
-    
 
     public function paypalAction() {
-       $this->__object1 ="XSTHWA5RYXRBU"; 
-       $this->__object2 = "";
+        // demo 
+        //$this->__object1 ="XSTHWA5RYXRBU"; 
+        // voiture jaune
+        $this->__object2 = "SGZJCG8U3KKB8";
     }
+
 }

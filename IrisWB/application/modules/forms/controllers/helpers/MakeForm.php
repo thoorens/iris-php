@@ -56,11 +56,7 @@ class MakeForm extends _ControllerHelper {
                     ->addTo($form)
                     ->setLabel("Nom de l'événement:");
         }
-        if ($all or in_array('remarque', $fields)) {
-            $formFactory->createEditor('Remarque')
-                    ->setLabel('Remarque:')
-                    ->addTo($form);
-        }
+        
         if ($all or in_array('organisateur', $fields)) {
             $formFactory->createText('Organisateur')
                     ->setLabel('Organisateur du spectacle')

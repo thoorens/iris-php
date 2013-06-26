@@ -32,6 +32,17 @@ switch (0) {
         }
         die('<h6>End of entity tests</h6>');
         break;
+    case 2:
+        $ticket = new \Payoff\Ticket('anticonstitutionnel');
+        echo $ticket->getValue().'<br>';
+        if($ticket->validate()){
+            echo "Yes!!!!";
+        }
+        else{
+            echo "No";
+        }
+        die('End of Payoff test');
+        break;
 }
 
 

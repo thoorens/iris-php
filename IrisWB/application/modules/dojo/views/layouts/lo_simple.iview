@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <!-- This layout is used only as an exemple of an application defined layout -->
+    <head>
+        {head()}
+        {wbCSS()}
+    </head>
+    <body {wbColors('GREEN2')}>
+        <div id="main">
+            {ILO_adminToolBar()}
+            <div id="container">
+                <div id='Title'>
+                    <h1>{Title}</h1>
+                </div><!-- Title -->
+                <div class="column one">
+                    <h2>Column 1</h2>
+                    {loremIpsum([1,12,22,32,42])}
+                </div><!-- 1 -->
+                <div class="column two2">
+                    {mainView()}
+                </div><!-- 2 -->
+                
+            </div><!-- container -->
+            <div id="foot">
+                {wbFooter('modules/dojo/views/scripts/lo_simple.iview')}
+            </div><!--foot-->
+        </div><!--main-->
+    </body>
+</html>

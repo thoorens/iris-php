@@ -1,0 +1,12 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {button($other)}
+    <h2>Content of <tt>$_POST</tt></h2>
+    <pre>
+        {php}
+            print_r($_POST)
+        {/php}
+    </pre>
+    {form}
+
+</div>

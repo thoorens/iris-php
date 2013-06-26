@@ -34,7 +34,7 @@ class Anything2 extends \Iris\DB\ViewEntity {
    protected $_entityName = 'vcustomers';
    
 
-    protected function _readMetadata($metadata) {
+    protected function _readMetadata($metadata = \NULL) {
         return parent::_readMetadata($metadata);
     }
 
