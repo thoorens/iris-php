@@ -22,7 +22,7 @@ foreach($this->error()->details as $key=>$detail):
 {/php}
 <div {tabs->item("det_$n")}>
     <h4>{key}</h4>
-    <? print_r($detail) ?> 
+    {? print_r($detail) ?} 
 </div>
 {php}
 $n++;
