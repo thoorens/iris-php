@@ -34,13 +34,22 @@ namespace Iris\Subhelpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Crud extends \Iris\Subhelpers\_LightSubhelper {
+
     const NOTHING = 0;
     const ID = 1;
     const PARAM = 2;
+    const EXT = 3;
 
     protected static $_Instance = NULL;
 
-    const ICON_SYSTEM_DIR = '/!documents/file/images/icons';
+    /**
+     * The default icon directory. May be changed (but concerns all icons)<ul>
+     * <li> through SetIconSystemDir
+     * <li> by redefining the static variable in a sub class
+     * </ul>
+     * @var string
+     */
+    protected static $_IconSystemDir = '/!documents/file/images/icons';
 
     /**
      * The entity name (in user's terminology) with a gender mark
@@ -57,13 +66,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      */
     protected $_actionSuffix;
 
-    /**
-     * The default icon directory. May be changed (but concerns all icons)
-     * 
-     * @var string
-     */
-    protected $_defaultIconDir = '/!documents/file/images/icons';
-
+    
     /**
      * The id field in data
      * @var string 
@@ -101,15 +104,29 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * @var string
      */
     protected $_language = '';
-    
-    /**
-     *
-     * @var array An associative array to provide format and parameter status
-     */
-    protected $_operationParams = array();
 
+    /**
+     * An associative array to provide format and parameter status
+     * @var array 
+     */
+    protected $_operationParams = [];
+
+    /**
+     * An associative array to maintain URL for extended function
+     * @var array 
+     */
+    protected $_extendedOperationURL = [];
+
+    /**
+     * The directory for extended operation icons
+     * @var string
+     */
+    protected $_extendedIconDir = '/images/icons';
+
+    
+    
     protected function __construct() {
-        $this->_operationParams = array(
+        $this->_operationParams = [
             // key => array(format, status)
             'create' => array("Add %U %E| (type %P)", self::PARAM),
             'read' => array('Display %D %E %O', self::ID),
@@ -120,7 +137,8 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
             'previous' => array('Go to the previous «%E»', self::ID),
             'next' => array('Go to the next «%E»', self::ID),
             'last' => array('Go to the last «%E»', self::ID),
-        );
+        ];
+        $this->_init();
     }
 
     /**
@@ -142,6 +160,11 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         return $this;
     }
 
+    
+    public static function SetIconSystemDir($dir){
+        static::$_IconSystemDir = $dir;
+    }
+    
     /**
      *
      * @param String $entity : le nom de l'objet manipulé
@@ -225,7 +248,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         return $this;
     }
 
-        /**
+    /**
      *
      * @param string $name
      * @param string $commentFormat
@@ -233,8 +256,9 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * @param string  $iconDir
      * @return Crud (fluent interface)
      */
-    public function addFunction($name, $commentFormat, $paramMode = self::ID, $iconDir = \NULL) {
+    public function addFunction($name, $commentFormat, $paramMode = self::ID, $url = \NULL, $iconDir = \NULL) {
         $this->_operationParams[$name] = array($commentFormat, $paramMode, $iconDir);
+        $this->_extendedOperationURL[$name] = $url;
         return $this;
     }
 
@@ -242,7 +266,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * Returns a create link/icon
      * @return string
      */
-    public function create($active=TRUE) {
+    public function create($active = TRUE) {
         return $this->render('create', $active);
     }
 
@@ -250,7 +274,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * Returns a read link/icon
      * @return string
      */
-    public function read($active=TRUE) {
+    public function read($active = TRUE) {
         return $this->render('read', $active);
     }
 
@@ -260,7 +284,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * @param boolean $active
      * @return string
      */
-    public function delete($active=TRUE) {
+    public function delete($active = TRUE) {
         return $this->render('delete', $active);
     }
 
@@ -270,7 +294,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * @param boolean $active
      * @return string
      */
-    public function update($active=TRUE) {
+    public function update($active = TRUE) {
         return $this->render('update', $active);
     }
 
@@ -280,7 +304,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * @param boolean $active
      * @return string 
      */
-    public function upload($active=TRUE) {
+    public function upload($active = TRUE) {
         return $this->render('upload', $active);
     }
 
@@ -292,35 +316,54 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * @return array
      */
     public function prepare($operation) {
+        
         $opParam = $this->_operationParams[$operation];
+        $params['operation'] = $operation;
+        $format = $this->_treatCategory($opParam[0], $this->_subType);
         // Additional operation may have a special directory for icons
-        $params['dir'] = count($opParam) == 2 ? self::ICON_SYSTEM_DIR : $opParam[2];
         switch ($opParam[1]) {
+            case self::EXT:
             case self::ID:
                 if (!is_null($this->_data)) {
-                    $paramI = $this->_data->{$this->_idField};
-                    $objectName = $this->_data->{$this->_descField};
+                    $params['id'] = $this->_data->{$this->_idField};
+                    $params['object'] = $this->_data->{$this->_descField};
                 }
                 else {
-                    $objectName = "ENTITY";
-                    $paramI = "id";
-                }
+                    $params['object'] = "ENTITY";
+                    $params['id'] = "id";
+                }        
                 break;
             case self::PARAM:
-                $paramI = $objectName = $this->_subType;
+                $params['id'] = $params['object'] = $this->_subType;
                 break;
             default:
-                $paramI = $objectName = '';
+                $params['id'] = $params['object'] = '';
                 break;
         }
-        $format = $this->_treatCategory($opParam[0], $this->_subType);
-        $params['ref'] = "$this->_controller/$operation" . "_" . "$this->_actionSuffix/" . $paramI;
-        $params['help'] = $this->_makeHelp($format, $objectName);
-        $params['operation'] = $operation;
+        $params['help'] = $this->_makeHelp($format, $params['object']);
+        // Special treatment for user extension
+        if ($opParam[1] == self::EXT) {
+            $this->_extendedPrepare($operation, $params);
+        }
+        else {
+            $params['ref'] = "$this->_controller/$operation" . "_" . "$this->_actionSuffix/" . $params['id'];
+            $params['dir'] = self::$_IconSystemDir;
+        }
         return $params;
     }
-    
-    public function testCLI($operation){
+
+    protected function _extendedPrepare($operation, &$params) {
+        $params['ref'] = $this->_extendedOperationURL[$operation] . $params['id'];
+        $params['dir'] = $this->_extendedIconDir;
+    }
+
+    /**
+     * Produces an example for CLI test during database definition
+     * 
+     * @param string $operation
+     * @return string
+     */
+    public function testCLI($operation) {
         $opParam = $this->_operationParams[$operation];
         $format = $this->_treatCategory($opParam[0], $this->_subType);
         $objectName = "someName";
@@ -331,6 +374,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      * Gestion des artices en fonction du genre défini
      * 
      * @return string : two '_' separated articles (def. and undef.) 
+     * @todo Plural?
      */
     private function _articles($initialGender) {
         switch ($initialGender) {
@@ -374,7 +418,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
     private function _makeHelp($format, $objectName) {
         $aEntity = explode('_', $this->_entity);
         // if no gender, push Neutral
-        if(count($aEntity)==1){
+        if (count($aEntity) == 1) {
             array_unshift($aEntity, 'N_');
         }
         list($initialGender, $entity) = $aEntity;
@@ -405,7 +449,6 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         elseif ($category != '') {
             $format = implode('', $splittedFormat);
             $newFormat = str_replace('%P', $category, $format);
-
         }
         // otherwise take only first part
         else {
@@ -418,15 +461,22 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         return \Iris\MVC\_Helper::HelperCall('crudIcon');
     }
 
-    public function _($message, $system = \FALSE){
-        if($this->_language=='english'){
+    public function _($message, $system = \FALSE) {
+        if ($this->_language == 'english') {
             return $message;
         }
-        else{
+        else {
             return parent::_($message);
         }
     }
-    
+
+    /**
+     * This method may be overriden in subclasses
+     */
+    public function _init() {
+        
+    }
+
 }
 
 ?>
