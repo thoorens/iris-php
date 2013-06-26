@@ -262,47 +262,12 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
         $this->autoForm('read');
         $this->_find($idValues);
         $this->_initObjects(self::READ, $idValues);
-//        if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
-//            $formData = $this->_form->getDataFromPost();
-//            $object = $this->retrieveData();
-//            if (is_null($object)) {
-//                return self::ERR_NOT_FOUND;
-//            }
-//            // some special treatments do not go further
-//            // for instance no database
-//            if ($this->_preDelete($object) == self::END) {
-//                return self::END;
-//            }
-//            try {
-//                $done = $object->delete();
-//                if ($done) {
-//                    $this->_postDelete($object);
-//                    return self::END;
-//                }
-//                else {
-//                    return self::ERR_INTEGRITY;
-//                }
-//            }
-//            catch (_Exception $exc) {
-//                return self::ERR_INTEGRITY;
-//            }
-//        }
         $data = $this->retrieveData();
         if (is_null($data)) {
             return self::ERR_NOT_FOUND;
         }
         $this->_form->fill($data->asArray());
         return $this->_preDisplay($data); //by ref
-//        throw new ex\NotSupportedException('Méthode non encore implémentée');
-//        $where = $this->_analyseCondition($conditions);
-//        $this->_initObjects(JT_Dojo_Form::READ);
-//        $data = $this->_entity->fetchRow($where);
-//        if (is_null($data)) {
-//            return $this->_errorManager(JT_Crud_Abstract::NOT_FOUND);
-//        }
-//        $this->_form->populate($data->toArray());
-//        $this->_preRead($conditions);
-//        return self::DISPLAY;
     }
 
     public function goFirst($idValues) {
