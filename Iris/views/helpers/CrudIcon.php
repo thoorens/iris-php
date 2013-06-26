@@ -28,11 +28,30 @@ namespace Iris\views\helpers;
  *
  */
 class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
-use \Iris\Subhelpers\tSubhelperLink;
-    
+
+    use \Iris\Subhelpers\tSubhelperLink;
+
+    protected static $_AlternateSubhelper = \NULL;
     
     protected $_baseDir = '/images/icones';
-    protected $_subhelperName ='\Iris\Subhelpers\Crud'; 
+
+    /**
+     * Defines the subhelper used by the class. One can use another subhelper 
+     * in a derived class by defining $_AlternateSubhelper
+     */
+    protected function _init() {
+        if (!is_null(static::$_AlternateSubhelper)) {
+            $this->_subhelperName = static::$_AlternateSubhelper;
+        }
+        else {
+            $this->_subhelperName = '\Iris\Subhelpers\Crud';
+        }
+    }
+
+    public static function SetAlternateSubhelper($subhelperName){
+        static::$_AlternateSubhelper = $subhelperName;
+    }
+
 
     /**
      *
@@ -40,22 +59,21 @@ use \Iris\Subhelpers\tSubhelperLink;
      * @param boolean $iconeActive: choix d'une icone désactivée (ce n'est pas un lien 
      * @return String (cette méthode brise la chaîne)
      */
-    public function render(array $params, $iconeActive=TRUE) {
-
+    public function render(array $params, $iconeActive = TRUE) {
         $operation = $params['operation'];
         $dir = $params['dir'];
         $ref = $params['ref'];
         $help = $params['help'];
 
         if ($iconeActive) {
-            $icon = $this->callViewHelper('image',$operation . ".png", $operation, $help, $dir);
+            $icon = $this->callViewHelper('image', $operation . ".png", $operation, $help, $dir);
             return '<a href="' . $ref . '">' . $icon . '</a>';
         }
         else {
             $file = $operation . "_des.png";
             $help = $this->_("Operation not possible in context", TRUE);
             $desc = "$operation inactive";
-            return $this->callViewHelper('image',$file, $desc, $help, $dir);
+            return $this->callViewHelper('image', $file, $desc, $help, $dir);
         }
     }
 
@@ -68,7 +86,6 @@ use \Iris\Subhelpers\tSubhelperLink;
         $this->_baseDir = $baseDir;
     }
 
- 
     /**
      * Translates a message by using its ancestor method with default 
      * to system message
@@ -77,7 +94,8 @@ use \Iris\Subhelpers\tSubhelperLink;
      * @param boolean $system System message (by default yes)
      * @return string 
      */
-    public function _($message, $system=\TRUE) {
+    public function _($message, $system = \TRUE) {
         return parent::_($message, $system);
     }
+
 }

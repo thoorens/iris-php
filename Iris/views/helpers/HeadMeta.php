@@ -18,7 +18,7 @@ namespace Iris\views\helpers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  *
  */
 
@@ -39,43 +39,16 @@ final class HeadMeta extends _ViewHelper {
 
     protected static $_Singleton = TRUE;
 
-    /**
-     *
-     * @var array : an array of key => meta_tag 
-     */
-    protected static $_Meta = array();
-
+    
     /**
      *
      * @param array/NULL $param : NULL for display, array to add new meta tags
      * @return string zero to many lines of html meta tags 
      */
-    public function help($param=NULL) {
-        if (is_null($param)) {
-            return $this->_display();
+    public function help() {
+        return \Iris\Subhelpers\Head::GetInstance();
         }
-        else {
-            $this->_add($param);
-        }
-    }
 
-    /**
-     * add one or more meta tags to the collection
-     * @param array $assocArray : an array of key => meta_tag
-     */
-    private function _add($assocArray) {
-        foreach ($assocArray as $key => $value) {
-            $this->_meta[$key] = $value;
-        }
-    }
-
-    private function _display() {
-        $metaLines = array();
-        foreach (self::$_Meta as $meta) {
-            $metaLines[] = "<meta $meta/>";
-        }
-        return implode("\n", $metaLines);
-    }
 
 }
 

@@ -18,7 +18,7 @@ namespace Iris\views\helpers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2013 Jacques THOORENS
  *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -28,21 +28,30 @@ namespace Iris\views\helpers;
  */
 
 /**
- * Gives facilities to manage the <title> of a page.
+ * Gives facilities to manage the &gt;title> of a page.
+ * Subtitle can be managed more easily by subtitle() helper.
  *
  */
 final class Title extends _ViewHelper {
 
     protected static $_Singleton = TRUE;
 
-    public function help($mainTitle = NULL, $subtitle = \NULL) {
+    /**
+     * Permits to set the main title and the subtitle of the page
+     * To set the subtitle only use the subtitle() helper instead.
+     * 
+     * @param string $mainTitle
+     * @param string $subtitle
+     */
+    public function help($mainTitle = \NULL, $subtitle = \NULL) {
         $head = \Iris\Subhelpers\Head::GetInstance();
-        $head->setTitle($mainTitle);
-        if(!is_null($subtitle)){
+        if (!is_null($mainTitle)) {
+            $head->setTitle($mainTitle);
+        }
+        if (!is_null($subtitle)) {
             $head->setSubtitle($subtitle);
         }
     }
-
 
 }
 
