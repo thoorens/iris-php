@@ -40,6 +40,7 @@ trait tSubhelperLink{
     
     private $_subhelper = \NULL;
 
+    protected static $_SubhelperName = \NULL;
     
     protected function _subclassInit(){
         self::$_Singleton = \TRUE;
@@ -58,7 +59,7 @@ trait tSubhelperLink{
     }
     
     private final function _initSubhelper(){
-        if(!isset($this->_subhelperName)){
+        if(is_null($this->_subhelperName)){
             throw new \Iris\Exceptions\InternalException
             ('The renderer '.__CLASS__.' must define its associated subhelper through $_subhelperName var');
         }

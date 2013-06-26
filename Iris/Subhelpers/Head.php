@@ -70,10 +70,18 @@ class Head implements \Iris\Design\iSingleton {
     private $_html = array();
 
     /**
-     * The list of associated loader
+     * The list of associated loader, created during page generation 
      * @var array 
      */
     private $_additionalHeadLoader = array();
+    
+    /**
+     * A list of keyword for the page. Each element of the array has this 
+     * structure
+     * [KeyWord] => Number
+     * @var array
+     */
+    private $_keywords = [];
 
     /**
      * Realizes the final rendering of the head part of the page
@@ -82,34 +90,43 @@ class Head implements \Iris\Design\iSingleton {
      */
     private function _render() {
         $this->_contentType();
-        $this->_author();
-        $this->_description();
-        $this->_siteIcon();
-        $this->_title();
-        $this->_meta('description');
-        $this->_meta('author');
-
-        $this->_writeMark();
+        $this->_prepareSiteIcon();
+        $this->_prepareTitle();
+        $this->_prepareKeyWords();
+        $this->_prepareAllMeta();
+        
         $html = implode(CRLF . TAB2, $this->_html) . CRLF;
         $this->_html = array(); // all treated lines are erased
         return TAB2 . $html;
     }
 
     /**
-     * Registers a new loader in the head process
+     * Registers a new loader in the head process (e.g. css or javascript loaders)
      * 
-     * @param type $className
+     * @param string $className
      */
     public function registerLoader($className) {
         $this->_additionalHeadLoader[] = $className;
     }
 
     /**
+     * Add one or various keywords separated by commas, avoiding doublons
+     * 
+     * @param string $string
+     */
+    public function addKeyWord($string){
+        $keywords = explode(',', $string);
+        foreach($keywords as $keyword){
+            $this->_keywords[$keyword] = count($this->_keywords);
+        }
+    }
+    
+    /**
      * Magic method to not declared methods: presently only setParameter is
      * supported
      * 
-     * @param type $name
-     * @param type $arguments
+     * @param string $name
+     * @param mixed $arguments
      * @return \Iris\Subhelpers\Head
      */
     public function __call($name, $arguments) {
@@ -142,21 +159,51 @@ class Head implements \Iris\Design\iSingleton {
      * 
      * @param type $metaName
      */
-    public function _meta($metaName) {
+    private function _prepareMeta($metaName) {
         $value = $this->_takeOnce($metaName, \NULL);
+        $metaName = str_replace('_','-', $metaName);
         if (!is_null($value)) {
             $this->_html[] = sprintf('<meta name="' . $metaName . '" content="%s" />', $value);
         }
     }
 
+    private function _prepareAllMeta(){
+        foreach($this->_components as $name => $d){
+            $this->_prepareMeta($name);
+        }
+    }
+    
     /**
      * Creates a shortcut icon
      */
-    private function _siteIcon() {
+    private function _prepareSiteIcon() {
         $iconFile = $this->_takeOnce('iconfile', "/images/favicon.ico");
         if (!is_null($iconFile)) {
             $this->_html[] = sprintf('<link href="%s" rel="shortcut icon" />', $iconFile);
         }
+    }
+
+    /**
+     * Prepare the title and subtitle
+     */
+    private function _prepareTitle() {
+        $title = $this->_takeOnce('title', 'Site réalisé avec Iris-PHP');
+        $subtitle = $this->_takeOnce('subtitle', '');
+        if ($subtitle != '') {
+            $this->_html[] = "<title>$title - $subtitle</title>".CRLF;
+        }
+        else {
+            $this->_html[] = "<title>$title</title>".CRLF;
+        }
+    }
+
+    /**
+     * Prepare the keywords
+     */
+    private function _prepareKeyWords() {
+        $keys = array_flip($this->_keywords);
+        $this->setKeywords(implode(', ', $keys));
+        $this->_prepareMeta('keywords');
     }
 
     /**
@@ -217,7 +264,7 @@ class Head implements \Iris\Design\iSingleton {
         try {
             $auto = self::GetInstance();
             $loaders = $auto->_render();
-            foreach ($auto->_additionalHeadLoader as $loaderName) {
+           foreach ($auto->_additionalHeadLoader as $loaderName) {
                 $loader = $loaderName::getInstance();
                 $loaders .= $loader->render($ajaxMode);
             }
