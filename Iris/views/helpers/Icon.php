@@ -53,15 +53,15 @@ class Icon extends _ViewHelper {
      */
     public function link($ref, $iconName, $help, $desc = null, $iconText = '', $class = \NULL) {
         $desc = is_null($desc) ? $iconName : $desc;
-        $icon = $this->callViewHelper('image',$this->_baseDir . $iconName, $desc, $help, '', $class) . $iconText;
+        $icon = $this->callViewHelper('image',$this->_baseDir . "$iconName.png", $desc, $help, '', $class) . $iconText;
         return '<a href="' . $ref . '">' . $icon . '</a>';
     }
 
     public function link2($ref, $iconNames, $help, $desc = null, $iconText = '', $class = \NULL) {
         list($icon1, $icon2) = explode('|',$iconNames);
         $desc = is_null($desc) ? $icon1 : $desc;
-        $path1 = "/images/".$this->_baseDir.$icon1;
-        $path2 = "/images/".$this->_baseDir.$icon2;
+        $path1 = "/images/".$this->_baseDir."$icon1.png";
+        $path2 = "/images/".$this->_baseDir."$icon2.png";
         $attributes = "onmouseover = \"this.src='$path2'\" ";
         $attributes .= "onmouseout=\"this.src='$path1'\" ";
         $icon = $this->callViewHelper('image',$this->_baseDir . $icon1, $desc, $help, '', $class, $attributes) . $iconText;
