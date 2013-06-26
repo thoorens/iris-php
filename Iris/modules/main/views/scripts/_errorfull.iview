@@ -1,3 +1,4 @@
+{REM} An partial for a display of error traces in tabs (in development mode) {/REM}
 {php}
 $this->dojo_tabContainer('tabs');
 $this->tabs->setDefault('desc')

@@ -1,7 +1,6 @@
-<!--?=$this->welcome($this->errorMessage,'IRIS-PHP')?-->
-<h1><?=$this->title?></h1>
+<h1>{title}</h1>
 <h3>Test</h3>
-<? \Iris\Engine\Debug::Dump($this)?>
+{? \Iris\Engine\Debug::Dump($this);?}
 <p>
-    <?=$this->button('Return to home page','/')?>
+    {button('Return to home page','/')}
 </p>

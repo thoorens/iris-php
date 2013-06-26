@@ -1,4 +1,4 @@
-<h1><?=$this->title?></h1>
+<h1>{title}</h1>
 <p>
     You don' have the privilege to access this page. You may want to 
     do the following action:
@@ -10,5 +10,5 @@
 </ul>
     
 <p>
-    <?=$this->button('Return to home page','/')?>
+    {button('Return to home page','/')}
 </p>
