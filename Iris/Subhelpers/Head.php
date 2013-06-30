@@ -74,7 +74,7 @@ class Head implements \Iris\Design\iSingleton {
      * @var array 
      */
     private $_additionalHeadLoader = array();
-    
+
     /**
      * A list of keyword for the page. Each element of the array has this 
      * structure
@@ -94,7 +94,7 @@ class Head implements \Iris\Design\iSingleton {
         $this->_prepareTitle();
         $this->_prepareKeyWords();
         $this->_prepareAllMeta();
-        
+
         $html = implode(CRLF . TAB2, $this->_html) . CRLF;
         $this->_html = array(); // all treated lines are erased
         return TAB2 . $html;
@@ -113,14 +113,18 @@ class Head implements \Iris\Design\iSingleton {
      * Add one or various keywords separated by commas, avoiding doublons
      * 
      * @param string $string
+     * @return \Iris\Subhelpers\Head for fluent interface
      */
-    public function addKeyWord($string){
-        $keywords = explode(',', $string);
-        foreach($keywords as $keyword){
-            $this->_keywords[$keyword] = count($this->_keywords);
+    public function addKeyWord($string) {
+        if (!empty($string)) {
+            $keywords = explode(',', $string);
+            foreach ($keywords as $keyword) {
+                $this->_keywords[$keyword] = count($this->_keywords);
+            }
         }
+        return $this;
     }
-    
+
     /**
      * Magic method to not declared methods: presently only setParameter is
      * supported
@@ -161,18 +165,18 @@ class Head implements \Iris\Design\iSingleton {
      */
     private function _prepareMeta($metaName) {
         $value = $this->_takeOnce($metaName, \NULL);
-        $metaName = str_replace('_','-', $metaName);
+        $metaName = str_replace('_', '-', $metaName);
         if (!is_null($value)) {
             $this->_html[] = sprintf('<meta name="' . $metaName . '" content="%s" />', $value);
         }
     }
 
-    private function _prepareAllMeta(){
-        foreach($this->_components as $name => $d){
+    private function _prepareAllMeta() {
+        foreach ($this->_components as $name => $d) {
             $this->_prepareMeta($name);
         }
     }
-    
+
     /**
      * Creates a shortcut icon
      */
@@ -190,10 +194,10 @@ class Head implements \Iris\Design\iSingleton {
         $title = $this->_takeOnce('title', 'Site réalisé avec Iris-PHP');
         $subtitle = $this->_takeOnce('subtitle', '');
         if ($subtitle != '') {
-            $this->_html[] = "<title>$title - $subtitle</title>".CRLF;
+            $this->_html[] = "<title>$title - $subtitle</title>" . CRLF;
         }
         else {
-            $this->_html[] = "<title>$title</title>".CRLF;
+            $this->_html[] = "<title>$title</title>" . CRLF;
         }
     }
 
@@ -264,7 +268,7 @@ class Head implements \Iris\Design\iSingleton {
         try {
             $auto = self::GetInstance();
             $loaders = $auto->_render();
-           foreach ($auto->_additionalHeadLoader as $loaderName) {
+            foreach ($auto->_additionalHeadLoader as $loaderName) {
                 $loader = $loaderName::getInstance();
                 $loaders .= $loader->render($ajaxMode);
             }
