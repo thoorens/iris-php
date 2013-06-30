@@ -1,0 +1,7 @@
+<div>
+    <h1>Editor</h1>
+    <pre>
+    {? print_r($_POST) ?}
+    </pre>
+    {form}
+</div>

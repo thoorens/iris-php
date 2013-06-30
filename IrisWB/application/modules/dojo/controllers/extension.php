@@ -34,4 +34,15 @@ class extension extends _dojo {
             'buttons' => 1+4,
             'logoName' => 'mainLogo'));
     }
+    public function editorAction() {
+        $ff = new \Dojo\Forms\FormFactory();
+        $form = $ff->createForm('montest');
+        $form->createHidden('cache')->setValue('Valeur secrete')->addTo($form);
+        $form->createEditor('editor')
+                ->setValeur('<b>test</b>')
+                ->addTo($form)
+                ->setLabel('Message:');
+        $form->createSubmit('send')->setValue('Envoyer')->addTo($form);
+        $this->__form = $form->render();
+    }
 }

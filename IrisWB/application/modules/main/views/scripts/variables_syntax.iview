@@ -1,0 +1,65 @@
+{wbHeader($this)}
+<div id="content" {wbBG()}>
+    <h2>Variables in controler</h2>
+    <table class="show">
+        <tr>
+            <th>var1</th>
+            <td>{var1}</td>
+        </tr>
+        <tr>
+            <th>var2</th>
+            <td>{var2}</td>
+        </tr>
+        <tr>
+            <th>var3</th>
+            <td>{var3}</td>
+        </tr>
+        <tr>
+            <th>var4</th>
+            <td>{var4}</td>
+        </tr>
+        <tr>
+            <th>var5</th>
+            <td>{var5}</td>
+        </tr>
+        <tr>
+            <th>var6</th>
+            <td>{var6}</td>
+        </tr>
+    </table>
+    <h2>Variables in controller helper</h2>
+    <table class="show">
+        <tr>
+            <th>var11</th>
+            <td>{var11}</td>
+        </tr>
+        <tr>
+            <th>var12</th>
+            <td>{var12}</td>
+        </tr>
+         <tr>
+            <th>var13</th>
+            <td>{var13}</td>
+        </tr>
+         <tr>
+            <th>var14</th>
+            <td>{var14}</td>
+        </tr>
+        <tr>
+            <td colspan="2">The rest of the code does not function</td>
+        </tr>
+        <tr>
+            <th>var13</th>
+            <td>ILLEGAL ACCESS</td>
+        </tr>
+        <tr>
+            <th>var13</th>
+            <td>Variable created in bad context</td>
+        </tr>
+        <tr>
+            <th>tricky var17</th>
+            <td>{var17}</td>
+        </tr>
+    </table>
+
+</div>
