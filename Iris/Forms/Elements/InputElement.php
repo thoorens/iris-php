@@ -43,6 +43,7 @@ class InputElement extends \Iris\Forms\_Element {
             case 'hidden':
                 $this->_labelPosition = self::NONE;
                 break;
+            case 'image':
             case 'reset':
             case 'submit':
             case 'button':

@@ -65,7 +65,7 @@ class SelectElement extends \Iris\Forms\Elements\_ElementGroup {
         $hidden->addTo($this->_container);
         $hidden->setValue($this->getValue());
         $this->setReadonly();
-        parent::setDisabled($value);
+        return parent::setDisabled($value);
     }
 
 }

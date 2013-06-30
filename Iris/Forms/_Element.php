@@ -31,7 +31,8 @@ use Iris\Forms\Validators as iv;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _Element implements \Iris\Translation\iTranslatable{
+abstract class _Element implements \Iris\Translation\iTranslatable {
+
     use \Iris\Translation\tSystemTranslatable;
 
     const NONE = 0;
@@ -132,7 +133,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
      * 
      * @var string
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
      *
@@ -140,7 +141,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
      * @param string $type type of the widget
      * @param array $options options for special elements 
      */
-    public function __construct($name, $type, $options = array()) {
+    public function __construct($name, $type, $options = []) {
         $this->_type = $type;
         $this->_labelPosition = self::BEFORE;
         $this->setName($name);
@@ -215,6 +216,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
             $value = 'disabled';
         }
         $this->$value = $value;
+        return $this;
     }
 
     /* ----------------------------------------------------------------------
@@ -231,7 +233,8 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
      * @return string
      */
     function render($layout = \NULL) {
-        if ($this->_subtype == 'hidden') {
+        if ($this->_labelPosition == self::NONE) {
+            //if ($this->_subtype == 'hidden') {
             $text = $this->baseRender();
         }
         else {
@@ -302,12 +305,10 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
      */
     protected function _renderOptions() {
         $text = '';
-        if (!is_null($this->_options)) {
-            foreach ($this->_options as $key => $option) {
-                $text .= $key . ' = "' . $option . '" ';
-            }
-            return $text;
+        foreach ([] as $key => $option) {
+            $text .= $key . ' = "' . $option . '" ';
         }
+        return $text;
     }
 
     /**
@@ -355,7 +356,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
                 $checkMark = ' checked = "checked" ';
             }
         }
-        $html = "value = \"$value\" $checkMark";
+        $html = "value=\"$value\" $checkMark";
         return $html;
     }
 
@@ -443,7 +444,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
         if (!$validator instanceof iv\_Validator) {
             if (is_null($this->_container)) {
                 throw new \Iris\Exceptions\FormException(
-                        $this->_('named validators only operate on objects registred with addTo().', TRUE));
+                $this->_('named validators only operate on objects registred with addTo().', TRUE));
             }
             $creator = "validator$validator";
             $ff = $this->getFormFactory();
@@ -577,6 +578,5 @@ abstract class _Element implements \Iris\Translation\iTranslatable{
         return $this;
     }
 
-   
 }
 
