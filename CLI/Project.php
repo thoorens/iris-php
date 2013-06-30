@@ -138,7 +138,10 @@ namespace CLI {
             $projectName = $parameters->getProjectName();
 // Creates a folder for the project (if it doesn't exist)
             if (file_exists($projectDir) and file_exists("$projectDir/.$projectName.irisproject")) {
-                throw new \Iris\Exceptions\CLIException("The directory '$projectDir' seems to contain a possibly broken project. Choose another name.\n");
+                throw new \Iris\Exceptions\CLIException("The folder '$projectDir' seems to contain a possibly broken project. Choose another name.\n");
+            }
+            if(file_exists($projectDir)){
+                throw new \Iris\Exceptions\CLIException("A folder '$projectDir' already exists.Choose antoher name\n");
             }
             echo "Creating new project $projectName in folder $projectDir\n";
             if (!file_exists($projectDir)) {
@@ -165,6 +168,10 @@ namespace CLI {
                 }
                 $config = $analyser->createNewConfig();
                 $projects[$config->getName()] = $config;
+                $config->ModuleName = 'main';
+                $config->ControllerName = 'index';
+                $config->ActionName = 'index';
+                echo $config->ProjectName;
                 $projects['Iris']->DefaultProject = $config->ProjectName;
                 $this->_updateConfig($projects);
             }
