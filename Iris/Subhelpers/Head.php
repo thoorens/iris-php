@@ -289,7 +289,7 @@ class Head implements \Iris\Design\iSingleton {
             }
         }
         catch (\Exception $exception) {
-            \Iris\Engine\Debug::Kill(\Iris\Engine\Program::ErrorBox($exception->__toString(), 'Fatal error during final tuning'));
+            \Iris\Engine\Debug::ErrorBoxDie($exception->__toString(), 'Fatal error during final tuning');
         }
     }
 
