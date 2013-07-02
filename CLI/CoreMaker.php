@@ -34,7 +34,8 @@ use \Iris\Exceptionss;
 class CoreMaker extends _Process {
 
     /**
-     *
+     * Theses classes cannot be overidden
+     * 
      * @var array
      * @todo see Log status
      */
@@ -43,7 +44,6 @@ class CoreMaker extends _Process {
         'Iris\\Engine\\Debug',
         'Iris\\Engine\\Mode',
         'Iris\\Engine\\PathArray',
-        'Iris\\Log\\Exception\\ErrorHandler',
         'Iris\\Log'
     );
 
@@ -55,7 +55,6 @@ class CoreMaker extends _Process {
      */
     protected function _makecore() {
         $parameters = Parameters::GetInstance();
-        $mydir = 'Extensions/';
         $className = $parameters->getClasseName();
         if (array_search($className, $this->_protectedClasses) !== FALSE) {
             throw new \Iris\Exceptions\CLIException("Class $className can't be overridden through CLI. 
@@ -71,20 +70,20 @@ Overwrite __construct in public/Bootstrap.php instead and load your own class ma
         }
 
         // copy class to core_class
-        $toPath = $this->_newFileAndDir($iris_library, 'Core/', $classPath);
-        $file = file_get_contents($fromPath);
-        $file = preg_filter('/(class) ([a-z_A-Z])/', '$1 core_$2', $file);
-        $file = str_replace('private', 'protected', $file);
-        if (file_exists($toPath)) {
-            echo "Warning : the file $toPath has been replaced by a fresh copy 
+        $corePath = $this->_newFileAndDir($iris_library, 'Core/', $classPath);
+        $fileContent = file_get_contents($fromPath);
+        $fileContent2 = preg_filter('/(class) ([a-z_A-Z])/', '$1 core_$2', $fileContent);
+        $fileContent3 = str_replace('private', 'protected', $fileContent2);
+        if (file_exists($corePath)) {
+            echo "Warning : the file $corePath has been replaced by a fresh copy 
 of the class from the current version of Iris-PHP.\n";
         }
-        file_put_contents($toPath, $file);
+        file_put_contents($corePath, $fileContent3);
 
         // make new class
-        $toPath = $this->_newFileAndDir($iris_library, $mydir, $classPath);
-        if (file_exists($toPath)) {
-            throw new \Iris\Exceptions\CLIException("The file $toPath exists. It may be convenient to check its content.");
+        $extendPath = $this->_newFileAndDir($iris_library,'Extensions/', $classPath);
+        if (file_exists($extendPath)) {
+            throw new \Iris\Exceptions\CLIException("The file $extendPath exists. It may be convenient to check its content.");
         }
         $arClass = explode('\\', $className);
         $class = array_pop($arClass);
@@ -103,16 +102,16 @@ namespace $namespace;
     
     }
 END;
-        file_put_contents($toPath, $file);
+        file_put_contents($extendPath, $file);
 
         // add the class to overridden.classes file
-        $toPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . '/config/overridden.classes';
+        $extendPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . '/config/overridden.classes';
         $text = "\t\\Iris\\Engine\\Loader::";
         $text .= '$UserClasses' . "['$className']=\\TRUE;\n";
-        if (!file_exists($toPath)) {
-            file_put_contents($toPath, "<?php\n");
+        if (!file_exists($extendPath)) {
+            file_put_contents($extendPath, "<?php\n");
         }
-        file_put_contents($toPath, $text, FILE_APPEND);
+        file_put_contents($extendPath, $text, FILE_APPEND);
     }
 
     /**
