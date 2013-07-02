@@ -71,7 +71,7 @@ class Bootstrap extends core_Bootstrap {
         //\Iris\Engine\Loader::GetInstance()->setTransapplicationName('Trans');
     }
 
-    // You can add her some debbuging tools and parameters
+    // You can add here some debbuging tools and parameters
     public function debug() {
         
     }
