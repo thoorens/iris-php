@@ -156,7 +156,7 @@ namespace CLI {
             $coder->_os = $this->_os;
             $coder->makePublic($projectDir);
             $coder->makeApplication($projectDir);
-            $this->_makeLibrary($projectDir);
+            $this->_makeLibrary($projectDir, $parameters->getLibraryName());
             $coder->makeVirtualParameter();
 // add a new config to the configs
             if (!$simulating) {
@@ -290,8 +290,8 @@ Use'iris.php --selectdefaultproject' to define a new one.\n";
          * création des liens vers la bibliothèque Iris
          * @param type $projectDir répertoire de base du projet
          */
-        private function _makeLibrary($projectDir) {
-            $this->_os->symlink(Analyser::GetIrisLibraryDir(), "$projectDir/library");
+        private function _makeLibrary($projectDir, $libraryName) {
+            $this->_os->symlink(Analyser::GetIrisLibraryDir(), "$projectDir/$libraryName");
         }
 
         /**

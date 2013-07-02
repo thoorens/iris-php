@@ -117,10 +117,10 @@ APACHE;
         // copy and adapt index.php
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/public';
         $destination = "$projectDir/$publicDir";
-        $this->_createFile("$source/index.php", "$destination/index.php", array('{APPLICATION}' => $parameters->getApplicationName()));
+        $this->_createFile("$source/index.php", "$destination/index.php", ['{APPLICATION}' => $parameters->getApplicationName()]);
         // other files are simply copied
         $this->_createFile("$source/dothtaccess", "$destination/.htaccess");
-        $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php");
+        $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php",['{LIBRARY}' => $parameters->getLibraryName()]);
         echo "You may have to edit $publicDir/.htaccess to suit your provider requirement.\n";
     }
 

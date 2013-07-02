@@ -3,7 +3,7 @@ namespace Iris\Engine;
 
 define('IRIS_ROOT_PATH', dirname(__DIR__));
 define('IRIS_PUBLIC_PATH', __DIR__);
-define('IRIS_LIBRARY','library');
+define('IRIS_LIBRARY','{LIBRARY}');
 set_include_path(IRIS_ROOT_PATH . PATH_SEPARATOR . get_include_path());
 
 

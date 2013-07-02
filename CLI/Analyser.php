@@ -91,6 +91,7 @@ class Analyser {
         'm:' => 'projectmetadata:',
         'a:' => 'applicationdir:',
         'p:' => 'publicdir:',
+        'l:' => 'libraryname:',
         'u:' => 'url:',
         // piece of code
         'g' => 'generate',
@@ -231,6 +232,11 @@ class Analyser {
                 // set application dir (default is application)
                 case 'a': case 'applicationdir':
                     $parameters->setApplicationName($value);
+                    break;
+
+                // Set library folder name  (default is library)   
+                case 'l': case 'libraryname':
+                    $parameters->setLibraryName($value);
                     break;
 
                 // set url (default is mysite.local)
