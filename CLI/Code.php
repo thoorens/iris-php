@@ -138,6 +138,7 @@ APACHE;
             '!config/base',
             '!data/private',
             '!data/public',
+            '!log',
             'modules'
         ];
         $files = [
