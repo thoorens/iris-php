@@ -1,6 +1,6 @@
 <?php
 
 /**
- * Some systeme controllers
+ * Some system controllers
  */
 namespace main\controllers;
