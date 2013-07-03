@@ -121,19 +121,7 @@ class _Controller extends _BaseController {
         }
     }
 
-    /**
-     * Do the verification of ACL. In case of deny, reroute to a specified
-     * URL (in $_noAclRoute)
-     */
-    protected function _verifyAcl() {
-// always happy
-        $acl = \Iris\Users\Acl::GetInstance();
-        $resource = '/' . $this->getModuleName() . '/' . $this->getControllerName();
-        if (!$acl->hasPrivilege($resource, $this->getActionName())) {
-            $this->reroute($this->_noAclRoute, TRUE);
-// no return
-        }
-    }
+    
 
     /**
      * 
