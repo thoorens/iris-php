@@ -67,6 +67,13 @@ class _Controller extends _BaseController {
     }
 
     /**
+     * Returns the current script name for the layout
+     * @return string
+     */
+    protected function _getLayout(){
+        return \Iris\MVC\Layout::GetInstance()->getViewScriptName();
+    }
+    /**
      * This class has is 
      * @param boolean $echoing
      * @return string 
