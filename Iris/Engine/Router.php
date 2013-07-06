@@ -238,8 +238,15 @@ class Router {
      * 
      * @return string 
      */
-    public function getAnalyzedURI() {
-        return sprintf('%s/%s/%s', $this->_moduleName, $this->_controllerName, $this->_actionName);
+    public function getAnalyzedURI($withParameters = \FALSE) {
+        if($withParameters){
+            $parameters = implode('/',$this->_parameters);
+            $actionPara = $this->_actionName."/$parameters";
+        }
+        else{
+            $actionPara = $this->_actionName;
+        }
+        return sprintf('%s/%s/%s', $this->_moduleName, $this->_controllerName, $actionPara);
     }
 
     /**
