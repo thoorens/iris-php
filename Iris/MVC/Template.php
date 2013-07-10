@@ -120,7 +120,7 @@ class Template implements \Iris\Translation\iTranslatable {
         ['/{for\((.+), ?(.+), ?(.+)\)}/i', '<?php for($1; $2; $3):?>'],
         ['{/for}', '<?php endfor;?>'],
         // foreach with key
-        ['/{foreach\((\.+): ?(\w+), ?(\w+)\)}/i', '<?php foreach($1 as $$2=>$$3):?>'],
+        ['/{foreach\((.+): ?(\w+), ?(\w+)\)}/i', '<?php foreach($1 as $$2=>$$3):?>'],
         ['/{foreach\((\w+), ?(\w+), ?(\w+)\)}/i', '<?php foreach($$1 as $$2=>$$3):?>'],
         // foreach without key
         ['/{foreach\((.+): ?(\w+)\)}/i', '<?php foreach($1 as $$2):?>'],
