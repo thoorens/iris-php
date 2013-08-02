@@ -1,0 +1,15 @@
+{wbHeader()}
+
+<div id="content" {wbBG()}>
+    <h3>Without parameter</h3>
+    {welcome()}
+    <h3>With parameter 1, 2</h3>
+    {welcome(1)}
+    {welcome(2)}
+    <h3>With parameter -1</h3>
+    {welcome(-1)}
+    <h3>With parameter 50</h3>
+    {welcome(50)}
+    <h3>With error message</h3>
+    {welcome('It is a fake error')}
+</div>

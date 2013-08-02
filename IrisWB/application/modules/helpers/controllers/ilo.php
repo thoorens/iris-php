@@ -16,10 +16,8 @@ class ilo extends _helpers {
     
 
     public function userAction() {
-        // these parameters are only for demonstration purpose
-        $this->__(NULL, array(
-            'Title' => "'<h1>helpers - ilo - user</h1>'",
-            'buttons' => 1+4,
-            'logoName' => 'mainLogo'));
+       
     }
+    
+    
 }

@@ -1,0 +1,61 @@
+<div>
+    <div id="page">
+        <table class="show">
+            <tr>
+                <th colspan="3">ILO_goAd()</th>
+            </tr>
+            <tr>
+                <td>{ILO_goAd(\TRUE)}</td>
+                <td>TRUE</td>
+                <td>goto internal presentation</td>
+            </tr>
+            <tr>
+                <td>{ILO_goAd(\FALSE)}</td>
+                <td>FALSE</td>
+                <td>goto official site</td>
+            </tr>
+            <tr>
+                <td>{ILO_goAd(\FALSE, \TRUE)}</td>
+                <td>FALSE, TRUE</td>
+                <td>goto official site, with grey logo</td>
+            </tr>
+            <tr>
+                <th colspan="3">ILO_goInternal()</th>
+            </tr>
+            <tr>
+                <td>{ILO_goInternal('admin')}</td>
+                <td>1 - admin</td>
+                <td>goto internal administration</td>
+            </tr>
+            <tr>
+                <td>{ILO_goInternal(2)}</td>
+                <td>2 - main</td>
+                <td>goto main page of the site</td>
+            </tr>
+            <tr>
+                <td>{ILO_goInternal(4)}</td>
+                <td>4 - reset</td>
+                <td>goto main page and reset all parameters</td>
+            </tr>
+            <tr>
+                <td>{ILO_goInternal(8)}</td>
+                <td>8 - irisroot</td>
+                <td>goto irisphp.org main page</td>
+            </tr>
+            <tr>
+                <td>{ILO_goInternal(16)}</td>
+                <td>16 - iriswiki</td>
+                <td>goto official wiki</td>
+            </tr>
+            <tr>
+                <td>{ILO_goInternal(32)}</td>
+                <td>32 - irisapi</td>
+                <td>goto official API</td>
+            </tr>
+        </table>
+
+
+
+    </div>
+
+</div>

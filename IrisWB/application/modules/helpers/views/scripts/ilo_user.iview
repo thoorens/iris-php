@@ -3,26 +3,26 @@
         <table class="show">
             <!-- Nom et groupe -->
             <tr>
-                <td>0 - {ILO_displayUser(0)}</td>
-                <td>1 - {ILO_displayUser(1)}</td>
-                <td>3 - {ILO_displayUser(3)}</td>
+                <th>0 </th><td> {ILO_displayUser(0)}</td>
+                <th>1 </th><td> {ILO_displayUser(1)}</td>
+                <th>3 </th><td> {ILO_displayUser(3)}</td>
             </tr>
             <!-- Nom-->
             <tr>
-                <td>4 - {ILO_displayUser(4)}</td>
-                <td>5 - {ILO_displayUser(5)}</td>
-                <td>7 - {ILO_displayUser(7)}</td>
+                <th>4 </th><td> {ILO_displayUser(4)}</td>
+                <th>5 </th><td> {ILO_displayUser(5)}</td>
+                <th>7 </th><td> {ILO_displayUser(7)}</td>
             </tr>
             <!-- Groupe -->
             <tr>
-                <td>8 - {ILO_displayUser(8)}</td>
-                <td>9 - {ILO_displayUser(9)}</td>
-                <td>11 - {ILO_displayUser(11)}</td>
+                <th>8 </th><td> {ILO_displayUser(8)}</td>
+                <th>9 </th><td> {ILO_displayUser(9)}</td>
+                <th>11 </th><td> {ILO_displayUser(11)}</td>
             </tr>
             <tr>
-                <td>12 - {ILO_displayUser(12)}(Display nothing)</td>
-                <td>13- {ILO_displayUser(13)}</td>
-                <td>14 - {ILO_displayUser(15)}</td>
+                <th>12 </th><td> {ILO_displayUser(12)}(Display nothing)</td>
+                <th>13</th><td> {ILO_displayUser(13)}</td>
+                <th>14 </th><td> {ILO_displayUser(15)}</td>
             </tr>
 
 

@@ -52,4 +52,9 @@ class links extends _helpers {
         $this->callViewHelper('styleLoader', 'explanations','td pre{font-size:0.8em}');
         $this->setViewScriptName(\NULL);
     }
+    
+    
+    public function internalAction() {
+        $this->setViewScriptName('');
+    }
 }

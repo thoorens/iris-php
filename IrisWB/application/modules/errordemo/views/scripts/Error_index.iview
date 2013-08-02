@@ -1,0 +1,2 @@
+<h1>{_('Error',TRUE)}</h1>
+{_('An error has occured. We apologize for the inconvenience.',TRUE)}

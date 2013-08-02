@@ -12,7 +12,9 @@
 // To have an Admintoolbar without Ajax, uncomment the next line
 //\ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
 
-\Iris\Subhelpers\Head::GetInstance()->title('Site officiel d\'Iris-PHP');
 
 // MD5 signature is an important feature of Work Bench
 \Iris\SysConfig\Settings::EnableMD5Signature();
+
+
+//\Iris\Errors\Settings::GetInstance()->setDefaultController('/errordemo/Error');

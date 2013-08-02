@@ -33,17 +33,21 @@ namespace Iris\views\helpers;
 class WbFooter extends _ViewHelper {
 
     public function help($layoutName, $buttons = 5) {
-        $html = "<b>Layout :</b> $layoutName";
-        if (\Iris\Engine\Memory::Get('hasSignature', \FALSE)) {
-            $html .= " - " . $this->callViewHelper('signature')->display();
+        $sequence = \Iris\Structure\DBSequence::GetInstance();
+        if (\Iris\SysConfig\Settings::HasMD5Signature()) {
+            $signature = ' - ' . $this->callViewHelper('signature')->display();
+            $buttonMD5 = $this->callViewHelper('signature')->saveButton();
+            $buttonCode = $this->callViewHelper('button', $this->_codeButton($sequence));
         }
+        else{
+            $signature = $buttonMD5 = $buttonCode= '';
+        }
+        $html = "<b>Layout :</b> $layoutName";
+        $html .= $signature;
         $html .= '<br/>';
         $html .= $this->callViewHelper('ILO_goInternal', $buttons);
-        $sequence = \Iris\Structure\DBSequence::GetInstance();
-        if (\Iris\Engine\Memory::Get('hasSignature', \FALSE)) {
-            $html .= $this->callViewHelper('signature')->saveButton();
-            $html .= $this->callViewHelper('button', $this->_codeButton($sequence));
-        }
+        $html .= $buttonMD5; // possibly no shown
+        $html .= $buttonCode; // possibly no shown
         $previous = $sequence->getPrevious();
         $html .= $this->callViewHelper('button', $previous);
         $html .= $this->callViewHelper('button', 'TOC', '/index/toc', 'Table of tests');

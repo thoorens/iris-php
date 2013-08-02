@@ -19,10 +19,9 @@ class _errors extends \modules\_application {
      */
     protected function _moduleInit() {
         
-        $this->_setLayout('application');
+        $this->_setLayout('wberror');
         $this->__bodyColor = 'ORANGE3';
-        $this->_noMd5();
-
+         \Iris\SysConfig\Settings::DisableMD5Signature();
     }
 
 }
