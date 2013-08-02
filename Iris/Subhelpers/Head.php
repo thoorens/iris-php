@@ -279,8 +279,8 @@ class Head implements \Iris\Design\iSingleton {
             else {
                 $text = \str_replace(self::LOADERMARK, $loaders, $text);
                 if (\Iris\SysConfig\Settings::HasMD5Signature()) {
-                    $starter .= \Iris\views\helpers\Signature::computeMD5($text);
-                    \Iris\views\helpers\Signature::computeMD5($loaders);
+                    $starter .= \Iris\views\helpers\Signature::ComputeMD5($text);
+                    \Iris\views\helpers\Signature::ComputeMD5($loaders);
                 }
                 if (\Iris\SysConfig\Settings::GetDisplayRuntimeDisplay() and !is_null($runtimeDuration)) {
                     $starter .= $runtimeDuration->jsDisplay($componentId);

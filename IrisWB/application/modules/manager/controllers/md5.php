@@ -2,6 +2,8 @@
 
 namespace modules\manager\controllers;
 
+use \Iris\views\helpers\Signature;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -45,9 +47,12 @@ class md5 extends _manager {
      */
     public function saveAction($module, $controller, $action, $md5) {
         $url = "/$module/$controller/$action";
-        $tSequences = \Iris\DB\_EntityManager::GetEntity('sequence');
-        $screen = $tSequences->fetchRow('URL=', $url);
-        $screen->Md5 = $md5;
+        $tSequences = \models\TSequence::GetEntity();
+        $fields = Signature::GetModelFields();
+        $URLField = $fields[Signature::URL];
+        $md5Field = $fields[Signature::MD5];
+        $screen = $tSequences->fetchRow("$URLField=", $url);
+        $screen->$md5Field = $md5;
         $screen->save();
         $this->reroute($url);
     }
