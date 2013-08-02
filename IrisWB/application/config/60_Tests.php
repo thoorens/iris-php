@@ -34,14 +34,37 @@ switch (0) {
         break;
     case 2:
         $ticket = new \Payoff\Ticket('anticonstitutionnel');
-        echo $ticket->getValue().'<br>';
-        if($ticket->validate()){
+        echo $ticket->getValue() . '<br>';
+        if ($ticket->validate()) {
             echo "Yes!!!!";
         }
-        else{
+        else {
             echo "No";
         }
         die('End of Payoff test');
+        break;
+    // test bits in \Iris\Errors\Settings    
+    case 3:
+
+        /* @var $settings Iris\Errors\Settings */
+        $settings = \Iris\Errors\Settings::GetInstance();
+        if ($settings->hasLog() or $settings->hasMail() or $settings->hasKeep() or $settings->hasHang()) {
+            die('One bit');
+        }
+        else {
+            echo "No bit <br>";
+        }
+        $settings->setMail();
+        $settings->setHang();
+        if($settings->hasMail()) echo 'MAIL OK <br>';
+        $settings->unsetMail();
+        if($settings->hasHang()) echo "HANG ok<br>";
+        if($settings->hasMail()) echo 'MAIL OK <br>';
+        if(!$settings->hasMail()) echo "No mail defined";
+        $settings->unsetHang();
+        if(!$settings->hasHang()) echo "No more hang";
+        
+        die('Test ok');
         break;
 }
 
