@@ -46,3 +46,8 @@ div.iris_tracecont, div.iris_tracecont h3 {
   background-color: #ffa;
   font-style: normal;
 }
+
+table.error tr th{
+    color:#c44;  
+    text-align : right;
+}
