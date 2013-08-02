@@ -24,6 +24,8 @@
 
 namespace Iris\MVC;
 
+use \Iris\Errors;
+
 /**
  * _BaseController:
  * an abstract class ancestor of any controller of the application.
@@ -37,7 +39,8 @@ namespace Iris\MVC;
  * 
  */
 class _BaseController {
-use \Iris\views\helpers\tViewHelperCaller;
+
+    use \Iris\views\helpers\tViewHelperCaller;
 
     /**
      * Each controller has a type to be defined in subclasses
@@ -70,20 +73,13 @@ use \Iris\views\helpers\tViewHelperCaller;
     private $_router;
 
     /**
-     * The default URL to go in case of privilege error
-     * 
-     * @var string
-     */
-    protected $_noAclRoute = "/ERROR/privilege";
-
-    /**
      * If the controller is not the main controller, a reference to 
      * this controller
      * 
      * @var _Controller
      */
     protected static $_MainController = NULL;
-    
+
     /**
      * 
      * @param \Iris\Engine\Response $response 
@@ -93,7 +89,7 @@ use \Iris\views\helpers\tViewHelperCaller;
         $this->_response = $response;
         $this->_view = new View();
         $this->_view->setViewScriptName($actionName);
-        \Iris\Exceptions\ErrorHandler::SystemTrace(static::$_Type, $response);
+        \Iris\Errors\Handler::SystemTrace(static::$_Type, $response);
     }
 
     /**
@@ -124,7 +120,7 @@ use \Iris\views\helpers\tViewHelperCaller;
      */
     public function security() {
         if ($this->_response->isInternal()) {
-            $this->reroute($this->_noAclRoute, TRUE);
+            $this->displayError(Errors\Settings::TYPE_PRIVILEGE);
         }
     }
 
@@ -180,7 +176,7 @@ use \Iris\views\helpers\tViewHelperCaller;
         $acl = \Iris\Users\Acl::GetInstance();
         $resource = '/' . $this->getModuleName() . '/' . $this->getControllerName();
         if (!$acl->hasPrivilege($resource, $this->getActionName())) {
-            $this->reroute($this->_noAclRoute, TRUE);
+            $this->displayError(Errors\Settings::TYPE_PRIVILEGE);
             // no return
         }
     }
@@ -215,8 +211,8 @@ use \Iris\views\helpers\tViewHelperCaller;
         }
     }
 
-    public function quote($text, $data=\NULL){
-        if(is_null($data)){
+    public function quote($text, $data = \NULL) {
+        if (is_null($data)) {
             $data = $this->_view;
         }
         $quoteView = new \Iris\MVC\Quote($text, $data);
@@ -224,7 +220,7 @@ use \Iris\views\helpers\tViewHelperCaller;
         $this->_view->addPrerending($render);
         $this->setViewScriptName('__QUOTE__');
     }
-    
+
     /**
      * Offers a way to render a view manually by giving its name. 
      * By default, it is echoed directly.
@@ -255,7 +251,7 @@ use \Iris\views\helpers\tViewHelperCaller;
     public function renderFile($scriptName, $echoing = TRUE) {
         return $this->renderNow($scriptName, $echoing, Template::ABSOLUTE);
     }
-    
+
     public function preRender($scriptName) {
         //$this->_prerendering .= $this->renderNow($scriptName, \FALSE);
         $this->_view->addPrerending($this->renderNow($scriptName, \FALSE));
@@ -310,14 +306,6 @@ use \Iris\views\helpers\tViewHelperCaller;
 
     /**
      *
-     * @return type 
-     */
-    protected function _getLayout() {
-        return NULL;
-    }
-
-    /**
-     *
      * @return \Iris\Engine\Router 
      */
     public function getRouter() {
@@ -344,6 +332,14 @@ use \Iris\views\helpers\tViewHelperCaller;
         return $this->_response;
     }
 
+    /**
+     * Permits to replace an action by another. The end
+     * of the current action is not executed (an exception
+     * is thrown, detected by the Program::run() method.
+     * 
+     * @param string $action
+     * @throws \Iris\Exceptions\RedirectException
+     */
     public function redirect($action) {
         $actionPara = explode('/', $action);
         $actionName = array_shift($actionPara);
@@ -356,6 +352,12 @@ use \Iris\views\helpers\tViewHelperCaller;
         throw new \Iris\Exceptions\RedirectException('First');
     }
 
+    /**
+     * Permits to have a new URL (optionaly in another server)
+     * 
+     * @param string $URI
+     * @param boolean $sameServer
+     */
     public function reroute($URI, $sameServer = TRUE) {
         // if parameters have been put in array
         if (is_array($URI)) {
@@ -366,6 +368,21 @@ use \Iris\views\helpers\tViewHelperCaller;
         }
         $URI = "http://$URI";
         header("location:$URI");
+    }
+
+    /**
+     * A special reroute for Error (using Handlers)
+     * 
+     * @param string $errorAction
+     */
+    public function displayError($type) {
+        $errorName = [
+            Errors\Settings::TYPE_STANDARD => 'standard',
+            Errors\Settings::TYPE_PRIVILEGE => 'privilege',
+            Errors\Settings::TYPE_FATAL => 'fatal',
+        ];
+        $errorController = \Iris\Errors\Settings::GetInstance()->getDefaultController();
+        $this->reroute("$errorController/".$errorName[$type]);
     }
 
     /**

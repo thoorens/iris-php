@@ -45,9 +45,12 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         //
         'Error' => 'Erreur',
         'An error has occured. We apologize for the inconvenience.' => "Une erreur s'est produite, veuillez nous en excuser.",
+        'A fatal error has occured. We apologize for the inconvenience.'=> "Une erreur fatale s'est produite. Veuillez nous en excuser.",
         'Forbidden page' => 'Page inaccessible',
         'Impossible access' => 'Accès impossible',
         "Unkwown fatal error" => 'Erreur fatale indéterminée',
+        "Sorry! An error occured in error screen. Back to main page..." => "D&eacute;sol&eacute;! Une erreur s'est produite dans une page d'erreur. Retour &agrave; la page d'accueil",
+        "Fatal error" => "Erreur fatale",
         //        
         // Date
         //        

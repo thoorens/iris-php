@@ -22,7 +22,7 @@ namespace Iris\Exceptions;
  */
 
 /**
- * An exception thrown by the ErrorHandler
+ * An exception thrown by the Handler
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org

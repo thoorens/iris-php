@@ -1,6 +1,0 @@
-<h1>{title}</h1>
-<h3>Test</h3>
-{? \Iris\Engine\Debug::Dump($this);?}
-<p>
-    {button('Return to home page','/')}
-</p>

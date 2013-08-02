@@ -83,5 +83,27 @@ abstract class Debug {
         die($message); // the only authorized die in programm
     }
 
+    
+    /**
+     * Error box with title and message, for error debugging purpose
+     * Should not be used in a production environment. This box is used
+     * when an error occurs in error processing for an cry of despair.
+     * 
+     * @param string $message : error description
+     * @param string $title : box title
+     * @return string 
+     */
+    public static function ErrorBox($message, $title = "Unkown class") {
+        $text = '<div style="background-color:#EF5B4F; color:#FFFFFF; margin:10px; padding:5px\">';
+        $text .= "&nbsp;<strong>IRIS-PHP SYSTEM ERROR : $title</strong><hr>";
+        $text .= '<pre style="background-color:#DDD;color:#800;margin:10px;font-size:0.8em;">';
+        $text .= $message . '</pre><p style="margin-top:-15px">&nbsp;</p></div>';
+        return $text;
+    }
+    
+    public static function ErrorBoxDie($message, $title = "Unkown class"){
+        $text = self::ErrorBox($message, $title);
+        self::Kill($text);
+    }
 }
 

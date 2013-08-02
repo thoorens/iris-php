@@ -48,7 +48,7 @@ abstract class _SecureInternal extends \Iris\MVC\_Controller {
     public function security() {
         // This module must not be active in production mode
         if(\Iris\Engine\Mode::IsProduction()){
-            $this->reroute('/ERROR/privilege',TRUE);
+            $this->displayError(\Iris\Errors\Settings::TYPE_PRIVILEGE);
         }
     }
 

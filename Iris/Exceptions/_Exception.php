@@ -132,7 +132,7 @@ abstract class _Exception extends \Exception {
      * @return \Iris\Exceptions\_Exception
      */
     public static function GetLastException($exception = \NULL) {
-        return \Iris\Engine\Memory::Get('Exception', $exception);
+        return \Iris\Engine\Memory::Get('untreatedException', $exception);
     }
 
     abstract public function getExceptionName();
@@ -181,7 +181,7 @@ abstract class _Exception extends \Exception {
             $firstUrl = $router->getAnalyzedURI();
             $MCAPU = explode('/', $firstUrl);
             $parameters = '== unavailable ==';
-            $trace = \Iris\Exceptions\ErrorHandler::$_Trace;
+            $trace = \Iris\Errors\Handler::$_Trace;
             foreach ($trace as $t) {
                 if ($t['MODULE'] . '/' . $t['CONTROLLER'] . '/' . $t['ACTION'] == $firstUrl) {
                     $parameters = implode('/', $t['PARAMETERS']);

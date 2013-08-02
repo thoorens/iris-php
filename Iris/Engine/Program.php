@@ -52,6 +52,7 @@ class Program {
      */
     public function __construct($programName = 'program') {
         define('IRIS_PROGRAM_PATH', IRIS_ROOT_PATH . '/' . $programName);
+        $this->_log($programName);
         $this->_runtimeDuration = new \Iris\Time\RuntimeDuration(NULL);
         self::$ProgramName = $programName;
         \Iris\Engine\Mode::AutosetSiteMode();
@@ -59,45 +60,31 @@ class Program {
     }
 
     /**
-     * Analyse URL and realize a web page. One can precise an error URI
-     * as a recursive entry in the process. In case of an error in the
-     * error treatment, no recursive call is done.
+     * If run without URI, analyses the URL and sends a page.
+     * If case of untreated exception
+     * If run with an error URI, tries to send an error page
+     * 
+     * @param string $URI
      */
-    public function run() {
-        $done = \FALSE;
-        $URI = \NULL;
-        while (!$done) {
-            try {
-                ob_start();
-                $dispatcher = new Dispatcher();
-                echo $dispatcher->analyseRoute($URI)
-                        ->prepareResponse()
-                        ->preDispatch()
-                        ->dispatch(); // pre and post in dispatch ??????
-                $dispatcher->postDispatch();
+    public function run($URI = \NULL) {
+        try {
+            ob_start();
+            $dispatcher = new Dispatcher();
+            echo $dispatcher->analyseRoute($URI)
+                    ->prepareResponse()
+                    ->preDispatch()
+                    ->dispatch(); // pre and post in dispatch ??????
+            $dispatcher->postDispatch();
+            $done = \TRUE;
+        }
+        catch (\Exception $exception) {
+            // RedirectException is a way to escape from the initial run method end
+            // It is not properly an error exception
+            if ($exception instanceof \Iris\Exceptions\RedirectException) {
                 $done = \TRUE;
             }
-            catch (\Exception $exception) {
-                // RedirectException is a way to escape from the initial run method end
-                if ($exception instanceof \Iris\Exceptions\RedirectException) {
-                    $done = \TRUE;
-                }
-                else{
-                    $this->_errorInformation($exception);
-                    // Clean all message in 
-                    \Iris\Exceptions\ErrorHandler::WipeAllText();
-                    // in case of error in error trapping, simple error box
-                    if (!is_null($URI)) {
-                        \Iris\Engine\Debug::Kill(self::ErrorBox($exception->__toString(), 'Fatal error'));
-                    }
-                    else {
-                        \Iris\MVC\Layout::GetInstance()->setViewScriptName(\NULL);
-                        Memory::Set('Exception', $exception);
-                        Memory::Set('Log', \Iris\Log::GetInstance());
-                        //Memory::SystemTrace();
-                        $URI = "/ERROR";
-                    }
-                }
+            else {
+                \Iris\Errors\Handler::GetInstance()->treatException($this, $exception, $URI);
             }
         }
         $text = ob_get_clean();
@@ -106,33 +93,25 @@ class Program {
     }
 
     /**
+     * This method defines a standard parameter setting for the log file.
+     * 
+     */
+    private function _log($program) {
+       ini_set('log_error','on');
+       $logFile = \Iris\Errors\Settings::GetInstance()->getLogfile();
+       ini_set('error_log',IRIS_ROOT_PATH."/$program/$logFile");
+    }
+    
+    /**
      * Collect, if possible, all information about error before restarting system in 
      * error state.
      * 
      * @param Exception $exception 
      */
     private function _errorInformation($exception) {
-        $errorInfo = \Iris\Exceptions\ErrorInformation::GetInstance();
+        $errorInfo = \Iris\Errors\ErrorInformation::GetInstance();
         $errorInfo->prepareErrorDiplay($exception);
-    }
-
-    /**
-     * Error box with title and message, for error debugging purpose
-     * Should not be used in a production environment. This box is used
-     * when an error occurs in error processing for an cry of despair.
-     * 
-     * @param string $message : error description
-     * @param string $title : box title
-     * @return string 
-     */
-    public static function ErrorBox($message, $title = "Unkown class") {
-        $text = '<div style="background-color:#979; color:#FFFFFF; margin:10px; padding:5px\">';
-        $text .= "&nbsp;<strong>ERROR : $title</strong><hr>";
-        $text .= '<pre style="background-color:#DDD;color:#008;margin:10px;font-size:0.8em;">';
-        $text .= $message . '</pre><p style="margin-top:-15px">&nbsp;</p></div>';
-        return $text;
     }
 
 }
 
-?>

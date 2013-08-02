@@ -1,6 +1,6 @@
 <?php
-namespace Iris\Engine;
 
+namespace Iris\Engine;
 
 /*
  * This file is part of IRIS-PHP.
@@ -32,9 +32,8 @@ namespace Iris\Engine;
  * and permits to create an instance of Program.
  * 
  */
+defined('CRLF') or define('CRLF', "\n");
 
-defined('CRLF') or define('CRLF',"\n");
-defined('IRIS_ERRORMANAGEMENT') or define('IRIS_ERRORMANAGEMENT',\TRUE);
 abstract class core_Bootstrap {
 
     /**
@@ -69,10 +68,9 @@ abstract class core_Bootstrap {
     public static $IniMode = 1; //\Iris\SysConfig\_Parser::COPY_INHERITED_VALUES;
 
     public function __construct() {
-        include IRIS_LIBRARY . '/' . $this->_standardLoaderPath;  
+        include IRIS_LIBRARY . '/' . $this->_standardLoaderPath;
         $this->init();
         $this->debug();
-        $this->log();
     }
 
     /**
@@ -80,7 +78,7 @@ abstract class core_Bootstrap {
      * to modify $_standardLoaderPath or add custom libraries
      */
     public function init() {
-      
+        
     }
 
     /**
@@ -90,30 +88,20 @@ abstract class core_Bootstrap {
     public function debug() {
         
     }
-    /**
-     * This method defines a standard parameter setting for the log file.
-     * 
-     */
-    public function log() {
-       ini_set('log_error','on');
-       ini_set('error_log',IRIS_ROOT_PATH.'/log/error.log');
-    }
+
     /**
      * Create a new application and read config files
      * 
      * @param string $programName The program name (by default : 'application'
      * @return Program 
      */
-    public function newProgram($programName='application') {
+    public function newProgram($programName = 'application') {
         // if necessary, load the overridden class names
         $overriddenClasses = "$programName/config/overridden.classes";
         if (file_exists(IRIS_ROOT_PATH . '/' . $overriddenClasses)) {
             include $overriddenClasses;
         }
         $program = new Program($programName);
-        $errorHandler = \Iris\Exceptions\ErrorHandler::GetInstance();
-        $errorHandler->setParameters();
-        $errorHandler->allException(IRIS_ERRORMANAGEMENT);
         // normal case : no configToRead defined, create it
         if (!is_array($this->_configToRead) or count($this->_configToRead) == 0) {
             $this->_configToRead = array();
@@ -123,6 +111,7 @@ abstract class core_Bootstrap {
         if ($this->_preConfig($programName)) {
             $this->_readConfig($programName);
         }
+        $this->_configureErrors();
         $this->_postConfig($programName);
         return $program;
     }
@@ -187,8 +176,6 @@ abstract class core_Bootstrap {
         }
     }
 
-    
-
     /**
      * Add a file to the list of files to process at start time.
      * @param string $fileName 
@@ -196,6 +183,16 @@ abstract class core_Bootstrap {
     public function addConfigFile($fileName) {
         $index = basename($fileName);
         $this->_configToRead[$index] = $fileName;
+    }
+
+    /**
+     * 
+     */
+    protected function _configureErrors() {
+        /* @var $errorHandler \Iris\Errors\Handler */
+        $errorHandler = \Iris\Errors\Handler::GetInstance();
+        $errorHandler->setIniParameters();
+        $errorHandler->allException();
     }
 
 }

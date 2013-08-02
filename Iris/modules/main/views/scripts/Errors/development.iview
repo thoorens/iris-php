@@ -1,0 +1,2 @@
+{REM}3 possible partials: errorsimple, errordetails or errorfull{/REM}
+{partial($partialName, $this)}

@@ -87,8 +87,8 @@ class Dispatcher {
      */
     public function preDispatch() {
         \Iris\Log::Debug("PreDispatch", \Iris\Engine\Debug::ROUTE);
-        $this->_controller->preDispatch();
         $this->_controller->security();
+        $this->_controller->preDispatch();
         return $this;
     }
 

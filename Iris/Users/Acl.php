@@ -122,16 +122,12 @@ class Acl implements \Iris\Design\iSingleton {
      * @return boolean
      */
     public function hasPrivilege($resource, $action) {
-// in site without ACL, evry page is visible
+// in site without ACL, every page is visible
         if ($this->_noAcl) {
             return TRUE;
         }
 
         if ($resource == '//') {
-            return TRUE;
-        }
-        // error display is allowed 
-        if ($resource == '/main/ERROR') {
             return TRUE;
         }
         if (\Iris\Engine\Response::GetDefaultInstance()->isInternal()) {

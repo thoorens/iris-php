@@ -1,6 +1,6 @@
 <?php
 
-namespace Iris\Exceptions;
+namespace Iris\Errors;
 
 
 
@@ -86,6 +86,7 @@ class ErrorInformation implements \Iris\Design\iSingleton {
     public function prepareErrorDiplay($exception){
         $subHelper = \Iris\Subhelpers\ErrorDisplay::GetInstance();
         $this->_url = $subHelper->prepareExceptionDisplay($exception);
+        //iris_debug($this->_url);
         //$this->_prepared = \TRUE;
     }
 

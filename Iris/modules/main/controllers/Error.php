@@ -1,9 +1,6 @@
 <?php
-
-
-
-namespace IrisInternal\main\controllers;
-
+// !! no Iris prefix (as in application)
+namespace modules\main\controllers;
 /*
  * This file is part of IRIS-PHP.
  *
@@ -21,28 +18,44 @@ namespace IrisInternal\main\controllers;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
- */
-
-/**
- * A possible ancestor for an internal islets. By default, they are
- * rerouted to privilege error. The security method is overridden to 
- * grant access in no production. Incidentaly, the exec time measure is
- * desactivated.
+ *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _SecureIslet extends \Iris\MVC\_Islet {
+
+/**
+ * The default error controller concrete class
+ * 
+ */
+class Error extends \Iris\modules\main\controllers\_Error {
+
+
     
-    public function security() {
-        // This module must not be active in production mode
-        if(\Iris\Engine\Mode::IsProduction()){
-            $this->displayError(\Iris\Errors\Settings::TYPE_PRIVILEGE);
-        }
+    protected function _standardProduction() {
+        $this->setViewScriptName('Errors/production');
+        $this->__ErrorType = "Standard";
     }
 
-    
-}
+    protected function _standardDevelopment() {
+        $this->setViewScriptName('Errors/development');
+        $this->__ErrorType = "Developement";
+        $this->_exceptionDescription();
+        $this->_displayStackLevel();
 
-?>
+        
+    }
+
+    protected function _privilegeProduction() {
+        $this->setViewScriptName('Errors/privilege');
+        $this->__ErrorType = "Privilege";
+    }
+
+    protected function _privilegeDevelopment() {
+        $this->setViewScriptName('Errors/privilege');
+        $this->__ErrorType = "PrivDev";
+    }
+
+
+}

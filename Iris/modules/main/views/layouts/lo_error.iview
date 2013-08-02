@@ -17,7 +17,7 @@
                 </div><!--main-->
                 <div id="footer">
                     <div>
-                        {ILO_goInternal('main')}
+                        {errorToolbar()}{ILO_goInternal('main')}
                     </div>
                 </div><!--footer-->
 

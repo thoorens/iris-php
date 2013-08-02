@@ -66,11 +66,13 @@ class Error extends \Iris\views\helpers\_ViewHelper implements \Iris\Subhelpers\
     }
 
     /**
-     * Tries to get a comment of the error if possible
+     * Tries to get a comment of the error if possible.
+     * Currently disabled
      * 
      * @return string 
      */
     public function comment() {
+        return;
         $commentName = \Iris\Engine\Memory::Get('ErrorComment', 'noComment');
         $commentClass = \Iris\Translation\_Messages::GetSender('error');
         $comment = new $commentClass;

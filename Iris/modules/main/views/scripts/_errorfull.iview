@@ -1,34 +1,30 @@
-{REM} An partial for a display of error traces in tabs (in development mode) {/REM}
-{php}
-$this->dojo_tabContainer('tabs');
-$this->tabs->setDefault('desc')
-        ->setItems(array('desc' => 'Description', 'stack' => 'Error stack', 'det' => 'Details'));
-$lines = count($this->error()->details);
-for ($n=0;$n<$lines;$n++):
-    $this->tabs->addItem("det_$n", "det_$n");
-endfor;
-{/php}
+{REM} A partial for a display of error traces in tabs (in development mode) {/REM}
+
 {tabs->setDim(NULL,950)->divMaster()}
+
+{REM}Simple description of the error{/REM}
 <div {tabs->item("desc")}>
     {error()->render()}
 </div>
+
+{REM}Stack TOC{/REM}
 <div {tabs->item("stack")}>
     <pre class="errortrace">
         {error()->trace}
     </pre>
-</div>
-{php}
-$n = 0;
-foreach($this->error()->details as $key=>$detail):
-{/php}
-<div {tabs->item("det_$n")}>
-    <h4>{key}</h4>
-    {? print_r($detail) ?} 
-</div>
-{php}
-$n++;
-endforeach;
-{/php}
+</div>    
+
+{REM}Details{/REM}
+{assign(n,0)}        
+{foreach($this->error()->details: key, detail)}
+    {if($n<$ignore)}
+        <div {tabs->item("det_".$n++)}>
+             <h4>{key}</h4>
+            {? print_r($detail) ?} 
+        </div>    
+    {/if}
+{/foreach}    
+
+{REM}{/REM}
+
 {tabs->endMaster()}
-
-

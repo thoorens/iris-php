@@ -54,4 +54,18 @@ class index extends \IrisInternal\main\controllers\_SecureInternal {
     }
 
 
+    /**
+     * This action is placed to test private screens
+     */
+    public function prohibitedAction(){
+        $this->displayError(\Iris\Errors\Settings::TYPE_PRIVILEGE);
+    }
+    
+    /**
+     * This action is intended to create a fatal error
+     * for testing purpose.
+     */
+    public function fatalAction(){
+        $i = 10/0;
+    }
 }

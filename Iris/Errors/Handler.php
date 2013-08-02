@@ -1,6 +1,6 @@
 <?php
 
-namespace Iris\Exceptions;
+namespace Iris\Errors;
 
 use Iris\Engine\Memory;
 
@@ -37,25 +37,93 @@ use Iris\Engine\Memory;
  * treat error in an application
  * 
  */
-class ErrorHandler implements \Iris\Design\iSingleton {
+class Handler implements \Iris\Design\iSingleton {
 
-    protected static $_Instance = NULL;
+    use \Iris\Translation\tSystemTranslatable;
+
     public static $_Trace = array();
 
-    public function getExceptionName() {
-        return "Error exception";
+    /**
+     *
+     * @var Settings
+     */
+    private $_errorSettings;
+
+    /**
+     * Returns the unique instance or creates it if necessary.
+     * 
+     * @staticvar \static $Instance Serves to store the unique instance
+     * @return Iris\Errors\Handler
+     */
+    public static function GetInstance() {
+        static $Instance = \NULL;
+        if (is_null($Instance)) {
+            $Instance = new static();
+            $Instance->_init();
+        }
+        return $Instance;
     }
 
     /**
-     * Get the unique instance
+     * The main method: what to do with an exception
      * 
-     * @return ErrorHandler
+     * @parap \Iris\Engine\Program $program the program singleton
+     * @param Iris\Exceptions\_Exception $exception The not treated exception
+     * @param string $ErrorURI The URI of the current error (NULL if first error)
      */
-    public static function GetInstance() {
-        if (is_null(self::$_Instance)) {
-            self::$_Instance = new ErrorHandler("Still undetermined error", 0, NULL);
+    public function treatException($program, $exception, $ErrorURI) {
+        $errorInformation = \Iris\Errors\ErrorInformation::GetInstance();
+        $errorInformation->prepareErrorDiplay($exception);
+        $this->_wipeAllText();
+        // First level of error
+        if (is_null($ErrorURI)) {
+            \Iris\Engine\Memory::Set('untreatedException', $exception);
+            $program->run($this->_errorSettings->getDefaultController() . "/standard");
         }
-        return self::$_Instance;
+        // There is an error in error treatment
+        else {
+            if (!$this->_isProduction) {
+                $message = sprintf("%s <br>In <b>%s</b> (line <b>%s</b>)", $exception->getMessage(), $exception->getFile(), $exception->getLine());
+                //iris_debug($exception->getTrace());
+                \Iris\Engine\Debug::ErrorBoxDie($message, $exception->getTitle());
+            }
+            else {
+                try {
+                    $URI = $this->_errorSettings->getDefaultController() . "/fatal";
+                    $program->run($URI);
+                    return;
+                }
+                catch (Exception $exc) {
+                    die("Sorry");
+                    echo $exc->getTraceAsString();
+                }
+            }
+        }
+    }
+
+//                    $this->_errorInformation($exception);
+//                    // Clean all message in 
+//                    \Iris\Errors\ErrorHandler::WipeAllText();
+//                    // in case of error in error trapping, simple error box
+//                    if (!is_null($URI)) {
+//                        \Iris\Engine\Debug::Kill(self::ErrorBox($exception->__toString(), 'Fatal error'));
+//                    }
+//                    else {
+//                        \Iris\MVC\Layout::GetInstance()->setViewScriptName(\NULL);
+//                        Memory::Set('Exception', $exception);
+//                        Memory::Set('Log', \Iris\Log::GetInstance());
+//                        //Memory::SystemTrace();
+//                        $URI = \Iris\Errors\ErrorHandler::GetInstance()->getDefaultController();
+//                    }   
+
+
+
+
+
+    /* ==========================================================================  */
+
+    public function getExceptionName() {
+        return "Error exception";
     }
 
     public static function Trap_Error($level, $message, $file, $line) {
@@ -69,19 +137,14 @@ class ErrorHandler implements \Iris\Design\iSingleton {
 
     /**
      * This methods normally wipes out all text before renewing a complete
-     * error cycle: always in production mode and unless a KEEP=1 has
-     * been provided in URL during development
+     * error cycle: always in production mode and unless an ERROR parameter contains
+     * 1 during development
      */
-    public static function WipeAllText() {
-        if (\Iris\Engine\Mode::IsProduction()) {
-            $wipe = TRUE;
-        }
-        else {
-            $keep = \Iris\Engine\Superglobal::GetGet('KEEP', 0);
-            $wipe = !$keep;
-        }
-        while (ob_get_level() AND $wipe) {
-            ob_end_clean();
+    private function _wipeAllText() {
+        if (($this->_isProduction) or (!$this->_errorSettings->hasKeep())) {
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
         }
     }
 
@@ -93,7 +156,7 @@ class ErrorHandler implements \Iris\Design\iSingleton {
      * @param type $line 
      */
     public function error2Exception($no, $mes, $file, $line) {
-        $errorExc = new ErrorException($mes, $no, E_ERROR, $file, $line);
+        $errorExc = new \Iris\Exceptions\ErrorException($mes, $no, E_ERROR, $file, $line);
         //$errorExc = new \Iris\Exceptions\ErrorException($mes, $no, \E_ERROR, $file, $line, \NULL);
         if (\Iris\Engine\Mode::IsProduction()) {
             $throw = TRUE;
@@ -121,9 +184,7 @@ class ErrorHandler implements \Iris\Design\iSingleton {
         $error = error_get_last();
         if ($error) {
             if ($error['type'] == E_RECOVERABLE_ERROR) {
-                while (ob_get_level()) {// AND \Iris\Engine\Mode::IsProduction()) {
-                    ob_end_clean();
-                }
+                $this->_wipeAllText();
                 $errorExc = new ErrorException($error['message'], \NULL, $error['type'], $error['file'], $error['line']);
                 Memory::Set('Exception', $errorExc);
                 Memory::Set('Log', \Iris\Log::GetInstance());
@@ -131,8 +192,12 @@ class ErrorHandler implements \Iris\Design\iSingleton {
                 $program->run('/ERROR');
             }
             else {
+                // in production, we go back to main page after 10 seconds
                 if (\Iris\Engine\Mode::IsProduction()) {
-                    header('location: /ERROR');
+                    $message = $this->_('Sorry! An error occured in error screen. Back to main page...');
+                    echo \Iris\Engine\Debug::ErrorBox($message, $this->_('Fatal error'));
+                    iris_debug($error);
+                    header("refresh:10;url=/");
                 }
             }
         }
@@ -144,44 +209,47 @@ class ErrorHandler implements \Iris\Design\iSingleton {
     /**
      * Install an error handler as an exception.
      * 
-     * @return ErrorHandler (fluent interface)
+     * @param boolean $install if false, no error to exception is done
+     * @return Handler (fluent interface)
      */
-    public function allException($install = \TRUE) {
-        if ($install) {
+
+    /**
+     * @return \Iris\Errors\Handler
+     */
+    public function allException() {
+        if (!$this->_errorSettings->hasHang()) {
             set_error_handler(array($this, 'error2Exception'));
             // capture all fatal errors
-            register_shutdown_function(array($this, 'captureShutdown'));
+            if ($this->_errorSettings->hasFatal()) {
+                register_shutdown_function(array($this, 'captureShutdown'));
+            }
         }
         return $this;
     }
 
     /**
-     *
-     * @return ErrorHandler (fluent interface)
+     * Sets the standard ini parameters for error managing
+     * 
+     * @param Settings $settings
+     * @return Handler (fluent interface)
      */
-    public function setParameters() {
+    public function setIniParameters() {
         $application = \Iris\Engine\Program::$ProgramName;
-        $logFile = IRIS_ROOT_PATH . '/' . $application . '/log/system.log';
-        // read config file
-        if (\FALSE) {
-            
-        }
-        elseif (\Iris\Engine\Mode::IsProduction()) {
+        $mustLog = $this->_errorSettings->hasLog() ? 'on' : 'off';
+        $logFile = IRIS_ROOT_PATH . '/' . $application . $this->_errorSettings->getLogFile();
+        if (\Iris\Engine\Mode::IsProduction()) {
             error_reporting(E_ALL);
             ini_set('track_error', 'off');
             ini_set('display_errors', 'off');
-            ini_set('log_errors', 'on');
-            ini_set('error_log', $logFile);
-            ini_set('log_errors_max_len', '1024');
         }
         else {
             error_reporting(E_ALL | E_STRICT);
             ini_set('track_error', 'off');
             ini_set('display_errors', 'on');
-            ini_set('log_errors', 'on');
-            ini_set('error_log', $logFile);
-            ini_set('log_errors_max_len', '1024');
         }
+        ini_set('log_errors', $mustLog);
+        ini_set('error_log', $logFile);
+        ini_set('log_errors_max_len', '1024');
         return $this;
     }
 
@@ -216,6 +284,11 @@ class ErrorHandler implements \Iris\Design\iSingleton {
         self::$_Trace[] = $trace;
     }
 
+    protected function _init() {
+
+        $this->_isProduction = \Iris\Engine\Mode::IsProduction();
+        $this->_errorSettings = \Iris\Errors\Settings::GetInstance();
+    }
+
 }
 
-?>

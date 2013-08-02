@@ -90,8 +90,8 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
      * 
      * @return string
      */
-    public function prepareExceptionDisplay($exception = \NULL) {
-        $this->_systemTrace = \Iris\Exceptions\ErrorHandler::$_Trace;
+    public function prepareExceptionDisplay($exception) {
+        $this->_systemTrace = \Iris\Errors\Handler::$_Trace;
         $exception = \Iris\Exceptions\_Exception::GetLastException($exception);
         if (is_null($exception)) {
             $this->_errorMessage = 'No message';

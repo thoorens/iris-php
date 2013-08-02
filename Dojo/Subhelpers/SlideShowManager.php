@@ -149,10 +149,10 @@ class SlideShowManager extends \Iris\Subhelpers\_SlideShowManager {
                 $this->_makeFlickrBubble();
                 break;
             case self::PICASSAMODE:
-                \Iris\Engine\Program::ErrorBox('Picassa mode is still unsupported');
+                \Iris\Engine\Debug::ErrorBoxDie('Picassa mode is still unsupported');
                 break;
             default:
-                \Iris\Engine\Program::ErrorBox('Dojo SlideShow need a source to display images');
+                \Iris\Engine\Debug::ErrorBoxDie('Dojo SlideShow need a source to display images');
         }
         $html .= <<<HTML
     <div id="$this->_id" data-dojo-type="dojox.image.SlideShow" data-dojo-props="$props">

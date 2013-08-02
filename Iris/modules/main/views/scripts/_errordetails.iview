@@ -1,0 +1,3 @@
+{REM} A partial for a display of error traces in tabs (in development mode) {/REM}
+{partial('errorsimple',$this)}
+<h1>Partial details</h1>

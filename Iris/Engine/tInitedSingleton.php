@@ -1,9 +1,5 @@
 <?php
 
-
-
-namespace IrisInternal\main\controllers;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -21,28 +17,45 @@ namespace IrisInternal\main\controllers;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
- */
-
-/**
- * A possible ancestor for an internal islets. By default, they are
- * rerouted to privilege error. The security method is overridden to 
- * grant access in no production. Incidentaly, the exec time measure is
- * desactivated.
+ *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _SecureIslet extends \Iris\MVC\_Islet {
-    
-    public function security() {
-        // This module must not be active in production mode
-        if(\Iris\Engine\Mode::IsProduction()){
-            $this->displayError(\Iris\Errors\Settings::TYPE_PRIVILEGE);
-        }
-    }
 
+/**
+ * The Mode class is defined in Loader.php file for consistency reasons
+ * 
+ * The mode class permits to know which type of site is running. 
+ * 
+ */
+
+namespace Iris\Engine;
+
+/**
+ * A singleton has only on instance and must have a non public constructor
+ * 
+ */
+trait tInitedSingleton {
+
+    /**
+     * Returns the unique instance or creates it if necessary.
+     * 
+     * @staticvar \static $Instance Serves to store the unique instance
+     * @return static
+     */
+    public static function GetInstance() {
+        static $Instance = \NULL;
+        if (is_null($Instance)) {
+            $Instance = new static();
+            $Instance->_init();
+        }
+        return $Instance;
+    }
     
+    protected abstract function _init();
+
 }
 
 ?>

@@ -38,7 +38,8 @@ abstract class _SecureSubcontroller extends \Iris\MVC\_Subcontroller {
     public function security() {
         // This module must not be active in production mode
         if(\Iris\Engine\Mode::IsProduction()){
-            $this->reroute('/ERROR/privilege',TRUE);
+            die('Prod: no internal');
+            $this->displayError('privilege');
         }
     }
 
