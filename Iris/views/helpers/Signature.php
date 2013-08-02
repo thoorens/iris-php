@@ -41,11 +41,13 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      * @var boolean
      */
     protected static $_Singleton = \TRUE;
+
     /**
      * The name of the span containing the md5 signature
      * @var string
      */
     private static $_SpanID = 'iris_md5';
+
     /**
      * The name of the model class used to store the md5 value, 
      * if NULL there is no md5 management, TSequence in WB
@@ -53,12 +55,24 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      * @var string
      */
     private static $_Model = \NULL;
+
     /**
      * An array containing the names of the fields used to make the mapping
      * URL - md5 (URL and Md5 in WB)
      * @var array
      */
     private static $_Fields = array();
+    
+    /**
+     * The name of the class responsible for the generation of the
+     * javascript code for the placement of the good values by the
+     * subhelper Head through the static method ComputeMD5. By default,
+     * the method is in this class, but it may be changed to a static
+     * method situated elsewhere.
+     * 
+     * @var string
+     */
+    public static $JSManager = '\\Iris\\views\\helpers\\Signature';
 
     /**
      * Access the singleton 
@@ -73,10 +87,10 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      * Change the span id
      * @param string $id (the optional id of the span field
      */
-    public static function SetSpanId($id){
+    public static function SetSpanId($id) {
         self::$_SpanID = $id;
     }
-    
+
     /**
      * Creates the HTML code with a span which is to contain the MD5 value
      * 
@@ -94,8 +108,8 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      */
     public function saveButton() {
         $name = self::$_SpanID;
-        return $this->callViewHelper('button')->addAttribute('id',"b_$name")
-                ->autorender(4, 'button','Save MD5',\NULL,'Save the present MD5 signature' );
+        return $this->callViewHelper('button')->addAttribute('id', "b_$name")
+                        ->autorender(4, 'button', 'Save MD5', \NULL, 'Save the present MD5 signature');
     }
 
     /**
@@ -105,10 +119,8 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      * @param string $text the entire HTML code for the page
      * @return string
      */
-    public static function computeMD5(&$text) {
-        if (is_null(self::$_Model)) {
-            return '';
-        }
+    public static function ComputeMD5(&$text) {
+
         $componentId = self::$_SpanID;
         if ($componentId == '') {
             $javascriptCode = '';
@@ -123,19 +135,8 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
             else {
                 $class = 'iris_md5_bad';
             }
-            $javascriptCode = <<< JS
-<script>
-require(["dojo/dom-class", "dojo/dom", "dojo/on", "dojo/domReady!"],
-function(domClass, dom, on){
-    dom.byId("$componentId").innerHTML = "<i>$md5</i>";
-    domClass.add("$componentId", "$class");    
-    on(dom.byId("b_$componentId"), "click", function(){
-        $link;
-  });
-});
-</script>
-
-JS;
+            $javascripManager = self::$JSManager;
+            $javascriptCode = $javascripManager::md5JS($componentId, $class, $md5, $link);
         }
         return $javascriptCode;
     }
@@ -146,7 +147,11 @@ JS;
      * @return string
      */
     private static function _OldMd5() {
-        $model = "\\models\\".self::$_Model;
+        // in case of no model, MD5 is supposed bad
+        if (is_null(self::$_Model)) {
+            return '';
+        }
+        $model = "\\models\\" . self::$_Model;
         $tSequences = $model::GetEntity();
         $urlField = self::$_Fields[self::URL];
         $screen = $tSequences->fetchRow("$urlField=", self::_URL());
@@ -183,5 +188,41 @@ JS;
         self::$_Fields[self::MD5] = $md5Field;
     }
 
+    /**
+     * Returns the field names for URL and md5 as an array of 2 elements
+     * 
+     * @return array
+     */
+    public static function GetModelFields() {
+        return self::$_Fields;
+    }
+
+    /**
+     * This code is responsible for the generation of the javascript code
+     * in ComputeMD5
+     * 
+     * @param string $componentId
+     * @param string $class
+     * @param string $md5
+     * @param string $link
+     * @return string
+     */
+    public static function md5JS($componentId, $class, $md5, $link){
+        return <<< JS
+<script>
+require(["dojo/dom-class", "dojo/dom", "dojo/on", "dojo/domReady!"],
+function(domClass, dom, on){
+    dom.byId("$componentId").innerHTML = "<i>$md5</i>";
+    domClass.add("$componentId", "$class");    
+    on(dom.byId("b_$componentId"), "click", function(){
+        $link;
+  });
+});
+</script>
+
+JS;
+    }
+
+    
 }
 
