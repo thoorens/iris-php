@@ -1,10 +1,6 @@
 <?php
 
-
-
 namespace Dojo\Forms\Elements;
-
-use \Iris\Forms as ifo;
 
 /*
  * This file is part of IRIS-PHP.
@@ -34,6 +30,8 @@ use \Iris\Forms as ifo;
  * @version $Id: $ */
 class InputElement extends \Iris\Forms\Elements\InputElement {
 
+    use \Dojo\Forms\tDojoDijit;
+
     /**
      * Dojo uses some different names for classes of elements
      * @var array
@@ -58,22 +56,22 @@ class InputElement extends \Iris\Forms\Elements\InputElement {
         parent::__construct($name, $type, $options);
         if (isset($this->_equivalence[$type])) {
             $dojoName = $this->_equivalence[$type];
-            $this->dojoType = "dijit.form.$dojoName";
+            $this->setDijitType("dijit.form.$dojoName");
             $dojoManager = \Dojo\Manager::GetInstance();
-            $dojoManager->addRequisite("$dojoName", 'dijit/form/'.$dojoName);
+            $dojoManager->addRequisite("$dojoName", 'dijit/form/' . $dojoName);
         }
-    }
-    public function setSize($size){
-        if(isset($this->_attributes['style'])){
-            $oldStyle = $this->_attributes['style'];
-        } 
-        else{
-            $oldStyle = '';
-        }
-        $this->_attributes['style'] = $oldStyle . " width:".$size."em;";
-        return $this;
     }
 
+    public function setSize($size) {
+        if (isset($this->_attributes['style'])) {
+            $oldStyle = $this->_attributes['style'];
+        }
+        else {
+            $oldStyle = '';
+        }
+        $this->_attributes['style'] = $oldStyle . " width:" . $size . "em;";
+        return $this;
+    }
 
 }
 

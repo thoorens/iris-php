@@ -41,14 +41,22 @@ class Editor extends \Iris\Forms\Elements\AreaElement {
         $this->_type = 'div';
         $hiddenCompanion = new \Iris\Forms\Elements\InputElement($name, 'hidden');
         $this->_hiddenCompanion = $hiddenCompanion;
-        /* @var $dojoManager \Dojo\Manager */
-        $dojoManager = \Dojo\Manager::GetInstance();
-        $this->_dojoManager = $dojoManager;
-        $dojoManager->addRequisite('dojo_editor', [
-            'dijit/Editor',
-            'dojo/domReady!',
-            'dijit/_editor/plugins/AlwaysShowToolbar']);
-        $dojoManager->addInitCode('editor_hidden', <<<JSEditor
+        
+        $bubble = \Dojo\Engine\Bubble::GetBubble($name);
+        $bubble->addModule("dijit/Editor",'editor')
+                ->addModule("dijit/form/TextBox")
+                ->addModule('dojo/domReady!')
+                ->addModule('dijit/_editor/plugins/AlwaysShowToolbar');
+//        $dojoManager = \Dojo\Manager::GetInstance();
+//        $this->_dojoManager = $dojoManager;
+//        $dojoManager->addRequisite('dojo_editor',[
+//        "dijit/Editor",
+//        'dojo/domReady!',
+//        'dijit/_editor/plugins/AlwaysShowToolbar']);
+//        //$dojoManager->addInitCode('editor_hidden', <<<JSEditor
+        $bubble->defFunction(<<<JSEditor
+            
+            alert('Yes');
             dojo.addOnLoad(function() {
             var editor = dijit.byId("$editorName");
             dojo.connect(editor, "onChange", this, function(event) {
@@ -63,6 +71,7 @@ JSEditor
     }
 
     public function addTo(\Iris\Forms\iFormContainer $container) {
+        //iris_debug($this->_hiddenCompanion);
         $this->_hiddenCompanion->addTo($container);
         return parent::addTo($container);
     }
@@ -88,7 +97,7 @@ JSEditor
             $extraPlugins = implode(',', $extraPlugins);
             $this->setExtraPlugins("[$extraPlugins]");
         }
-        $this->_hiddenCompanion->render($this->getLayout());
+        $html = $this->_hiddenCompanion->render($this->getLayout());
         return parent::render($layout);
     }
 
