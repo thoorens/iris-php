@@ -41,13 +41,21 @@ class GoInternal extends _ViewHelper {
      */
     const MAIN = 2;
     /**
-     * The irisphp site button mapped bit
-     */
-    const IRISPHP = 4;
-    /**
      * The Reset page button mapped bit
      */
-    const RESET = 8;
+    const RESET = 4;
+    /**
+     * The irisphp site button mapped bit
+     */
+    const IRISPHP = 8;
+    /**
+     * The irisphp wiki site button mapped bit
+     */
+    const IRISWIKI = 16;
+    /**
+     * The irisphp API site button mapped bit
+     */
+    const IRISAPI = 32;
     
     /**
      * This helper is a singleton
@@ -88,6 +96,16 @@ class GoInternal extends _ViewHelper {
                 $uri = 'http://irisphp.org';
                 $comment = $this->_('Return to irisphp.org',TRUE);
                 break;
+            case 'iriswiki':
+                $text = $this->_('Iris PHP documentation wiki site',TRUE);
+                $uri = 'http://wiki.irisphp.org';
+                $comment = $this->_('Return to documentation',TRUE);
+                break;
+            case 'irisapi':
+                $text = $this->_('Iris PHP API web site',TRUE);
+                $uri = 'http://api.irisphp.org';
+                $comment = $this->_('Return to API documentation',TRUE);
+                break;
         }
         if($developmentOnly and \Iris\Engine\Mode::IsProduction()){
             return '';
@@ -113,11 +131,17 @@ class GoInternal extends _ViewHelper {
         if($numbers & self::MAIN){
             $text .= $this->help('main');
         }
+        if($numbers & self::RESET){
+            $text .= $this->help('reset');
+        }
         if($numbers & self::IRISPHP){
             $text .= $this->help('irisroot');
         }
-        if($numbers & self::RESET){
-            $text .= $this->help('reset');
+        if($numbers & self::IRISWIKI){
+            $text .= $this->help('iriswiki');
+        }
+        if($numbers & self::IRISAPI){
+            $text .= $this->help('irisapi');
         }
         return $text;
     }

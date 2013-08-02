@@ -46,9 +46,12 @@ class GoAd extends _ViewHelper {
     /**
      * 
      * @param boolean $local If TRUE go the internal description, otherwise to the official site
+     * @param boolean $grey If True, the logo is in grey tones
+     * 
      * @return type
      */
-    public function help($local = \TRUE) {
+    public function help($local = \TRUE, $grey = \FALSE) {
+        $logoName = $grey ? 'IrisSmallG' : 'IrisSmall';
         $client = new \Iris\System\Client();
         $lang = $client->getLanguage();
         $title = $this->_('Site powered by Iris-PHP', \TRUE);
@@ -56,7 +59,7 @@ class GoAd extends _ViewHelper {
             $url = "/!iris/index/index/$lang";
         else
             $url = 'http://irisphp.org';
-        return $this->callViewHelper('link')->image('/!documents/file/logos/IrisSmall.png',$title,$url,$title);
+        return $this->callViewHelper('link')->image("/!documents/file/logos/$logoName.png",$title,$url,$title);
     }
 
 }
