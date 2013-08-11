@@ -40,6 +40,7 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         // Helpers
         //        
         '(Details)' => '(Détails)',
+        'Site created with Iris-PHP' => 'Site réalisé avec Iris-PHP',
         //        
         // Errors
         //

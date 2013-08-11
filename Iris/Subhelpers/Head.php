@@ -32,8 +32,9 @@ defined('TAB2') or define('TAB2', "\t\t");
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Head implements \Iris\Design\iSingleton {
+class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
 
+    use \Iris\Translation\tSystemTranslatable;
     use \Iris\Engine\tSingleton;
 
 
@@ -191,7 +192,7 @@ class Head implements \Iris\Design\iSingleton {
      * Prepare the title and subtitle
      */
     private function _prepareTitle() {
-        $title = $this->_takeOnce('title', 'Site réalisé avec Iris-PHP');
+        $title = $this->_takeOnce('title', $this->_('Site created with Iris-PHP'));
         $subtitle = $this->_takeOnce('subtitle', '');
         if ($subtitle != '') {
             $this->_html[] = "<title>$title - $subtitle</title>" . CRLF;
