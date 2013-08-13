@@ -2,7 +2,7 @@
 
 namespace CLI;
 
-use \Iris\Exceptionss;
+
 
 /*
  * This file is part of IRIS-PHP.
