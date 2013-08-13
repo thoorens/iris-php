@@ -364,11 +364,11 @@ class Analyser {
                 break;
             // Core class creation (for user customization)
             case self::CORECODE:
-                $newCode['module'] = $this->getModuleName();
-                //$config = $this->loadDefaultProject();
-                if ($config == NULL) {
-                    throw new \Iris\Exceptions\CLIException('No active default project, please select one...');
-                }
+                //$newCode['module'] = $this->getModuleName();
+//                $config = $this->loadDefaultProject();
+//                if ($config == NULL) {
+//                    throw new \Iris\Exceptions\CLIException('No active default project, please select one...');
+//                }
                 require_once self::GetIrisLibraryDir() . '/CLI/CoreMaker.php';
                 $code = new \CLI\CoreMaker($this);
                 $code->process();

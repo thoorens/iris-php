@@ -2,7 +2,9 @@
 
 /*
  * Put a comment marker // before "return" to enable the debugging facilities,
- * otherwise the reste of this file will be ignored
+ * otherwise the rest of this file will be ignored.
+ * 
+ * At the end of development, you can even delete this file.
  */
 return;
 
@@ -31,8 +33,8 @@ return;
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
 /*                 (helper classes) */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
-/* You can precise here what class to trace when \Debug::LOADER is set */
-//\Iris\Engine\Loader::AddTrace(array('test'));
+/* You can precise here what classes to trace when \Debug::LOADER is set */
+//\Iris\Engine\Loader::AddTrace(['test']);
 
 /* router messages */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
@@ -43,4 +45,4 @@ return;
 /* All messages (they are many) */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ALL)
 
-?>
+

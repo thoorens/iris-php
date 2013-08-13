@@ -105,13 +105,8 @@ abstract class _Process {
      * @param string $destination the path to the new file
      * @param array $replacement an associative array with the fields and values 
      */
-    protected function _createFile($source, $destination, $replacement = array()) {
-        if(file_exists(($destination))){
-            require_once $this->_analyser->GetIrisLibraryDir().'/Iris/FileSystem/File.php';
-            $file = new \Iris\FileSystem\File(basename($destination),  dirname($destination));
-            $file->backup(10);
-            echo "The file $destination already exists. A backup has been made.\n";
-        }
+    protected function _createFile($source, $destination, $replacement = array(), $backupNumber = 10) {
+        $this->_checkExistingFile($destination, $backupNumber);
         $parameters = Parameters::GetInstance();
         $replacement['{PROJECTNAME}'] = $parameters->getDetailedProjectName();
         $replacement['{LICENSE}'] = $parameters->getLicense();
@@ -119,6 +114,15 @@ abstract class _Process {
         $replacement['{IRISVERSION}'] = \Iris\System\Functions::IrisVersion();
         $replacement['{COMMENT}'] = $parameters->getComment();
         $this->_os->createFromTemplate($source, $destination, $replacement);
+    }
+    
+    protected function _checkExistingFile($fileName, $backupNumber = 10){
+        if(file_exists(($fileName))){
+            require_once $this->_analyser->GetIrisLibraryDir().'/Iris/FileSystem/File.php';
+            $file = new \Iris\FileSystem\File(basename($fileName),  dirname($fileName));
+            $file->backup($backupNumber);
+            echo "The file $fileName already exists. A backup has been made.\n";
+        }
     }
 
 }

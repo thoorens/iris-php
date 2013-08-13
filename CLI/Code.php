@@ -143,7 +143,7 @@ APACHE;
         ];
         $files = [
             '_application.php' => "modules/_application.php",
-            '00_debug.php' => "config/00_debug.php",
+            '01_debug.php' => "config/01_debug.php",
             '20_settings.php' => "config/20_settings.php",
         ];
         $parameters = Parameters::GetInstance();

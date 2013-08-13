@@ -33,6 +33,8 @@ use \Iris\Exceptionss;
  */
 class CoreMaker extends _Process {
 
+    const CLASS_FILE_NAME = '/config/00_overriddenclasses.php';
+
     /**
      * Theses classes cannot be overidden
      * 
@@ -54,13 +56,20 @@ class CoreMaker extends _Process {
      * in library/extensions directory. The class is added to the list in config/overriddenclasses.php 
      */
     protected function _makecore() {
+        // verify there is a default project
         $parameters = Parameters::GetInstance();
+        $parameters->requireDefaultProject();
+        // verify the class is not an invalid one
         $className = $parameters->getClasseName();
         if (array_search($className, $this->_protectedClasses) !== FALSE) {
             throw new \Iris\Exceptions\CLIException("Class $className can't be overridden through CLI. 
 Overwrite __construct in public/Bootstrap.php instead and load your own class manually.");
         }
-        $project = $parameters->loadDefaultProject();
+        // Please no initial backslash
+        if($className == '\\'){
+            $className = substr($className,1);
+        }
+        $project = $parameters->getCurrentProject();
         $libraryName = $this->_getLibraryName($project);
         $iris_library = $project->ProjectDir . "/$libraryName/";
         $classPath = str_replace('\\', '/', $className) . '.php';
@@ -72,7 +81,7 @@ Overwrite __construct in public/Bootstrap.php instead and load your own class ma
         // copy class to core_class
         $corePath = $this->_newFileAndDir($iris_library, 'Core/', $classPath);
         $fileContent = file_get_contents($fromPath);
-        $fileContent2 = preg_filter('/(class) ([a-z_A-Z])/', '$1 core_$2', $fileContent);
+        $fileContent2 = preg_filter('/(final )?(class) ([a-z_A-Z])/', '$2 core_$3', $fileContent);
         $fileContent3 = str_replace('private', 'protected', $fileContent2);
         if (file_exists($corePath)) {
             echo "Warning : the file $corePath has been replaced by a fresh copy 
@@ -81,7 +90,7 @@ of the class from the current version of Iris-PHP.\n";
         file_put_contents($corePath, $fileContent3);
 
         // make new class
-        $extendPath = $this->_newFileAndDir($iris_library,'Extensions/', $classPath);
+        $extendPath = $this->_newFileAndDir($iris_library, 'Extensions/', $classPath);
         if (file_exists($extendPath)) {
             throw new \Iris\Exceptions\CLIException("The file $extendPath exists. It may be convenient to check its content.");
         }
@@ -105,7 +114,7 @@ END;
         file_put_contents($extendPath, $file);
 
         // add the class to overridden.classes file
-        $extendPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . '/config/overridden.classes';
+        $extendPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . self::CLASS_FILE_NAME;
         $text = "\t\\Iris\\Engine\\Loader::";
         $text .= '$UserClasses' . "['$className']=\\TRUE;\n";
         if (!file_exists($extendPath)) {
@@ -136,16 +145,26 @@ END;
      */
     protected function _searchcore() {
         $parameters = Parameters::GetInstance();
-        $project = $parameters->loadDefaultProject();
+        $parameters->requireDefaultProject();
+        $project = $parameters->getCurrentProject();
         $iris_library = $this->_getLibraryName($project);
         $classes = array();
         $this->_readCoreFile($project->ProjectDir . '/' . $iris_library . '/Core', '', $classes);
         $text = "<?php\n";
         foreach ($classes as $class) {
+            $class = substr($class,1);
+            echo "Adding class $class\n";
             $text .= sprintf("\t\\Iris\\Engine\\Loader::\$UserClasses['%s']=\\TRUE;\n", $class);
         }
-        $toPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . '/config/overridden.classes';
-        file_put_contents($toPath, $text);
+        if (count($classes)) {
+            $toPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . self::CLASS_FILE_NAME;
+            $this->_checkExistingFile($toPath);
+            file_put_contents($toPath, $text);
+            echo "File $toPath has been created.\n";
+        }
+        else {
+            echo 'No extended class has been found.\n';
+        }
     }
 
     /**
@@ -159,7 +178,9 @@ END;
             $fileName = $file->getFilename();
             //echo "Examine $file\n";
             if ($file->isFile()) {
-                $classes[] = $dirname . '\\' . basename($fileName, '.php');
+                if ($file->getExtension() == 'php') {
+                    $classes[] = $dirname . '\\' . basename($fileName, '.php');
+                }
                 //echo "Fichier : $fileName\n";
             }
             if ($file->isDir() and !$file->isDot()) {
