@@ -41,13 +41,15 @@ class CoreMaker extends _Process {
      * @var array
      * @todo see Log status
      */
-    private $_protectedClasses = array(
+    private $_protectedClasses = [
+        'Iris\\Engine\\Bootstrap',
+        'Iris\\Engine\\LoadLoader',
         'Iris\\Engine\\Loader',
         'Iris\\Engine\\Debug',
         'Iris\\Engine\\Mode',
         'Iris\\Engine\\PathArray',
-        'Iris\\Log'
-    );
+        'Iris\\Log',
+    ];
 
     /**
      * Permits to override any class in the framework (except those in 
