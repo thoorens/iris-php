@@ -74,7 +74,7 @@ class Settings implements \Iris\Design\iSingleton {
         $instance->_data['adminToolbarAjaxMode'] = $value;
     } 
     
-    public static function GetDisplayRuntimeDisplay(){
+    public static function GetDisplayRuntimeDuration(){
         $instance = self::GetInstance();
         return $instance->_getValue('displayRuntimeDuration', self::DEF_DISPLAY_RTD);
     }
