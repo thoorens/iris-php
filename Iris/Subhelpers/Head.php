@@ -283,7 +283,7 @@ class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
                     $starter .= \Iris\views\helpers\Signature::ComputeMD5($text);
                     \Iris\views\helpers\Signature::ComputeMD5($loaders);
                 }
-                if (\Iris\SysConfig\Settings::GetDisplayRuntimeDuration() and !is_null($runtimeDuration)) {
+                if (\Iris\SysConfig\Settings::HasDisplayRuntimeDuration() and !is_null($runtimeDuration)) {
                     $starter .= $runtimeDuration->jsDisplay($componentId);
                 }
                 $text = \str_replace('</body>', $starter . "\n</body>", $text);

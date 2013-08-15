@@ -64,17 +64,25 @@ class Settings implements \Iris\Design\iSingleton {
      * 
      * @var boolean 
      */
-    public static function GetAdminTollbarAjaxMode() {
+    public static function HasAdminTollbarAjaxMode() {
         $instance = self::GetInstance();
         return $instance->_getValue('adminToolbarAjaxMode', self::DEF_ATB_AJAXMODE);
     }
 
-    public static function SetAdminToolbarAjaxMode($value = \TRUE){
+    public static function EnableAdminToolbarAjaxMode(){
         $instance = self::GetInstance();
-        $instance->_data['adminToolbarAjaxMode'] = $value;
+        $instance->_data['adminToolbarAjaxMode'] = \TRUE;
     } 
-    
-    public static function GetDisplayRuntimeDuration(){
+    public static function DisableAdminToolbarAjaxMode(){
+        $instance = self::GetInstance();
+        $instance->_data['adminToolbarAjaxMode'] = \FALSE;
+    } 
+    /**
+     * Tests if the final javascript exec time routine must fire
+     * 
+     * @return boolean
+     */
+    public static function HasDisplayRuntimeDuration(){
         $instance = self::GetInstance();
         return $instance->_getValue('displayRuntimeDuration', self::DEF_DISPLAY_RTD);
     }

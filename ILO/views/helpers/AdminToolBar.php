@@ -84,7 +84,7 @@ class AdminToolBar extends _ViewHelper {
     public function render($display = \TRUE, $color = '#148') {
         $this->callViewHelper('styleLoader','/!documents/file/css/admintoolbar.css');
         if (!\Iris\Engine\Mode::IsProduction() and $display) {
-            if (Settings::GetAdminTollbarAjaxMode()) {
+            if (Settings::HasAdminTollbarAjaxMode()) {
                $html = $this->_ajaxRender();
             }
             else {
