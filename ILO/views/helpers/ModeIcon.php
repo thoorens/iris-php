@@ -37,7 +37,7 @@ use Iris\SysConfig\Settings;
 class ModeIcon extends _ViewHelper {
 
     public function help() {
-        if (Settings::HasAdminTollbarAjaxMode()) {
+        if (Settings::HasAdminToolbarAjaxMode()) {
             $icon = $this->callViewHelper('image', '/!documents/file/images/icons/ajax.png', 'ajax symbol', $this->_('Toolbar managed by Ajax'));
         }
         else {
