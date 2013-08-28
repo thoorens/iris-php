@@ -61,13 +61,6 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
     ]; 
     
 
-    /**
-     * The namespace path of the concrete class used to implement Ajax
-     * (by default \Dojo\Ajax)
-     * 
-     * @var string
-     */
-    protected static $_DefaultAjaxLibrary = '\\Dojo\Ajax\\';
     
     /**
      * The subhelper static reference for simulating singleton behaviour.
@@ -86,13 +79,19 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
      * The Ajax default provider (Dojo) may be changed.
      * 
      * @param string $library
+     * @deprecated since version 1.0 (use Settings to modify)
      */
     public static function SetDefaultAjaxLibrary($library) {
-        self::$_DefaultAjaxLibrary = $library;
+        \Iris\SysConfig\Settings::SetDefaultAjaxLibrary($library);
     }
 
+    /**
+     * Gets the default library for Ajax
+     * @return string
+     * @deprecated since version 1.0 (use Settings to know)
+     */
     public static function GetDefaultAjaxLibrary(){
-        return self::$_DefaultAjaxLibrary;
+        return  \Iris\SysConfig\Settings::GetDefaultAjaxLibrary();
     }
     
     protected function _getRenderer() {
