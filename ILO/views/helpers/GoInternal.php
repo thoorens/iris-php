@@ -1,6 +1,7 @@
 <?php
 
 namespace ILO\views\helpers;
+
 use \Iris\views\helpers\_ViewHelper;
 
 /*
@@ -26,15 +27,16 @@ use \Iris\views\helpers\_ViewHelper;
  * @see http://irisphp.org 
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $
-/**
+  /**
  * This helper creates administration and demo buttons. It can be 
  * 
  */
-class GoInternal extends _ViewHelper {
 
+class GoInternal extends _ViewHelper {
     /**
      * The admin button mapped bit
      */
+
     const ADMIN = 1;
     /**
      * The main welcome page button mapped bit
@@ -56,12 +58,12 @@ class GoInternal extends _ViewHelper {
      * The irisphp API site button mapped bit
      */
     const IRISAPI = 32;
-    
+
     /**
      * This helper is a singleton
      * @var boolean 
      */
-    protected static $_Singleton = true;
+    protected static $_Singleton = \TRUE;
 
     /**
      * Displays one or more buttons (if first parameters is a bit field)
@@ -70,47 +72,47 @@ class GoInternal extends _ViewHelper {
      * @param boolean $developmentOnly If TRUE will appear only at development time
      * @return string
      */
-    public function help($command,$developmentOnly=FALSE) {
-        if(is_numeric($command)){
-            return $this->_variousButtons($command,$developmentOnly);
+    public function help($command, $developmentOnly = FALSE) {
+        if (is_numeric($command)) {
+            return $this->_variousButtons($command, $developmentOnly);
         }
         switch ($command) {
             case 'admin':
                 $text = 'Administration';
-                $uri = '/!'.$command;
-                $comment = $this->_('Go to administration tools...',TRUE);
-                $developmentOnly =TRUE;
+                $uri = '/!' . $command;
+                $comment = $this->_('Go to administration tools...', \TRUE);
+                $developmentOnly = \TRUE;
                 break;
             case 'reset':
                 $text = 'RESET';
                 $uri = '/!iris/reset';
-                $comment = $this->_('Reset the session',TRUE);
+                $comment = $this->_('Reset the session', \TRUE);
                 break;
             case 'main':
-                $text = $this->_('Return to main page',TRUE);
+                $text = $this->_('Return to main page', \TRUE);
                 $uri = '/';
-                $comment = $this->_('Quit admin module and return to the site welcome page',TRUE);
+                $comment = $this->_('Quit admin module and return to the site welcome page', \TRUE);
                 break;
             case 'irisroot':
-                $text = $this->_('Iris PHP official web site',TRUE);
+                $text = $this->_('Iris PHP official web site', \TRUE);
                 $uri = 'http://irisphp.org';
-                $comment = $this->_('Return to irisphp.org',TRUE);
+                $comment = $this->_('Return to irisphp.org', \TRUE);
                 break;
             case 'iriswiki':
-                $text = $this->_('Iris PHP documentation wiki site',TRUE);
+                $text = $this->_('Iris PHP documentation wiki site', \TRUE);
                 $uri = 'http://wiki.irisphp.org';
-                $comment = $this->_('Return to documentation',TRUE);
+                $comment = $this->_('Return to documentation', \TRUE);
                 break;
             case 'irisapi':
-                $text = $this->_('Iris PHP API web site',TRUE);
+                $text = $this->_('Iris PHP API web site', \TRUE);
                 $uri = 'http://api.irisphp.org';
-                $comment = $this->_('Return to API documentation',TRUE);
+                $comment = $this->_('Return to API documentation', \TRUE);
                 break;
         }
-        if($developmentOnly and \Iris\Engine\Mode::IsProduction()){
+        if ($developmentOnly and \Iris\Engine\Mode::IsProduction()) {
             return '';
         }
-        return $this->callViewHelper('button',$text,$uri,$comment);
+        return $this->callViewHelper('button', $text, $uri, $comment);
     }
 
     /**
@@ -120,31 +122,32 @@ class GoInternal extends _ViewHelper {
      * @param boolean $developmentOnly if TRUE, the buttons will ignored in production
      * @return string
      */
-    private function _variousButtons($numbers,$developmentOnly){
-        if($developmentOnly and \Iris\Engine\Mode::IsProduction()){
+    private function _variousButtons($numbers, $developmentOnly) {
+        if ($developmentOnly and \Iris\Engine\Mode::IsProduction()) {
             return '';
         }
         $text = '';
-        if($numbers & self::ADMIN){
+        if ($numbers & self::ADMIN) {
             $text .= $this->help('admin');
         }
-        if($numbers & self::MAIN){
+        if ($numbers & self::MAIN) {
             $text .= $this->help('main');
         }
-        if($numbers & self::RESET){
+        if ($numbers & self::RESET) {
             $text .= $this->help('reset');
         }
-        if($numbers & self::IRISPHP){
+        if ($numbers & self::IRISPHP) {
             $text .= $this->help('irisroot');
         }
-        if($numbers & self::IRISWIKI){
+        if ($numbers & self::IRISWIKI) {
             $text .= $this->help('iriswiki');
         }
-        if($numbers & self::IRISAPI){
+        if ($numbers & self::IRISAPI) {
             $text .= $this->help('irisapi');
         }
         return $text;
     }
+
 }
 
 ?>
