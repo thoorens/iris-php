@@ -34,16 +34,20 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
     
+    /**
+     * A sample date in Japan mode : 2013-08-28
+     */
     const JAPAN = 1;
+    /**
+     * A sample date in USA mode : 08-28-2013
+     */
     const USA = 2;
+    /**
+     * A sample date in Europe mode : 28-08-2013
+     */
     const EUROPE = 3;
 
-    /**
-     * By default, works in JAPAN mode (2012-12-01)
-     * 
-     * @var int 
-     */
-    protected static $_Mode = self::JAPAN;
+    
 
     /**
      * A 13 element array for month lengths, item 0 is unused
@@ -59,12 +63,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      */
     protected $_internalDate = NULL;
 
-    /**
-     * The default time zone
-     * @var string
-     * @todo change default Time Zone
-     */
-    protected static $_DefaultTimeZone = 'Europe/Brussels';
+    
 
     /**
      * 
@@ -85,7 +84,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         }
         else {
             if (is_null($timeZone)) {
-                $timeZone = new \DateTimeZone(self::$_DefaultTimeZone);
+                $timeZone = new \DateTimeZone(\Iris\SysConfig\Settings::GetDefaultTimeZone());
             }
             $this->_internalDate = new \DateTime(\NULL, $timeZone);
             if (!is_null($date) and is_string($date)) {
@@ -161,8 +160,9 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         if ($countNumbers < 2 or $countNumbers > 3) {
             return;
         }
+        $mode = \Iris\SysConfig\Settings::GetTimeDateMode();
         // European dates have reverse day month order
-        if (self::$_Mode == self::EUROPE) {
+        if ($mode == self::EUROPE or $mode == 'europe') {
             $day = $numbers[0];
             $numbers[0] = $numbers[1];
             $numbers[1] = $day;
@@ -174,7 +174,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
             array_unshift($numbers, $toyear);
         }
         // non japanese mode have to put year in front
-        elseif (self::$_Mode != self::JAPAN) {
+        elseif ($mode != self::JAPAN and $mode != 'japan') {
             $year = array_pop($numbers);
             array_unshift($numbers, $year);
         }
@@ -224,8 +224,14 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         $this->_internalDate->setTime($numbers[0], $numbers[1], $numbers[2]);
     }
 
+    /**
+     * A way to change the date mode 
+     * 
+     * @param int $mode
+     * @deprecated since version 1.0 (use Settings instead)
+      */
     public static function SetMode($mode) {
-        self::$_Mode = $mode;
+        \Iris\SysConfig\Settings::SetDateMode($mode);
     }
 
     /**
