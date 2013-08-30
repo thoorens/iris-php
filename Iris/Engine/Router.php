@@ -87,7 +87,7 @@ class Router {
      * @param type $forcedURI
      * @return \Iris\Engine\Router  
      */
-    public static function GetInstance($forcedURI=NULL) {
+    public static function GetInstance($forcedURI = NULL) {
         // if force a new router, do it
         if (!is_null($forcedURI)) {
             self::$_Myself = new Router($forcedURI);
@@ -105,11 +105,11 @@ class Router {
      *
      * @param string $error an optional url in case of error 
      */
-    private function __construct($error=NULL) {
+    private function __construct($error = NULL) {
         $this->_previous = self::$_Myself;
         //// set program name
         $slices0 = $this->_getURLSlices($error);
-        list($slices,$modules) = $this->_seekModules($slices0);
+        list($slices, $modules) = $this->_seekModules($slices0);
         $this->seekOtherComponents($slices);
         \Iris\Engine\Loader::GetInstance()->pathToHelpers($modules);
     }
@@ -165,14 +165,14 @@ class Router {
             $modulePath = '/modules/' . $this->_moduleName;
             $mainPath = '/modules/main';
         }
-        if($modulePath == $mainPath){
+        if ($modulePath == $mainPath) {
             $modules = array($mainPath);
         }
-        else{
+        else {
             $modules = array($modulePath, $mainPath);
         }
-            
-        return array($slices,$modules);
+
+        return array($slices, $modules);
     }
 
     /**
@@ -187,7 +187,7 @@ class Router {
         // in modules, search helpers in main if not found
         // unnecessary to search main twice
         $i = 0;
-        if (count($modules)==2) {
+        if (count($modules) == 2) {
             $loader->pathToHelpers($modules[0]);
             $i++;
         }
@@ -195,8 +195,8 @@ class Router {
     }
 
     public function seekOtherComponents($URIchunks) {
-        $this->_controllerName = $this->forceIndex(array_shift($URIchunks));
-        $this->_actionName = $this->forceIndex(array_shift($URIchunks));
+        $this->_controllerName = $this->_forceIndex(array_shift($URIchunks));
+        $this->_actionName = $this->_forceIndex(array_shift($URIchunks));
         $this->_parameters = $URIchunks;
     }
 
@@ -208,7 +208,7 @@ class Router {
         return "$this->_moduleName - $this->_controllerName - $this->_actionName";
     }
 
-    private function forceIndex($name) {
+    private function _forceIndex($name) {
         return $name == '' ? 'index' : $name;
     }
 
@@ -225,11 +225,8 @@ class Router {
      * 
      * @return Response 
      */
-    public function makeResponse($responseNumber) {
-        $response = new Response($this->_controllerName, $this->_actionName,
-                        $this->_moduleName, $this->_parameters, $this->_internal);
-        // the router makes the main response
-        $response->setDefault();
+    public function makeResponse() {
+        $response = new Response($this->_controllerName, $this->_actionName, $this->_moduleName, $this->_parameters, $this->_internal);
         return $response;
     }
 
@@ -239,11 +236,11 @@ class Router {
      * @return string 
      */
     public function getAnalyzedURI($withParameters = \FALSE) {
-        if($withParameters){
-            $parameters = implode('/',$this->_parameters);
-            $actionPara = $this->_actionName."/$parameters";
+        if ($withParameters) {
+            $parameters = implode('/', $this->_parameters);
+            $actionPara = $this->_actionName . "/$parameters";
         }
-        else{
+        else {
             $actionPara = $this->_actionName;
         }
         return sprintf('%s/%s/%s', $this->_moduleName, $this->_controllerName, $actionPara);

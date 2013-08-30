@@ -43,13 +43,7 @@ class Dispatcher {
      */
     private $_router;
 
-    /**
-     *
-     * @var \Iris\Engine\Response
-     */
-    private $_mainResponse;
-
-    private $_responseCounter=0;
+   
     
     /**
      * the required controller
@@ -75,9 +69,8 @@ class Dispatcher {
      */
     public function prepareResponse() {
         \Iris\Log::Debug("Response", \Iris\Engine\Debug::ROUTE);
-        $responseNumber = ++$this->_responseCounter;
-        $this->_mainResponse = $this->_router->makeResponse($responseNumber);
-        $this->_controller = $this->_mainResponse->makeController();
+        $response = $this->_router->makeResponse($responseNumber);
+        $this->_controller = $response->makeController();
         return $this;
     }
 

@@ -75,6 +75,9 @@ class Response {
      * @var Response; 
      */
     private static $_DefaultInstance = NULL;
+    
+    
+    private static $_Counter = 0;
 
     /**
      *
@@ -85,6 +88,9 @@ class Response {
      * @param type $internal 
      */
     public function __construct($controller, $action='index', $module='main', $parameters = array(), $internal=FALSE) {
+        if(++ self::$_Counter == 1){
+            self::$_DefaultInstance = $this;
+        }
         $this->_moduleName = $module;
         $this->_controllerName = $controller;
         $this->_actionName = $action;
