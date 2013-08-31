@@ -1,6 +1,7 @@
 <?php
 
 namespace Iris\Users;
+use \Iris\SysConfig\Settings;
 
 /*
  * This file is part of IRIS-PHP.
@@ -32,8 +33,6 @@ namespace Iris\Users;
 class Somebody implements iUser {
     use tUser;
     
-    protected static $_DefaultName = 'somebody';
-    protected static $_DefaultRole = 'browse';
     
     protected $_emailAddress = 'info@irisphp.org';
 
@@ -42,8 +41,8 @@ class Somebody implements iUser {
      * @param string $serialized 
      */
     public function __construct($serialized = NULL) {
-        $this->_name = self::$_DefaultName;
-        $this->_role = self::$_DefaultRole;
+        $this->_name = Settings::GetDefaultUserName();
+        $this->_role = Settings::GetDefaultRoleName();
         if (!is_null($serialized)) {
             $data = explode('&', $serialized);
             $this->_name = $data[0];
@@ -54,21 +53,40 @@ class Somebody implements iUser {
     }
 
     
-
+    /**
+     * 
+     * @param string $name
+     * @deprecated since version 1.0 (use Settings)
+     */
     public static function SetDefaultName($name) {
-        self::$_DefaultName = $name;
+        Settings::SetDefaultUserName($name);
     }
 
+    /**
+     * 
+     * @return type
+     * @deprecated since version 1.0 (use Settings)
+     */
     public static function GetDefaultName() {
-        return self::$_DefaultName;
+        Settings::GetDefaultUserName();
     }
 
+    /**
+     * 
+     * @param string $name
+     * @deprecated since version 1.0 (use Settings)
+     */
     public static function SetDefaultRole($name) {
-        self::$_DefaultRole = $name;
+        Settings::SetDefaultRoleName($name);
     }
 
+    /**
+     * 
+     * @return string
+     * @deprecated since version 1.0 (use Settings)
+     */
     public static function GetDefaultRole() {
-        return self::$_DefaultRole;
+        return Settings::GetDefaultRoleName();
     }
 
     public function __get($propName) {
