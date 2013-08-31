@@ -50,7 +50,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     const VIEW_HELPER = 1;
     const CONTROLLER_HELPER = 2;
 
-    // Directory patterns for views/layout
+// Directory patterns for views/layout
     const INTERNAL = '%s/IrisInternal/%s/views/%s%s';
     const INTERNALMAIN = '%s/IrisInternal/main/views/%s%s';
     const MODULE = '%s/modules/%s/views/%s%s';
@@ -63,7 +63,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      */
     const STANDARD_LIBRARIES = "Iris_Dojo";
 
-    // By defaut no class is traced
+// By defaut no class is traced
     protected static $_ClassesToTrace = array();
 
     /**
@@ -139,8 +139,8 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     protected function __construct() {
         $this->_classPath = array();
         $this->library = IRIS_LIBRARY;
-        // First look in Iris, then in another specified library
-        // application path will be prepend by a Program method 
+// First look in Iris, then in another specified library
+// application path will be prepend by a Program method 
         $initial = array("$this->library/Iris/", "$this->library/");
         foreach ($this->_stackList as $stackType) {
             $this->_classPath[$stackType] = new PathArray($initial);
@@ -163,13 +163,16 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @throws IX\LoaderException
      */
     public function loadClass($className, $throwException = \TRUE) {
-        if (!$this->overridden($className)) {
+        if ($this->_findOverriddenClass($className)) {
+            $found = \TRUE;
+        }
+        else {
             $this->_stackType = self::PLAIN_CLASS;
             $this->_loadDebug("Searching class ", $className);
             $classPath = $this->classToPath($className);
             $found = FALSE;
-            foreach ($this->_classPath[self::PLAIN_CLASS] as $path) {
-                if ($this->_tryToLoad($classPath, $path)) {
+            foreach ($this->_classPath[self::PLAIN_CLASS] as $basePath) {
+                if ($this->_tryToLoad($basePath . $classPath)) {
                     $found = TRUE;
                     break; //quick and dirty
                 }
@@ -177,8 +180,8 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             if (!$found and $throwException) {
                 throw new IX\LoaderException("Can't find standard class $className");
             }
-            return $found;
         }
+        return $found;
     }
 
     /**
@@ -190,22 +193,25 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @throws IX\LoaderException
      */
     public function loadHelper($className, $helperType) {
+// helpers are loaded only once
         if (isset($this->_loadedClasses[$helperType][$className])) {
             return \TRUE;
         }
-        $this->_stackType = $helperType;
         $this->_loadDebug("Searching class ", $className, \Iris\Engine\Debug::HELPER);
+// if necessary tries to load an overridden class
+        if ($this->_findOverriddenClass($className)) {
+            return \TRUE;
+        }
+        $this->_stackType = $helperType;
         $classPath = $this->classToPath($className);
         $found = FALSE;
-        foreach ($this->_classPath[$helperType] as $path) {
-            if ($this->_tryToLoad($classPath, $path)) {
+        foreach ($this->_classPath[$helperType] as $basePath) {
+            if ($this->_tryToLoad($basePath . $classPath)) {
                 $found = TRUE;
                 break; //quick and dirty
             }
         }
         if (!$found) {
-//                echo $className;
-//                iris_debug($this->_classPath);
             throw new IX\LoaderException("$className : can't find this class");
         }
         $this->_loadedClasses[$helperType][$className] = \TRUE;
@@ -224,7 +230,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     public function loadView($scriptName, $controllerDirectory, $response) {
         $module = $response->getModuleName();
         if (!preg_match('/[\/_]/', $scriptName)) {
-            //if (strpos($scriptName, '/') === FALSE) {
+//if (strpos($scriptName, '/') === FALSE) {
             $scriptName = "_" . $scriptName;
         }
         elseif ($scriptName[0] != '/') {
@@ -233,22 +239,22 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $program = \Iris\Engine\Program::$ProgramName;
         $libraryList = $this->_extensionLibraries; // may be 0 element
         $libraryList[] = $this->library;
-        // partials or views may be in system libraries
+// partials or views may be in system libraries
         if (strpos($scriptName, '#')) {
             list($library, $scriptName) = explode('#', $scriptName);
             $library = $this->library . '/' . substr($library, 1);
             $viewFiles[] = sprintf(self::LIBRARY, $library, $controllerDirectory, $scriptName);
         }
-        // views beginning with ! are to take from IrisInternal (notably layouts)
+// views beginning with ! are to take from IrisInternal (notably layouts)
         if ($response->isInternal() or $scriptName[1] == '!') {
             if ($scriptName[1] == '!') {
                 $scriptName = "_" . substr($scriptName, 2);
             }
-            // search in internal module
+// search in internal module
             foreach ($libraryList as $library) {
                 $viewFiles[] = sprintf(self::INTERNAL, $library, $module, $controllerDirectory, $scriptName);
             }
-            // search in internal main if necessary
+// search in internal main if necessary
             if ($module != 'main') {
                 foreach ($libraryList as $library) {
                     $viewFiles[] = sprintf(self::INTERNALMAIN, $library, $controllerDirectory, $scriptName);
@@ -256,18 +262,18 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             }
         }
         else {
-            // search in module
+// search in module
             $viewFiles[] = sprintf(self::MODULE, $program, $module, $controllerDirectory, $scriptName);
             $this->_transapplicationName == '' or
                     $viewFiles[] = sprintf(self::MODULE, $this->_transapplicationName, $module, $controllerDirectory, $scriptName);
-            // next in main module if necessary
+// next in main module if necessary
             if ($module != 'main') {
                 $viewFiles[] = sprintf(self::MAIN, $program, $controllerDirectory, $scriptName);
                 $this->_transapplicationName == '' or
                         $viewFiles[] = sprintf(self::MAIN, $this->_transapplicationName, $controllerDirectory, $scriptName);
             }
         }
-        // next in library
+// next in library
         foreach ($libraryList as $library) {
             $viewFiles[] = sprintf(self::LIBRARY, $library . '/modules/main', $controllerDirectory, $scriptName);
         }
@@ -288,7 +294,6 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             }
             $index++;
         }
-        //$this->setStackType(self::PLAIN_CLASS);
         if (!$found) {
             $viewFile = basename($scriptName);
             $this->_loadDebug("Unable to find ", "$viewFile", \Iris\Engine\Debug::VIEW);
@@ -304,7 +309,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @param string $className
      * @return boolean 
      */
-    public function overridden($className) {
+    protected function _findOverriddenClass($className) {
         $path = str_replace('\\', '/', $className);
         $pathComponents = explode('/', $path);
         // Overriden classes may only occur in standard libraries
@@ -313,23 +318,26 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         }
         else {
             if (isset(self::$UserClasses[$className])) {
-                $classPath = $this->classToPath($className);
-                if (!$this->_tryToLoad($classPath, $this->library . 'core')) {
+                $alternativePath = self::$UserClasses[$className];
+                $classPath = $this->classToPath($className, \FALSE);
+                $corePath = $this->library . '/Core/' . $classPath;
+                if (!is_array($alternativePath)) {
+                    $corePath = $this->library . '/Core/' . $classPath;
+                    $extensionPath = $this->library . '/Extensions/' . $classPath;
+                }
+                else {
+                    $extensionPath = $alternativePath[0] . "/" . basename($classPath);
+                    if (count($alternativePath) > 1) {
+                        $corePath = $alternativePath[1] . "/" . basename($classPath);
+                    }
+                }
+                if (!$this->_tryToLoad($corePath)) {
                     throw new \Iris\Exceptions\LoaderException("Core class $className not found");
                 }
-                // load modified class in extension
-                if (self::$UserClasses[$className] === TRUE) {
-                    if (!$this->_tryToLoad($classPath, $this->library . 'Extensions')) {
-                        throw new \Iris\Exceptions\LoaderException("Core class $className not found");
-                    }
+                if (!$this->_tryToLoad($extensionPath)) {
+                    throw new \Iris\Exceptions\LoaderException("Extensions class $className not found");
                 }
-                // load modified class in explicit PATH
-                else {
 
-                    if (!$this->_tryToLoad($classPath, $this->library . '/' . self::$UserClasses[$className] . "/")) {
-                        throw new \Iris\Exceptions\LoaderException("Developper special class $className not found");
-                    }
-                }
                 return \TRUE;
             }
             return \FALSE;
@@ -341,11 +349,10 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * from the root path
      * 
      * @param string $classPath qualified class name (with separators)
-     * @param string $path path to search in
      * @return boolean TRUE if file loaded
      */
-    protected function _tryToLoad($classPath, $path, $debugMode = \Iris\Engine\Debug::LOADER) {
-        $fileName = IRIS_ROOT_PATH . "/$path$classPath.php";
+    protected function _tryToLoad($classPath, $debugMode = \Iris\Engine\Debug::LOADER) {
+        $fileName = IRIS_ROOT_PATH . "/$classPath.php";
         $this->_loadDebug("Testing $fileName...", \NULL, $debugMode);
         if (!file_exists($fileName)) {
             $found = \FALSE;
@@ -368,7 +375,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     }
 
     /**
-     * Creates the path to search the helpers accroding to <ul>
+     * Creates the path to search the helpers according to <ul>
      * <li>the program Name
      * <li>the optional transapplication name
      * <li>the module in use </ul>
@@ -379,7 +386,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         if (!is_array($modules)) {
             $modules = array($modules);
         }
-        // reverse the array because its elements will be prepended
+// reverse the array because its elements will be prepended
         $modules = array_reverse($modules);
         if (strpos($modules[0], 'library/IrisInternal') === 0) {
             $programName = $transapplicationName = '';
@@ -390,7 +397,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         }
         foreach ($modules as $module)
             foreach (array(self::CONTROLLER_HELPER, self::VIEW_HELPER) as $helperType) {
-                $transapplicationName == '' OR
+                $transapplicationName === '' OR
                         $this->getStack($helperType)->prepend($transapplicationName . $module . "/");
                 $this->getStack($helperType)->prepend($programName . $module . "/");
             }
@@ -463,11 +470,11 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @param type $mode the mode corresponding to the class (has to marked for debugging)
      */
     protected function _loadDebug($message, $className = NULL, $mode = \Iris\Engine\Debug::LOADER) {
-        // no debugging in production
+// no debugging in production
         if (!defined('IRIS_DEBUG') or \Iris\Engine\Mode::IsProduction()) {
             return;
         }
-        // helpers have to be identified specificly
+// helpers have to be identified specificly
         if ($this->_stackType != self::PLAIN_CLASS) {
             $mode = \Iris\Engine\Debug::HELPER;
         }
@@ -476,7 +483,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             $memClassName = basename(str_replace('\\', '/', $className));
             $message .= $memClassName;
         }
-        // Impossible to log Log search
+// Impossible to log Log search
         if ($memClassName != 'Log') {
             if (count(self::$_ClassesToTrace) == 0 or
                     array_search($memClassName, self::$_ClassesToTrace) !== FALSE) {
@@ -486,17 +493,20 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     }
 
     /**
-     * Converts fully qualified classname to path
+     * Converts fully qualified classname to path. Initial Iris is stripped out 
+     * by default
      * 
      * @param string $className a className to convert to path
+     * @param boolean $eraseIris if true erase the first component if it is Iris
      * @return string 
      */
-    protected function classToPath($className) {
+    protected function classToPath($className, $eraseIris = \TRUE) {
         $parts = explode('\\', $className);
-        if ($parts[0] == 'Iris') {
+        if ($parts[0] == 'Iris' and $eraseIris) {
             array_shift($parts);
         }
         return implode('/', $parts);
     }
 
 }
+
