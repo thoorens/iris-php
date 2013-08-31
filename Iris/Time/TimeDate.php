@@ -160,7 +160,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         if ($countNumbers < 2 or $countNumbers > 3) {
             return;
         }
-        $mode = \Iris\SysConfig\Settings::GetTimeDateMode();
+        $mode = \Iris\SysConfig\Settings::GetDateMode();
         // European dates have reverse day month order
         if ($mode == self::EUROPE or $mode == 'europe') {
             $day = $numbers[0];
