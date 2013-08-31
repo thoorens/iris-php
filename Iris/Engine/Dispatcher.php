@@ -69,7 +69,7 @@ class Dispatcher {
      */
     public function prepareResponse() {
         \Iris\Log::Debug("Response", \Iris\Engine\Debug::ROUTE);
-        $response = $this->_router->makeResponse($responseNumber);
+        $response = $this->_router->makeResponse();
         $this->_controller = $response->makeController();
         return $this;
     }

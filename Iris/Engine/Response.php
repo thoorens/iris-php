@@ -232,17 +232,9 @@ class Response {
      * Returns the main Response object
      * 
      * @return Response 
-     */
-    public static function GetDefaultInstance() {
-        return self::$_DefaultInstance;
-    }
-
-    /**
-     *
-     * @return Response 
      * @todo in islet or subcontroller IT MUST BE DISTINCT
      */
-    public static function GetCurrentInstance() {
+    public static function GetDefaultInstance() {
         return self::$_DefaultInstance;
     }
 
