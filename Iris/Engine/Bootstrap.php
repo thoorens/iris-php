@@ -153,7 +153,12 @@ abstract class core_Bootstrap {
                     $params = $parser->processFile($filePath, FALSE, self::$IniMode);
                     $labels = explode('_', basename($file, '.ini'));
                     $label = count($labels) > 1 ? $labels[1] : $labels[0];
-                    Memory::Set('param_' . $label, $params);
+                    if($label == 'settings'){
+                       \Iris\SysConfig\Settings::GetInstance()->iniSettings($params); 
+                    }
+                    else{
+                       Memory::Set('param_' . $label, $params); 
+                    }
                     break;
                 case 'classes':
                     // has been read before 
@@ -195,6 +200,8 @@ abstract class core_Bootstrap {
         $errorHandler->allException();
     }
 
+    
+
 }
 
-?>
+
