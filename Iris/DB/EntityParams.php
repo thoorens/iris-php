@@ -55,7 +55,7 @@ class EntityParams {
         $this->_fullClassName = $fullClassName;
         switch ($fullClassName) {
             case 'Iris\\DB\\_Entity':
-                throw new \Iris\Exceptions\DBException('GetEntity must be used with \\Iris\\DB\AutoEntity not _Entity.');
+                throw new \Iris\Exceptions\DBException('GetEntity must be used with \\Iris\\DB\\TableEntity or \\Iris\\DB\\ViewEntity or not _Entity.');
                 break;
             case 'Iris\\DB\\TableEntity':
                 $this->_type = self::AUTOTABLE;
