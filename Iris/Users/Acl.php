@@ -122,7 +122,7 @@ class Acl implements \Iris\Design\iSingleton {
      * @return boolean
      */
     public function hasPrivilege($resource, $action) {
-// in site without ACL, every page is visible
+        // in site without ACL, every page is visible
         if ($this->_noAcl) {
             return TRUE;
         }
@@ -182,10 +182,10 @@ class Acl implements \Iris\Design\iSingleton {
             list($command, $module, $controller) = $keyExploded;
             $resource = "/$module/$controller";
             if ($command == 'allow') {
-                $this->_allowed[$roleName][$resource] = $privilege == '' ? 'ALL' : $privilege;
+                $this->_allowed[$roleName][$resource] = $privilege == 'null' ? 'ALL' : $privilege;
             }
             else {
-                $this->_denied[$roleName][$resource] = $privilege == '' ? 'ALL' : $privilege;
+                $this->_denied[$roleName][$resource] = $privilege == 'null' ? 'ALL' : $privilege;
             }
         }
     }
