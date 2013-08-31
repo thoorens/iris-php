@@ -42,14 +42,6 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
 
     protected static $_Instance = NULL;
 
-    /**
-     * The default icon directory. May be changed (but concerns all icons)<ul>
-     * <li> through SetIconSystemDir
-     * <li> by redefining the static variable in a sub class
-     * </ul>
-     * @var string
-     */
-    protected static $_IconSystemDir = '/!documents/file/images/icons';
 
     /**
      * The entity name (in user's terminology) with a gender mark
@@ -160,10 +152,6 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         return $this;
     }
 
-    
-    public static function SetIconSystemDir($dir){
-        static::$_IconSystemDir = $dir;
-    }
     
     /**
      *
@@ -347,7 +335,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         }
         else {
             $params['ref'] = "$this->_controller/$operation" . "_" . "$this->_actionSuffix/" . $params['id'];
-            $params['dir'] = self::$_IconSystemDir;
+            $params['dir'] = \Iris\SysConfig\Settings::GetIconSystemDir();
         }
         return $params;
     }
