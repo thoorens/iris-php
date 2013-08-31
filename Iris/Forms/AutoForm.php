@@ -108,7 +108,7 @@ class AutoForm extends Elements\Form {
         $entityManager = $this->_entity->getEntityManager();
         $tableName = $foreign->getTargetTable();
         /* @var $targetTable \Iris\DB\_Entity */
-        $targetTable = \Iris\DB\_Entity::GetEntity($tableName, $entityManager);
+        $targetTable = \Iris\DB\TableEntity::GetEntity($tableName, $entityManager);
         $idNames = $foreign->getToKeys();
         $idName = $idNames[0];
         $descField = $this->getDescriptionField($targetTable);
@@ -159,9 +159,10 @@ class AutoForm extends Elements\Form {
      * Returns the name of the field serving for the description of a concrete
      * object
      * 
-     * @return string 
+     * @param \Iris\DB\_Entity $targetTable
+     * @return string
      */
-    public function getDescriptionField(\Iris\DB\_Entity $targetTable) {
+    public function getDescriptionField($targetTable) {
         if($targetTable->getDescriptionField()!=''){
             return $targetTable->getDescriptionField();
         }
