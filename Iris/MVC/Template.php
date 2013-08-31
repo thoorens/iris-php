@@ -53,13 +53,7 @@ class Template implements \Iris\Translation\iTranslatable {
      */
     const ABSOLUTE = \TRUE;
 
-    /**
-     * If true, the translation of .phtml is managed through files
-     * 
-     * @var boolean
-     */
-    private static $_CacheTemplate = \FALSE;
-
+   
     /**
      * The view associated to the template (none in case of Quote views)
      * 
@@ -236,7 +230,7 @@ class Template implements \Iris\Translation\iTranslatable {
     private function _readTemplateAsArray($scriptFileName) {
         $this->_view->SetLastScriptName($scriptFileName);
         $read = \FALSE;
-        if (self::$_CacheTemplate and file_exists("$scriptFileName.phtml")) {
+        if ($this->_getCacheTemplate() and file_exists("$scriptFileName.phtml")) {
             $file = file("$scriptFileName.phtml");
             $this->_toBeParsed = \FALSE;
             $this->_readScriptFileName = "$scriptFileName.phtml";
@@ -292,7 +286,7 @@ class Template implements \Iris\Translation\iTranslatable {
                 }
             }
             $phtml = implode("", $this->_templateArray);
-            if (self::$_CacheTemplate and is_writable(dirname($this->_phtmlFilename))) {
+            if ($this->_getCacheTemplate() and is_writable(dirname($this->_phtmlFilename))) {
                 file_put_contents($this->_phtmlFilename, $phtml);
             }
         }
@@ -300,12 +294,12 @@ class Template implements \Iris\Translation\iTranslatable {
     }
 
     /**
-     * Sets the catch template status for all the application
+     * Gets the catch template status for the application
      * 
-     * @param int $flag
+     * @return boolean
      */
-    public static function setCacheTemplate($flag = self::CACHE_PRODUCTION) {
-        switch ($flag) {
+    private function _getCacheTemplate() {
+        switch (\Iris\SysConfig\Settings::GetCacheTemplate()) {
             case self::CACHE_ALWAYS:
                 $value = \TRUE;
                 break;
@@ -319,7 +313,7 @@ class Template implements \Iris\Translation\iTranslatable {
                 $value = \Iris\Engine\Mode::IsProduction();
                 break;
         }
-        self::$_CacheTemplate = $value;
+        return $value;
     }
 
     /**
