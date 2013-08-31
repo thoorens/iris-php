@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\SysConfig;
 
 /*
@@ -23,7 +21,7 @@ namespace Iris\SysConfig;
  * @copyright 2011-2013 Jacques THOORENS
  */
 
-/** 
+/**
  * A parser (read and write) for config in a ini file.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -71,15 +69,15 @@ class IniParser extends _Parser {
      * @param int $inheritance copy inherited values (or ref to parent)
      * @return Config (object or array)
      */
-    public function processFile($filename, $sectionName=FALSE, $inheritance=_Parser::COPY_AND_LINK) {
+    public function processFile($filename, $sectionName = FALSE, $inheritance = _Parser::COPY_AND_LINK) {
         // in case of single section, it is necessary to copy values
         $inheritance = $sectionName ? self::COPY_INHERITED_VALUES : $inheritance;
-        $parsedData = parse_ini_file($filename, TRUE);
+        $parsedData = parse_ini_file($filename, TRUE, INI_SCANNER_RAW);
         $configs = array();
         foreach ($parsedData as $namespace => $properties) {
             // Needs a dummy ancestor 
             list($name, $parent) = explode(':', $namespace . ":");
-            
+
             $name = trim($name);
             $parent = trim($parent); // may be empty
             // create namespace if necessary
@@ -91,13 +89,14 @@ class IniParser extends _Parser {
                 if (isset($configs[$parent])) {
                     if ($inheritance == self::COPY_AND_LINK or
                             $inheritance == self::LINK_TO_PARENT) {
-                        $configs[$name]->setParent($configs[$parent],$inheritance);
+                        $configs[$name]->setParent($configs[$parent], $inheritance);
                     }
                     foreach ($configs[$parent] as $prop => $val) {
                         if ($inheritance == self::COPY_AND_LINK or
                                 $inheritance == self::COPY_INHERITED_VALUES) {
                             $configs[$name]->$prop = $val;
-                        } else {
+                        }
+                        else {
                             // put prop in iterator
                             $configs[$name]->getIterator()->add($prop);
                         }
@@ -112,7 +111,8 @@ class IniParser extends _Parser {
         // if no section selected returns an array, otherwise a Config
         if ($sectionName === FALSE) {
             return $configs;
-        } else {
+        }
+        else {
             return $configs[$sectionName];
         }
     }
@@ -124,8 +124,8 @@ class IniParser extends _Parser {
      * @param array $configs the configs to write to the file
      * @param int $inheritance copy inherited values (or ref to parent)
      */
-    public function exportFile($fileName, $configs, $inheritance=self::LINK_TO_PARENT) {
-        $data = $this->_makeIniText($configs,$inheritance);
+    public function exportFile($fileName, $configs, $inheritance = self::LINK_TO_PARENT) {
+        $data = $this->_makeIniText($configs, $inheritance);
         $text = implode("\n", $data);
         file_put_contents($fileName, $text);
     }
@@ -137,29 +137,30 @@ class IniParser extends _Parser {
      * @param int $inheritance
      * @return string
      */
-    protected function _makeIniText($configs,$inheritance) {
+    protected function _makeIniText($configs, $inheritance) {
         $results = array();
         if (is_array($configs)) {
             foreach ($configs as $section => $config) {
-                if(is_numeric($section)){
+                if (is_numeric($section)) {
                     $section = $config->getName();
                 }
-                if (is_null($config->getParent()) or $inheritance==self::NO_INHERITANCE) {
+                if (is_null($config->getParent()) or $inheritance == self::NO_INHERITANCE) {
                     $results[] = "[$section]";
-                } else {
+                }
+                else {
                     $parentName = $config->getParent()->getName();
                     $results[] = "[$section:$parentName]";
                 }
-                $resSection = $this->_makeIniText($config,$inheritance);
+                $resSection = $this->_makeIniText($config, $inheritance);
                 $results = array_merge($results, $resSection);
                 $results[] = '';
             }
-            
-        } else {
+        }
+        else {
             $parent = $configs->getParent();
             foreach ($configs as $key => $val) {
-                if(!is_null($parent) and $inheritance==self::LINK_TO_PARENT){
-                    if($val == $parent->$key){
+                if (!is_null($parent) and $inheritance == self::LINK_TO_PARENT) {
+                    if ($val == $parent->$key) {
                         continue;
                     }
                 }
@@ -168,8 +169,6 @@ class IniParser extends _Parser {
         }
         return $results;
     }
-
-
 
 }
 
