@@ -22,12 +22,12 @@ namespace Iris\SysConfig;
  */
 
 /**
- * A vanilla setting has get and set methods
+ * A standard setting has get and set methods
   @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Setting extends _Setting {
+class StandardSetting extends _Setting {
 
     /**
      * Returns the value of the setting
@@ -52,7 +52,7 @@ class Setting extends _Setting {
      * @return string
      */
     protected function _showType() {
-        return '(vanilla)';
+        return '(standard)';
     }
 
 }
