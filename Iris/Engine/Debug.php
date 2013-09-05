@@ -47,6 +47,7 @@ abstract class Debug {
     const HELPER = 16;
     const ACL = 32;
     const FILE = 64;
+    const SETTINGS = 128;
 
     /**
      * Display a var_dump between <pre> tags
