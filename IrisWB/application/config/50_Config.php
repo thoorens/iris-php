@@ -5,7 +5,7 @@
 \Iris\Translation\_Translator::SetCurrentTranslator(\Iris\Translation\SystemTranslator::GetInstance());
 
 // In workbench, performances are, usually, not the main point
-\Iris\MVC\Template::setCacheTemplate(\Iris\MVC\Template::CACHE_NEVER);
+\Iris\SysConfig\Settings::SetCacheTemplate(\Iris\MVC\Template::CACHE_NEVER);
 
 // Uncomment next to use local Dojo
 //\Dojo\Manager::SetSource(0);

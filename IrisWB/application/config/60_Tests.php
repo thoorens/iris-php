@@ -47,24 +47,32 @@ switch (0) {
     case 3:
 
         /* @var $settings Iris\Errors\Settings */
-        $settings = \Iris\Errors\Settings::GetInstance();
-        if ($settings->hasLog() or $settings->hasMail() or $settings->hasKeep() or $settings->hasHang()) {
+        if (\Iris\Errors\Settings::HasLog() or \Iris\Errors\Settings::HasMail() or \Iris\Errors\Settings::HasKeep() or \Iris\Errors\Settings::HasHang()) {
             die('One bit');
         }
         else {
             echo "No bit <br>";
         }
-        $settings->setMail();
-        $settings->setHang();
-        if($settings->hasMail()) echo 'MAIL OK <br>';
-        $settings->unsetMail();
-        if($settings->hasHang()) echo "HANG ok<br>";
-        if($settings->hasMail()) echo 'MAIL OK <br>';
-        if(!$settings->hasMail()) echo "No mail defined";
-        $settings->unsetHang();
-        if(!$settings->hasHang()) echo "No more hang";
-        
+        \Iris\Errors\Settings::EnableMail();
+        \Iris\Errors\Settings::EnableHang();
+        if (\Iris\Errors\Settings::HasMail())
+            echo 'MAIL OK <br>';
+        \Iris\Errors\Settings::DisableMail();
+        if (\Iris\Errors\Settings::HasHang())
+            echo "HANG ok<br>";
+        if (\Iris\Errors\Settings::HasMail())
+            echo 'MAIL OK <br>';
+        if (!\Iris\Errors\Settings::hasMail())
+            echo "No mail defined";
+        \Iris\Errors\Settings::DisableHang();
+        if (\Iris\Errors\Settings::HasHang())
+            echo "No more hang";
+
         die('Test ok');
+        break;
+    case 4:
+        echo \Iris\SysConfig\Settings::GetInstance()->debug(\FALSE);
+        \Dojo\Engine\Settings::GetInstance()->debug();
         break;
 }
 
