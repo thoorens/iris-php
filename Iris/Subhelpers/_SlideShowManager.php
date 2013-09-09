@@ -35,8 +35,6 @@ abstract class _SlideShowManager extends _Subhelper {
 
     use tRepository;
     
-    protected static $_DefaultLibrary = '\\Dojo\\';
-    
     protected $_id = "SlideShow1";
 
     /**
@@ -51,22 +49,14 @@ abstract class _SlideShowManager extends _Subhelper {
 
     
     /**
-     * The default provider (Dojo) may be changed.
-     * 
-     * @param string $library
-     */
-    public static function SetDefaultLibrary($library) {
-        self::$_DefaultLibrary = $library;
-    }
-
-    /**
      * The constructor request uses the default library
      * 
      * @param type $objectName The name of the object to create
      * @return \Iris\Subhelpers\className
      */
     protected static function _New($objectName) {
-        $className = self::$_DefaultLibrary . 'Subhelpers\\SlideShowManager';
+        $defaultLibrary = \Iris\SysConfig\Settings::GetSlideShowManagerLibrary();
+        $className = $defaultLibrary. 'Subhelpers\\SlideShowManager';
         return new $className($objectName);
     }
     
