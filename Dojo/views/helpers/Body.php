@@ -41,10 +41,9 @@ class Body extends \Iris\views\helpers\_ViewHelper {
      * @return string 
      */
     public function help() {
-        $manager = \Dojo\Manager::GetInstance();
-        if (!$manager->isActive())
+        if(!\Dojo\Manager::IsActive())
             return '';
-        $theme = $manager->getTheme();
+        $theme = \Dojo\Engine\Settings::GetTheme();
         return " class=\"$theme\"";
     }
 

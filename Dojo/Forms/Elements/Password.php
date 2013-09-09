@@ -44,7 +44,6 @@ class Password_____ extends \Iris\Forms\Elements\InputElement {
         parent::__construct($name, 'password', $options);
         $type = "dojox.form.PasswordValidator";
         $dojoManager = \Dojo\Manager::GetInstance();
-        $dojoManager->setActive();
         $dojoManager->addRequisite("PasswordValidator", $type);
         $this->dojoType = $type;
         $this->setPwType($subType);

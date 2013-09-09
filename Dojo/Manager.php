@@ -33,7 +33,7 @@ define('URL_DOJO_YANDEX', "http://yandex.st/dojo");
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Manager implements \Iris\Design\iSingleton{
+class Manager implements \Iris\Design\iSingleton {
 
     use \Iris\Engine\tSingleton;
 
@@ -75,63 +75,17 @@ class Manager implements \Iris\Design\iSingleton{
      * 
      * @var boolean  
      */
-    protected $_dojoActive = FALSE;
-
-    /**
-     * The dojo style used in the program among the 4 standard styles <ul>
-     * <li>nihilo
-     * <li>soria
-     * <li>tundra
-     * <li>claro
-     * </ul>
-     * @var string
-     */
-    protected $_theme = 'nihilo'; // soria/tundra/claro/nihilo
-
-    /**
-     * the source directory/url where dojo can be find
-     * 
-     * @var string 
-     */
-    protected static $_Source = self::GOOGLE;
+    protected static $_DojoActive = FALSE;
 
     
-
-    /**
-     * By default Dojo is parsed on page load
-     * 
-     * @var string 
-     */
-    protected $_parseOnLoad = 'true';
-
-    /**
-     * Debug info is set according to site type (in construct)
-     * 
-     * @var string 
-     */
-    protected $_debug; //true in development / false in production
-
-    /**
-     * Version number correspond to the version used to write Iris-PHP.
-     * This number is only used in remote URL. With local source, only
-     * one version is supposed to installed in public/js folder.
-     * 
-     * @var string 
-     */
-    protected $_version = '1.9.0';
 
     /**
      * The constructor is private (singleton). It inits the basic CSS
      * and debug mode (according to server type)
      */
     private function __construct() {
+        self::SetActive();
         $this->addStyle("/!documents/file/css/dojo.css");
-        if (\Iris\Engine\Mode::IsDevelopment()) {
-            $this->setDebug('true');
-        }
-        else {
-            $this->setDebug('false');
-        }
         if (!\Iris\Users\Session::JavascriptEnabled()) {
             $this->addStyle('/!documents/files/css/iris_nojs.css');
         }
@@ -140,108 +94,24 @@ class Manager implements \Iris\Design\iSingleton{
     }
 
     /**
-     * Accessor for $_version
-     * 
-     * @return string
-     */
-    public function getVersion() {
-        return $this->_version;
-    }
-
-    /**
-     * Accessor for $_version
-     * 
-     * @param string $version 
-     */
-    public function setVersion($version) {
-        $this->_version = $version;
-    }
-
-    /**
-     * Accessor for $_debug, an intial parameter for Dojo
-     * 
-     * @return boolean
-     */
-    public function getDebug() {
-        $this->setActive();
-        return $this->_debug;
-    }
-
-    /**
-     * Accessor for $_debub, an intial parameter for Dojo
-     * 
-     * @param string $debug 
-     */
-    public function setDebug($debug) {
-        $this->setActive();
-        $this->_debug = $debug;
-    }
-
-    /**
-     * Accessor for $_parseOnLoad, an intial parameter for Dojo
-     * 
-     * @param string $parseOnLoad 
-     */
-    public function setParseOnLoad($parseOnLoad) {
-        $this->setActive();
-        $this->_parseOnLoad = $parseOnLoad;
-    }
-
-    /**
-     * Accessor for $_parseOnLoad, an intial parameter for Dojo
-     * 
-     * @return string 
-     */
-    public function getParseOnLoad() {
-        $this->setActive();
-        return $this->_parseOnLoad;
-    }
-
-    /**
      * When set to true, all Dojo stuffs are loaded
-     * 
-     * @param type $value 
      */
-    public function setActive($value = TRUE) {
-        $this->_dojoActive = $value;
+    public static function SetActive() {
+        self::$_DojoActive = \TRUE;
     }
 
     /**
      * Tests the necessity to load Dojo
      * @return type 
      */
-    public function isActive() {
-        return $this->_dojoActive;
+    public static function IsActive() {
+        return self::$_DojoActive;
     }
 
-    /**
-     * Acessor for the style (CSS file to use)
-     * 
-     * @param type $style 
-     */
-    public function setTheme($style) {
-        $this->setActive();
-        $this->_theme = $style;
-    }
+    
 
-    /**
-     * Acessor for the style (CSS file to use)
-     * 
-     * @return type 
-     */
-    public function getTheme() {
-        return $this->_theme;
-    }
 
-    /**
-     * Dojo can be found on local directory or in the Internet. Setting 
-     * source permits to specify where to load it from.
-     * 
-     * @param int $source 
-     */
-    public static function SetSource($source) {
-        self::$_Source = $source;
-    }
+   
 
     /**
      * Returns the source URL for the main script of dojo,
@@ -266,8 +136,8 @@ class Manager implements \Iris\Design\iSingleton{
      * @return string 
      */
     public function getURL() {
-        $version = $this->getVersion();
-        switch (self::$_Source) {
+        $version = \Dojo\Engine\Settings::GetVersion();
+        switch (\Dojo\Engine\Settings::GetSource()) {
             case self::GOOGLE:
                 $source = URL_DOJO_GOOGLE . $version;
                 break;

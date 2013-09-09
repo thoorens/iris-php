@@ -45,7 +45,6 @@ class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
         \Iris\Forms\Elements\_ElementGroup::__construct($name, 'dl', $formFactory, $options);
         $type = "dojox.form.PasswordValidator";
         $dojoManager = \Dojo\Manager::GetInstance();
-        $dojoManager->setActive();
         $dojoManager->addRequisite("PasswordValidator", $type);
         $this->dojoType = $type;
     }
