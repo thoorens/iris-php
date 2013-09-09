@@ -1,6 +1,7 @@
 <?php
 
 namespace Dojo\Engine;
+
 use Iris\System\tRepository;
 
 /*
@@ -38,7 +39,6 @@ class Bubble {
     const TEXT = 1;
     const JSON = 2;
     const XML = 3;
-    
     const DOM = 11;
     const QUERY = 12;
     const DOMREADY = 13;
@@ -64,9 +64,7 @@ class Bubble {
      * @return Bubble
      */
     public static function GetBubble($objectName) {
-        if(self::InstanceNumber()==0){
-            \Dojo\Manager::GetInstance()->setActive();
-        }
+        \Dojo\Manager::SetActive();
         return self::_GetObject($objectName);
     }
 
@@ -95,7 +93,7 @@ class Bubble {
             case self::JSON:
                 $this->addModule('dojo/JSON', 'json');
                 break;
-            
+
             case self::DOM:
                 $this->addModule('dojo/dom', 'dom');
                 break;

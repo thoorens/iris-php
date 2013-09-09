@@ -64,15 +64,15 @@ class Head {
      * @return string
      */
     public function render($ajaxMode = \FALSE) {
-        $manager = \Dojo\Manager::GetInstance();
-        if (!$manager->isActive()) {
+        if (!\Dojo\Manager::IsActive()) {
             return '';
         }
+        $manager = \Dojo\Manager::GetInstance();
         $source = $manager->getURL();
         $script = $manager->getScript();
-        $theme = $manager->getTheme();
-        $parseOnLoad = $manager->getParseOnLoad();
-        $debug = $manager->getDebug();
+        $theme = \Dojo\Engine\Settings::GetTheme();
+        $parseOnLoad = \Dojo\Engine\Settings::GetParseOnLoad();
+        $debug = \Dojo\Engine\Settings::GetDebug();
 
         // Loads css and js scripts
         $text = '';
