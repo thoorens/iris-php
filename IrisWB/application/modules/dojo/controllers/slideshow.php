@@ -14,7 +14,7 @@ class slideshow extends _dojo {
 
     protected function _init() {
         // to be shure we use dojo library
-        \Iris\Subhelpers\_SlideShowManager::SetDefaultLibrary('\\Dojo\\');
+        \Iris\SysConfig\SettingsSetSlideShowManagerLibrary('\\Dojo\\');
         $this->_setLayout('application');       
         $this->setViewScriptName('all');
     }

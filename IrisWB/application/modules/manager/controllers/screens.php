@@ -47,7 +47,7 @@ class screens extends _manager {
                 ->setDescField('Description')
                 // champ constituant la clé primaire
                 ->setIdField('id');
-        $tSequence = \Iris\DB\_Entity::GetEntity('sequence');
+        $tSequence = \Iris\DB\TableEntity::GetEntity('sequence');
         $tSequence->where('section_id=', $section);
         $screens = $tSequence->fetchAll();
         $this->__screens = $screens;

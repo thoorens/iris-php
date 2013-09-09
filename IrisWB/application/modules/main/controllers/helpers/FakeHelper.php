@@ -47,7 +47,7 @@ class FakeHelper extends _ControllerHelper{
         $this->__view16 = 'value 16';
         
         // A complex init
-        $controller = \Iris\Engine\Response::GetCurrentInstance()->makedController;
+        $controller = \Iris\Engine\Response::GetDefaultInstance()->makedController;
         $controller->__var17 = 'value 17';
         
     }

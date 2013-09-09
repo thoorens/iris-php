@@ -1,6 +1,9 @@
 <?php
 
-namespace modules\manager\controllers;
+
+
+namespace Iris\views\helpers;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -26,25 +29,21 @@ namespace modules\manager\controllers;
  * @version $Id: $ */
 
 /**
+ * An example of view helper (for Iris WB)
  * 
- * Created for IRIS-PHP 0.9 - beta
- * Description of sides
- * 
- * @author jacques
- * @license not defined
  */
-class islSides extends \Iris\MVC\_Islet {
+class DemoCopy extends \Iris\views\helpers\_ViewHelper {
 
-    public function leftAction($sectionMode = \TRUE) {
-        $tSections = \Iris\DB\TableEntity::GetEntity('sections');
-        $tSections->where('id>', 0);
-        $this->__sections = $tSections->fetchAll();
-        $this->__sectionMode = $sectionMode;
-    }
+    static $_singleton = FALSE;
 
-    public function rightAction() {
-       $this->callViewHelper('dojo_Mask');
-       $this->__sequence = $this->getScreenList();
+    public function help($text) {
+        return <<< HTML
+<span style="margin: 15px; color: #000 ;background: #FFF;border-style: solid;border-color: #AAA;">
+    $text
+</span>
+HTML;
+        
     }
 
 }
+

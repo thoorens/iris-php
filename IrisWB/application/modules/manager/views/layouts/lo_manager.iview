@@ -12,7 +12,7 @@
                     <h1>Iris Workbench Manager</h1>
                 </div><!-- Title -->
                 <div class="column one">
-                    {islet('islSides',[],'left')}
+                    {islet('islSides',['sectionMode' => $sectionMode],'left')}
                 </div><!-- 1 -->
                 <div class="column two">
                     {mainView()}

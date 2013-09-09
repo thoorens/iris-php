@@ -1,0 +1,23 @@
+{php}
+        // now we will use a new definition of demo()
+        \Iris\Engine\Loader::$UserClasses['Iris\views\helpers\Demo']= ['application/alter/Extensions','application/alter/Core'];
+{/php}
+<div>
+    <div id="page">
+        <table class="show">
+            <tr>
+                <th>Normal text</th>
+                <td>{text}</td>
+            </tr>
+            <tr>
+                <th>Text through a copy of original helper Demo</th>
+                <td>{demoCopy($text)}</td>
+            </tr>
+            <tr>
+                <th>Text through customized helper Demo</th>
+                <td>{demo($text)}</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
