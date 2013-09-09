@@ -29,6 +29,8 @@ namespace Iris\SysConfig;
  * @version $Id: $ */
 class StandardSetting extends _Setting {
 
+    protected static $_Type = 'standard';
+
     /**
      * Returns the value of the setting
      *  
@@ -39,20 +41,15 @@ class StandardSetting extends _Setting {
     }
 
     /**
-     * Sets the new value of a setting
+     * Sets the new value of a setting if it is not locked
      * 
      * @param mixed $value
      */
     public function set($value) {
+        if ($this->_locked) {
+            $this->SettingError("The setting $this->_fullName has been locked.");
+        }
         $this->_value = $value;
-    }
-
-    /**
-     * Ret
-     * @return string
-     */
-    protected function _showType() {
-        return '(standard)';
     }
 
 }

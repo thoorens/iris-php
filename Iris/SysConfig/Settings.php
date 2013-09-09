@@ -22,126 +22,53 @@ namespace Iris\SysConfig;
  */
 
 /**
- * A config is a container for some properties. It can be looked into
- * through foreach. Each property has its own value or can be inherited
- * from an ancestor. The values can be managed in files or database through 
- * a _Parser.
+ * This class offers a way to manage settings:<ul>
+ * <li> some are predefined during Settings occurrence initialization
+ * <li> there are vanilla settings with <b>ge</b>t and  <b>set</b> methods
+ * <li> there are boolean settings with <b>has</b>, <b>enable</b> and <b>disable</b>
+ * <li> settings can be added at later stage (one at a time or through an ini file)
+ * <li> a non defined setting reading throws an exception
+ * </ul>
  * 
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Settings implements \Iris\Design\iSingleton {
+class Settings extends _Settings {
 
-    use \Iris\Engine\tSingleton;
+    protected static $_GroupName = 'main';
+    protected static $_Instance = \NULL;
 
-    /**
-     * By default, the admin tool bar is displayed by an Ajax request
-     */
-    const DEF_ATB_AJAXMODE = \TRUE;
-    /**
-     * By default, the run time display is enabled (only effective in development)
-     */
-    const DEF_DISPLAY_RTD = \TRUE;
-    
-    /**
-     *
-     * @var array : associative array containing the values of the 
-     * config (inherited values may be in it or not according to inheritance mode) 
-     * Always use the iterator or magic methods to access the actual data
-     */
-    private $_data = array();
-
-    /**
-     * 
-     * @return boolean
-     */
-    /**
-     * If TRUE, the toolbar is only prepared at runtime and refreshed later
-     * by an ajax routine. May be changed directly by this instruction in a config file:
-     * \ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
-     * 
-     * @var boolean 
-     */
-    public static function HasAdminTollbarAjaxMode() {
-        $instance = self::GetInstance();
-        return $instance->_getValue('adminToolbarAjaxMode', self::DEF_ATB_AJAXMODE);
+    protected function _init() {
+        // Admin toolbar may be Ajax or simple javascript 
+        BooleanSetting::CreateSetting('adminToolbarAjaxMode', \TRUE);
+        // Pages usually don't have a MD5 signature (usefull in debugging or caching)
+        BooleanSetting::CreateSetting('MD5Signature', \FALSE);
+        // In development, it may be usefull to compute Program Time Excecution, 
+        // by default managed by Javascript (not Ajax)
+        BooleanSetting::CreateSetting('displayRuntimeDuration', \TRUE);
+        StandardSetting::CreateSetting('runtimeDisplayMode', \Iris\Time\RuntimeDuration::INNERCODE);
+        // Unformated dates use japanese format as in 2012-12-31
+        StandardSetting::CreateSetting('dateMode', \Iris\Time\TimeDate::JAPAN); // could be 'japan'
+        // The default time zone is Brussels
+        StandardSetting::CreateSetting('defaultTimezone', 'Europe/Brussels');
+        // All Ajax functions need a library to manage them, by default it is Dojo
+        StandardSetting::CreateSetting('defaultAjaxLibrary', '\\Dojo\\Ajax\\');
+        // The slideshow is javascript based (by default trough Dojo)
+        StandardSetting::CreateSetting('slideShowManagerLibrary', '\\Dojo\\');
+        // If ACL are used, the default user is named 'somebody' in 'browse' group
+        StandardSetting::CreateSetting('defaultUserName', 'somebody');
+        StandardSetting::CreateSetting('defaultRoleName', 'browse');
+        // 
+        StandardSetting::CreateSetting('errorDebuggingLevel', 1);
+        // To minimize execution templates can be cached (not by default)
+        StandardSetting::CreateSetting('cacheTemplate', \Iris\MVC\Template::CACHE_NEVER);
+        // Some icons are used internally (e.g. in CRUD), a default directory is specified
+        StandardSetting::CreateSetting('iconSystemDir', '/!documents/file/images/icons');
+        // By default all messages are in US english
+        StandardSetting::CreateSetting('defaultLanguage', 'en-us');
     }
 
-    public static function EnableAdminToolbarAjaxMode(){
-        $instance = self::GetInstance();
-        $instance->_data['adminToolbarAjaxMode'] = \TRUE;
-    } 
-    public static function DisableAdminToolbarAjaxMode(){
-        $instance = self::GetInstance();
-        $instance->_data['adminToolbarAjaxMode'] = \FALSE;
-    } 
-    /**
-     * Tests if the final javascript exec time routine must fire
-     * 
-     * @return boolean
-     */
-    public static function HasDisplayRuntimeDuration(){
-        $instance = self::GetInstance();
-        return $instance->_getValue('displayRuntimeDuration', self::DEF_DISPLAY_RTD);
-    }
-    
-    /**
-     * Enable the final javascript exec time routine
-     * (RunTime Duration)
-     * No effect in production.
-     * 
-     */
-    public static function EnableDisplayRuntimeDuration(){
-        $instance = self::GetInstance();
-        $instance->_data['displayRuntimeDuration'] = \TRUE;
-    }
-    /**
-     * Disable the final javascript exec time routine
-     * (Runtime Duration)
-     * This is the default state
-     * 
-     */
-    public static function DisableDisplayRuntimeDuration(){
-        $instance = self::GetInstance();
-        $instance->_data['displayRuntimeDuration'] = \FALSE;
-    }
-    
-    /**
-     * An MD5 signature may be calculated for a page and
-     * placed in a field (used by WB)
-     * By default, not used.
-     */
-    public static function EnableMD5Signature(){
-       $instance = self::GetInstance();
-       $instance->_data['md5'] = \TRUE;
-    }
-    
-    /**
-     * Disables the MD5 signature after it has been enabled
-     */
-    public static function DisableMD5Signature(){
-       $instance = self::GetInstance();
-       $instance->_data['md5'] = \FALSE;
-    }
-    
-    /**
-     * Returns true if MD5 signature is enabled
-     * @return boolean
-     */
-    public static function HasMD5Signature(){
-        $instance = self::GetInstance();
-        return $instance->_getValue('md5', \FALSE);
-    }
-    
-    private function _getValue($name,$default){
-        if(!isset($this->_data[$name])){
-            return $default;
-        }
-        return $this->_data[$name];
-    }
-
-    
 }
 

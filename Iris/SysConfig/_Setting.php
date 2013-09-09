@@ -32,18 +32,92 @@ namespace Iris\SysConfig;
  */
 abstract class _Setting {
 
+    use \Iris\System\tDoubleRepository;
+
+    private static $_CurrentGroup = \NULL;
+
     /**
-     *
+     * Each subclass has its own type
+     * 
+     * @var string
+     */
+    protected static $_Type = \NULL;
+
+    /**
+     * If true, the setting cannot be modified
+     * 
+     * @var boolean
+     */
+    protected $_locked = \FALSE;
+
+    /**
+     * The value of the setting
+     * 
      * @var mixed
      */
     protected $_value;
 
+    /**
+     * The full camelcase name of the setting
+     * 
+     * @var string
+     */
     protected $_fullName;
+    private $_defined = \FALSE;
+
     
-    public function __construct(&$repository, $fullName, $initialValue) {
-        $this->_fullName = $fullName;
-        $repository[strtolower($fullName)] = $this;
-        $this->_value = $initialValue;
+
+    public static function CreateSetting($fullName, $initialValue, $groupName = \NULL) {
+        $object = self::_GetSetting($fullName, $groupName);
+        \Iris\Log::Debug("Initing setting $fullName with $initialValue", \Iris\Engine\Debug::SETTINGS);
+        $object->_value = $initialValue;
+        $object->_fullName = $fullName;
+        $object->_defined = \TRUE;
+    }
+
+    public static function GetSetting($settingName, $groupName = \NULL, $exception = \FALSE) {
+        $object = self::_GetSetting($settingName, $groupName);
+        if ($object->_defined and $exception) {
+            self::SettingError("The setting $settingName does not seem to exist in $groupName");
+        }
+        $object->_value = \NULL;
+        return $object;
+    }
+
+    /**
+     * 
+     * @param type $fullSettingName
+     * @param type $groupName
+     * @return _Setting
+     */
+    private static function _GetSetting($fullSettingName, $groupName) {
+        $settingName = strtolower($fullSettingName);
+        if (is_null($groupName)) {
+            if (is_null(self::$_CurrentGroup)) {
+                iris_debug(debug_backtrace());
+                self::SettingError("'SetCurrentRepository' must be used before creating new settings.");
+            }
+            $groupName = self::$_CurrentGroup;
+        }
+
+        /* @var $object _Setting */
+        return self::_GetObject($groupName, $settingName);
+    }
+
+    /**
+     * Sets the current group name
+     * 
+     * @param string $groupName 
+     */
+    public static function SetCurrentGroup($groupName) {
+        self::$_CurrentGroup = $groupName;
+    }
+
+    /**
+     * No more CurrentRepositpry
+     */
+    public static function ResetGroup() {
+        self::$_CurrentGroup = \NULL;
     }
 
     // Boolean accessors
@@ -54,24 +128,25 @@ abstract class _Setting {
      * @throws \Iris\Exceptions\InternalException
      */
     public function has() {
-        throw new \Iris\Exceptions\InternalException("The requested setting is not boolean");
+        self::SettingError("The requested setting is not boolean");
     }
 
     /**
-     * Enables a boolean setting
+     * Enables a boolean setting  if it is not locked
+     * 
      * @throws \Iris\Exceptions\InternalException
      */
     public function enable() {
-        throw new \Iris\Exceptions\InternalException("The requested setting is not boolean");
+        self::SettingError("The requested setting is not boolean");
     }
 
     /**
-     * Disables a boolean setting
+     * Disables a boolean setting if it is not locked
      * 
      * @throws \Iris\Exceptions\InternalException
      */
     public function disable() {
-        throw new \Iris\Exceptions\InternalException("The requested setting is not boolean");
+        self::SettingError("The requested setting is not boolean");
     }
 
     /**
@@ -80,7 +155,7 @@ abstract class _Setting {
      * @throws \Iris\Exceptions\InternalException
      */
     public function get() {
-        throw new \Iris\Exceptions\InternalException("The requested setting is boolean");
+        self::SettingError("The requested setting is boolean");
     }
 
     /**
@@ -90,18 +165,18 @@ abstract class _Setting {
      * @throws \Iris\Exceptions\InternalException
      */
     public function set($value) {
-        throw new \Iris\Exceptions\InternalException("The requested setting is boolean");
+        self::SettingError("The requested setting is boolean");
     }
-    
+
     /**
      * The object necessarily exists
      * 
      * @return boolean
      */
-    public function exists(){
-        return \TRUE;
+    public function exists() {
+        return $this->_defined;
     }
-    
+
     /**
      * Returns the name + type + value of a setting (for debugging purpose)
      * 
@@ -118,11 +193,26 @@ abstract class _Setting {
     /**
      * Will return the setting type according to the Setting class
      */
-    protected abstract function _showType();
-    
-    protected function _showValue(){
+    protected function _showType() {
+        return static::$_Type;
+    }
+
+    /**
+     * Returns the required value (overridden in BooleanSetting)
+     * 
+     * @return mixed
+     */
+    protected function _showValue() {
         return $this->_value;
     }
-    
+
+    public static function SettingError($message) {
+        die($message);
+        if (is_null(self::$_CurrentGroup) or !\Iris\Errors\Settings::HasSettingException()) {
+            die("Error in settings: $message");
+        }
+        throw new \Iris\Exceptions\SettingException($message);
+    }
+
 }
 

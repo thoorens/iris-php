@@ -30,24 +30,46 @@ namespace Iris\SysConfig;
  * @version $Id: $ */
 class BooleanSetting extends _Setting {
 
+    protected static $_Type = 'boolean';
+    
     // Boolean accessors
 
+    /**
+     * Will return TRUE if the setting has been enabled
+     */
     public function has() {
         return $this->_value === \TRUE;
     }
 
+    /**
+     * Enables a boolean setting  if it is not locked
+     * 
+     * @throws \Iris\Exceptions\InternalException
+     */
     public function enable() {
+        if($this->_locked){
+            $this->SettingError("The setting $this->_fullName has been locked.");
+        }
         $this->_value = \TRUE;
     }
 
+   /**
+     * Disables a boolean setting if it is not locked
+     * 
+     * @throws \Iris\Exceptions\InternalException
+     */
     public function disable() {
+        if($this->_locked){
+            $this->SettingError("The setting $this->_fullName has been locked.");
+        }
         $this->_value = \FALSE;
     }
 
-    protected function _showType() {
-        return "(boolean)";
-    }
-
+    /**
+     * Returns the required boolean value as a readable string, not a number
+     * 
+     * @return boolean
+     */
     protected function _showValue() {
         return $this->_value ? 'TRUE' : 'FALSE';
     }
