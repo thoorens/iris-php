@@ -49,7 +49,6 @@ class Client {
     const ARRAY_ = 4; // major and minor in an array
 
     
-    public static $DefaultLanguage = 'en-us';
     /**
      * Tests if the Browser is very old (that means for instance a IE prior to 7
      * 
@@ -146,7 +145,7 @@ class Client {
         /* IE 8 : fr-BE  */
         /* IE5.0 :  fr  */
         /* IE6 :  fr  */
-        $language = \Iris\Engine\Superglobal::GetServer('HTTP_ACCEPT_LANGUAGE', self::$DefaultLanguage);
+        $language = \Iris\Engine\Superglobal::GetServer('HTTP_ACCEPT_LANGUAGE', \Iris\SysConfig\Settings::GetDefaultLanguage());
         $lang2 = strtoupper(substr($language, 0, 2));
         if (!$full) {
             return $lang2;
