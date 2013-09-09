@@ -168,7 +168,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      * @return string
      */
     private static function _URL() {
-        $response = \Iris\Engine\Response::GetCurrentInstance();
+        $response = \Iris\Engine\Response::GetDefaultInstance();
         $module = $response->getModuleName();
         $controller = $response->getControllerName();
         $action = $response->getActionName();
