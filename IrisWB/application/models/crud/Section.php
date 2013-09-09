@@ -36,7 +36,7 @@ class Section extends \Iris\DB\DataBrowser\_Crud {
     
     public function __construct($param = NULL) {
         parent::__construct($param);
-        $entity = \Iris\DB\_Entity::GetEntity('sections');
+        $entity = \Iris\DB\TableEntity::GetEntity('sections');
         $this->setEntity($entity);
         $this->setActions("erreur", "index");
     }

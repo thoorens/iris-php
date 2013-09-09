@@ -35,7 +35,7 @@ class Screen extends \Iris\DB\DataBrowser\_Crud {
 
     public function __construct($param = NULL) {
         parent::__construct($param);
-        $entity = \Iris\DB\_Entity::GetEntity('sequence');
+        $entity = \Iris\DB\TableEntity::GetEntity('sequence');
         $this->setEntity($entity);
         $this->setActions("erreur", "index");
     }
@@ -57,7 +57,8 @@ class Screen extends \Iris\DB\DataBrowser\_Crud {
     }
 
     private function _setSection($object) {
-        $section = $object->section_id;
+        //iris_debug($object);
+        //$section = $object->section_id;
     }
 
 }
