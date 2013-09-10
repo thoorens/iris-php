@@ -55,8 +55,6 @@ class Editor extends \Iris\Forms\Elements\AreaElement {
 //        'dijit/_editor/plugins/AlwaysShowToolbar']);
 //        //$dojoManager->addInitCode('editor_hidden', <<<JSEditor
         $bubble->defFunction(<<<JSEditor
-            
-            alert('Yes');
             dojo.addOnLoad(function() {
             var editor = dijit.byId("$editorName");
             dojo.connect(editor, "onChange", this, function(event) {
