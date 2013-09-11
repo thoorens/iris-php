@@ -68,7 +68,7 @@ class Somebody implements iUser {
      * @deprecated since version 1.0 (use Settings)
      */
     public static function GetDefaultName() {
-        Settings::GetDefaultUserName();
+        return Settings::GetDefaultUserName();
     }
 
     /**
