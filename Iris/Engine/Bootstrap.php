@@ -136,13 +136,15 @@ abstract class core_Bootstrap {
     }
 
     /**
-     * Read some files containing various parameters
+     * Reads some files containing various parameters
+     * Only considers ini and php files
+     * 
      * @param array $filess 
      */
     private function _readConfig($programName) {
         sort($this->_configToRead);
-        foreach ($this->_configToRead as $file) {
-            $filePath = $file;
+        foreach ($this->_configToRead as $filePath) {
+            \Iris\Log::Debug("<b>Reading setting file: $filePath</b>", \Iris\Engine\Debug::SETTINGS);
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             switch ($ext) {
                 case 'php':
@@ -151,13 +153,13 @@ abstract class core_Bootstrap {
                 case 'ini':
                     $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
                     $params = $parser->processFile($filePath, FALSE, self::$IniMode);
-                    $labels = explode('_', basename($file, '.ini'));
+                    $labels = explode('_', basename($filePath, '.ini'));
                     $label = count($labels) > 1 ? $labels[1] : $labels[0];
-                    if($label == 'settings'){
-                       \Iris\SysConfig\Settings::GetInstance()->iniSettings($params); 
+                    if ($label == 'settings') {
+                        \Iris\SysConfig\Settings::GetInstance()->iniSettings($params);
                     }
-                    else{
-                       Memory::Set('param_' . $label, $params); 
+                    else {
+                        Memory::Set('param_' . $label, $params);
                     }
                     break;
                 case 'classes':
@@ -200,8 +202,5 @@ abstract class core_Bootstrap {
         $errorHandler->allException();
     }
 
-    
-
 }
-
 
