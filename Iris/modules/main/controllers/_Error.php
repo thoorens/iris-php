@@ -32,11 +32,7 @@ namespace Iris\modules\main\controllers;
  */
 abstract class _Error extends \Iris\MVC\_Controller {
 
-    /**
-     *
-     * @var \Iris\Errors\Settings
-     */
-    protected $_errorSettings;
+    
     protected $_isDevelopment;
 
     /**
@@ -52,10 +48,9 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * error display mechanism. These can be overidden in _init() or predispatch().
      */
     protected final function _moduleInit() {
-        $this->_errorSettings = \Iris\Errors\Settings::GetInstance();
         $this->_isDevelopment = \Iris\Engine\Mode::IsDevelopment();
         $this->_setLayout('error');
-        $this->__title = $this->_errorSettings->getTitle();
+        $this->__title = \Iris\Errors\Settings::GetTitle();
         $this->_exception = \Iris\Engine\Memory::Get('untreatedException', new \Iris\Exceptions\InternalException('Unkown exception'));
     }
 
@@ -146,7 +141,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * @param \Iris\Exceptions\_Exception $exception
      */
     protected final function _displayStackLevel() {
-        $stackLevel = $this->_errorSettings->getErrorStackLevel();
+        $stackLevel = \Iris\Errors\Settings::GetStackLevel();
         if (is_null($stackLevel)) {
             $this->_noStack();
         }

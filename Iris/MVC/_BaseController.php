@@ -381,7 +381,7 @@ class _BaseController {
             Errors\Settings::TYPE_PRIVILEGE => 'privilege',
             Errors\Settings::TYPE_FATAL => 'fatal',
         ];
-        $errorController = \Iris\Errors\Settings::GetInstance()->getDefaultController();
+        $errorController = \Iris\Errors\Settings::GetController();
         $this->reroute("$errorController/".$errorName[$type]);
     }
 

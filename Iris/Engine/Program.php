@@ -97,11 +97,11 @@ class Program {
      * 
      */
     private function _log($program) {
-       ini_set('log_error','on');
-       $logFile = \Iris\Errors\Settings::GetInstance()->getLogfile();
+       ini_set('log_error',\Iris\Errors\Settings::HasLog());
+       $logFile = \Iris\Errors\Settings::GetLogfile();
        ini_set('error_log',IRIS_ROOT_PATH."/$program/$logFile");
     }
-    
+
     /**
      * Collect, if possible, all information about error before restarting system in 
      * error state.

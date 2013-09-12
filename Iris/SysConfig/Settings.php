@@ -72,3 +72,5 @@ class Settings extends _Settings {
 
 }
 
+// Auto init
+Settings::Init();

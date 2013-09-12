@@ -39,29 +39,21 @@ use Iris\Engine\Memory;
  */
 class Handler implements \Iris\Design\iSingleton {
 
-    use \Iris\Translation\tSystemTranslatable;
+    use \Iris\Engine\tInitedSingleton,
+        \Iris\Translation\tSystemTranslatable;
 
     public static $_Trace = array();
 
     /**
-     *
-     * @var Settings
-     */
-    private $_errorSettings;
-
-    /**
-     * Returns the unique instance or creates it if necessary.
      * 
-     * @staticvar \static $Instance Serves to store the unique instance
-     * @return Iris\Errors\Handler
+     * @var boolean
      */
-    public static function GetInstance() {
-        static $Instance = \NULL;
-        if (is_null($Instance)) {
-            $Instance = new static();
-            $Instance->_init();
-        }
-        return $Instance;
+    private $_isProduction;
+
+    
+
+    protected function _init() {
+        $this->_isProduction = \Iris\Engine\Mode::IsProduction();
     }
 
     /**
@@ -75,10 +67,11 @@ class Handler implements \Iris\Design\iSingleton {
         $errorInformation = \Iris\Errors\ErrorInformation::GetInstance();
         $errorInformation->prepareErrorDiplay($exception);
         $this->_wipeAllText();
+        $errorController = \Iris\Errors\Settings::GetController();
         // First level of error
         if (is_null($ErrorURI)) {
             \Iris\Engine\Memory::Set('untreatedException', $exception);
-            $program->run($this->_errorSettings->getDefaultController() . "/standard");
+            $program->run($errorController . "/standard");
         }
         // There is an error in error treatment
         else {
@@ -89,36 +82,17 @@ class Handler implements \Iris\Design\iSingleton {
             }
             else {
                 try {
-                    $URI = $this->_errorSettings->getDefaultController() . "/fatal";
+                    $URI = $errorController . "/fatal";
                     $program->run($URI);
                     return;
                 }
                 catch (Exception $exc) {
-                    die("Sorry");
-                    echo $exc->getTraceAsString();
+                    $message = "Cannot execute fatal error subroutine.";
+                    \Iris\Engine\Debug::ErrorBoxDie($message, $exception->getTitle());
                 }
             }
         }
     }
-
-//                    $this->_errorInformation($exception);
-//                    // Clean all message in 
-//                    \Iris\Errors\ErrorHandler::WipeAllText();
-//                    // in case of error in error trapping, simple error box
-//                    if (!is_null($URI)) {
-//                        \Iris\Engine\Debug::Kill(self::ErrorBox($exception->__toString(), 'Fatal error'));
-//                    }
-//                    else {
-//                        \Iris\MVC\Layout::GetInstance()->setViewScriptName(\NULL);
-//                        Memory::Set('Exception', $exception);
-//                        Memory::Set('Log', \Iris\Log::GetInstance());
-//                        //Memory::SystemTrace();
-//                        $URI = \Iris\Errors\ErrorHandler::GetInstance()->getDefaultController();
-//                    }   
-
-
-
-
 
     /* ==========================================================================  */
 
@@ -141,7 +115,7 @@ class Handler implements \Iris\Design\iSingleton {
      * 1 during development
      */
     private function _wipeAllText() {
-        if (($this->_isProduction) or (!$this->_errorSettings->hasKeep())) {
+        if (($this->_isProduction) or (!\Iris\Errors\Settings::HasKeep())) {
             while (ob_get_level()) {
                 ob_end_clean();
             }
@@ -217,10 +191,10 @@ class Handler implements \Iris\Design\iSingleton {
      * @return \Iris\Errors\Handler
      */
     public function allException() {
-        if (!$this->_errorSettings->hasHang()) {
+        if (!\Iris\Errors\Settings::HasHang()) {
             set_error_handler(array($this, 'error2Exception'));
             // capture all fatal errors
-            if ($this->_errorSettings->hasFatal()) {
+            if (\Iris\Errors\Settings::HasFatal()) {
                 register_shutdown_function(array($this, 'captureShutdown'));
             }
         }
@@ -235,8 +209,7 @@ class Handler implements \Iris\Design\iSingleton {
      */
     public function setIniParameters() {
         $application = \Iris\Engine\Program::$ProgramName;
-        $mustLog = $this->_errorSettings->hasLog() ? 'on' : 'off';
-        $logFile = IRIS_ROOT_PATH . '/' . $application . $this->_errorSettings->getLogFile();
+        $mustLog = \Iris\Errors\Settings::HasLog() ? 'on' : 'off';
         if (\Iris\Engine\Mode::IsProduction()) {
             error_reporting(E_ALL);
             ini_set('track_error', 'off');
@@ -248,7 +221,7 @@ class Handler implements \Iris\Design\iSingleton {
             ini_set('display_errors', 'on');
         }
         ini_set('log_errors', $mustLog);
-        ini_set('error_log', $logFile);
+        ini_set('error_log', IRIS_ROOT_PATH . '/' . $application . Settings::GetLogFile());
         ini_set('log_errors_max_len', '1024');
         return $this;
     }
@@ -282,12 +255,6 @@ class Handler implements \Iris\Design\iSingleton {
         $trace["ACTION"] = $response->getActionName();
         $trace["PARAMETERS"] = $response->getParameters();
         self::$_Trace[] = $trace;
-    }
-
-    protected function _init() {
-
-        $this->_isProduction = \Iris\Engine\Mode::IsProduction();
-        $this->_errorSettings = \Iris\Errors\Settings::GetInstance();
     }
 
 }
