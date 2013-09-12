@@ -39,7 +39,7 @@ namespace Iris\Engine;
 abstract class Debug {
 
     const NONE = 0;
-    const ALL = -1;
+    const ALL = 65535; // Warning: -1 is identified as 127
     const LOADER = 1;
     const ROUTE = 2;
     const DB = 4;
