@@ -1,6 +1,5 @@
 <?php
-
-/*
+/* 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -26,8 +25,9 @@ namespace modules\system\classes;
  * @copyright 2011-2013 Jacques THOORENS
  */
 
+
 /**
- * Description of Mother2
+ * Description of Daugher1Of1
  * 
  * Project IRIS-PHP
  * 
@@ -36,18 +36,8 @@ namespace modules\system\classes;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-abstract class _Mother2 {
+class Daughter1 extends _Mother {
 
-    use Engine\tPolySingleton;
-
-    private $_name = 'Daughter of Mother 2';
-
-    public function getName() {
-        return $this->_name;
-    }
-
-    public function setName($name) {
-        $this->_name = $name;
-    }
-
+    protected $_name = 'Daughter 1';
 }
+

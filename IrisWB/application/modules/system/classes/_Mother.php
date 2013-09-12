@@ -27,7 +27,7 @@ namespace modules\system\classes;
 
 
 /**
- * Description of Daughter2Of2
+ * Description of Mother1
  * 
  * Project IRIS-PHP
  * 
@@ -36,7 +36,21 @@ namespace modules\system\classes;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class Daughter2Of2 extends _Mother2{
+abstract class _Mother {
+    use \Iris\Engine\tSingleton;
+    
+    protected $_name;
+    
+    public function getName() {
+        return $this->_name;
+    }
+
+    public function setName($name) {
+        $this->_name = $name;
+        return $this;
+    }
+
+
     
 }
 ?>

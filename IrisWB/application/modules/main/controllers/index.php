@@ -14,6 +14,7 @@ class index extends _main {
     public function indexAction() {
         $this->_setLayout('color');
         $this->__bodyColor = 'BLUE3';
+        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
         \Iris\SysConfig\Settings::DisableMD5Signature();
     }
 

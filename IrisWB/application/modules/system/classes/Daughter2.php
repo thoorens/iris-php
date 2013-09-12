@@ -36,7 +36,9 @@ namespace modules\system\classes;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class Daughter2Of1 extends _Mother1{
+class Daughter2 extends _Mother{
+
+    protected $_name = "Daughter 2";
     
 }
-?>
+

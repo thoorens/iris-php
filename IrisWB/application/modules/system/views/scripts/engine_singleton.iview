@@ -1,9 +1,39 @@
-<div>
-    <div id="page">
-        {welcome(2)}
-        <p>
-            {_('Now you can begin to modify this page...',TRUE)}
-        </p>
-    </div>
+{wbHeader($this)}
 
+<div id="content" {wbBG()}>
+    <h3>Instances of subclasses where mother is singleton</h3>
+    <table class="show">
+        <tr>
+            <th>Name of the unique instance of Daughter1</th>
+            <td>{name1}</td>
+        </tr>
+        <tr>
+            <th>Name of the unique instance of Daughter2</th>
+            <td>{name2}</td>
+        </tr>
+    </table>
+        
+    <h3>Using 2 variables for same instance (with GetInstance())</h3>
+    <table class="show">
+        <tr>
+            <th>Name of an instance of Daughter 1</th>
+            <td>{name1}</td>
+        </tr>
+        <tr>
+            <th>Name of this instance in another var</th>
+            <td>{copyName}</td>
+        </tr>
+    </table>
+        
+    <h3>Changing the name through the first var</h3>
+    <table class="show">
+        <tr>
+            <th>Name of an instance of Daughter 1 from var1</th>
+            <td>{changedName}</td>
+        </tr>
+        <tr>
+            <th>Name of this instance from var 2</th>
+            <td>{changedNameCopy}</td>
+        </tr>
+    </table>
 </div>
