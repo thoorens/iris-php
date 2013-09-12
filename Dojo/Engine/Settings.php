@@ -26,13 +26,6 @@ use Dojo\Manager;
 class Settings extends \Iris\SysConfig\_Settings {
 
     
-    /**
-     * Required by tPolySingleton
-     * 
-     * @var Setting
-     */
-    protected static $_Instance = \NULL;
-
     
     protected static $_GroupName = 'dojo';
 
@@ -67,7 +60,7 @@ class Settings extends \Iris\SysConfig\_Settings {
      * Defines some standard settings with a default value
      */
     protected function _init() {
-        Manager::SetActive();
+        //Manager::SetActive();
         \Iris\SysConfig\StandardSetting::CreateSetting('version', self::VERSION);
         // Debug info is set according to site type (in construct)
         if (\Iris\Engine\Mode::IsDevelopment()) {
@@ -87,3 +80,5 @@ class Settings extends \Iris\SysConfig\_Settings {
 
 }
 
+// Auto init
+Settings::Init();

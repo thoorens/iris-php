@@ -38,6 +38,9 @@ namespace Dojo\Ajax;
  */
 class Provider extends \Iris\Ajax\_AjaxProvider {
 
+    public static function Init(){
+        \Dojo\Manager::GetInstance();
+    }
     /**
      * Direct get request
      * 
@@ -244,3 +247,4 @@ JS1;
 
 }
 
+Provider::Init();
