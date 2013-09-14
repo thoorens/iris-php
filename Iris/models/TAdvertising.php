@@ -43,7 +43,7 @@ class TAdvertising extends \Iris\DB\_Entity{
     /**
      * An static initializer: two vars to init
      */
-    public static function __Init() {
+    public static function __ClassInit() {
         $client = new \Iris\System\Client();
         self::$_Language = $client->getLanguage();
         $em = \Iris\DB\_EntityManager::EMFactory('sqlite:/library/IrisInternal/iris/irisad.sqlite');
@@ -75,5 +75,3 @@ class TAdvertising extends \Iris\DB\_Entity{
 
 }
 
-// Start initializer at loading time
-TAdvertising::__Init();

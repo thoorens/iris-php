@@ -156,7 +156,7 @@ abstract class core_Bootstrap {
                     $labels = explode('_', basename($filePath, '.ini'));
                     $label = count($labels) > 1 ? $labels[1] : $labels[0];
                     if ($label == 'settings') {
-                        \Iris\SysConfig\Settings::GetInstance()->iniSettings($params);
+                        \Iris\SysConfig\Settings::FromConfigs($params);
                     }
                     else {
                         Memory::Set('param_' . $label, $params);

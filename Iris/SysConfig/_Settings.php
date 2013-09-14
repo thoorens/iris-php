@@ -39,7 +39,7 @@ abstract class _Settings implements \Iris\Design\iSingleton {
 
     use \Iris\Engine\tSingleton;
 
-    const CLASSESSECTION = "settingclasses";
+    const EXTRASETTINGS = "extrasettings";
 
     /**
      * All the known methods of the _Setting class
@@ -64,8 +64,9 @@ abstract class _Settings implements \Iris\Design\iSingleton {
     /**
      * Each settings class must be Inited before use
      */
-    public static function Init() {
-        static::GetInstance();
+    public static function __ClassInit() {
+        if (!is_null(static::$_GroupName))
+            static::GetInstance();
     }
 
     /**
@@ -139,47 +140,42 @@ abstract class _Settings implements \Iris\Design\iSingleton {
      * @return string
      */
     public static function Debug($stop = \TRUE) {
-        return _Setting::Debug(self::$_GroupName, $stop);
+        return _Setting::Debug(static::$_GroupName, $stop);
     }
 
     /**
+     * Inserts the value from configs into the settings
      * 
-     * @param Config $configs
+     * @param array(Config) $configs
      */
-    public function iniSettings($configs) {
-        $classes = $this->_findClasses($configs);
+    public static function FromConfigs($configs) {
+        $classes = self::_FindClasses($configs);
         foreach ($configs as $sectionName => $config) {
-            if ($sectionName != self::CLASSESSECTION) {
-                //$this->_treatSection($sectionName, $config, $classes);
+            if ($sectionName != self::EXTRASETTINGS) {
+                self::_TreatSection($sectionName, $config, $classes);
             }
         }
     }
 
-    private function _treatSection($sectionName, $config, $classes) {
-        if ($sectionName == 'caprout')
-            return;
-        echo "Section : $sectionName<br>";
-        die('OK');
+    private static function _TreatSection($sectionName, $config, $classes) {
         $class = $classes[$sectionName];
-        echo "With $class<br>";
         foreach ($config as $key => $value) {
-            $value = $this->_normalize($value);
-            echo "Key ($key): value ($value)<br>";
+            $value = self::_Normalize($value);
             if (is_bool($value)) {
-                $function = "Enable$key";
+                if ($value) {
+                    $function = "Enable$key";
+                }
+                else {
+                    $function = "Disable$key";
+                }
                 Settings::$function();
-                die('Zut');
-                Settings::GetInstance()->debug();
-                die($function);
             }
             else {
                 $function = "Set$key";
                 $class::GetInstance();
-                die($function);
                 Settings::$function($value);
             }
         }
-        echo "<hr>";
     }
 
     /**
@@ -188,22 +184,21 @@ abstract class _Settings implements \Iris\Design\iSingleton {
      * 
      * @param Config $configs
      */
-    private function _findClasses($configs) {
+    private static function _FindClasses($configs) {
         $classes = [
             'main' => '\\Iris\\SysConfig\\Settings',
             'dojo' => '\\Dojo\\Engine\\Settings',
             'error' => '\\Iris\Errors\\Settings',
         ];
-        if (isset($configs[self::CLASSESSECTION])) {
-            foreach ($configs['settingclasses'] as $section => $className) {
+        if (isset($configs[self::EXTRASETTINGS])) {
+            foreach ($configs[self::EXTRASETTINGS] as $section => $className) {
                 $classes[$section] = $className;
             }
         }
         return $classes;
     }
 
-    public function _normalize($value) {
-        iris_debug($value);
+    public static function _Normalize($value) {
         if ($value == 'FALSE') {
             $value = \FALSE;
         }
@@ -211,23 +206,6 @@ abstract class _Settings implements \Iris\Design\iSingleton {
             $value = \TRUE;
         }
         return $value;
-    }
-
-    protected static function _GetObject($groupName, $objectName) {
-        echo "GETTING $groupName - $objectName <br>";
-        if (!isset(self::$_Repository[$groupName]) or !isset(self::$_Repository[$groupName][$objectName])) {
-            echo "CREATION $groupName - $objectName <br>";
-            $setting = self::_New($objectName);
-            self::$_Repository[$groupName][$objectName] = $setting;
-        }
-        else {
-            echo "LECTURE $groupName - $objectName <br>";
-
-            /* @var $setting \Iris\SysConfig\StandardSetting */
-            $setting = self::$_Repository[$groupName][$objectName];
-        }
-        iris_debug(self::$_Repository);
-        return $setting;
     }
 
 }

@@ -163,6 +163,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @throws IX\LoaderException
      */
     public function loadClass($className, $throwException = \TRUE) {
+        //echo "$className<br>";
         if ($this->_findOverriddenClass($className)) {
             $found = \TRUE;
         }
@@ -173,6 +174,10 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             $found = FALSE;
             foreach ($this->_classPath[self::PLAIN_CLASS] as $basePath) {
                 if ($this->_tryToLoad($basePath . $classPath)) {
+                    // if necessary call the class initializer
+                    if (method_exists($className, '__ClassInit')) {
+                        call_user_func([$className, '__ClassInit']);
+                    }
                     $found = TRUE;
                     break; //quick and dirty
                 }

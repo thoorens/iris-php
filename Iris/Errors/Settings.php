@@ -156,4 +156,4 @@ class Settings extends \Iris\SysConfig\_Settings {
 }
 
 // Auto init
-Settings::Init();
+Settings::__ClassInit();

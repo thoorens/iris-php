@@ -81,11 +81,11 @@ class View implements \Iris\Translation\iTranslatable {
      *
      * @var \Iris\System\Stack
      */
-    private static $EvalStack = \NULL;
+    private static $_EvalStack = \NULL;
 
-    public static function Initializer() {
-        if (is_null(self::$EvalStack)) {
-            self::$EvalStack = new \Iris\System\Stack('Error in View script stack');
+    public static function __ClassInit() {
+        if (is_null(self::$_EvalStack)) {
+            self::$_EvalStack = new \Iris\System\Stack('Error in View script stack');
         }
     }
 
@@ -171,9 +171,9 @@ class View implements \Iris\Translation\iTranslatable {
             }
             ob_start();
             echo $this->_prerendering;
-            self::$EvalStack->push($template);
+            self::$_EvalStack->push($template);
             $this->_eval($template);
-            self::$EvalStack->pop();
+            self::$_EvalStack->pop();
             $page = ob_get_clean();
             return $page;
         }
@@ -210,9 +210,9 @@ class View implements \Iris\Translation\iTranslatable {
         }
 
         try {
-            self::$EvalStack->push($template);
+            self::$_EvalStack->push($template);
             eval("?>" . $phtml);
-            self::$EvalStack->pop();
+            self::$_EvalStack->pop();
         }
         catch (\Iris\Exceptions\LoaderException $l_ex) {
             throw $l_ex;
@@ -316,9 +316,7 @@ class View implements \Iris\Translation\iTranslatable {
      * @return \Iris\System\Stack;
      */
     public static function GetEvalStack() {
-        return self::$EvalStack;
+        return self::$_EvalStack;
     }
 
 }
-
-View::Initializer();
