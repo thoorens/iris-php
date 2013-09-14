@@ -39,9 +39,7 @@ class ErrorToolbar extends \Iris\views\helpers\_ViewHelper {
         if (!\Iris\Engine\Mode::IsProduction()) {
             /* @var $settings \Iris\Errors\Settings */
             $settings = \Iris\Errors\Settings::GetInstance();
-            if ($settings->hasFlag()) {
-                $html = sprintf("Flags : %b &diams; ", $settings->getErrorflags());
-            }
+            $html = sprintf("Flags : %b &diams; ", $settings->getErrorflags());
             /* @var $exception \Iris\Exceptions\_Exception */
             $exception = \Iris\Engine\Memory::Get('untreatedException');
             $router = \Iris\Engine\Router::GetInstance();
