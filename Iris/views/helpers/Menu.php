@@ -34,10 +34,41 @@ use \Iris\Structure as is;
  */
 class Menu extends _ViewHelper{
 
-    protected static $_ActiveClass = 'active';
+    protected $_activeClass;
     
-    protected static $_MainTag = 'ul';
+    protected $_mainTag;
     
+    /**
+     * Inits the active class and main tag names from settings
+     */
+    protected function _init() {
+        $this->_activeClass = \Iris\SysConfig\Settings::GetMenuActiveClass();
+        $this->_mainTag = \Iris\SysConfig\Settings::GetMenuMainTag();
+    }
+    
+    /**
+     * Accessor to modify the active class of the menu
+     * 
+     * @param string $activeClass
+     * @return \Iris\views\helpers\Menu for fluent interface
+     */
+    public function setActiveClass($activeClass) {
+        $this->_activeClass = $activeClass;
+        return $this;
+    }
+
+    /**
+     * Acessor to modify main tag of the menu
+     * 
+     * @param string $mainTag
+     * @return \Iris\views\helpers\Menu for fluent interface
+     */
+    public function setMainTag($mainTag) {
+        $this->_mainTag = $mainTag;
+        return $this;
+    }
+
+        
     /**
      * Permits to add a same id to all URI of the menu
      * 
@@ -74,11 +105,7 @@ class Menu extends _ViewHelper{
     public function render($name = '#def#', $recursive = \FALSE){
         return $this->help($name, $recursive);
     }
-    
-    public function setActiveClass($class) {
-        self::$_ActiveClass = $class;
-    }
-
+        
     /**
      * A recursive HTML rendering of a hierarchical menu
      * as an array
@@ -95,7 +122,7 @@ class Menu extends _ViewHelper{
             }
         }
         if (count($items)) {
-            $tag = self::$_MainTag;
+            $tag = $this->_mainTag;
             return "<$tag>\n" .
                     implode("\n", $items)
                     . "\n</$tag>\n";
@@ -106,7 +133,7 @@ class Menu extends _ViewHelper{
     }
 
     protected function _renderItem($item, $recursive) {
-        $active = self::$_ActiveClass;
+        $active = $this->_activeClass;
         $uri = $this->_simplifyUri($item['uri']);
         if($this->_specialId!=''){
             $uri .= '/'.$this->_specialId;

@@ -34,9 +34,17 @@ use \Iris\Structure as is;
  */
 class ButtonMenu extends Menu {
 
-    protected static $_ActiveClass = 'active';
+    protected $_activeClass;
     
-    protected static $_MainTag = 'div';
+    protected $_mainTag;
+    
+    /**
+     * Inits the active class and main tag names from settings
+     */
+    protected function _init() {
+        $this->_activeClass = \Iris\SysConfig\Settings::GetMenuActiveClass();
+        $this->_mainTag = \Iris\SysConfig\Settings::GetButtonMenuMainTag();
+    }
 
     protected function _renderItem($item,$dummy) {
         $uri = $this->_simplifyUri($item['uri']);

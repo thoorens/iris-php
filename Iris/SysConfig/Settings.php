@@ -68,6 +68,11 @@ class Settings extends _Settings {
         StandardSetting::CreateSetting('iconSystemDir', '/!documents/file/images/icons');
         // By default all messages are in US english
         StandardSetting::CreateSetting('defaultLanguage', 'en-us');
+        // Defaults settings for menu
+        StandardSetting::CreateSetting('menuActiveClass', 'active');
+        StandardSetting::CreateSetting('menuMainTag', 'ul');
+        StandardSetting::CreateSetting('buttonMenuMainTag', 'div');
+        
     }
 
 }
