@@ -130,7 +130,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
      * @param mixed $param 
      */
     public function __construct($param=\NULL) {
-        $response = \Iris\Engine\Response::GetCurrentInstance();
+        $response = \Iris\Engine\Response::GetDefaultInstance();
         $module = $response->getModuleName();
         $controller = $response->getControllerName();
         $action = $response->getActionName();
