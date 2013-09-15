@@ -27,8 +27,9 @@ namespace Iris\Structure;
  * If no label, assumes "Continue".
  * 
  * Initially developped for Iris Workbench it has been replaced by DBSequence.
- * It may be helpfull (see the subclass workbench\TextSequence for an
- * example of use).
+ * It may be helpfull. The removed subclass workbench\TextSequence 
+ * presented an example of use (this class is still present in Blueprint library,
+ * which can be obtained on demand to the author).
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
