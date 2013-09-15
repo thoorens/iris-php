@@ -32,18 +32,31 @@ namespace Iris\Forms;
 abstract class _FormFactory {
 
     /**
-     *
-     * @var type 
-     * @todo deprecated..
+     * The library in which find the elements
+     * 
+     * @var string 
      */
     protected static $_Library = null;
 
     /**
-     *
+     * The default form factory
+     * 
      * @var _FormFactory
      */
     protected static $_DefaultFormFactory = NULL;
 
+    
+    public static function __classInit(){
+        $formClassName = get_called_class();
+        $nameChunks = explode('\\',$formClassName);
+        array_pop($nameChunks);
+        static::$_Library = implode('\\', $nameChunks);
+    }
+
+
+    /**
+     * The current form class becomes the default one
+     */
     public function setDefault() {
         self::$_DefaultFormFactory = $this;
     }
@@ -54,8 +67,8 @@ abstract class _FormFactory {
      */
     public static function GetDefaultFormFactory() {
         if (is_null(self::$_DefaultFormFactory)) {
-            $ff = new \Iris\Forms\StandardFormFactory();
-            //$ff = new \Dojo\Forms\FormFactory();
+            $defaultClassName = \Iris\SysConfig\Settings::GetDefaultFormClass();
+            $ff = new $defaultClassName();
             $ff->setDefault();
         }
         return self::$_DefaultFormFactory;

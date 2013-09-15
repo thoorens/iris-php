@@ -32,8 +32,6 @@ namespace Dojo\Forms;
  * @version $Id: $ */
 class FormFactory extends \Iris\Forms\_FormFactory {
 
-    protected static $_Library = "Dojo\\Forms";
-
     public function __construct() {
         //\Dojo\views\helpers\Loader::HelperCall('dojo_Loader', array(TRUE));
     }

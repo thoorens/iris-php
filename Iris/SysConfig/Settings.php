@@ -72,7 +72,8 @@ class Settings extends _Settings {
         StandardSetting::CreateSetting('menuActiveClass', 'active');
         StandardSetting::CreateSetting('menuMainTag', 'ul');
         StandardSetting::CreateSetting('buttonMenuMainTag', 'div');
-        
+        // Default settings for forms
+        StandardSetting::CreateSetting('defaultFormClass', '\\Iris\\Forms\\StandardFormFactory');
     }
 
 }

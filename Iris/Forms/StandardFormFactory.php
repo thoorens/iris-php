@@ -33,8 +33,7 @@ namespace Iris\Forms;
  * @version $Id: $ */
 class StandardFormFactory extends _FormFactory {
 
-    protected static $_Library = "Iris\\Forms";
-
+    
     
     
 
