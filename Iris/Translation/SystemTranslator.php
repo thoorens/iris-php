@@ -35,12 +35,17 @@ namespace Iris\Translation;
 class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\Design\iSingleton {
 
     private static $_Instance = NULL;
-    private $_data = array(
+    private $_data = [
         //        
         // Helpers
         //        
         '(Details)' => '(Détails)',
+        // {Head()}
         'Site created with Iris-PHP' => 'Site réalisé avec Iris-PHP',
+        // {Boolean()}
+        'FALSE' => 'FAUX',
+        'TRUE' => 'VRAI',
+        'Not a logical value' => 'Valeur non logique',
         //        
         // Errors
         //
@@ -120,7 +125,7 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         'Fonction 4||A développer',
         'Function 5||Future enhancement' =>
         'Fonction 5||A développer',
-// Formulaires
+// Forms
         'Upload' => 'Téléverser',
         'File to upload:' => 'Fichier à téléverser:',
         'Retype password:' => 'Retapez le mot de passe:',
@@ -167,7 +172,7 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         'Execution time'=>'Temps d\'exécution',
         'Reset the session' => 'Réinitialiser la session',
         'Toolbar managed by Ajax' => "Barre d'administration en mode Ajax",
-    );
+    ];
 
     public static function GetInstance() {
         if (static::$_Instance == NULL) {
