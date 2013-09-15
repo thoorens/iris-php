@@ -1,0 +1,47 @@
+{wbHeader($this)}
+
+<div id="content" {wbBG()}>
+    <h3>Initial values</h3>
+    {defaultsettings}
+    <br/>
+    <table class="show">
+        <thead>
+            <tr>
+                <th colspan="2" >Standart setting</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Initial value</td>
+                <td>{backgroundColor1}</td>
+            </tr>
+            <tr>
+                <td>Modified value</td>
+                <td>{backgroundColor2}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <table class="show">
+        <thead>
+            <tr>
+                <th colspan="2">Boolean setting</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Initial value</td>
+                <td>{boolean($layout1)}</td>
+            </tr>
+            <tr>
+                <td>Disable</td>
+                <td>{boolean($layout2)}</td>
+            </tr>
+            <tr>
+                <td>Enable</td>
+                <td>{boolean($layout3)}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>        

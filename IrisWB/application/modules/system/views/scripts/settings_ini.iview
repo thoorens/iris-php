@@ -1,0 +1,8 @@
+{wbHeader($this)}
+
+<div id="content" {wbBG()}>
+    <h3>Initial values</h3>
+    {defaultsettings}
+    <h3>Values modified by the ini file</h3>
+    {modifiedsettings}
+</div>        

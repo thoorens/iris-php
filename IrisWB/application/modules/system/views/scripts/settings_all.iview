@@ -1,0 +1,7 @@
+{wbHeader($this)}
+
+<div id="content" {wbBG()}>
+    
+    {settings}
+
+</div>
