@@ -264,4 +264,4 @@ class Metadata implements \Serializable, \Countable {
 
 }
 
-?>
+

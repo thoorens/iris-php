@@ -41,4 +41,4 @@ class Anything2 extends \Iris\DB\ViewEntity {
    
 }
 
-?>
+

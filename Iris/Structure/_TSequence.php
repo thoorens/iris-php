@@ -168,4 +168,4 @@ abstract class _TSequence extends \Iris\DB\_Entity {
 
 }
 
-?>
+

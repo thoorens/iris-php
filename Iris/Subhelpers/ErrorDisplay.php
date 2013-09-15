@@ -150,4 +150,4 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
         }
     }
 
-?>
+

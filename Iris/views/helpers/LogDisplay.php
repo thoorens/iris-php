@@ -49,4 +49,4 @@ class LogDisplay extends _ViewHelper {
 
 }
 
-?>
+

@@ -89,4 +89,4 @@ class Em_PDOOracle extends \Iris\DB\Dialects\_Em_PDO {
 
 }
 
-?>
+

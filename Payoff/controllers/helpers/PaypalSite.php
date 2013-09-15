@@ -100,4 +100,4 @@ class PaypalSite extends \Iris\controllers\helpers\_ControllerHelper{
         return sprintf("%s/%s/%s",$this->_base, $this->_actions[$index], $ticketNumber);
     }
 }
-?>
+

@@ -36,4 +36,4 @@ class UTF8 extends \Iris\Translation\MultiByte {
 
 }
 
-?>
+

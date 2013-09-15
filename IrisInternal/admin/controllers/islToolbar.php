@@ -47,4 +47,4 @@ class islToolbar extends \Iris\MVC\_Islet {
 
 }
 
-?>
+

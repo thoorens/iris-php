@@ -196,4 +196,4 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
 
 }
 
-?>
+

@@ -56,4 +56,4 @@ class User extends \Iris\DB\Object implements iUser {
 
 }
 
-?>
+

@@ -53,4 +53,4 @@ trait tTranslatable {
         return $translator;
     }
 }
-?>
+

@@ -55,4 +55,4 @@ class Logo extends _ViewHelper {
 
 }
 
-?>
+

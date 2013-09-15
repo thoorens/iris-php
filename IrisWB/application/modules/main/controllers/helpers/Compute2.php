@@ -40,4 +40,4 @@ class Compute2 extends _ControllerHelper{
     }
 }
 
-?>
+

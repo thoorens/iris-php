@@ -223,4 +223,4 @@ class MultiByte implements \Iterator {
 
 }
 
-?>
+

@@ -39,4 +39,4 @@ interface iLateScriptProvider {
     public function getLateScript();
 }
 
-?>
+

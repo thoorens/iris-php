@@ -163,4 +163,4 @@ class DoublePassword extends \Iris\Forms\Elements\_ElementGroup {
     
 }
 
-?>
+

@@ -107,4 +107,4 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
 
 }
 
-?>
+

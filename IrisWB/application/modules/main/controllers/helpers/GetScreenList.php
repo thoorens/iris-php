@@ -59,4 +59,4 @@ class GetScreenList extends _ControllerHelper {
 
 }
 
-?>
+

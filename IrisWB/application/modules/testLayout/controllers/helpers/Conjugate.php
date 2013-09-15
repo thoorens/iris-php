@@ -76,4 +76,4 @@ class Conjugate extends _ControllerHelper{
         return $radix.$this->endings[$number];
     }
 }
-?>
+

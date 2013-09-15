@@ -43,4 +43,4 @@ return;
 /* All messages (they are many) */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ALL)
 
-?>
+

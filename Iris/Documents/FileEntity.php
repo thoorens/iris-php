@@ -50,4 +50,4 @@ class FileEntity extends \Iris\DB\_Entity {
 
 }
 
-?>
+

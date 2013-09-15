@@ -41,4 +41,4 @@ class TProducts extends _invoiceManager {
 
 }
 
-?>
+

@@ -104,4 +104,3 @@ function iris_member($object, $memberName){
 assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'iris_assert');
 
-?>

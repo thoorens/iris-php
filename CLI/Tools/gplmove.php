@@ -46,4 +46,4 @@ if ($modified) {
     $newFile .= implode("", $classDescription);
     file_put_contents($fileName, $newFile);
 }
-?>
+

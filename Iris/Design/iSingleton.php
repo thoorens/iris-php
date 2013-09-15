@@ -38,4 +38,4 @@ interface iSingleton {
     public static function GetInstance();
 }
 
-?>
+

@@ -51,4 +51,4 @@ class Mail extends _Validator {
 
 }
 
-?>
+

@@ -68,4 +68,4 @@ class layout extends _main{
     
 }
 
-?>
+

@@ -163,4 +163,4 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
 
 }
 
-?>
+

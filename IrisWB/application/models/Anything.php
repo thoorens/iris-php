@@ -36,4 +36,4 @@ class Anything extends \Iris\DB\_Entity {
 
 }
 
-?>
+

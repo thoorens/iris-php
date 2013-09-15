@@ -36,4 +36,4 @@ class subDemo extends \IrisInternal\main\controllers\_SecureSubcontroller {
 
 }
 
-?>
+

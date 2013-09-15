@@ -196,4 +196,4 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
 
 }
 
-?>
+

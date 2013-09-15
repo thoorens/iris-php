@@ -6,4 +6,4 @@
  */
 
 namespace Iris\DB\Dialects;
-?>
+

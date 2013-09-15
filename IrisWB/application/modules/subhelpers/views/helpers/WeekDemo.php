@@ -82,4 +82,4 @@ class WeekDemo extends \Iris\views\helpers\Week {
 
 }
 
-?>
+

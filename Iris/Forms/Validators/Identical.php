@@ -46,4 +46,4 @@ class Identical extends _Validator {
 
 }
 
-?>
+

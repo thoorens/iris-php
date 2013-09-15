@@ -52,4 +52,4 @@ class Required extends \Iris\Forms\Validators\Required {
 
 }
 
-?>
+

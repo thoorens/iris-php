@@ -150,4 +150,4 @@ class GoInternal extends _ViewHelper {
 
 }
 
-?>
+

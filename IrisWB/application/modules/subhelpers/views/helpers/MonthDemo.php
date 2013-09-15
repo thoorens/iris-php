@@ -82,4 +82,4 @@ class MonthDemo extends \Iris\views\helpers\Month {
 
 }
 
-?>
+

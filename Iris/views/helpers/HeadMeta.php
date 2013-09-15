@@ -52,4 +52,4 @@ final class HeadMeta extends _ViewHelper {
 
 }
 
-?>
+

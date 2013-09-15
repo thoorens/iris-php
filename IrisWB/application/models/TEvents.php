@@ -45,4 +45,4 @@ class TEvents extends _invoiceManager {
 
 }
 
-?>
+

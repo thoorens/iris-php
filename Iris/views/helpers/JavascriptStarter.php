@@ -64,4 +64,4 @@ class JavascriptStarter extends _ViewHelper {
 
 }
 
-?>
+

@@ -52,4 +52,4 @@ class Password_____ extends \Iris\Forms\Elements\InputElement {
 
 
 }
-?>
+

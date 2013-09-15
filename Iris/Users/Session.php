@@ -108,4 +108,4 @@ final class Session implements \Iris\Design\iSingleton{
     }
 }
 
-?>
+

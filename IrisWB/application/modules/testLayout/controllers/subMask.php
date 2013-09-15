@@ -34,4 +34,4 @@ class subMask extends \Iris\MVC\_Subcontroller {
     }
 }
 
-?>
+

@@ -64,4 +64,4 @@ class GoAd extends _ViewHelper {
 
 }
 
-?>
+

@@ -87,4 +87,4 @@ class SecureMail extends \Iris\views\helpers\_ViewHelper{
     }
 }
 
-?>
+

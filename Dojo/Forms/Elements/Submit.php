@@ -59,4 +59,4 @@ class Submit extends \Iris\Forms\_Element {
 
 }
 
-?>
+

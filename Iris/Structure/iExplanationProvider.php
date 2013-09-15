@@ -43,4 +43,4 @@ interface iExplanationProvider {
     public function getMessage($view);
 }
 
-?>
+

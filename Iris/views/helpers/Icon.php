@@ -83,4 +83,4 @@ class Icon extends _ViewHelper {
 
 }
 
-?>
+

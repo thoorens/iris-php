@@ -56,4 +56,4 @@ class VVcustomers extends \Iris\DB\ViewEntity {
 
 }
 
-?>
+

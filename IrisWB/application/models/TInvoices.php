@@ -46,4 +46,4 @@ class TInvoices extends _invoiceManager {
     
 }
 
-?>
+

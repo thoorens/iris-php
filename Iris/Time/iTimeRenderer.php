@@ -43,4 +43,4 @@ interface iTimeRenderer extends \Iris\Subhelpers\iRenderer {
     public function eventDisplay($events);
     public function renderDate($events, $nbEvent);
 }
-?>
+

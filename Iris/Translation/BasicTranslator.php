@@ -48,4 +48,4 @@ class BasicTranslator extends \Iris\Translation\_Translator{
 
 }
 
-?>
+

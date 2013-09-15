@@ -343,4 +343,4 @@ abstract class _EntityManager {
     public abstract function bitXor();
 }
 
-?>
+

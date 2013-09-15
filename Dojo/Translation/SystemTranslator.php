@@ -60,4 +60,4 @@ class SystemTranslator extends \Iris\Translation\SystemTranslator {
 
 }
 
-?>
+

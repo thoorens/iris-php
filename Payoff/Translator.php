@@ -50,4 +50,4 @@ class Translator extends \Iris\Translation\SystemTranslator {
 
 }
 
-?>
+

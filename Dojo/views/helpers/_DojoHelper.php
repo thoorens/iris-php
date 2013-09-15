@@ -44,4 +44,4 @@ abstract class _DojoHelper extends \Iris\views\helpers\_ViewHelper{
 
 }
 
-?>
+

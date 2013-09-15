@@ -47,4 +47,4 @@ class islDemo extends \IrisInternal\main\controllers\_SecureIslet {
 
 }
 
-?>
+

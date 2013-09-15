@@ -39,4 +39,4 @@ class _admin extends \IrisInternal\main\controllers\_SecureInternal {
 
 }
 
-?>
+

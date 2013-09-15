@@ -67,4 +67,4 @@ trait tSubhelperLink{
         $this->_subhelper = $subhelper::GetInstance($this);
     }
 }
-?>
+
