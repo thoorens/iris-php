@@ -168,12 +168,11 @@ abstract class _Settings implements \Iris\Design\iSingleton {
                 else {
                     $function = "Disable$key";
                 }
-                Settings::$function();
+                $class::$function();
             }
             else {
                 $function = "Set$key";
-                $class::GetInstance();
-                Settings::$function($value);
+                $class::$function($value);
             }
         }
     }
