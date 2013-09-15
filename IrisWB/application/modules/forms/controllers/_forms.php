@@ -21,8 +21,7 @@ class _forms extends \modules\_application {
         $this->_setLayout('main');
         $this->__bodyColor = 'ORANGE3';
         // choose Dojo type forms
-        $ff = new \Dojo\Forms\FormFactory();
-        $ff->setDefault();
+        \Iris\SysConfig\Settings::SetDefaultFormClass('\\Dojo\\Forms\\FormFactory');
     }
 
 }
