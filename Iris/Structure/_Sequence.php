@@ -33,10 +33,12 @@ namespace Iris\Structure;
 abstract class _Sequence {
 
     /**
-     * Specifies the type of sequence used in WB (initially an ArraySequence, now a DBSequence
+     * Specifies the type of sequence used in WB (initially an ArraySequence, now a DBSequence)
+     * The var has not been put in Settings because this class is only used in Workbench.
+     * 
      * @var string
      */
-    public static $DefaultSequenceType = '\\Iris\\Structure\\DBSequence';
+    public static $DefaultSequenceType = '\\Iris\\Structure\\DBSequence'; 
     
     /**
      * Conserves the current URL
