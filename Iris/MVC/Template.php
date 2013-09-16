@@ -89,7 +89,7 @@ class Template implements \Iris\Translation\iTranslatable {
     /**
      * The content of the template, as an array of lines
      * 
-     * @var array(string)
+     * @var string[]
      */
     private $_templateArray = '';
 
@@ -97,7 +97,7 @@ class Template implements \Iris\Translation\iTranslatable {
      * The template language as an array of array. Each 0 element beginning
      * with '/' is considered as a regular expression
      * 
-     * @var array
+     * @var string[]
      */
     private static $_Token = [
         // escaping {
@@ -250,7 +250,7 @@ class Template implements \Iris\Translation\iTranslatable {
      * Explores the array template and replace all template tags 
      * by php and or html code. Returns a string.
      *  
-     * @param array $template
+     * @param string[] $template
      * @return string 
      */
     public function renderTemplate() {

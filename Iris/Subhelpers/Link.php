@@ -46,18 +46,21 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     
     /**
      * A special array corresponding to a non existent button/link
-     * @var array
+     * 
+     * @var string[]
      */
     public static $NoLink = ['!!!!NONE!!!!', '', ''];
     
     /**
      * HTML arguments may be added and removed from here
-     * @var array 
+     * 
+     * @var string[]
      */
     protected $_attributes = array();
 
     /**
      * Each subhelper class has its own unique instance
+     * 
      * @var static
      */
     protected static $_Instance = NULL;
@@ -112,7 +115,7 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * Stops the rendering if the link is null 
      * Overwrites the method in tAutoRenderer
      * 
-     * @param array $args
+     * @param string[] $args
      * @return boolean
      */
     protected function _dontRender($args) {

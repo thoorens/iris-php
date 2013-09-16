@@ -46,7 +46,8 @@ class Bubble {
 
     /**
      * A list of requisites for the bubble. 
-     * @var array
+     * 
+     * @var string[]
      */
     private $_modules = array();
 
@@ -61,6 +62,7 @@ class Bubble {
      * Syntaxic sugar for GetObject
      * 
      * @param string $objectName
+     * 
      * @return Bubble
      */
     public static function GetBubble($objectName) {

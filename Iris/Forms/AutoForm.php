@@ -84,7 +84,7 @@ class AutoForm extends Elements\Form {
     /**
      *
      * @param db\MetaItem $metaItem
-     * @param array $labels
+     * @param string[] $labels
      */
     private function _makeElement(db\MetaItem $metaItem) {
         switch ($metaItem->getType()) {

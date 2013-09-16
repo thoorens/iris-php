@@ -69,7 +69,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     /**
      * An array containing all the format for displaying verbose messages
      * 
-     * @var array(string)
+     * @var string[]
      */
     protected $_format = array();
 
@@ -297,7 +297,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * 
      * @param string $source the path to the original template file
      * @param string $destination the path to the new file
-     * @param array $replacement an associative array with the fields and values 
+     * @param mixed[] $replacement an associative array with the fields and values 
      */
     public function createFromTemplate($source, $destination, $replacement = array()) {
         $text = $this->file_get_contents($source);

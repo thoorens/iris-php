@@ -59,7 +59,7 @@ class Analyser {
      * An associative array with the types of metadata for a project
      * complete description
      * 
-     * @var array
+     * @var string[]
      */
     private static $_Metadata = array(
         'A' => 'Author',
@@ -74,7 +74,7 @@ class Analyser {
      * Option terminating with ':' requires a parameter, with '::' has
      * an optional parameter (e.g. h::).
      * 
-     * @var array
+     * @var string[]
      */
     public static $Functions = [
         'h::' => 'help::',

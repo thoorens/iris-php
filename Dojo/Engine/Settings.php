@@ -41,16 +41,7 @@ class Settings extends \Iris\SysConfig\_Settings {
     const VERSION = '1.9.0';
 
 
-    /**
-     *
-     * @var array : associative array containing the values of the 
-     * config (inherited values may be in it or not according to inheritance mode) 
-     * Always use the iterator or magic methods to access the actual data
-     * The subclass has its own array.
-     * 
-     */
-
-    
+        
 
     /**
      * Defines some standard settings with a default value

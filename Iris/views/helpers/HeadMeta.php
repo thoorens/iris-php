@@ -42,7 +42,7 @@ final class HeadMeta extends _ViewHelper {
     
     /**
      *
-     * @param array/NULL $param : NULL for display, array to add new meta tags
+     * @param string[]/NULL $param : NULL for display, array to add new meta tags
      * @return string zero to many lines of html meta tags 
      */
     public function help() {

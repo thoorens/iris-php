@@ -58,7 +58,7 @@ abstract class _Login extends _Crud {
      * <li> $this->finalTreatment if username and password matched
      * <li> $this->errorTreatment if password doesn't match
      * </ul>
-     * @param array $data
+     * @param mixed[] $data
      * @return mixed 
      */
     protected function _postLogin($data) {

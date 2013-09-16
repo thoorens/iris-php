@@ -66,7 +66,7 @@ class SlideShowManager extends \Iris\Subhelpers\_SlideShowManager {
     /**
      * The data-dojo-props collection
      * 
-     * @var array 
+     * @var string[] 
      */
     private $_dojoProps = [
         "slideshowInterval" => 4,

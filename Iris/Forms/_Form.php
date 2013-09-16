@@ -53,7 +53,7 @@ abstract class _Form implements iFormContainer {
     /**
      * the direct components of the form (which may be iFormContainer)
      * 
-     * @var array(_Element)
+     * @var _Element[]
      */
     protected $_components = array();
 
@@ -61,13 +61,13 @@ abstract class _Form implements iFormContainer {
      * These are elements whose value must be calculated from their components
      * value.
      * 
-     * @var array(_Element)
+     * @var _Element[]
      */
     protected $_aidedComponents = array();
 
     /**
      * the elements contained (directly or in container) by the form 
-     * @var array(_Element)
+     * @var _Element[]
      */
     protected $_registry = array();
 
@@ -89,7 +89,7 @@ abstract class _Form implements iFormContainer {
     /**
      * An associative array of facultative attributes
      * 
-     * @var array
+     * @var string[]
      */
     protected $_attributes = array();
 
@@ -212,7 +212,7 @@ abstract class _Form implements iFormContainer {
     /**
      * Checks each data in formdata against the element validators
      * 
-     * @param array $formData
+     * @param mixed[] $formData
      * @return boolean 
      */
     public function isValid($formData) {
@@ -230,7 +230,7 @@ abstract class _Form implements iFormContainer {
      * Fill the form values with the data provided (or by default
      * with $_POST values)
      * 
-     * @param array $formData 
+     * @param mixed[] $formData 
      */
     public function fill($formData=NULL) {
         if ($formData == NULL) {

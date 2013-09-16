@@ -61,7 +61,7 @@ abstract class _Helper implements \Iris\Translation\iTranslatable{
      * according to the different types of helpers)
      * 
      * @param string $functionName Class name of helper
-     * @param array $arguments arguments for help method
+     * @param mixed[] $arguments arguments for help method
      * @param mixed $view the view/controller possibly containing the helper
      * @return mixed 
      */
@@ -87,7 +87,6 @@ abstract class _Helper implements \Iris\Translation\iTranslatable{
     /**
      *
      * @param string $functionName
-     * @param array $arguments
      * @param string $helperType
      * @return \Iris\MVC\_Helper 
      */

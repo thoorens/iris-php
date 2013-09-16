@@ -97,8 +97,8 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
 
     /**
      * 
-     * @param array $searchValues
-     * @param array $newData
+     * @param string[] $searchValues
+     * @param mixed[] $newData
      */
     public function undeleteOrInsert($values) {
         $assoc = array_combine(static::$_InsertionKeys, $values);

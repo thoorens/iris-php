@@ -33,13 +33,15 @@ class PHPException extends _Exception {
 
     /**
      * A copy of system trace for standard exceptions
-     * @var array
+     * @var Exception[]
+     * @todo not read
      */
-    protected $_trace = NULL;
+    protected $_trace = [];
 
     /**
      * A copy of system trace (as a string) for standard exceptions
      * @var string
+     * @todo not read
      */
     protected $_traceAsString = NULL;
 

@@ -39,12 +39,20 @@ class Events {
     
     /**
      *
-     * @var array(iEvent)
+     * @var iEvent[]
      */
     private $_events = array();
     
+    /**
+     *
+     * @var Date
+     */
     private $_date = \NULL;
     
+    /**
+     *
+     * @var type 
+     */
     private $_rendering = \NULL;
     
     /**

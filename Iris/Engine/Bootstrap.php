@@ -49,13 +49,14 @@ abstract class core_Bootstrap {
      * of the files in /config). It is not deprecated, but /config offers
      * a more convenient way to manage parameter files.
      * 
-     * @var array
+     * @var string[]
      */
     private $_configToRead = NULL;
 
     /**
      * Implied in the internal overridden class mechanism
-     * @var array
+     * @var string[]
+     * 
      * @deprecated will be soon replaced by another mechanism
      */
     public static $AlternativeClasses = array();
@@ -139,7 +140,7 @@ abstract class core_Bootstrap {
      * Reads some files containing various parameters
      * Only considers ini and php files
      * 
-     * @param array $filess 
+     * @param string[] $filess 
      */
     private function _readConfig($programName) {
         sort($this->_configToRead);

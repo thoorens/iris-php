@@ -30,8 +30,17 @@ namespace models;
  * @version $Id: $ */
 class TInvoices extends _invoiceManager {
 
+    /**
+     *
+     * @var string[]
+     */
     protected $_externalEntities = ['customers' => 'TCustomers2'];
     
+    /**
+     * SQL command to construct the table
+     * 
+     * @var string[]
+     */
     protected static $_SQLCreate = array(
         'sqlite' =>
         'CREATE TABLE invoices(

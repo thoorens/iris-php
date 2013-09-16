@@ -36,7 +36,7 @@ class CodeContainer {
 
     /**
      * The main container for the code
-     * @var array
+     * @var string[]
      */
     private $_codePieces = array();
     /**

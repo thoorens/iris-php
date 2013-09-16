@@ -38,7 +38,7 @@ class Menu {
 
     /**
      * The collection of menu items
-     * @var array MenuItem 
+     * @var MenuItem[] 
      */
     protected $_items = array();
     protected $_defaultUri = null;
@@ -71,7 +71,7 @@ class Menu {
     /**
      * Treat a complex key and a value (the key may be multi level)
      * 
-     * @param array $keys Each item correspond to a level
+     * @param string[] $keys Each item correspond to a level
      * @param type $value The value
      */
     protected function _addData1(Menu $base, array $keys, $value) {

@@ -66,20 +66,20 @@ class Object {
 
     /**
      * The field names (in keys) and offsets (in values)
-     * @var array 
+     * @var int[]
      */
     protected $_fields = array();
 
     /**
      * The current content of the fields 
-     * @var array 
+     * @var mixed[] 
      */
     protected $_currentContent = array();
 
     /**
      * The modified content of the field
      * 
-     * @var array
+     * @var mixed[]
      */
     protected $_modifiedContent = array();
 
@@ -101,7 +101,7 @@ class Object {
      * An object may have various parents : each one has the foreign field(s)
      * as an index
      * 
-     * @var array
+     * @var Object[]
      */
     private $_parents = array();
 
@@ -109,7 +109,7 @@ class Object {
      * An object may have various series of children : each one has the table
      * name + index(es) as index and an array of object as value.
      * 
-     * @var array
+     * @var Object[]
      */
     protected $_children = array();
 
@@ -124,8 +124,8 @@ class Object {
      * Constructor for an object
      * 
      * @param \Iris\DB\_Entity $entity The entity corresponding to the object
-     * @param array $idValues An array with the primary key field values
-     * @param array $data The initials values of the object (in an array)
+     * @param string[] $idValues An array with the primary key field values
+     * @param mixed[] $data The initials values of the object (in an array)
      * @param boolean $new If true the object is new (by default not)
      */
     public function __construct(_Entity $entity, $idValues, $data, $new = FALSE) {

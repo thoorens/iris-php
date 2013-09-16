@@ -35,7 +35,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
 
     /**
      *
-     * @param array $sequence (ignored)
+     * @param mixed[] $sequence (ignored)
      */
     public function __construct($sequence = array()) {
         $router = \Iris\Engine\Router::GetInstance();

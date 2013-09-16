@@ -64,7 +64,7 @@ class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
     /**
      * Job has been done by Dojo
      * 
-     * @param array $data Data from form
+     * @param mixed[] $data Data from form
      * @return string 
      */
     public function compileValue(&$data) {

@@ -38,7 +38,7 @@ class CoreMaker extends _Process {
     /**
      * Theses classes cannot be overidden
      * 
-     * @var array
+     * @var string[]
      * @todo see Log status
      */
     private $_protectedClasses = [

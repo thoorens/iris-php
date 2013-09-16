@@ -52,7 +52,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     /**
      * A 13 element array for month lengths, item 0 is unused
      * 
-     * @var array(int)
+     * @var int[]
      */
     protected static $_MonthLength = array(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 

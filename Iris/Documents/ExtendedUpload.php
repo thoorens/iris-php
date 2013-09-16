@@ -98,8 +98,8 @@ class ExtendedUpload extends \Iris\DB\DataBrowser\Upload {
      * <i>innername => databasename</i>
      * </ul>
      * 
-     * @param array $param (a two item array : array categories and array mapping
-     * @param array $mapping  list of modified field name
+     * @param string[] $param (a two item array : array categories and array mapping
+     * @param string[] $mapping  list of modified field name
      */
     public function __construct($param) {
         list($categories,$mapping) = $param;
@@ -114,7 +114,7 @@ class ExtendedUpload extends \Iris\DB\DataBrowser\Upload {
     /**
      * Recuperate the mapping given to the constructor.
      * 
-     * @param array $mapping an array of key => field names
+     * @param string[] $mapping an array of key => field names
      */
     private function _prepareMapping($mapping) {
         foreach ($mapping as $key => $newValue) {
@@ -154,7 +154,7 @@ class ExtendedUpload extends \Iris\DB\DataBrowser\Upload {
      * the name of the folder in which store the uploaded file
      * 
      * @param string $fieldName The name of the field used to choice the file
-     * @param array $uploadedFile The uploaded file metadata (from $_FILES)
+     * @param string[] $uploadedFile The uploaded file metadata (from $_FILES)
      * @param type $formData All the data form the form
      */
     protected function _getFileDir(\Iris\Forms\Elements\FileElement $fileElement) {
@@ -226,7 +226,7 @@ class ExtendedUpload extends \Iris\DB\DataBrowser\Upload {
 
     /**
      *
-     * @param array $categories as received by the constructor
+     * @param string[] $categories as received by the constructor
      * @return \Iris\Forms\_Form 
      */
     protected function _newForm($categories) {

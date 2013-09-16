@@ -46,19 +46,19 @@ abstract class _FormLayout {
 
     /**
      * 
-     * @var array
+     * @var mixed[]
      */
     protected $_before;
 
     /**
      *
-     * @var array
+     * @var mixed[]
      */
     protected $_middle;
 
     /**
      *
-     * @var array
+     * @var mixed[]
      */
     protected $_after;
 
@@ -154,7 +154,7 @@ abstract class _FormLayout {
      * 
      * @see TabLayout for en example
      * 
-     * @param array $sepArray
+     * @param string[] $sepArray
      * @param string $attributes Optional attributes as a text
      * @return string 
      */

@@ -45,16 +45,17 @@ class ArraySequence extends _Sequence {
      */
     protected $_explanationProvider = \NULL;
     
-        /**
+    /**
      * The sequence to be followed
      * 
-     * @var array
+     * @var mixed[]
      */
     private $_sequence;
 
     /**
      * the original sequence (the array can contain arrays)
-     * @var array
+     * 
+     * @var mixed[]
      */
     private $_rawSequence;
 
@@ -70,7 +71,7 @@ class ArraySequence extends _Sequence {
      * In that case, the follower has label '!!!!NONE!!!!'
      * which forces the helper Button to no display.
      * 
-     * @param array $sequence 
+     * @param string[] $sequence 
      */
     public function setSequence(array $sequence) {
         $this->_rawSequence = $sequence;

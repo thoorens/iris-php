@@ -34,7 +34,7 @@ abstract class _Sequence extends _Animation {
 
     /**
      * The collection of distinct events to memorize
-     * @var array
+     * @var string[][]
      */
     private static $_Events = array();
 

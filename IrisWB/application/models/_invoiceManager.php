@@ -34,10 +34,22 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
 
     /**
      * Eachs subclasses will have its proper SQL DDL string to create a table
-     * @var array
+     * 
+     * @var string[]
      */
     protected static $_SQLCreate = array();
+    
+    /**
+     *
+     * @var \Iris\DB\_EntityManager
+     */
     private static $_Em = \NULL;
+    
+    /**
+     * The default file name for Sqlite database
+     * 
+     * @var string
+     */
     private static $_File = '/library/IrisWB/application/config/base/invoice.sqlite';
 
     /**
@@ -47,7 +59,7 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
      * @param string $dbType The type of database (by default sqlite)
      * @return \Iris\DB\_EntityManager
      */
-    public static function GetEM($dbType='sqlite') {
+    public static function GetEM($dbType = 'sqlite') {
         if (is_null(self::$_Em)) {
             switch ($dbType) {
                 case 'sqlite':
@@ -58,7 +70,6 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
         return self::$_Em;
     }
 
-    
     public static function DefaultEntityManager() {
         return self::GetEM();
     }
@@ -68,6 +79,7 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
      * 
      * @param string $dbType The type of database (by default sqlite)
      */
+
     /**
      * 
      * @param type $dbType
@@ -95,8 +107,5 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
         $em->directSQL($sql);
     }
 
-    
-
 }
-
 

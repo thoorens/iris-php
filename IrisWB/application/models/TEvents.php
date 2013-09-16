@@ -30,6 +30,11 @@ namespace models;
  * @version $Id: $ */
 class TEvents extends _invoiceManager {
 
+    /**
+     * SQL command to construct the table
+     * 
+     * @var string[]
+     */
     protected static $_SQLCreate = array(
         'sqlite' =>
         'CREATE TABLE events(

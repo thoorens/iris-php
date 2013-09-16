@@ -63,7 +63,7 @@ class MultiCheckbox extends _ElementGroup{
     
     /**
      *
-     * @param array $data (data from POST) 
+     * @param mixed[] $data (data from POST) 
      */
     public function compileValue(&$data=NULL) {
         $sum = 0;

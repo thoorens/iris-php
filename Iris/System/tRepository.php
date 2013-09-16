@@ -36,7 +36,8 @@ trait tRepository{
     
     /**
      * All the object are placed in a repository
-     * @var array(static)
+     * 
+     * @var static[] 
      */
     private static $_Repository = array();
 

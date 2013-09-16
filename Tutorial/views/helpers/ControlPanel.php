@@ -95,7 +95,7 @@ class ControlPanel extends \Dojo\views\helpers\_DojoHelper{
     /**
      * Does the job: html for button bar and javascript
      * 
-     * @param array(int) $duration The time duration of each frame
+     * @param int[] $duration The time duration of each frame
      * @param string $channel The publish/subscribe channel name (defautl IRIS_CP)
      * @return string 
      */

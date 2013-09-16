@@ -57,7 +57,7 @@ class Response {
 
     /**
      *
-     * @var array
+     * @var string[]
      */
     private $_parameters;
 
@@ -148,7 +148,7 @@ class Response {
      * Replaces the parameters of the action
      * (e.g. in case of redirect)
      * 
-     * @param array(string) $actionPara 
+     * @param string[] $actionPara 
      */
     public function setParameters($actionPara) {
         $this->_parameters = $actionPara;

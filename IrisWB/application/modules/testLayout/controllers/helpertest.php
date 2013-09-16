@@ -35,7 +35,7 @@ class helpertest extends _testLayout{
     /**
      * This array is going to be used directly in the Conjugate helper
      * 
-     * @var array
+     * @var string[]
      */
     public $endings = [
         '','o' , 's', '', 'mos', 'is', 'n'

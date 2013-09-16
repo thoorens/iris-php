@@ -36,10 +36,11 @@ namespace Iris\SysConfig;
 class Config implements \IteratorAggregate {
 
     /**
-     *
-     * @var array : associative array containing the values of the 
+     * associative array containing the values of the 
      * config (inherited values may be in it or not according to inheritance mode) 
      * Always use the iterator or magic methods to access the actual data
+     * 
+     * @var mixed[]
      */
     protected $_data = array();
 

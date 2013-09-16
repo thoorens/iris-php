@@ -33,8 +33,19 @@ class TCustomers extends _invoiceManager {
     // TCostumers is used for demonstration purpose elsewhere, so we must
     // specify the table name, which would be customers2 if not explicitely
     // defined
+    
+    /**
+     * Table name
+     * 
+     * @var string
+     */
     protected $_entityName = 'customers';
     
+    /**
+     * SQL command to construct the table
+     * 
+     * @var string[]
+     */
     protected static $_SQLCreate = [
         'sqlite' =>
         'CREATE TABLE customers(

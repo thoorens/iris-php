@@ -83,7 +83,7 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
      * Permits to init the components of the widget. Returns an exception if
      * the widget is not registred in a form or subcontainer
      * 
-     * @param array $pairs
+     * @param string[] $pairs
      * @return _ElementGroup 
      * @throw FormException
      */

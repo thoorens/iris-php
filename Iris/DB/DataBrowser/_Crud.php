@@ -114,7 +114,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
      * A correspondance between the action and the submit button text
      * (which can be localized afterwards)
      * 
-     * @var array(string)
+     * @var string[]
      */
     protected static $_SubmitButtonText = array(
         'create' => 'Insert',
@@ -385,7 +385,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
      * The object need perhaps some modication just before
      * to be inserted in the database
      * 
-     * @param array $formData data form the form
+     * @param mixed[] $formData data form the form
      * @param \Iris\DB\Object $object the future object to be inserted
      */
     protected function _preCreate($formData, &$object) {
@@ -427,7 +427,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
      * <li>decide to stop by returning an error code instead of DISPLAY
      * </ul>
      *
-     * @param array $data the data used by the form
+     * @param mixed[] $data the data used by the form
      * @return int what to do next (by default DISPLAY)
      */
     protected function _preDisplay(&$data) {
@@ -467,7 +467,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
      * The object need perhaps some modication just before
      * to be updated in the database
      * 
-     * @param array $data
+     * @param mixed[] $data
      * @param \Iris\DB\Object $object 
      */
     protected function _preUpdate($formData, &$object) {
@@ -491,7 +491,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
      * on a single field
      * 
      * @param int $mode one of CRUD
-     * @param array $formData data from the form
+     * @param mixed[] $formData data from the form
      * @return boolean (if FALSE go to form display)
      */
     protected function _postValidate($mode, $formData) {
@@ -564,7 +564,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable{
      * 
      * @param \Iris\MVC\_Controller $controller the controller which calls the CRUD
      * @param type $actionName the name of the current action (with Action suffix)
-     * @param array $parameters the action parameters as received by a __call method
+     * @param mixed[] $parameters the action parameters as received by a __call method
      * @param string $scriptName the optional name of a script used by all operation
      */
     public static function DispatchAction($controller, $actionName, $parameters, $scriptName = NULL) {

@@ -43,7 +43,7 @@ abstract class _localCrud extends \Iris\DB\DataBrowser\_Crud {
     /**
      * The list of fields in primary key
      * 
-     * @var array
+     * @var string[]
      */
     protected static $_IdName;
     

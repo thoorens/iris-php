@@ -111,7 +111,7 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
      * </ul>
      * 
      * @param string $name
-     * @param array $arguments
+     * @param mixed[] $arguments
      * @return \Dojo\Ajax\Provider for fluent interface
      */
     public function __call($name, $arguments) {

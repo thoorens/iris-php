@@ -109,7 +109,7 @@ abstract class _Exception extends \Exception {
      * Formats an array as a string with htmlentities and an optional
      * title line (to be used by _formatedTrace)
      * 
-     * @param array $value
+     * @param string[] $value
      * @param int $key
      * @param boolean $lineTitle 
      */

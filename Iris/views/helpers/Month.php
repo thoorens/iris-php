@@ -54,7 +54,7 @@ class Month extends \Iris\views\helpers\_ViewHelper implements \Iris\Time\iTimeR
      * 
      * O V E R W R I T E    W I T H  C A U T I O N ! !
      * 
-     * @param array $arg1
+     * @param mixed[] $arg1
      * @param type $arg2
      * @return string
      */

@@ -81,21 +81,21 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * in a path computed from the class name, otherwise, the literal value
      * will be used as a path
      * 
-     * @var array
+     * @var string[]
      */
     public static $UserClasses = array();
 
     /**
      * Implemenation of 3 stacks to search classes into
      * 
-     * @var array(PathArray) 
+     * @var PathArray[] 
      */
     protected $_classPath = array();
 
     /**
      * The stack type used during a search
      * 
-     * @var array(int)
+     * @var int[]
      */
     protected $_stackType;
 
@@ -118,7 +118,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
 
     /**
      *
-     * @var array(int) emulates an enum of the 3 stack types 
+     * @var int[] emulates an enum of the 3 stack types 
      */
     protected $_stackList = array(
         self::PLAIN_CLASS,
@@ -129,7 +129,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     /**
      * Special libraries added to the search path
      * 
-     * @var array(string)
+     * @var string[]
      */
     protected $_extensionLibraries = array();
 
@@ -385,7 +385,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * <li>the optional transapplication name
      * <li>the module in use </ul>
      * 
-     * @param array(string) $modules
+     * @param string[] $modules
      */
     public function pathToHelpers($modules) {
         if (!is_array($modules)) {

@@ -47,7 +47,7 @@ class Counter extends \Iris\Ajax\_Counter {
      * @param string $messageId The message Id
      * @param int $max the max value to start from
      * @param string $objectName The optional DOM object to serve as display zone
-     * @param array $args The argument to be send with the message
+     * @param mixed[] $args The arguments to be send with the message
      */
     protected function _linkedCounter($mode, $messageId, &$max, $objectName, $args) {
         list($operator, $test) = $this->_engine($mode, $max);
@@ -76,7 +76,7 @@ JS
      * @param int $mode UP or DOWN
      * @param string $messageId The message Id
      * @param int $max the max value to grow to from 0
-     * @param array $args The argument to be send with the message
+     * @param mixed[] $args The arguments to be send with the message
      */
     protected function _unlinkedCounter($mode, $messageId, &$max, $args) {
         list($operator, $test) = $this->_engine($mode, $max);
@@ -101,7 +101,8 @@ JS
 
     /**
      * A layout for the arguments (implementation dependant) 
-     * @param array $args
+     * 
+     * @param mixed[] $args
      * @return string
      */
     protected function _implodeArgs(array $args) {

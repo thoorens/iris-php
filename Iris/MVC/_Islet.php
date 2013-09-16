@@ -44,14 +44,14 @@ abstract class _Islet extends _BaseController {
 
     /**
      * what to do in case of direct call 
-     * @var array : parameter for redirect 
+     * @var mixed[] : parameter for redirect 
      */
     protected static $_ErrorRedirection = array('/', TRUE);
 
     /**
      * The parameters to send to the called method
      * 
-     * @var array
+     * @var string[]
      */
     protected $_parameters = array();
 
@@ -96,7 +96,7 @@ abstract class _Islet extends _BaseController {
      * Permits to set the parameters of the method which is going 
      * to be executed in the subcontroller.
      * 
-     * @param array $parameters 
+     * @param mixed[] $parameters 
      * @return static (fluent interface)
      */
     public function setParameters($parameters) {

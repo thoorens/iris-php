@@ -76,7 +76,7 @@ abstract class _EntityManager {
     /**
      * An array repository with all entities 
      * 
-     * @var array 
+     * @var _Entity[]
      */
     private $_entityRepository = array();
 
@@ -128,7 +128,7 @@ abstract class _EntityManager {
      * @param String $username : user login name
      * @param String $passwd : user password
      * @param boolean $default : if TRUE store this EM as default
-     * @param array $options additional options
+     * @param string[] $options additional options
      */
     protected function __construct($dsn, $username, $passwd, &$options = \NULL) {
         if (!is_null($options)) {
@@ -193,7 +193,7 @@ abstract class _EntityManager {
 
     /**
      *
-     * @param array $param
+     * @param string[] $param
      * @return string 
      */
     protected static function _GetDsn($param) {

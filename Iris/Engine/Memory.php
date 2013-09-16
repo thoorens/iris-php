@@ -38,7 +38,7 @@ class Memory{ // implements \Iris\Design\iSingleton
     /**
      * An associative array to store the value
      * 
-     * @var array
+     * @var mixed[]
      */
     protected $_variables = array();
 

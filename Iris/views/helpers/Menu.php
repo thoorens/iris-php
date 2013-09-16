@@ -110,7 +110,7 @@ class Menu extends _ViewHelper{
      * A recursive HTML rendering of a hierarchical menu
      * as an array
      * 
-     * @param array $data
+     * @param string[] $data
      * @return string 
      */
     protected function _render(array $data, $recursive) {

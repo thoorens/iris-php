@@ -36,7 +36,7 @@ class _Controller extends _BaseController {
 
     /**
      * The list of subcontroller 
-     * @var array(_Subcontroller) 
+     * @var _Subcontroller[]
      */
     private $_wrappers = array();
 

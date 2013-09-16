@@ -52,7 +52,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      * @param String $username : user login name
      * @param String $passwd : user password
      * @param boolean $default : if TRUE store this EM as default
-     * @param array $options additional options
+     * @param mixed[] $options additional options
      */
     protected function __construct($dsn, $username=\NULL, $passwd=\NULL, &$options = \NULL) {
         list($adapter,$filename) = explode(':',$dsn);

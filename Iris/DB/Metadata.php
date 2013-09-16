@@ -36,20 +36,20 @@ class Metadata implements \Serializable, \Countable {
 
     /**
      *
-     * @var array(MetaItem) 
+     * @var MetaItem[] 
      */
     private $_fields = array();
 
     /**
      * An array consisting of the names of the primary key fieds
      * 
-     * @var array(string) 
+     * @var string[] 
      */
     private $_primary = array();
 
     /**
      *
-     * @var array(ForeignKey)
+     * @var ForeignKey[]
      */
     private $_foreigns = array();
 

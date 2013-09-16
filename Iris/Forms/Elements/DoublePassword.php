@@ -110,7 +110,7 @@ class DoublePassword extends \Iris\Forms\Elements\_ElementGroup {
      * If both password are similar, returns the common value
      * otherwise return NULL
      * 
-     * @param array $data Data from form
+     * @param mixed[] $data Data from form
      * @return string 
      */
     public function compileValue(&$data) {

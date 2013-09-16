@@ -39,11 +39,16 @@ namespace Dojo\Ajax;
  */
 class EventManager extends \Iris\Ajax\_EventManager {
 
+    /**
+     *
+     * @var string[]
+     */
     private $_modules = [];
     
     /**
      * 
-     * @param array $modules
+     * @param string[] $modules
+     * 
      * @return \Dojo\Ajax\EventManager
      */
     public function addModules($modules){

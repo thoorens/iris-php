@@ -99,18 +99,21 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
 
     /**
      * An associative array to provide format and parameter status
-     * @var array 
+     * 
+     * @var string[]
      */
     protected $_operationParams = [];
 
     /**
      * An associative array to maintain URL for extended function
-     * @var array 
+     * 
+     * @var string[]
      */
     protected $_extendedOperationURL = [];
 
     /**
      * The directory for extended operation icons
+     * 
      * @var string
      */
     protected $_extendedIconDir = '/images/icons';

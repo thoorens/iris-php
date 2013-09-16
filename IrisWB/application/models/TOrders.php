@@ -30,6 +30,11 @@ namespace models;
  * @version $Id: $ */
 class TOrders extends _invoiceManager {
 
+    /**
+     * SQL command to construct the table
+     * 
+     * @var string[]
+     */
     protected static $_SQLCreate = array(
         'sqlite' =>
         'CREATE TABLE orders(

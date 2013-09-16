@@ -43,7 +43,7 @@ class Customer extends _localCrud {
     /**
      * The list of fields in primary key
      * 
-     * @var array
+     * @var string[]
      */
     protected static $_IdName = ['id'];
 

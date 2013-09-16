@@ -59,7 +59,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
     /**
      * An array containing the names of the fields used to make the mapping
      * URL - md5 (URL and Md5 in WB)
-     * @var array
+     * @var string[]
      */
     private static $_Fields = array();
     

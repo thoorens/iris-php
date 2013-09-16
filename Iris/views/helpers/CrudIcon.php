@@ -55,7 +55,7 @@ class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
 
     /**
      *
-     * @param array $params : nom de l'opération et de l'icône
+     * @param string[] $params : nom de l'opération et de l'icône
      * @param boolean $iconeActive: choix d'une icone désactivée (ce n'est pas un lien 
      * @return String (cette méthode brise la chaîne)
      */

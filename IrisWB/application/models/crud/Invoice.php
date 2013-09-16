@@ -32,23 +32,23 @@ namespace models\crud;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Invoice extends \Iris\DB\DataBrowser\_Crud {
- 
+
     protected $_formProperties = array(
-        'customer_id' => array('LABEL','Customer:'),
+        'customer_id' => array('LABEL', 'Customer:'),
     );
+
     /**
      * The name of the table
      * 
      * @var string
      */
     protected static $_TableName = 'Invoices';
+
     /**
      * The list of fields in primary key
      * 
-     * @var array
+     * @var string[]
      */
     protected static $_IdName = ['id'];
 
-
-    
 }

@@ -61,7 +61,7 @@ class Router {
     /**
      * Any parameters remaining after mod/cont/act analysis
      * 
-     * @var array
+     * @var string[]
      */
     private $_parameters;
 
@@ -179,7 +179,7 @@ class Router {
      * Add the path to the modules in the loader
      * 
      * @param string
-     * @param array $modules 
+     * @param string[] $modules 
      * @todo clean the loader when it executes a second time
      */
     public function prepareLoader($error, $modules) {

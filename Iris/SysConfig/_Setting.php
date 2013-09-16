@@ -35,7 +35,7 @@ abstract class _Setting {
     /**
      * All the settings are in arrays stored in an array
      * 
-     * @var array of array
+     * @var _Setting[][]
      */
     protected static $_Repository = [];
 

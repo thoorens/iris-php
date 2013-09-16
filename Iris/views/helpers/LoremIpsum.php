@@ -37,7 +37,7 @@ class LoremIpsum extends _ViewHelper {
     /**
      * The array containing the gibberish sentences
      * 
-     * @var array(string) 
+     * @var string[]
      */
     private $_sentenceArray;
     

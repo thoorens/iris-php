@@ -74,9 +74,9 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
 
     /**
      *
-     * @var array
+     * @var mixed
      */
-    protected $_label = NULL;
+    protected $_label = \NULL;
 
     /**
      *
@@ -139,7 +139,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      *
      * @param string $name name of the widget
      * @param string $type type of the widget
-     * @param array $options options for special elements 
+     * @param string[] $options options for special elements 
      */
     public function __construct($name, $type, $options = []) {
         $this->_type = $type;

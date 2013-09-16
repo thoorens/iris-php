@@ -35,13 +35,13 @@ class ForeignKey implements \Serializable{
     /**
      * The list of key names in the child table
      * 
-     * @var array(string)
+     * @var string[]
      */
     private $_fromKeys = array();
 
     /**
      * The list of key names in the father table
-     * @var array(string)
+     * @var string[]
      */
     private $_toKeys = array();
     

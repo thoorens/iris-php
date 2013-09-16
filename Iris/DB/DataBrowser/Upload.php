@@ -58,7 +58,7 @@ class Upload extends _Crud {
      * A 4 element array shared by different methods (it may grow in subclasses
      * All data are meant to be significant only during the moving of an uploaded file
      * 
-     * @var array A 4  
+     * @var mixed[]
      */
     protected $_sharedData = array(
         'field' => NULL, // The name of the field used to choose the file
@@ -181,14 +181,10 @@ class Upload extends _Crud {
         
     }
 
+
     /**
-     * @param string $fieldName the name of the field used to choice the file 
-     * @param array $uploadedFile the uploaded file metadata
-     * @param array $formData the data in the form
      * 
-     * @param type $uploadedFile
-     * @param \Iris\Forms\Elements\FileElement $fileElement
-     * @param type $formData
+     * @return \Iris\FileSystem\File
      */
     protected function _getFilePath() {
         $fileElement = $this->_form->getComponent($this->_sharedData['field']);

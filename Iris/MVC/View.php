@@ -53,7 +53,7 @@ class View implements \Iris\Translation\iTranslatable {
 
     /**
      * the array containing all view variables
-     * @var array(mixed) 
+     * @var mixed[]
      */
     protected $_properties = array();
 
@@ -271,7 +271,7 @@ class View implements \Iris\Translation\iTranslatable {
      * A view helper is called in case an unknow method is called 
      * 
      * @param string $functionName
-     * @param array $arguments
+     * @param mixed[] $arguments
      * @return mixed
      */
     public function __call($functionName, $arguments) {

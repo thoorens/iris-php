@@ -116,7 +116,7 @@ class EntityParams {
 
     /**
      * Analyses the params in the case of a subclass of _Entity
-     * @param array $strings
+     * @param string[] $strings
      * @throws \Iris\Exceptions\DBException
      */
     private function _analyseParamEntity($strings) {

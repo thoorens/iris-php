@@ -30,15 +30,21 @@ namespace models;
  * @version $Id: $ */
 class Anything2 extends \Iris\DB\ViewEntity {
 
-   protected $_reflectionEntity = 'customers';
-   protected $_entityName = 'vcustomers';
-   
+    /**
+     *
+     * @var string
+     */
+    protected $_reflectionEntity = 'customers';
+
+    /**
+     *
+     * @var string 
+     */
+    protected $_entityName = 'vcustomers';
 
     protected function _readMetadata($metadata = \NULL) {
         return parent::_readMetadata($metadata);
     }
 
-   
 }
-
 

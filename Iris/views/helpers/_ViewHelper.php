@@ -62,7 +62,7 @@ use tViewHelperCaller;
      * View helper call mechanism
      * 
      * @param string $functionName the view helper to instanciate or retrieve
-     * @param array $arguments optional arguments
+     * @param mixed[] $arguments optional arguments
      * @param \Iris\View $view the current view (a new one is created if none exists)
      * @return mixed the value returned by the view helper "help" method
      */

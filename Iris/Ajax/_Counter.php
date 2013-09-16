@@ -77,7 +77,7 @@ abstract class _Counter extends \Iris\Subhelpers\_LightSubhelper {
      * @param string $messageId The message Id
      * @param int $max the max value to start from
      * @param string $objectName The optional DOM object to serve as display zone
-     * @param array $args The argument to be send with the message
+     * @param mixed[] $args The argument to be send with the message
      */
     public function down($messageId, $max, $objectName = \NULL, $args = array()) {
         if (!is_null($objectName)) {
@@ -96,7 +96,7 @@ abstract class _Counter extends \Iris\Subhelpers\_LightSubhelper {
      * @param string $messageId The message Id
      * @param int $max the max value to grow to from 0
      * @param string $objectName The optional DOM object to serve as display zone
-     * @param array $args The argument to be send with the message
+     * @param mixed[] $args The argument to be send with the message
      */
     public function up($messageName, $max, $objectName = \NULL, $args = array()) {
         if (!is_null($objectName)) {
@@ -147,7 +147,8 @@ abstract class _Counter extends \Iris\Subhelpers\_LightSubhelper {
 
     /**
      * A layout for the arguments (implementation dependent) 
-     * @param array $args
+     * 
+     * @param mixed[] $args
      * @return string
      */
     protected abstract function _implodeArgs(array $args);

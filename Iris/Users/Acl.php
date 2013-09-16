@@ -43,14 +43,14 @@ class Acl implements \Iris\Design\iSingleton {
     /**
      * The list of allowed priveleges (for each role)
      * 
-     * @var array
+     * @var string[]
      */
     private $_allowed = array();
 
     /**
      * The list of denied privileges (for each role)
      * 
-     * @var array
+     * @var string[]
      */
     private $_denied = array();
 
@@ -162,7 +162,7 @@ class Acl implements \Iris\Design\iSingleton {
     /**
      * Stores the privileges for a given role
      * 
-     * @param array $paramAcl ACL read from config
+     * @param Config[] $paramAcl ACL read from config
      * @param type $roleName  the role name to be considered
      */
     private function _addPrivileges($paramAcl, $roleName) {
@@ -182,10 +182,10 @@ class Acl implements \Iris\Design\iSingleton {
             list($command, $module, $controller) = $keyExploded;
             $resource = "/$module/$controller";
             if ($command == 'allow') {
-                $this->_allowed[$roleName][$resource] = $privilege == 'null' ? 'ALL' : $privilege;
+                $this->_allowed[$roleName][$resource] = ($privilege == 'null' ? 'ALL' : $privilege);
             }
             else {
-                $this->_denied[$roleName][$resource] = $privilege == 'null' ? 'ALL' : $privilege;
+                $this->_denied[$roleName][$resource] = ($privilege == 'null' ? 'ALL' : $privilege);
             }
         }
     }

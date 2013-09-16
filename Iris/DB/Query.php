@@ -38,20 +38,20 @@ class Query {
 
     /**
      * the fields for the SELECT clause
-     * @var array 
+     * @var string[]
      */
     protected $_selectedFields;
 
     /**
      * The values to be bind to the prepared statement
      * in same order that _fieldPlaceHolders
-     * @var array 
+     * @var mixed[]
      */
     protected $_fieldValues;
 
     /**
      * the fields in WHERE/INSERT/SET clause
-     * @var array 
+     * @var string[] 
      */
     protected $_preparedFields;
 
@@ -63,7 +63,7 @@ class Query {
 
     /**
      * The place holders for the fields in the prepared statement
-     * @var array 
+     * @var string[] 
      */
     protected $_fieldPlaceHolders;
 

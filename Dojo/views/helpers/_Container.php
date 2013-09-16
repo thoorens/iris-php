@@ -63,7 +63,7 @@ abstract class _Container extends _DojoHelper {
 
     /**
      * 
-     * @var array
+     * @var \Dojo\Engine\Item[]
      */
     protected $_items = array();
 
@@ -139,7 +139,7 @@ abstract class _Container extends _DojoHelper {
      * is not installed in the client.
      * 
      * @param string $name the name internally used by javascript
-     * @param array $items pairs of key and label to identify and display the container parts
+     * @param string[] $items pairs of key and label to identify and display the container parts
      * @param int $heigth Height of the container
      * @param int $width Width of the container
      * @return string 

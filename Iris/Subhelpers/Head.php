@@ -60,19 +60,20 @@ class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
 
     /**
      * The components of the &lt;head> part of the file
-     * @var array(string)
+     * @var string[]
      */
     private $_components = array();
 
     /**
      *
-     * @var array 
+     * @var string[]
      */
     private $_html = array();
 
     /**
      * The list of associated loader, created during page generation 
-     * @var array 
+     * 
+     * @var string[] 
      */
     private $_additionalHeadLoader = array();
 
@@ -80,7 +81,8 @@ class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
      * A list of keyword for the page. Each element of the array has this 
      * structure
      * [KeyWord] => Number
-     * @var array
+     * 
+     * @var int[]
      */
     private $_keywords = [];
 

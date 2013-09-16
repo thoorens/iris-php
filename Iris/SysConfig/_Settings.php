@@ -43,7 +43,7 @@ abstract class _Settings implements \Iris\Design\iSingleton {
 
     /**
      * All the known methods of the _Setting class
-     * @var array(string)
+     * @var string[]
      */
     private static $_Functions = [
         'has' => 3,
@@ -91,7 +91,7 @@ abstract class _Settings implements \Iris\Design\iSingleton {
      * </ul>
      *  
      * @param string $name
-     * @param array $arguments
+     * @param mixed[] $arguments
      * @return boolean/mixed
      * @throws \Iris\Exceptions\InternalException
      */
@@ -146,7 +146,7 @@ abstract class _Settings implements \Iris\Design\iSingleton {
     /**
      * Inserts the value from configs into the settings
      * 
-     * @param array(Config) $configs
+     * @param Config[] $configs
      */
     public static function FromConfigs($configs) {
         $classes = self::_FindClasses($configs);

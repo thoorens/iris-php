@@ -70,7 +70,7 @@ abstract class _Parser {
      * Exports an array of configs to a text file
      * 
      * @param string $filename file name to write
-     * @param array $configs the configs to write to the file
+     * @param Config[] $configs the configs to write to the file
      * @param int $inheritance copy inherited values (or ref to parent)
      */
     public function exportFile($fileName, $configs,  $inheritance=self::LINK_TO_PARENT) {

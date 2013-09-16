@@ -39,10 +39,11 @@ class Event extends _localCrud {
      * @var string
      */
     protected static $_TableName = 'events';
+    
     /**
      * The list of fields in primary key
      * 
-     * @var array
+     * @var string[]
      */
     protected static $_IdName = ['id'];
 

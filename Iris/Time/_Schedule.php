@@ -63,7 +63,7 @@ abstract class _Schedule extends \Iris\Subhelpers\_Subhelper {
     /**
      * A not completely filled array with data. Index is the date in Y-m-d format
      * 
-     * @var array(Events)
+     * @var Events[]
      */
     protected $_content;
 

@@ -44,7 +44,7 @@ abstract class _Entity {
     /**
      * An array repository with all objects
      * 
-     * @var array 
+     * @var Object[] 
      */
     private $_objectRepository = array();
 
@@ -63,7 +63,7 @@ abstract class _Entity {
     /**
      * A way to identify related entities when they have special names
      * 
-     * @var array
+     * @var string[]
      */
     protected $_externalEntities = [];
 
@@ -91,7 +91,7 @@ abstract class _Entity {
      * The primary key fields (while be filled by getMetadata if possible).
      * May safely initialized by hand
      * 
-     * @var array 
+     * @var string[] 
      */
     protected $_idNames = array();
 
@@ -99,6 +99,7 @@ abstract class _Entity {
      * The foreign keys if not defined in the databases. Each
      * 
      * @var array
+     * @todo This var does not seem to be initialized
      */
     protected $_foreignKeyDescriptions = array();
 
@@ -227,7 +228,7 @@ abstract class _Entity {
      * entityName and a className and the gets the corresponding entity.
      * from 0 to 3 parameters are expected.
      * 
-     * @param array $params
+     * @param mixed[] $params
      * @return array
      * @throws \Iris\Exceptions\DBException
      */
@@ -310,7 +311,7 @@ abstract class _Entity {
      * Put an object in the repository
      * 
      * @param string $entityName
-     * @param array $idValues
+     * @param string[] $idValues
      * @param Object $object 
      */
     public function registerObject($idValues, $object) {
@@ -322,7 +323,7 @@ abstract class _Entity {
      * Retrieve an object from the repository (if possible, NULL otherwise)
      * 
      * @param  string $entityName
-     * @param array $idValues
+     * @param string[] $idValues
      * @return Object 
      */
     public function retrieveObject($idValues) {
@@ -347,7 +348,7 @@ abstract class _Entity {
     /**
      * Accessor set for the id field list
      * 
-     * @param array $idNames 
+     * @param string[] $idNames 
      */
     public function setIdNames($idNames) {
         if (!is_array($idNames)) {
@@ -530,7 +531,7 @@ abstract class _Entity {
     /**
      * Add a serie of pairs field=>value to the where clause
      * 
-     * @param array $conditions
+     * @param string[] $conditions
      * @return _Entity (fluent interface)
      */
     public function wherePairs($conditions) {
@@ -772,7 +773,7 @@ abstract class _Entity {
     /**
      * Delete a line from table with primary key condition
      * 
-     * @param array $primaryKeys
+     * @param mixed[] $primaryKeys
      * @return boolean 
      */
     public function delete($primaryKeys) {

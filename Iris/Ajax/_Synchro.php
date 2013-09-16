@@ -71,7 +71,7 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
 
     /**
      * An array of 3 URL for previous, current and next frames
-     * @var array
+     * @var string[]
      */
     protected $_context = [self::NO_URL, self::NO_URL, self::NO_URL];
     

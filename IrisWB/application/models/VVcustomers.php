@@ -30,6 +30,11 @@ namespace models;
  * @version $Id: $ */
 class VVcustomers extends \Iris\DB\ViewEntity {
 
+    /**
+     * SQL command to construct the table
+     * 
+     * @var string[]
+     */
     protected static $_SQLCreate = [
         'sqlite' =>
         'CREATE  VIEW "main"."vcustomers" AS select * from customers WHERE id < 3;

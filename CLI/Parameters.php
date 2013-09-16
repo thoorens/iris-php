@@ -39,7 +39,7 @@ class Parameters {
      * An associative array with the types of metadata for a project
      * complete description
      * 
-     * @var array
+     * @var string[]
      */
     private static $_Metadata = array(
         'A' => 'Author',
@@ -51,14 +51,14 @@ class Parameters {
     /**
      * The parameters read n command line.
      * 
-     * @var array(string) 
+     * @var string[] 
      */
     private $_parameters = array();
 
     /**
      * The content of the projects.ini file
      * 
-     * @var array(\Iris\SysConfig\Config)
+     * @var \Iris\SysConfig\Config[]
      */
     private $_projects = NULL;
 
@@ -144,7 +144,7 @@ class Parameters {
      * (Re)creates a ini file with the content of an array of configs
      * 
      * @param type $paramFile the ini file to create/overwrite
-     * @param array(\Iris\SysConfig\Config)type $configs An array of configs
+     * @param \Iris\SysConfig\Config[] $configs An array of configs
      */
     public function writeParams($paramFile, $configs) {
         $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
@@ -382,7 +382,7 @@ or create one with 'iris.php --createproject'.");
      * Magic method to manage the parameters
      * 
      * @param string $name
-     * @param array $arguments
+     * @param mixed[] $arguments
      */
     public function __call($name, $arguments) {
         if (substr($name, 0, 3) == 'set') {

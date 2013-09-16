@@ -186,7 +186,7 @@ class _BaseController {
      * method (overridden)
      * 
      * @param string $actionName the name of the action (e.g. "createAction" )
-     * @param array parameters the parameters from URL
+     * @param string[] parameters the parameters from URL
      */
     public function __callAction($actionName, $parameters) {
         \Iris\Engine\Memory::SystemTrace();
@@ -390,7 +390,7 @@ class _BaseController {
      * the program tries to use a controller helper
      * 
      * @param string $functionName the non existent method
-     * @param array $arguments the optional arguments as an array
+     * @param mixed[] $arguments the optional arguments as an array
      * @return mixed the value returned by the helper
      */
     public function __call($functionName, $arguments) {

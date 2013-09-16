@@ -40,7 +40,7 @@ class Role {
     
     /**
      * An array containing all existing roles
-     * @var array(Role) 
+     * @var Role[]
      */
     protected static $_Collection = array();
     
@@ -87,7 +87,7 @@ class Role {
     /**
      * An array containing all the parent names of
      * a role
-     * @var array(string) 
+     * @var string[] 
      */
     protected $_parents = array();
     
@@ -102,7 +102,7 @@ class Role {
      * and register it in the collection
      * 
      * @param string $name
-     * @param array(string) $parentNames 
+     * @param string[] $parentNames 
      */
     public function __construct($name, $parentNames = array()) {
         $this->_name = $name;

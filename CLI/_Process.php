@@ -78,7 +78,7 @@ abstract class _Process {
 
     /**
      * Rewrite the configs to the project.ini file in ~/.iris directory
-     * @param array $configs 
+     * @param Config[] $configs 
      */
     protected function _updateConfig($configs) {
         $paramDir = $this->_os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
@@ -103,7 +103,7 @@ abstract class _Process {
      * 
      * @param string $source the path to the original template file
      * @param string $destination the path to the new file
-     * @param array $replacement an associative array with the fields and values 
+     * @param mixed[] $replacement an associative array with the fields and values 
      */
     protected function _createFile($source, $destination, $replacement = array(), $backupNumber = 10) {
         $this->_checkExistingFile($destination, $backupNumber);
@@ -116,6 +116,11 @@ abstract class _Process {
         $this->_os->createFromTemplate($source, $destination, $replacement);
     }
     
+    /**
+     * 
+     * @param string $fileName
+     * @param int $backupNumber
+     */
     protected function _checkExistingFile($fileName, $backupNumber = 10){
         if(file_exists(($fileName))){
             require_once $this->_analyser->GetIrisLibraryDir().'/Iris/FileSystem/File.php';

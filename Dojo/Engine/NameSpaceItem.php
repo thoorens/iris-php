@@ -68,7 +68,7 @@ class NameSpaceItem {
     private $_value = \NULL;
     /**
      * The javascript params for a function
-     * @var array 
+     * @var string 
      */
     private $_args;
     /**
@@ -81,7 +81,7 @@ class NameSpaceItem {
     /**
      * The list of all different namespace
      * 
-     * @var array
+     * @var string[]
      */
     private static $_NameSpaces = [];
 
@@ -179,7 +179,7 @@ class NameSpaceItem {
      * Specifies an item as a function (whose code is to be generated later)
      * 
      * @param \Dojo\Engine\iLateScriptProvider $provider
-     * @param array $args The arguments for the function (as javascript source code)
+     * @param string[] $args The arguments for the function (as javascript source code)
      * @param string $nameSpace The optional namespace
      */
     public function createLateFunction(\Dojo\Engine\iLateScriptProvider $provider, $args = '', $nameSpace = \NULL) {

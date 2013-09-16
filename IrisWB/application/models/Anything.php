@@ -30,6 +30,10 @@ namespace models;
  * @version $Id: $ */
 class Anything extends \Iris\DB\_Entity {
 
+    /**
+     *
+     * @var string
+     */
     protected $_entityName = 'customers';
     
     

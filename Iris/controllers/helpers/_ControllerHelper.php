@@ -49,7 +49,7 @@ abstract class _ControllerHelper extends \Iris\MVC\_Helper {//*/
      * A convenient way of calling a controller helper by its name
      * 
      * @param string $functionName the controller helper name (as a method name)
-     * @param array $arguments the ar
+     * @param mixed[] $arguments the ar
      * @param \Iris\MVC\_Controller $controller : the calling controller 
      * @return type 
      */
@@ -63,7 +63,7 @@ abstract class _ControllerHelper extends \Iris\MVC\_Helper {//*/
      * The controller helper can access to public methods of its calling controller
      * 
      * @param string $name
-     * @param array $arguments
+     * @param mixed[] $arguments
      * @return mixed 
      */
     public function __call($name, $arguments) {

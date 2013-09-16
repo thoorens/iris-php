@@ -48,24 +48,18 @@ class Manager implements \Iris\Design\iSingleton {
      */
     protected static $_Instance = NULL;
 
-    /**
-     * The JS prerequisites for the dojo witgets used in the program
-     * 
-     * @var array 
-     * @deprecated
-     */
-    protected $_requisites = array();
+    
 
     /**
      * The JS init code for the dojo witgets used in the program
-     * @var array 
+     * @var string[] 
      */
     protected $_initCode = array();
 
     /**
      * The style file used by Dojo
      * 
-     * @var array 
+     * @var string[] 
      */
     protected $_styleFiles = array();
 
@@ -201,14 +195,6 @@ class Manager implements \Iris\Design\iSingleton {
         return $this;
     }
 
-    /**
-     * Accessor get for prerequisites
-     * 
-     * @return array 
-     */
-    public function getRequisites() {
-        return $this->_requisites;
-    }
 
     /**
      * Accessor get for initcode
