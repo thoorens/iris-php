@@ -50,11 +50,7 @@ class Settings extends \Iris\SysConfig\_Settings {
      * 
      */
 
-    /**
-     *
-     * @var array 
-     */
-    protected $_data = array();
+    
 
     /**
      * Defines some standard settings with a default value
