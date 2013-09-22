@@ -67,6 +67,7 @@ abstract class Superglobal {
                 $var = $_SERVER;
                 break;
             case 'SESSION':
+                \Iris\Users\Session::GetInstance();
                 $var = $_SESSION;
                 break;
             case 'POST':
