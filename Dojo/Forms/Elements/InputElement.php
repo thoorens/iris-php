@@ -34,7 +34,7 @@ class InputElement extends \Iris\Forms\Elements\InputElement {
 
     /**
      * Dojo uses some different names for classes of elements
-     * @var array
+     * @var string[]
      */
     protected $_equivalence = array(
         'text' => 'TextBox',
@@ -73,6 +73,7 @@ class InputElement extends \Iris\Forms\Elements\InputElement {
         return $this;
     }
 
+    
 }
 
-?>
+
