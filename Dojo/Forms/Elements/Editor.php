@@ -29,7 +29,8 @@ namespace Dojo\Forms\Elements;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Editor extends \Iris\Forms\Elements\AreaElement {
-
+    use \Dojo\Forms\tDojoDijit;
+    
     protected $_dojoManager;
     protected $_plugins = array();
     protected $_extraPlugins = array();
@@ -63,7 +64,7 @@ class Editor extends \Iris\Forms\Elements\AreaElement {
             }); 
 JSEditor
         );
-        $this->setDojoType("dijit.Editor")
+        $this->setDijitType("dijit.Editor")
                 ->setInheritWidth(TRUE)
                 ->setHeight('150px');
     }

@@ -33,7 +33,9 @@ use Iris\Forms as ifo;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
-
+    
+    use \Dojo\Forms\tDojoDijit;
+    
     /**
      * The constructor creates a group and loads all Dojo material needed
      * 
@@ -46,7 +48,7 @@ class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
         $type = "dojox.form.PasswordValidator";
         $dojoManager = \Dojo\Manager::GetInstance();
         $dojoManager->addRequisite("PasswordValidator", $type);
-        $this->dojoType = $type;
+        $this->setDijitType($type);
     }
 
     /**

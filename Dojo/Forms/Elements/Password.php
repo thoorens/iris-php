@@ -33,7 +33,8 @@ use \Iris\Forms as ifo;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Password_____ extends \Iris\Forms\Elements\InputElement {
-
+    use \Dojo\Forms\tDojoDijit;
+    
     /**
      *
      * @param string $name name of the element
@@ -45,7 +46,7 @@ class Password_____ extends \Iris\Forms\Elements\InputElement {
         $type = "dojox.form.PasswordValidator";
         $dojoManager = \Dojo\Manager::GetInstance();
         $dojoManager->addRequisite("PasswordValidator", $type);
-        $this->dojoType = $type;
+        $this->setDijitType($type);
         $this->setPwType($subType);
     }
 

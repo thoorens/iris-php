@@ -32,6 +32,8 @@ namespace Dojo\Forms\Elements;
  * @version $Id: $ */
 class Submit extends \Iris\Forms\_Element {
 
+    use \Dojo\Forms\tDojoDijit;
+    
     /**
      * This Element uses a closing tab
      * @var boolean
@@ -54,7 +56,7 @@ class Submit extends \Iris\Forms\_Element {
         $this->_subtype = 'submit';
         $dojoName = 'dijit/form/Button';
         \Dojo\Manager::GetInstance()->addRequisite("$dojoName", $dojoName);
-        $this->setDojoType($dojoName); 
+        $this->setDijitType($dojoName); 
     }
 
 }
