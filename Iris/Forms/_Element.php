@@ -233,29 +233,23 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * @return string
      */
     function render($layout = \NULL) {
-        if ($this->_labelPosition == self::NONE) {
-            //if ($this->_subtype == 'hidden') {
-            $text = $this->baseRender();
+        // normal element have their layout set
+        // companion elements need to receive one
+        if (is_null($layout)) {
+            $layout = $this->getLayout();
         }
-        else {
-            // normal element have their layout set
-            // companion elements need to receive one
-            if (is_null($layout)) {
-                $layout = $this->getLayout();
-            }
-            // maybe layout will be pleased to know what kind of element it is 
-            // decorating
-            $layout->setCurrentElement($this);
-            $text = '';
-            $text .= $layout->initialSeparator("id=\"$this->_name-label\"");
-            $text .= $this->_outerLabel();
-            $text .= $layout->innerSeparator();
-            $text .= $this->_renderError();
-            $text .= $this->baseRender();
-            $text .= $layout->finalSeparator();
-            if ($this->_fileSize > 0) {
-                $text .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$this->_fileSize\" />\n";
-            }
+        // maybe layout will be pleased to know what kind of element it is 
+        // decorating
+        $layout->setCurrentElement($this);
+        $text = '';
+        $text .= $layout->initialSeparator("id=\"$this->_name-label\"");
+        $text .= $this->_outerLabel();
+        $text .= $layout->innerSeparator();
+        $text .= $this->_renderError();
+        $text .= $this->baseRender();
+        $text .= $layout->finalSeparator();
+        if ($this->_fileSize > 0) {
+            $text .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$this->_fileSize\" />\n";
         }
         return $text;
     }
