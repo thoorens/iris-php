@@ -40,10 +40,10 @@ class md5 extends _manager {
      * This action saves the md5 chacksum corresponding to the module/controller/action
      * passed as parameters
      * 
-     * @param string $module
-     * @param string $controller
-     * @param string $action
-     * @param string $md5
+     * @param string $module the module part of the URL
+     * @param string $controller the controller part of the URL
+     * @param string $action the action part of the URL
+     * @param string $md5 the md5 value
      */
     public function saveAction($module, $controller, $action, $md5) {
         $url = "/$module/$controller/$action";
@@ -54,6 +54,7 @@ class md5 extends _manager {
         $screen = $tSequences->fetchRow("$URLField=", $url);
         $screen->$md5Field = $md5;
         $screen->save();
+        // go to precedent screen
         $this->reroute($url);
     }
 
