@@ -169,7 +169,6 @@ class AutoForm extends Elements\Form {
         /* @var $field  \Iris\DB\MetaItem */
         foreach($targetTable->getMetadata()->getFields() as $field){
             $fieldName = $field->getFieldName();
-            echo $fieldName;
             if(array_search($fieldName, self::$_PlausibleDescriptions)!== \FALSE){
                 return $fieldName;
             }
