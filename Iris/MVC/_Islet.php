@@ -88,7 +88,7 @@ abstract class _Islet extends _BaseController {
      * 
      * @return array
      */
-    protected function _getParameters() {
+    public function getParameters() {
         return $this->_parameters;
     }
 

@@ -154,7 +154,7 @@ class _BaseController {
         $methodes = get_class_methods(get_class($this));
         // caution : in subcontrollers, the parameters are provided by the
         // main controller 
-        $parameters = $this->_getParameters();
+        $parameters = $this->getParameters();
         if (array_search($actionName, $methodes) === FALSE) {
             $this->__callAction($actionName, $parameters);
         }
@@ -300,7 +300,7 @@ class _BaseController {
      * 
      * @return array
      */
-    protected function _getParameters() {
+    public function getParameters() {
         return $this->_response->getParameters();
     }
 
@@ -382,7 +382,7 @@ class _BaseController {
             Errors\Settings::TYPE_FATAL => 'fatal',
         ];
         $errorController = \Iris\Errors\Settings::GetController();
-        $this->reroute("$errorController/".$errorName[$type]);
+        $this->reroute("$errorController/" . $errorName[$type]);
     }
 
     /**
