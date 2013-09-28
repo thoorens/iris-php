@@ -21,7 +21,6 @@ namespace Iris\SysConfig;
  * @copyright 2011-2013 Jacques THOORENS
  */
 
-
 /**
  * A boolean setting has enable, disable and has methods
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -31,7 +30,7 @@ namespace Iris\SysConfig;
 class BooleanSetting extends _Setting {
 
     protected static $_Type = 'boolean';
-    
+
     // Boolean accessors
 
     /**
@@ -46,23 +45,25 @@ class BooleanSetting extends _Setting {
      * 
      * @throws \Iris\Exceptions\InternalException
      */
-    public function enable() {
-        if($this->_locked){
+    public function enable($lock = \FALSE) {
+        if ($this->_locked) {
             $this->SettingError("The setting $this->_fullName has been locked.");
         }
         $this->_value = \TRUE;
+        $this->_locked = $lock;
     }
 
-   /**
+    /**
      * Disables a boolean setting if it is not locked
      * 
      * @throws \Iris\Exceptions\InternalException
      */
-    public function disable() {
-        if($this->_locked){
+    public function disable($lock = \FALSE) {
+        if ($this->_locked) {
             $this->SettingError("The setting $this->_fullName has been locked.");
         }
         $this->_value = \FALSE;
+        $this->_locked = $lock;
     }
 
     /**

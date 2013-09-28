@@ -45,11 +45,12 @@ class StandardSetting extends _Setting {
      * 
      * @param mixed $value
      */
-    public function set($value) {
+    public function set($value, $lock = \FALSE) {
         if ($this->_locked) {
             $this->SettingError("The setting $this->_fullName has been locked.");
         }
         $this->_value = $value;
+        $this->_locked = $lock;
     }
 
 }
