@@ -54,7 +54,7 @@ class Settings extends \Iris\SysConfig\_Settings {
             \Iris\SysConfig\StandardSetting::CreateSetting('debug', 'true'); // true is js code
         }
         else {
-            \Iris\SysConfig\StandardSettin::CreateSettingg('debug', 'false'); // false is js code
+            \Iris\SysConfig\StandardSetting::CreateSetting('debug', 'false'); // false is js code
         }
         // By default Dojo is parsed on page load
         \Iris\SysConfig\StandardSetting::CreateSetting('parseOnLoad', 'true'); // true is js code
