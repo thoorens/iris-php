@@ -99,7 +99,7 @@ abstract class _EntityManager {
      * @return _Entity 
      */
     public function retrieveEntity($param1, $alternativeClassName = NULL, $metadata = \NULL) {
-        if(! $param1 instanceof EntityParams){
+        if (!$param1 instanceof EntityParams) {
             $param1 = new EntityParams($param1, $alternativeClassName, $metadata);
         }
         $entityName = $param1->getEntityName();
@@ -261,11 +261,17 @@ abstract class _EntityManager {
     /**
      * Executes a directs SQL query on the connexion.
      * 
-     * @param type $sql
-     * @return array(\PDORow)
+     * @param string $sql
+     * @param boolean 
+     * @return Statement/int
      */
-    public function directSQL($sql) {
-        $result = $this->_connexion->query($sql);
+    public function directSQL($sql, $statement = \TRUE) {
+        if ($statement) {
+            $result = $this->_connexion->query($sql);
+        }
+        else {
+            $result = $this->_connexion->exec($sql);
+        }
         return $result;
     }
 
@@ -342,5 +348,4 @@ abstract class _EntityManager {
 
     public abstract function bitXor();
 }
-
 
