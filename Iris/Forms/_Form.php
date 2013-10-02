@@ -101,7 +101,7 @@ abstract class _Form implements iFormContainer {
      * @param string $action
      * @param string $method 
      */
-    public function __construct($name, $action=NULL, $method='post') {
+    public function __construct($name, $action = NULL, $method = 'post') {
         $this->_name = $name;
         if ($action == NULL) {
             $this->_action = \Iris\Engine\Superglobal::GetServer('REQUEST_URI');
@@ -158,7 +158,7 @@ abstract class _Form implements iFormContainer {
      * 
      * @return string 
      */
-    public function show($doRender=TRUE) {
+    public function show($doRender = TRUE) {
         if ($doRender) {
             $html = $this->render();
         }
@@ -220,6 +220,7 @@ abstract class _Form implements iFormContainer {
         $valid = TRUE;
         foreach ($this->_registry as $element) {
             if (!$element->validate()) {
+                // do not exit, because one must prepare error validation messages
                 $valid = FALSE;
             }
         }
@@ -232,13 +233,12 @@ abstract class _Form implements iFormContainer {
      * 
      * @param mixed[] $formData 
      */
-    public function fill($formData=NULL) {
+    public function fill($formData = NULL) {
         if ($formData == NULL) {
             $formData = \Iris\Engine\Superglobal::GetPost();
         }
         foreach ($formData as $key => $value) {
             if (isset($this->_registry[$key])) {
-                $element = $this->_registry[$key];
                 $this->_registry[$key]->setValue($value);
             }
         }
@@ -360,7 +360,7 @@ abstract class _Form implements iFormContainer {
         $this->_attributes[$key] = $value;
     }
 
-    public function getDataFromPost($field=NULL, $defaultValue=NULL) {
+    public function getDataFromPost($field = NULL, $defaultValue = NULL) {
         static $data = NULL;
         if ($data == NULL) {
             $formData = \Iris\Engine\Superglobal::GetPost();
