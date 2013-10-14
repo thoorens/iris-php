@@ -60,6 +60,7 @@ class Settings extends _Settings {
         // If ACL are used, the default user is named 'somebody' in 'browse' group
         StandardSetting::CreateSetting('defaultUserName', 'somebody');
         StandardSetting::CreateSetting('defaultRoleName', 'browse');
+        StandardSetting::CreateSetting('defaultUserEmail', 'info@irisphp.org');
         // 
         StandardSetting::CreateSetting('errorDebuggingLevel', 1);
         // To minimize execution templates can be cached (not by default)
