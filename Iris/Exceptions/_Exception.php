@@ -33,6 +33,9 @@ namespace Iris\Exceptions;
  * @version $Id: $ * 
  */
 abstract class _Exception extends \Exception {
+    
+    private static $_ErrorCode = 0;
+    
     /**
      * This mode corresponds to getTraceAsString from \Exception
      */
@@ -59,9 +62,12 @@ abstract class _Exception extends \Exception {
      * @param int $code
      * @param \Exception $previous 
      */
-    public function __construct($message, $code = 0, $previous = NULL) {
+    public function __construct($message, $code = \NULL, $previous = NULL) {
         \Iris\Log::Save(); // all output are going to be wiped out
-        parent::__construct($message, NULL, $previous);
+        if(is_null($code)){
+            $code = static::$_ErrorCode;
+        }
+        parent::__construct($message, $code, $previous);
     }
 
     /**
@@ -181,7 +187,7 @@ abstract class _Exception extends \Exception {
             $firstUrl = $router->getAnalyzedURI();
             $MCAPU = explode('/', $firstUrl);
             $parameters = '== unavailable ==';
-            $trace = \Iris\Errors\Handler::$_Trace;
+            $trace = \Iris\Errors\Handler::GetSystemTrace();
             foreach ($trace as $t) {
                 if ($t['MODULE'] . '/' . $t['CONTROLLER'] . '/' . $t['ACTION'] == $firstUrl) {
                     $parameters = implode('/', $t['PARAMETERS']);
