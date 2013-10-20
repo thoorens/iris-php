@@ -108,6 +108,17 @@ function iris_print($message){
     echo "$message<br/>";
 }
 
+/**
+ * Prints a backtrace (all levels of call to subroutine) and stops
+ * the program execution
+ * 
+ * @param boolean $die if not true, does not stop the program
+ */
+function iris_context($die = \TRUE){
+    iris_debug(debug_backtrace(), $die);
+}
+
+
 assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'iris_assert');
 
