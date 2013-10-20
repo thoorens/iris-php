@@ -100,6 +100,13 @@ function iris_member($object, $memberName){
     return $value;
 }
 
+/**
+ * Echoes a line (with a final br tag)
+ * @param string $message
+ */
+function iris_print($message){
+    echo "$message<br/>";
+}
 
 assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'iris_assert');
