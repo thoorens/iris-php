@@ -30,16 +30,17 @@ namespace models;
  * @version $Id: $ */
 class TCustomers extends _invoiceManager {
 
-    // TCostumers is used for demonstration purpose elsewhere, so we must
-    // specify the table name, which would be customers2 if not explicitely
-    // defined
-    
-    /**
-     * Table name
+    /*
+     * W A R N I N G:
      * 
-     * @var string
+     * the code of this class is only used to create the table and
+     * its copy.
+     * 
+     * It is by no way an illustration of a table management
+     * 
      */
-    protected $_entityName = 'customers';
+    
+    
     
     /**
      * SQL command to construct the table
@@ -47,18 +48,57 @@ class TCustomers extends _invoiceManager {
      * @var string[]
      */
     protected static $_SQLCreate = [
-        'sqlite' =>
+        /* ---------------------------------------------------------- */
+        self::SQLITE =>
         'CREATE TABLE customers(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Name TEXT  NOT NULL,
     Address TEXT,
     Email TEXT)',
-        'mysql' => '',
-        'oracle' =>'
-            
-',
+        /* ---------------------------------------------------------- */
+        self::MYSQL =>
+        'CREATE TABLE customers(
+    id INTEGER AUTO_INCREMENT NOT NULL , 
+    Name VARCHAR(100) NOT NULL,
+    Address VARCHAR(100),
+    Email VARCHAR(100),
+    PRIMARY KEY(id))
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ',
     ];
 
-}
+    /**
+     * SQL commands to create a copy
+     * @var string
+     */
+    private static $_SQLCopy = [
+        /* ---------------------------------------------------------- */
+        self::SQLITE => [
+            'CREATE TABLE customers2(
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
+    Name TEXT  NOT NULL,
+    Address TEXT,
+    Email TEXT);',
+            'INSERT INTO customers2 SELECT * FROM customers'],
+        /* ---------------------------------------------------------- */
+        self::MYSQL =>[
+        'CREATE TABLE customers2 AS SELECT * FROM customers;',
+        'ALTER TABLE customers2 ADD CONSTRAINT PRIMARY KEY(id);',    
+            ]
+    ];
 
+    /**
+     * A series of commands to realise a copy
+     */
+    public static function Copy() {
+        $em = self::GetEM();
+        $dbType = self::$_DefaultDbType;
+        _invoiceManager::Say('Making a copy of customers');
+        $result = $em->directSQL(static::$_SQLCopy[$dbType][0], \FALSE);
+        if (isset(static::$_SQLCopy[$dbType][1])) {
+            $result2 = $em->directSQL(static::$_SQLCopy[$dbType][1], \FALSE);
+        }
+        return $result > $result2 ? $result : $result2;
+    }
+
+}
 

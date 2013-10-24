@@ -28,16 +28,17 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Anything extends \Iris\DB\_Entity {
+class TEmptyModel extends \Iris\DB\TableEntity {
 
     /**
-     *
+     * Illustrates how a dummy empty class can have its special methods.
+     * It ignores wich table it will use.
+     * 
      * @var string
      */
-    protected $_entityName = 'customers';
-    
-    
+    public function special() {
+        return "TEmptyModel has a special method<br>";
+    }
 
 }
-
 

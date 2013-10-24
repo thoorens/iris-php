@@ -22,7 +22,8 @@ namespace models;
  */
 
 /**
- * Small invoice manager for test purpose: the Customers table
+ * Small invoice manager for test purpose: the vcustomers view
+ * which acces all customers from the customers table having an id less than 3
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net
@@ -30,33 +31,50 @@ namespace models;
  * @version $Id: $ */
 class VVcustomers extends \Iris\DB\ViewEntity {
 
+    
+    /*
+     * W A R N I N G:
+     * 
+     * the code of this class is only used to create the table and
+     * its copy.
+     * 
+     * It is by no way an illustration of a table management
+     * 
+     */
+    
     /**
-     * SQL command to construct the table
+     * SQL command to construct the view
      * 
      * @var string[]
      */
     protected static $_SQLCreate = [
-        'sqlite' =>
-        'CREATE  VIEW "main"."vcustomers" AS select * from customers WHERE id < 3;
-            ',
-        'mysql' => '',
-        'oracle' => '
-            
-',
+        _invoiceManager::SQLITE =>
+        'CREATE  VIEW "main"."%s" AS select * from customers WHERE id %s;',
+        _invoiceManager::MYSQL => 
+        'CREATE  VIEW %s AS select * from customers WHERE id %s;',
     ];
 
     protected $_reflectionEntity = 'customers';
 
 
+   
+
+    
     /**
-     * Creates un new view in the database
+     * Creates a new view in the database
      * 
      * @param string $dbType The type of database (by default sqlite)
      * @param \Iris\DB\_EntityManager em
      */
-    public static function Create($dbType, $em) {
-        $sql = static::$_SQLCreate[$dbType];
-        $em->directSQL($sql);
+    public static function Create($em) {
+        $class = get_called_class();
+        _invoiceManager::Say("Creating table for class $class");
+        $sqlFormat = static::$_SQLCreate[_invoiceManager::GetDefaultDbType()];
+        $sql1 = sprintf($sqlFormat, 'vcustomers', '< 3');
+        _invoiceManager::Say($sql1);
+        $em->directSQL($sql2);
+        $sql2 = sprintf($sqlFormat, 'vcustomers2', '> 1');
+        $em->directSQL($sql2);
     }
 
 }

@@ -30,18 +30,38 @@ namespace models;
  * @version $Id: $ */
 class TProducts extends _invoiceManager {
 
+    
+    /*
+     * W A R N I N G:
+     * 
+     * the code of this class is only used to create the table and
+     * its copy.
+     * 
+     * It is by no way an illustration of a table management
+     * 
+     */
+    
     /**
      * SQL command to construct the table
      * 
      * @var string[]
      */
      protected static $_SQLCreate = array(
-        'sqlite' =>
+         /*---------------------------------------------------------- */
+        self::SQLITE =>
         'CREATE TABLE products(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Description TEXT  NOT NULL,
     Price NUMBER)',
-        'mysql' => ''
+         /*---------------------------------------------------------- */
+        self::MYSQL => 
+         'CREATE TABLE IF NOT EXISTS products (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  Description varchar(100) NOT NULL,
+  Price float NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+'
     );
 
 }

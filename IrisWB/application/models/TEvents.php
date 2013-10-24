@@ -22,7 +22,8 @@ namespace models;
  */
 
 /**
- * Small invoice manager for test purpose: the Orders table
+ * Small invoice manager for test purpose: the Events table.
+ * It has a double foreign key to orders
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net
@@ -30,13 +31,25 @@ namespace models;
  * @version $Id: $ */
 class TEvents extends _invoiceManager {
 
+    /*
+     * W A R N I N G:
+     * 
+     * the code of this class is only used to create the table and
+     * its copy.
+     * 
+     * It is by no way an illustration of a table management
+     * 
+     */
+    
+    
     /**
      * SQL command to construct the table
      * 
      * @var string[]
      */
     protected static $_SQLCreate = array(
-        'sqlite' =>
+        /* ---------------------------------------------------------- */
+        self::SQLITE =>
         'CREATE TABLE events(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     Description VARCHAR,
@@ -44,10 +57,18 @@ class TEvents extends _invoiceManager {
     invoice_id INTEGER NOT NULL ,
     product_id INTEGER NOT NULL ,
     FOREIGN KEY (invoice_id,product_id) REFERENCES orders(invoice_id,product_id))',
-        'mysql' => ''
+        /* ---------------------------------------------------------- */
+        self::MYSQL =>
+        'CREATE TABLE events(
+    id INTEGER NOT NULL AUTO_INCREMENT NOT NULL,
+    Description VARCHAR(100),
+    Moment DATETIME,
+    invoice_id INTEGER NOT NULL ,
+    product_id INTEGER NOT NULL ,
+    PRIMARY KEY(id),
+    FOREIGN KEY (invoice_id,product_id) REFERENCES orders(invoice_id,product_id))
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci '
     );
 
-
 }
-
 

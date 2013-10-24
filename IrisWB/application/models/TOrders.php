@@ -29,26 +29,47 @@ namespace models;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class TOrders extends _invoiceManager {
+    
+    
+    
+    /*
+     * W A R N I N G:
+     * 
+     * the code of this class is only used to create the table and
+     * its copy.
+     * 
+     * It is by no way an illustration of a table management
+     * 
+     */
 
     /**
      * SQL command to construct the table
      * 
      * @var string[]
      */
-    protected static $_SQLCreate = array(
-        'sqlite' =>
+    protected static $_SQLCreate = [
+        /* ---------------------------------------------------------- */
+        self::SQLITE =>
         'CREATE TABLE orders(
     invoice_id INTEGER NOT NULL ,
     product_id INTEGER NOT NULL ,
     UnitPrice NUMBER,
     Quantity INTEGER,
     PRIMARY KEY(invoice_id,product_id),
-    FOREIGN KEY (invoice_id) REFERENCES invoices(id)
+    FOREIGN KEY (invoice_id) REFERENCES invoices(id),
     FOREIGN KEY (product_id) REFERENCES products(id))',
-        'mysql' => ''
-    );
-
+        /* ---------------------------------------------------------- */
+        self::MYSQL =>
+        'CREATE TABLE orders(
+    invoice_id INTEGER NOT NULL ,
+    product_id INTEGER NOT NULL ,
+    UnitPrice FLOAT,
+    Quantity INTEGER,
+    PRIMARY KEY(invoice_id,product_id),
+    FOREIGN KEY (invoice_id) REFERENCES invoices(id),
+    FOREIGN KEY (product_id) REFERENCES products(id))
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ',
+    ];
 
 }
-
 

@@ -35,6 +35,17 @@ class TInvoices extends _invoiceManager {
      * @var string[]
      */
     protected $_externalEntities = ['customers' => 'TCustomers2'];
+
+    /*
+     * W A R N I N G:
+     * 
+     * the code hereafter in this class is only used to create the table and
+     * its copy.
+     * 
+     * It is by no way an illustration of a table management
+     * 
+     */
+    
     
     /**
      * SQL command to construct the table
@@ -42,17 +53,25 @@ class TInvoices extends _invoiceManager {
      * @var string[]
      */
     protected static $_SQLCreate = array(
-        'sqlite' =>
+        /* ---------------------------------------------------------- */
+        self::SQLITE =>
         'CREATE TABLE invoices(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     InvoiceDate DATE,
     customer_id INTEGER,
     Amount NUMBER,
     FOREIGN KEY (customer_id) REFERENCES customers(id))',
-        'mysql' => ''
+        /* ---------------------------------------------------------- */
+        self::MYSQL =>
+        'CREATE TABLE invoices(
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    InvoiceDate DATE,
+    customer_id INTEGER,
+    Amount REAL,
+    PRIMARY KEY(id),
+    FOREIGN KEY (customer_id) REFERENCES customers(id))
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
     );
 
-    
 }
-
 
