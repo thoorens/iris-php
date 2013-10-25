@@ -33,10 +33,11 @@ use Iris\Exceptions as ie;
 class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
-    
+
     /**
      * A sample date in Japan mode : 2013-08-28
      */
+
     const JAPAN = 1;
     /**
      * A sample date in USA mode : 08-28-2013
@@ -46,8 +47,6 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * A sample date in Europe mode : 28-08-2013
      */
     const EUROPE = 3;
-
-    
 
     /**
      * A 13 element array for month lengths, item 0 is unused
@@ -62,8 +61,6 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * @var \DateTime 
      */
     protected $_internalDate = NULL;
-
-    
 
     /**
      * 
@@ -200,28 +197,27 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     protected function _analyseTimeString($string, $ampm) {
-        $badTime = [0, 0, 0];
+        $ampm = strtoupper($ampm);
         if ($ampm != '' and $ampm != 'AM' and $ampm != 'PM') {
-            $numbers = $badTime;
+            $hour = $minute = $second = 0;
         }
         else {
             $numbers = explode(':', $string);
             $countNumbers = count($numbers);
-
             // one must provide 2 or 3 numbers
             if ($countNumbers < 2 or $countNumbers > 3) {
-                $numbers = $badTime;
+                $hour = $minute = $second = 0;
             }
             else {
-                $hour = ($ampm == 'PM' ? 12 : 0) + $numbers[0];
-                $minute = $numbers[1];
-                $second = (count($numbers) == 3) ? $numbers[2] : 0;
+                $hour = (int) (($ampm == 'PM' ? 12 : 0) + $numbers[0]);
+                $minute = (int) $numbers[1];
+                $second = (count($numbers) == 3) ? (int) $numbers[2] : 0;
                 if ($hour < 0 or $hour > 24 or $minute < 0 or $minute > 59 or $second < 0 or $second > 59) {
-                    $numbers = $badTime;
+                    $hour = $minute = $second = 0;
                 }
             }
         }
-        $this->_internalDate->setTime($numbers[0], $numbers[1], $numbers[2]);
+        $this->_internalDate->setTime($hour, $minute, $second);
     }
 
     /**
@@ -229,7 +225,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * 
      * @param int $mode
      * @deprecated since version 1.0 (use Settings instead)
-      */
+     */
     public static function SetMode($mode) {
         \Iris\SysConfig\Settings::SetDateMode($mode);
     }
@@ -564,5 +560,4 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
 }
-
 
