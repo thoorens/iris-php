@@ -1,25 +1,28 @@
-
-
-<table border="1">
-    <thead>
-        <tr>
-            <th>Invoice #</th>
-            <th>Date</th>
-            <th>Qty</th>
-            <th>Description</th>
-            <th>Event</th>
-        </tr>
-    </thead>
-    <tbody>
-        {foreach(events,event)}
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <table border="1">
+        <thead>
             <tr>
-                <td>{(event['Order']['Invoice'])}</td>
-                <td>{(event['Moment'])}</td>
-                <td>{(event['Order']['Qty'])}</td>
-                <td>{(event['Order']['Product'])} </td>
-                <td>{(event['Description'])}</td>
+                <th colspan="2">Foreign Key</th>
+                <th>Event</th>
+                <th>Invoice Date</th>
+                <th>Order Qty</th>
+                <th>Product description</th>
             </tr>
-        {/foreach}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {foreach(events,event)}
+                <tr>
+                    <td>{(event['Key1'])}</td>
+                    <td>{(event['Key2'])}</td>
+                    <td>{(event['Description'])}</td>
+                    <td>{simpleTimeDate($event['Moment'])}</td>
+                    <td>{(event['Order']['Qty'])}</td>
+                    <td>{(event['Order']['Product'])} </td>
+                </tr>
+            {/foreach}
+        </tbody>
+    </table>
+    {dbWarning()}
+</div>
 

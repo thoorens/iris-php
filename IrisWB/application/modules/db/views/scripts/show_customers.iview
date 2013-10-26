@@ -6,7 +6,7 @@
             {assign(invoices,$customer['Inv'])}
             {foreach(invoices,invoice)}
                 <li>
-                    {(invoice['Number'])} {(invoice['Date'])}
+                    Invoice #{(invoice['Number'])} <i>({simpleDate($invoice['Date'])})</i>
                 </li>
             {/foreach}
         </ul>

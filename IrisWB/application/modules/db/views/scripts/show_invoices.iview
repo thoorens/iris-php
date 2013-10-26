@@ -4,7 +4,7 @@
     {container->divMaster()}
     {foreach(invoices,invoice)}
         <div {container->item('Invoice '.$invoice['id'])}>
-            <b>Date:</b>{(invoice['Date'])}<br/> 
+            <b>Date: </b>{simpleDate($invoice['Date'])}<br/> 
             <b>Customer's name:</b> {(invoice['CustName'])}
             <ul>
                 {assign(orders,$invoice['Orders'])}

@@ -3,23 +3,26 @@
         p {margin:0}
     </style>
 {/literal}
-<h1>Orders</h1>
-{container->divMaster()}
-{foreach(orders,order)}
-    <div {container->item($order['InvNum'])}>
-        <p><b>Billing date :</b>{(order['Date'])}</p>
-        <p>
-            <b>Production description :</b>{(order['Description'])}
-        </p>
-        <p><b>Associated events :</b></p>
-        <ul>
-            {assign(events,$order['Events'])}
-            {foreach(events,event)}
-                <li>
-                    {event} 
-                </li>
-            {/foreach}
-        </ul>
-    </div>
-{/foreach}
-{container->endMaster()}
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {container->divMaster()}
+    {foreach(orders,order)}
+        <div {container->item($order['InvNum'])}>
+            <p><b>Billing date : </b>{simpleDate($order['Date'])}</p>
+            <p>
+                <b>Product description :</b>{(order['Description'])}
+            </p>
+            <p><b>Associated events :</b></p>
+            <ul>
+                {assign(events,$order['Events'])}
+                {foreach(events,event)}
+                    <li>
+                        {event} 
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    {/foreach}
+    {container->endMaster()}
+    {dbWarning()}
+</div>

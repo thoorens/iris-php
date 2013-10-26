@@ -35,17 +35,22 @@ class show extends _db {
     
 
     protected function _init() {
-        //
+        $this->__action = "show";
         $this->dbState()->validateDB();
     }
 
+    
+   
+    
+    
+    
     /**
      * Displays all the invoices (with full details)
      * 
      * @param type $dbType
      */
-    public function invoicesAction($dbType = 'sqlite') {
-        $tInvoices = \models\TInvoices::GetEntity();
+    public function invoicesAction() {
+        $tInvoices = \models\TInvoices::GetEntity($this->_entityManager);
         $invoices = $tInvoices->fetchAll();
         foreach ($invoices as $invoice) {
             $invs[] = $this->_readInvoice($invoice);
@@ -84,7 +89,7 @@ class show extends _db {
      * Displays all the customers
      */
     public function customersAction() {
-        $tCustomers = \models\TCustomers2::GetEntity();
+        $tCustomers = \models\TCustomers::GetEntity($this->_entityManager);
         $customers = $tCustomers->fetchAll();
         foreach ($customers as $customer) {
             $cust['Name'] = $customer->Name;
@@ -102,11 +107,47 @@ class show extends _db {
         $this->__customers = $custs;
     }
 
+    /**
+     * Displays all the customers
+     */
+    public function productsAction() {
+        $tProducts = \models\TProducts::GetEntity($this->_entityManager);
+        $products = $tProducts->fetchAll();
+        foreach ($products as $products) {
+            $prods[] = $this->_readProduct($products);
+        }
+        $this->__products = $prods;
+        /* @var $container \Dojo\views\helpers\TabContainer */
+        $container = $this->callViewHelper('dojo_tabContainer', 'container');
+        $container->setDim(300, 700);
+    }
+    
+    private function _readProduct($product) {
+        $prod['Description'] = $product->Description;
+        $prod['Price'] = $product->Price;
+        $orders = $product->_children_orders__product_id;
+        $invs = [];
+        foreach($orders as $order){
+            $invoice = $order->_at_invoice_id;
+            $invs[] = [
+                'Quantity' => $order->Quantity,
+                'Number' => $invoice->id,
+                'Date' => $invoice->Date,
+                'CustomerName' => $invoice->_at_customer_id->Name,
+            ];
+        }
+        $prod['Invoices'] = $invs;
+        return $prod;
+    }
+    
+    
     public function eventsAction() {
-        $tEvents = \models\TEvents::GetEntity();
+        $tEvents = \models\TEvents::GetEntity($this->_entityManager);
         $events = $tEvents->fetchAll();
         foreach ($events as $event) {
             $ord = array();
+            $ev['Key1'] = $event->invoice_id;
+            $ev['Key2'] = $event->product_id;
             $ev['Moment'] = $event->Moment;
             $ev['Description'] = $event->Description;
             $order = $event->_at_invoice_id__product_id;
@@ -148,7 +189,11 @@ class show extends _db {
      * 
      * @param int $num
      */
-    public function errorAction($num) {
+    public function errorAction() {
+        $this->__Title = "Error in database";
+        $this->setViewScriptName('/commons/error');
     }
+
+    
 
 }

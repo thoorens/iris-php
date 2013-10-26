@@ -1,0 +1,22 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h1>List of products</h1>
+    {container->divMaster()}
+    {foreach(products,product)}
+        <div {container->item($product['Description'])}>
+            <h3>{(product['Description'])}</h3>
+            Price : {(product['Price'])}<br/>
+            <ul>
+                {assign(invoices,$product['Invoices'])}
+                {foreach(invoices,invoice)}
+                    <li>
+                        <b>Invoice #{(invoice['Number'])}</b> ({(invoice['CustomerName'])})
+                        Quantity: {(invoice['Quantity'])} 
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    {/foreach}
+    {container->endMaster()}
+    {dbWarning()}
+</div>
