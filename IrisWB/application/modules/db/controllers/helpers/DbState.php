@@ -32,9 +32,21 @@ namespace Iris\controllers\helpers;
  * @version $Id: $ */
 class DbState extends \Iris\controllers\helpers\_ControllerHelper {
 
+    /**
+     * No know status
+     */
     const UNKNOWN = 1;
+    /**
+     * A freshly created database
+     */
     const CREATED = 2;
+    /**
+     * A database modified by the user
+     */
     const MODIFIED = 3;
+    /**
+     * A deleted database
+     */
     const DELETED = 4;
 
     protected $_singleton = TRUE;
@@ -57,10 +69,21 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
         }
     }
 
+    /**
+     * Returns an array with a message and a CSS class name describing the
+     * database state
+     * 
+     * @return string[]
+     */
     public function state() {
         return [$this->_warning(), $this->_cssClass()];
     }
 
+    /**
+     * Prepares a message to be displayed at the page bottom
+     * 
+     * @return string
+     */
     private function _warning() {
         switch ($this->getCurrentState()) {
             case self::UNKNOWN:
@@ -73,12 +96,17 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
                 $message = "The database has been recently created but modifications have been done by the user.";
                 break;
             case self::DELETED:
-                $message = "The database has been deleted. No more management is possible. Please reset it with '/db/crud/init'";
+                $message = "The database has been deleted. No more management is possible. Please reset it with '/db/sample/init'";
                 break;
         }
         return $message;
     }
 
+    /**
+     * Prepares a CSS class name to select the color and aspect of the message
+     * 
+     * @return string
+     */
     private function _cssClass() {
         switch ($this->getCurrentState()) {
             case self::UNKNOWN:
@@ -97,22 +125,39 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
         return $class;
     }
 
+    /**
+     * Sets the status to CREATED
+     */
     public function setCreated() {
         $this->setCurrentState(self::CREATED);
     }
 
+    /**
+     * Sets the status to MODIFIED
+     */
     public function setModified() {
         $this->setCurrentState(self::MODIFIED);
     }
 
+    /**
+     * Sets the status to DELETED
+     */
     public function setDeleted() {
         $this->setCurrentState(self::DELETED);
     }
 
+    /**
+     * Sets the status to the required value (through the session manager)
+     * @param int $state
+     */
     private function setCurrentState($state) {
         \Iris\Users\Session::GetInstance()->wbDbState = $state;
     }
 
+    /**
+     * Returns the present state taken from the session manager
+     * 
+     */
     private function getCurrentState() {
         return \Iris\Users\Session::GetInstance()->getValue('wbDbState', self::UNKNOWN);
     }

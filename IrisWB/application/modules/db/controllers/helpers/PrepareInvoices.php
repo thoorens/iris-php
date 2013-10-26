@@ -33,72 +33,82 @@ namespace Iris\controllers\helpers;
 class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
 
     protected $_singleton = TRUE;
-    
-    
+
     public function help() {
         return $this;
     }
-
-    
 
     /**
      * Creates all 5 tables with data in them and returns an array
      * with the table names as keys and numbers of rows as values
      * 
-     * @param string $type the rdbms type
      * @return array
      */
-    public function createAll($type, $data = \TRUE) {
-        $entityManager = \models\_invoiceManager::Reset($type);
-        $results =  [
-            "Customers" => $this->createCustomers($type, $data),
-            "Products" => $this->createProducts($type, $data),
-            "Invoices" => $this->createInvoices($type, $data),
-            "Orders" => $this->createOrders($type, $data),
-            "Events" => $this->createEvents($type, $data),
-        ];
-        \models\VVcustomers::Create($type, $entityManager);
+    public function createAll() {
+        $entityManager = \models\_invoiceManager::GetEM();
+        $tables = $entityManager->listTables();
+        if (count($tables)) {
+            $results['Error'] = \TRUE;
+        }
+        else {
+            $results = [
+                "Customers" => $this->createCustomers(),
+                "Customers2" => $this->createCustomers2(),
+                "Products" => $this->createProducts(),
+                "Invoices" => $this->createInvoices(),
+                "Orders" => $this->createOrders(),
+                "Events" => $this->createEvents(),
+            ];
+            \models\VVcustomers::Create($entityManager);
+        }
         return $results;
     }
 
+    public function deletall() {
+        
+    }
+
     /**
-     * Creates a customer table, optionaly with data
+     * Creates a customer table
      * 
-     * @param string $type the rdbms type
-     * @param boolean $withData if true, populates the table (default)
      * @return int Number of rows created
      */
-    public function createCustomers($type, $withData = \TRUE) {
-        \models\TCustomers::Create($type);
+    public function createCustomers() {
+        \models\TCustomers::Create();
         $tCustomers = \models\TCustomers::GetEntity();
         $customerList = [
             ['Jacques Thoorens', 'rue Villette', 'irisphp@thoorens.net'],
-            ['John Smith' , 'Bourbon street', 'john@smith.eu'],
-            ['Antonio Sanchez' , 'Gran Via', \NULL]
+            ['John Smith', 'Bourbon street', 'john@smith.eu'],
+            ['Antonio Sanchez', 'Gran Via', \NULL]
         ];
         $elements = 0;
-        if ($withData) {
-            foreach ($customerList as $items) {
-                $customer = $tCustomers->createRow();
-                $customer->Name = $items[0];
-                $customer->Address = $items[1];
-                $customer->Email = $items[2];
-                $customer->save();
-                $elements++;
-            }
+        foreach ($customerList as $items) {
+            $customer = $tCustomers->createRow();
+            $customer->Name = $items[0];
+            $customer->Address = $items[1];
+            $customer->Email = $items[2];
+            $customer->save();
+            $elements++;
         }
         return $elements;
     }
 
     /**
-     * Creates a product table, optionaly with data
      * 
-     * @param string $type the rdbms type
-     * @param boolean $withData if true, populates the table (default)
+     * @param type $type
+     * @return type
+     */
+    public function createCustomers2() {
+        return \models\TCustomers::Copy();
+    }
+
+    /**
+     * Creates a product table
+     * 
      * @return int Number of rows created
      */
-    public function createProducts($type, $withData = \TRUE) {
-        \models\TProducts::Create($type);
+    public function createProducts() {
+        \models\TProducts::Create();
         $tProducts = \models\TProducts::GetEntity();
 
         $productList = [
@@ -107,27 +117,23 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
             'apple' => 0.30,
         ];
         $elements = 0;
-        if ($withData) {
-            foreach ($productList as $description => $price) {
-                $product = $tProducts->createRow();
-                $product->Description = $description;
-                $product->Price = $price;
-                $product->save();
-                $elements++;
-            }
+        foreach ($productList as $description => $price) {
+            $product = $tProducts->createRow();
+            $product->Description = $description;
+            $product->Price = $price;
+            $product->save();
+            $elements++;
         }
         return $elements;
     }
 
     /**
-     * Creates a invoice table, optionaly with data
+     * Creates a invoice table
      * 
-     * @param string $type the rdbms type
-     * @param boolean $withData if true, populates the table (default)
      * @return int Number of rows created
      */
-    public function createInvoices($type, $withData = \TRUE) {
-        \models\TInvoices::Create($type);
+    public function createInvoices() {
+        \models\TInvoices::Create();
         $tInvoices = \models\TInvoices::GetEntity();
 
         $invoiceList = [
@@ -140,28 +146,24 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
             [3, '2012-03-05'], // id=6
         ];
         $elements = 0;
-        if ($withData) {
-            foreach ($invoiceList as $item) {
-                $invoice = $tInvoices->createRow();
-                $invoice->customer_id = $item[0];
-                $invoice->InvoiceDate = $item[1];
-                $invoice->save();
-                $elements++;
-            }
+        foreach ($invoiceList as $item) {
+            $invoice = $tInvoices->createRow();
+            $invoice->customer_id = $item[0];
+            $invoice->InvoiceDate = $item[1];
+            $invoice->save();
+            $elements++;
         }
         return $elements;
     }
 
     /**
-     * Creates a order table, optionaly with data (each order is a line
+     * Creates a order table (each order is a line
      * in the correspondant invoice)
      * 
-     * @param string $type the rdbms type
-     * @param boolean $withData if true, populates the table (default)
      * @return int Number of rows created
      */
-    public function createOrders($type, $withData = \TRUE) {
-        \models\TOrders::Create($type);
+    public function createOrders() {
+        \models\TOrders::Create();
         $tOrders = \models\TOrders::GetEntity();
         $orderList = [
             //[invoice_id,product_id,quantity)
@@ -178,29 +180,25 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
             [6, 3, 1],
         ];
         $elements = 0;
-        if ($withData) {
-            foreach ($orderList as $item) {
-                $order = $tOrders->createRow();
-                $order->invoice_id = $item[0];
-                $order->product_id = $item[1];
-                $order->Quantity = $item[2];
-                $order->save();
-                $elements++;
-            }
+        foreach ($orderList as $item) {
+            $order = $tOrders->createRow();
+            $order->invoice_id = $item[0];
+            $order->product_id = $item[1];
+            $order->Quantity = $item[2];
+            $order->save();
+            $elements++;
         }
         return $elements;
     }
 
     /**
-     * Creates a event table, optionaly with data
+     * Creates a event table
      * (the events concern each row of the invoices (order, shipment...)
      * 
-     * @param string $type the rdbms type
-     * @param boolean $withData if true, populates the table (default)
      * @return int Number of rows created
      */
-    public function createEvents($type, $withData = \TRUE) {
-        \models\TEvents::Create($type);
+    public function createEvents() {
+        \models\TEvents::Create();
         $tEvents = \models\TEvents::GetEntity();
         $eventList = [
             // [invoice_id,product_id, Description, Moment)
@@ -219,19 +217,16 @@ class PrepareInvoices extends \Iris\controllers\helpers\_ControllerHelper {
             [6, 3, 'Shipment', '2012-03-04 23:00'],
         ];
         $elements = 0;
-        if ($withData) {
-            foreach ($eventList as $item) {
-                $event = $tEvents->createRow();
-                $event->invoice_id = $item[0];
-                $event->product_id = $item[1];
-                $event->Description = $item[2];
-                $event->Moment = $item[3];
-                $event->save();
-                $elements++;
-            }
+        foreach ($eventList as $item) {
+            $event = $tEvents->createRow();
+            $event->invoice_id = $item[0];
+            $event->product_id = $item[1];
+            $event->Description = $item[2];
+            $event->Moment = $item[3];
+            $event->save();
+            $elements++;
         }
         return $elements;
     }
 
-    
 }
