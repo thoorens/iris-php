@@ -1,15 +1,21 @@
 <h2>"Invoices" database</h2>
-{button('Show database diagram','/db','Show the five table structures and their relations')}<br />
-{button('Create the database','/db/crud/init','Clear all the data and create a fresh new database')}<br />
-{button('Delete the database','/db/crud/init/sqlite/0','Clear all the data')}<br />
+{button('Show database diagram','/db/sample/structure','Show the five table structures and their relations')}<br />
+{button('Delete the data','/db/sample/deletedata','Clear all the data (tables and views)')}<br />
+{button('Create the database','/db/sample/init','Create the tables, views and data')}<br />
+{button('Verify the database','/db/sample/verify','Verify the existence of the tables and view')}<br />
+{if($sqlite)}
+    {button('Erase the database','/db/sample/deletefile','Deletes the file containing the database')}<br />
+{/if}
 <hr />
 {button('Show customers','/db/show/customers','Show all the customers of the example')}<br />
 {button('Show invoices','/db/show/invoices','Show all the invoices of the example')}<br />
+{button('Show products','/db/show/products','Show all the products of the example')}<br />
 {button('Show orders','/db/show/orders','Show all the orders of the example')}<br />
 {button('Show events','/db/show/events','Show all the events of the example')}<br />
 <hr />
 {button('Manage customers','/db/crud/customers','')}<br />
 {button('Manage invoices','/db/crud/invoices','')}<br />
+{button('Manage products','/db/crud/products','')}<br />
 {button('Manage orders','/db/crud/orders','')}<br />
 {button('Manage events','/db/crud/events','')}<br />
 

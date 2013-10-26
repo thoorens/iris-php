@@ -1,7 +1,7 @@
 <?php
 
 namespace modules\db\controllers;
-
+use models\_invoiceManager;
 /*
  * This file is part of IRIS-PHP.
  *
@@ -37,9 +37,7 @@ class menu extends \Iris\MVC\_Subcontroller {
      * A menu for the left part of the screen
      */
     public function indexAction() {
-        
+        $this->__sqlite = _invoiceManager::GetDefaultDbType() == _invoiceManager::SQLITE;
     }
-    
-    
 
 }
