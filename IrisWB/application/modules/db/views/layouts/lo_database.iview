@@ -14,11 +14,14 @@
                 </div><!-- Title -->
                 <div class="column one">
                     {subView(1)}
+                    <div class="dblogo">
+                        {dbLogo()}
+                    </div>
                 </div><!-- 1 -->
                 <div class="column two2">
                     {mainView()}
                 </div><!-- 2 -->
-                
+
             </div><!-- container -->
             <div id="foot">
                 {wbFooter('modules/main/views/scripts/lo_database.iview')}
