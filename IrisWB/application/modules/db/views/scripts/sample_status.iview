@@ -1,0 +1,5 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h2>{Result}</h2>
+    {dbWarning()}
+</div>

@@ -1,0 +1,19 @@
+{wbHeader()}
+
+<div class="content" {wbBG()}>
+    <h3>Resetting all data</h3>
+    {if($error)}
+        <p>    
+            The database has already been created. If you want to create it, you must first deleted it.
+        </p>
+    {else}
+        <ul>
+            {foreach(tables,table,element)}
+                <li>
+                    Table {table} : {element} rows 
+                </li>
+            {/foreach}
+        </ul>
+    {/if}
+    {dbWarning()}
+</div>

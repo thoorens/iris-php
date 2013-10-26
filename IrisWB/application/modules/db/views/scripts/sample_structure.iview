@@ -1,0 +1,7 @@
+{REM}Display a picture of the database diagram{/REM}
+
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {image('invoiceDB.jpg','The invoice database diagram')}
+</div>
+{dbWarning()}
