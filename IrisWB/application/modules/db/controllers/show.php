@@ -35,6 +35,7 @@ class show extends _db {
     
 
     protected function _init() {
+        $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
         $this->__action = "show";
         $this->dbState()->validateDB();
     }
