@@ -50,8 +50,6 @@ abstract class _TSequence extends \Iris\DB\_Entity {
         return $tSequence->fetchRow();
     }
 
-    
-    
     /**
      * Returns the first
      * 
@@ -101,7 +99,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
                 break;
             case self::PREVIOUS;
                 $current = $tSequence->fetchRow('URL=', $url);
-                if(is_null($current)){
+                if (is_null($current)) {
                     return \Iris\Subhelpers\Link::$NoLink;
                 }
                 $tSequence->order('id DESC');
@@ -110,7 +108,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
                 break;
             case self::NEXT:
                 $current = $tSequence->fetchRow('URL=', $url);
-                if(is_null($current)){
+                if (is_null($current)) {
                     return \Iris\Subhelpers\Link::$NoLink;
                 }
                 $tSequence->order('id');
@@ -121,7 +119,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
                 $tSequence->order('id DESC');
                 break;
         }
-        
+
         $sequence = $tSequence->fetchRow();
         if ($array) {
             if (is_null($sequence)) {
@@ -140,9 +138,10 @@ abstract class _TSequence extends \Iris\DB\_Entity {
     public static function GetStructuredSequence() {
         $level1 = array();
         $level2 = array();
-        $oldSection = 1234567;
+        $oldSection = -1;
         //$tSections = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder('sections');
         $tSequence = static::GetEntity();
+        $tSequence->order('id');
         $sequence = $tSequence->fetchAll();
         foreach ($sequence as $item) {
             $section_id = $item->section_id;
@@ -159,7 +158,8 @@ abstract class _TSequence extends \Iris\DB\_Entity {
             }
             if ($section_id == 0) {
                 $level1[$item->URL] = $item->Description;
-            }else{
+            }
+            else {
                 $level2[$item->URL] = $item->Description;
             }
         }
@@ -167,5 +167,4 @@ abstract class _TSequence extends \Iris\DB\_Entity {
     }
 
 }
-
 
