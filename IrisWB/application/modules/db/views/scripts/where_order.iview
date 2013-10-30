@@ -1,0 +1,30 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+
+
+    <table class="show">
+        <tr>
+            <th colspan="2">
+                Customers ordered by address
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <tt>
+                    {clause}
+                </tt>
+            </td>
+        </tr>
+        {foreach(customers, customer)}
+            <tr> 
+                <td>
+                    {(customer->Name)}
+                </td>
+                <td>
+                    <b>{(customer->Address)}</b>
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+    {dbWarning()}
+</div>

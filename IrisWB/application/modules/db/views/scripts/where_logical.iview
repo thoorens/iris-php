@@ -1,0 +1,33 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <p>
+        Customers that are <b>not</b> <i>Antonio Sanchez</i>
+    </p>
+    <ul>
+        {foreach(customers1, customer)}
+            <li>
+                {(customer->Name)}
+            </li>
+        {/foreach}
+    </ul>
+    <p>
+        Customers that are <b>not</b> <i>Antonio Sanchez</i> <b>and</b> live <i>rue Villette</i>
+    </p>
+    <ul>
+        {foreach(customers2, customer)}
+            <li>
+                {(customer->Name)} ({(customer->Address)}) 
+            </li>
+        {/foreach}
+    </ul><p>
+        Customers that are <i>Antonio Sanchez</i> <b>or</b> <i>Jacques Thoorens</i>
+    </p>
+    <ul>
+        {foreach(customers3, customer)}
+            <li>
+                {(customer->Name)}
+            </li>
+        {/foreach}
+    </ul>
+    {dbWarning()}
+</div>

@@ -1,0 +1,39 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>find()</h3>
+    <p>
+        Invoice #2
+    </p>
+    <ul>
+        <li>
+            #<b>{(invoice2->id)}</b> :  <i>{simpleDate($invoice2->InvoiceDate)}</i> - <b>{(invoice2->_at_customer_id->Name)} </b>
+        </li>
+    </ul>
+    <hr />
+    <h3>fetchRow() and fetchAll() with where()</h3>
+    <p>
+        Invoice with date > 2012-02-13 
+    </p>
+    <ul>
+        <li>fetchRow() takes the firt (if any):
+            <ul><li>
+                    # <b>{(invoice1->id)}</b> - <i>{simpleDate($invoice1->InvoiceDate)}</i> - <b>{(invoice1->_at_customer_id->Name)}</b>
+                </li>
+            </ul>
+        </li>
+        <li>
+            fetchall() takes them all
+            <ul>
+                {foreach(invoices,invoice)}
+                    <li>
+                        #<b>{(invoice->id)}</b> - <i>{simpleDate($invoice->InvoiceDate)}</i> - 
+                        <b>{(invoice->_at_customer_id->Name)}</b>
+                    </li>
+                {/foreach}
+            </ul>
+        </li>
+    </ul>
+    <p>
+        {dbWarning()}
+    </p>
+</div>

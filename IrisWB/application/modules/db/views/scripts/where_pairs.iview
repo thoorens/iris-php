@@ -1,0 +1,37 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>Implicit default operator (=)</h3>
+    <table class="show">
+        <tr>
+            <th>Method call</th>
+            <td><tt>{methodCall1}</tt></td>
+        </tr>
+        <tr>
+            <th>Result</th>
+            <td>{(customer1->Name)} (<i>{(customer1->Address)}</i>)</td>
+        </tr>
+    </table>
+    <h3>Explicit default operator</h3>
+    <table class="show">
+        <tr>
+            <th>Method call</th>
+            <td><tt>{methodCall2}</tt></td>
+        </tr>
+        <tr>
+            <th>Result</th>
+            <td>{(customer2->Name)} (<i>{(customer2->Address)}</i>)</td>
+        </tr>
+    </table>
+    <h3>No default operator</h3>
+    <table class="show">
+        <tr>
+            <th>Method call</th>
+            <td><tt>{methodCall3}</tt></td>
+        </tr>
+        <tr>
+            <th>Result</th>
+            <td>{(customer3->Name)} (<i>{(customer3->Address)}</i>)</td>
+        </tr>
+    </table>
+    {dbWarning()}
+</div>
