@@ -80,16 +80,10 @@ class sample extends _db {
         $this->setViewScriptName('status');
     }
 
-    public function error($number) {
-        switch ($number) {
-            case 1:
-                die('Erreur creation');
-                break;
-            case 2:
-                break;
-        }
-    }
 
+    /**
+     * A way to qhickly verify that the database is working
+     */
     public function verifyAction() {
         $em = \models\_invoiceManager::GetEM();
         $tables = $em->listTables();
@@ -110,4 +104,10 @@ class sample extends _db {
         }
     }
 
+    /**
+     * The sequence table offers a warning before going to next screen: deleleall!
+     */
+    public function warningAction(){
+        $this->redirect('verify');
+    }
 }
