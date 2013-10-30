@@ -65,7 +65,7 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
      */
     public function validateDB() {
         if ($this->getCurrentState() == self::DELETED) {
-            $this->redirect('error/1');
+            $this->redirect('error');
         }
     }
 

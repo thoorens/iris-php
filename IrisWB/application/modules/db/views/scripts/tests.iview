@@ -1,0 +1,36 @@
+{literal}
+    <style>
+        table.show td.good{
+            background-color: #DFD;
+        }
+        table.show td.bad{
+            background-color:#FDD;
+        }
+        table.show td.command{
+            background-color: #FFE;
+        }
+        td.command tt{
+            font-size:0.8em;
+        }
+    </style>
+{/literal}
+
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {foreach(results, command, result)}
+        <table class="show">
+            {if($result == 'OK')}
+                {assign(goodbad,'good')}
+            {else}
+                {assign(goodbad,'bad')}
+            {/if}
+            <tr>
+                <td class="command"><tt>{command}</tt></td>
+            </tr>
+            <tr>
+                <td class="{goodbad}">{result}</td>
+            </tr>
+        </table>
+    {/foreach}
+    {dbWarning()}
+</div>

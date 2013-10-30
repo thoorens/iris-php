@@ -1,0 +1,18 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    
+    <p>
+        Customers that are <i>Antonio Sanchez</i> <b>or</b> <i>Jacques Thoorens</i>
+    </p>
+    <p>
+    <tt>{clause}</tt>
+    </p>
+    <ul>
+        {foreach(customers, customer)}
+            <li>
+                {(customer->Name)}
+            </li>
+        {/foreach}
+    </ul>
+    {dbWarning()}
+</div>
