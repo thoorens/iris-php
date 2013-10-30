@@ -29,6 +29,14 @@ namespace Iris\DB\Dialects;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
+
+    /**
+     * SQLite uses a file as a container
+     * 
+     * @var string 
+     */
+    private $_fileName;
+
     /*
      * INTEGER
      * BOOL
@@ -43,27 +51,61 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      * DATETIME
      */
 
-    
     /**
      * The constructor add default values to all parameters but one
-     * and correct database filename if its adress is relative
+     * and correct the database filename if it is relative
      * 
      * @param String $dsn : Data Source Name
-     * @param String $username : user login name
-     * @param String $passwd : user password
-     * @param boolean $default : if TRUE store this EM as default
+     * @param String $userName : user login name (not used here)
+     * @param String $passwd : user password (not used here)
      * @param mixed[] $options additional options
      */
-    protected function __construct($dsn, $username=\NULL, $passwd=\NULL, &$options = \NULL) {
-        list($adapter,$filename) = explode(':',$dsn);
-        if(!file_exists($filename)){
-            $filename = IRIS_ROOT_PATH.'/'.$filename;
-            $dsn = "$adapter:$filename";
+    protected function __construct($dsn, $userName = \NULL, $passwd = \NULL, &$options = []) {
+        list($adapter, $fileName) = explode(':', $dsn);
+        $fullFileName = self::FullPathName($fileName);
+        if (!file_exists($fullFileName) and \Iris\SysConfig\Settings::HasSqliteCreateMissingFile()) {
+            self::CreateFile($fullFileName);
         }
-        parent::__construct($dsn, '', '', $options);
+        $this->_fileName = $fullFileName;
+        $dsn = "$adapter:$fullFileName";
+        parent::__construct($dsn, $userName, $passwd, $options);
     }
 
+    public function getFileName() {
+        return $this->_fileName;
+    }
+
+    /**
+     * Returns a full path for a given file name
+     * 
+     * @param string $fileName
+     * @return string
+     */
+    public static function FullPathName($fileName){
+        if ($fileName[0] != '/') {
+            $fullName = IRIS_ROOT_PATH . '/' . $fileName;
+        }
+        else{
+            $fullName = $fileName;
+        }
+        return $fullName;
+    }
     
+
+    public static function CreateFile($fileName){
+        $fullFileName = self::FullPathName($fileName);
+        if(!file_exists($fullFileName)){
+            touch($fullFileName);
+        }
+    }
+    
+    public static function PurgeFile($fileName){
+        $fullFileName = self::FullPathName($fileName);
+        if(file_exists($fullFileName)){
+            unlink($fullFileName);
+        }
+        
+    }
     
     /**
      * SQLite manages Dsn differently and override the _GetDsn method.
@@ -73,13 +115,9 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      */
     protected static function _GetDsn($param) {
         $fileName = $param->database_dbname;
-        if(!file_exists($fileName)){
-            $fileName = IRIS_ROOT_PATH.'/'.$fileName;
-        }
         return sprintf('%s:%s', $param->database_adapter, $fileName);
     }
 
-    
     /* PRAGMA TABLE_INFO output example 
       object(stdClass)#44 (6) {
       ["cid"]=> string(1) "0"
@@ -97,9 +135,10 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      * @return \Iris\DB\Metadata
      */
     public function readFields($tableName) {
-        $results = $this->directSQL("PRAGMA table_info($tableName)");
+        $sql = "PRAGMA table_info($tableName)";
+        $results = $this->directSQL($sql);
         $results->setFetchMode(\PDO::FETCH_OBJ);
-        $metadata = new \Iris\DB\Metadata();
+        $metadata = new \Iris\DB\Metadata($tableName);
         foreach ($results as $line) {
             $MetaItem = new \Iris\DB\MetaItem($line->name);
             $MetaItem->setType($line->type)
@@ -109,8 +148,10 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
             if ($line->pk) {
                 try {
                     $metadata->addPrimary($line->name);
-                    $results = $this->directSQL("select * from customers"/* where name ='$tableName';"*/,\PDO::FETCH_ASSOC);
-                    if (count($results) == 1) {
+                    // exception if no defined sequence in the database
+                    $results = $this->directSQL("select * from sqlite_sequence where name ='$tableName';");
+                    $lines = $results->fetchall();
+                    if (count($lines) == 1) {
                         $MetaItem->setAutoIncrement();
                     }
                 }
@@ -147,7 +188,8 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
             if ($seq == 0) {
                 $foreignKey = new \Iris\DB\ForeignKey();
                 $foreignKeys[$id] = $foreignKey;
-            } else {
+            }
+            else {
                 $foreignKey = $foreignKeys[$id];
             }
             $foreignKey->setTargetTable($line->table);
@@ -160,11 +202,13 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
     /**
      * Returns the table list of the database
      * 
+     * @parameter boolean $views if false does not list views
      * @return array
      */
-    public function listTables() {
+    public function listTables($views = \TRUE) {
         $connexion = $this->getConnexion();
-        $results = $connexion->query("Select name From sqlite_master where type = 'table' and name!='sqlite_sequence'");
+        $noviews = $views ? '' : "type = 'table' and ";
+        $results = $connexion->query("SELECT name FROM sqlite_master WHERE $noviews name not like 'sqlite_%'");
         $data = $results->fetchAll(\PDO::FETCH_OBJ);
         $tables = array();
         foreach ($data as $line) {
@@ -195,5 +239,4 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
     }
 
 }
-
 
