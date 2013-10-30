@@ -24,13 +24,11 @@ namespace Dojo\Forms;
 /**
  * 
  */
-trait tDojoDijit{
+trait tDojoDijit {
 
-    
     private $_dijitType = \NULL;
-    
-    private $_dijitAttribute = [];
-    
+    private $_dijitAttributes = [];
+
     public function getDijitType() {
         return $this->_dijitType;
     }
@@ -51,26 +49,34 @@ trait tDojoDijit{
      * @param type $value
      * @return static
      */
-    public function addDijitAttribute($name, $value){
-        $this->_dijitAttribute[$name] = $value;
+    public function addDijitAttribute($collection, $name, $value) {
+        $this->_dijitAttributes[collection][$name] = $value;
         return $this;
-    }    
-    
-    protected function _renderAttributes(){
+    }
+
+    protected function _renderAttributes() {
         $text = '';
-        if(!is_null($this->_dijitType)){
-            $text = sprintf('data-dojo-type="%s" ',$this->_dijitType);
+        if (!is_null($this->_dijitType)) {
+            $text = sprintf('data-dojo-type="%s" ', $this->_dijitType);
         }
         $dojoProps = '';
-        foreach($this->_dijitAttribute as $attr => $value){
-            $dojoProps .= "$attr='$value' ";
+        foreach ($this->_dijitAttributes as $attr => $value) {
+            if ($value != []) {
+                if (is_array($value)) {
+                    $composedValues = implode("','",$value);
+                    $dojoProps .= "$attr : ['$composedValues']";
+        //if(stop) iris_debug($dojoProps);
+                }
+                else {
+                    $dojoProps .= "$attr='$value' ";
+                }
+            }
         }
-        if($dojoProps != ''){
+        if ($dojoProps != '') {
             $text .= sprintf('data-dojo-props = "%s"', $dojoProps);
         }
         return $text . parent::_renderAttributes();
     }
-            
-}
 
+}
 

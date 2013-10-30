@@ -34,7 +34,8 @@ namespace Dojo\Forms\Validators;
  * 
  */
 class Required extends \Iris\Forms\Validators\Required {
-
+    
+    
     protected static $_Html5 = FALSE;
 
     /**
@@ -43,8 +44,8 @@ class Required extends \Iris\Forms\Validators\Required {
      */
     public function setElement($element) {
         $element->setRequired('true');
-        if ($element->dojoType != 'dijit.editor') {
-            $element->dojoType = "dijit.form.ValidationTextBox";
+        if ($element->dijitType != 'dijit.editor') {
+            $element->setDijitType("dijit.form.ValidationTextBox");
             \Dojo\Manager::GetInstance()->addRequisite("ValidationTextBox", "dijit.form.ValidationTextBox");
         }
         parent::setElement($element);

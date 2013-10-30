@@ -29,12 +29,15 @@ namespace Dojo\Forms\Elements;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Editor extends \Iris\Forms\Elements\AreaElement {
-    use \Dojo\Forms\tDojoDijit;
+    use \Dojo\Forms\tDojoPlugins; /* includes tDojoDijit */
     
     protected $_dojoManager;
-    protected $_plugins = array();
-    protected $_extraPlugins = array();
     protected $_hiddenCompanion;
+    /**
+     *
+     * @var \Dojo\Engine\Bubble
+     */
+    protected $_bubble;
 
     public function __construct($name, $options = array()) {
         $editorName = $name . "_editor";
@@ -67,6 +70,7 @@ JSEditor
         $this->setDijitType("dijit.Editor")
                 ->setInheritWidth(TRUE)
                 ->setHeight('150px');
+        $this->_bubble = $bubble;
     }
 
     public function addTo(\Iris\Forms\iFormContainer $container) {
@@ -84,29 +88,8 @@ JSEditor
         return $this;
     }
 
-    public function render($layout = \NULL) {
-        if (count($this->_plugins)) {
-            $plugins = implode("','", $this->_plugins);
-            $this->setPlugins("['$plugins']");
-        }
-        if (count($this->_extraPlugins)) {
-            foreach ($this->_extraPlugins as $command => $extra) {
-                $extraPlugins[] = sprintf("{name:'%s',command:'%s'}", $extra, $command);
-            }
-            $extraPlugins = implode(',', $extraPlugins);
-            $this->setExtraPlugins("[$extraPlugins]");
-        }
-        $html = $this->_hiddenCompanion->render($this->getLayout());
-        return parent::render($layout);
-    }
+   
 
-    public function _addPlugin($plugin) {
-        $this->_plugins[] = $plugin;
-    }
-
-    public function _addExtraPlugin($command, $plugin) {
-        $this->_extraPlugins[$command] = $plugin;
-    }
 
     public function toolBar($string) {
         foreach (str_split($string) as $letter) {
@@ -184,7 +167,7 @@ JSEditor
         return $this;
     }
 
-    public function StandartToolBar() {
+    public function StandardToolBar() {
         $this->toolBar('UR|XCVP|BI_S|ou><|lrcf|');
         return $this;
     }
@@ -196,7 +179,8 @@ JSEditor
             switch ($function) {
                 case 'hiliteColor':
                 case 'foreColor':
-                    $this->_dojoManager->addRequisite("editor_color", "dijit._editor.plugins.TextColor");
+                    $this->_bubble->addModule('dijit/_editor/plugins/TextColor');
+                    //$this->_dojoManager->addRequisite("editor_color", "dijit._editor.plugins.TextColor");
                     $this->_addPlugin($function);
                     break;
                 case "createLink":
@@ -227,8 +211,10 @@ JSEditor
                 case 'fontName':
                 case 'fontSize':
                 case 'formatBlock':
-                    $this->_dojoManager->addRequisite("editor_font", 'dijit._editor.plugins.FontChoice');
-                    $this->_addExtraPlugin($function, 'dijit._editor.plugins.FontChoice');
+                    //$this->_bubble->addModule('editor_font');
+                    $this->_bubble->addModule('dijit/_editor/plugins/FontChoice');
+                    //$this->_dojoManager->addRequisite("editor_font", 'dijit._editor.plugins.FontChoice');
+                    $this->_addExtraPlugin($function, "extraPlugins:['fontName', 'fontSize', 'formatBlock']");
                     break;
 
                 case 'createLink':
