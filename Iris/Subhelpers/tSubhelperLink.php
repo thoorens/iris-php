@@ -40,14 +40,17 @@ trait tSubhelperLink{
     
     private $_subhelper = \NULL;
 
-    protected static $_SubhelperName = \NULL;
+    /**
+     * Must be defined in main class
+     */
+    //protected $_subhelperName = ...;
     
     protected function _subclassInit(){
         self::$_Singleton = \TRUE;
     }
     
     /**
-     * Returns the instance to get its pseudo variable (using __get) or it
+     * Returns the instance to get its pseudo variable (using __get) or its
      * methods
      * 
      * @return Error
@@ -58,8 +61,14 @@ trait tSubhelperLink{
         return $this->_subhelper;
     }
     
+    /**
+     * The mechanism to find the subhelper: here it finds the class through the HelperName
+     * but this can be changed in subclasses
+     * 
+     * @throws \Iris\Exceptions\InternalException
+     */
     private final function _initSubhelper(){
-        if(is_null($this->_subhelperName)){
+        if(!isset($this->_subhelperName)){
             throw new \Iris\Exceptions\InternalException
             ('The renderer '.__CLASS__.' must define its associated subhelper through $_subhelperName var');
         }

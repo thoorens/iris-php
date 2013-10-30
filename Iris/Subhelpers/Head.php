@@ -35,7 +35,8 @@ defined('TAB2') or define('TAB2', "\t\t");
 class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
-    use \Iris\Engine\tSingleton;
+
+use \Iris\Engine\tSingleton;
 
 
 
@@ -269,7 +270,11 @@ class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
      */
     private static function _MakeTuning($ajaxMode, &$text, $runtimeDuration, $componentId) {
         try {
+            /* @var $auto Head */
             $auto = self::GetInstance();
+            if($ajaxMode){
+                return;
+            }
             $loaders = $auto->_render();
             foreach ($auto->_additionalHeadLoader as $loaderName) {
                 $loader = $loaderName::getInstance();

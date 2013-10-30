@@ -2,6 +2,8 @@
 
 namespace Iris\Subhelpers;
 
+use Iris\Exceptions\ExceptionContainer as EC;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -37,9 +39,9 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
     private $_module = 'Fake module';
     private $_controller = "Fake controller";
     private $_action = "Fake action";
-    private $_parameters = array();
+    private $_parameters = [];
     private $_trace = 'Fake system trace';
-    private $_details = array("Fake details");
+    private $_details = ["Fake details"];
     private $_comment = 'Fake comment';
     private $_systemTrace = 'Fake SystemTrace';
     private $_rawTrace;
@@ -91,38 +93,41 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
      * @return string
      */
     public function prepareExceptionDisplay($exception) {
-        $this->_systemTrace = \Iris\Errors\Handler::$_Trace;
-        $exception = \Iris\Exceptions\_Exception::GetLastException($exception);
+        $this->_systemTrace = \Iris\Errors\Handler::GetSystemTrace();
         if (is_null($exception)) {
             $this->_errorMessage = 'No message';
             $this->_title = $this->_("Unkwown fatal error");
-            $this->_trace = array();
+            $this->_trace = [];
             // the remaining variables are empty
             $this->_errorComment = $this->_firstModule = $this->_firstController =
                     $this->_firstAction = $this->_firstParameters = $this->_systemTrace = '';
             $firstURL = '???';
         }
         else {
-            $exception = \Iris\Exceptions\PHPException::Encapsulate($exception);
-            $this->_rawTrace = $exception->getTrace();
-            $this->_message = $exception->getMessage();
+            $exceptionContainer = new \Iris\Exceptions\ExceptionContainer($exception);
+            $this->_rawTrace = $exceptionContainer->getTrace();
+            $this->_message = $exceptionContainer->getMessage();
             if (strpos($this->_message, 'SQL') !== FALSE) {
                 $this->_message.= "<br>" . \Iris\DB\Dialects\MyPDOStatement::$LastSQL;
             }
-            $this->_title = $exception->getTitle();
-            $this->_trace = $exception->getIrisTrace(\Iris\Exceptions\_Exception::MODE_STRING);
-            $this->_details = $exception->getIrisTrace(\Iris\Exceptions\_Exception::MODE_BOTH);
-            $this->_module = $exception->getModule();
-            $this->_controller = $exception->getController();
-            $this->_action = $exception->getAction();
+            $this->_title = $exceptionContainer->getTitle();
+            $this->_trace = $exceptionContainer->getIrisTrace(EC::MODE_STRING);
+            $stackLevel = \Iris\Errors\Settings::GetStackLevel();
+            if ($stackLevel == -1)
+                $this->_details = $exceptionContainer->getIrisTrace(EC::MODE_BOTH);
+            elseif (is_numeric($stackLevel))
+                $this->_details = $exceptionContainer->getIrisTrace(EC::MODE_ARRAY);
+            $this->_module = $exceptionContainer->getModule();
+            $this->_controller = $exceptionContainer->getController();
+            $this->_action = $exceptionContainer->getAction();
             $systemTrace = $this->_systemTrace;
             if (count($systemTrace) == 0) {
-                $this->_parameters = array();
+                $this->_parameters = [];
             }
             else {
                 $this->_parameters = $systemTrace[0]['PARAMETERS']; //$exception->getParameters();
             }
-            $firstURL = $exception->getFirstURL();
+            $firstURL = $exceptionContainer->getFirstURL();
         }
         return $firstURL;
     }
@@ -133,7 +138,7 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
     }
 
     public function __call($name, $arguments) {
-        call_user_func_array(array($this->_renderer, $name), $arguments);
+        call_user_func_array([$this->_renderer, $name], $arguments);
     }
 
     protected function _getRenderer() {
@@ -144,10 +149,10 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
         $line = "";
         $trace = $this->_rawTrace;
         if (isset($trace[0]['args'][3])) {
-            $line = " line : ".$trace[0]['args'][3];
+            $line = " line : " . $trace[0]['args'][3];
         }
-            $this->_message .= $fileInfo . $line;
-        }
+        $this->_message .= $fileInfo . $line;
     }
 
+}
 
