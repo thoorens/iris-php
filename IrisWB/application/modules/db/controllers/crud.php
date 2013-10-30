@@ -33,47 +33,12 @@ namespace modules\db\controllers;
  * @version $Id: $ */
 class crud extends _dbCrud {
 
-    
-    protected function _init() {
-        $action = $this->getActionName();
-        if($action != 'init' and $action != 'delete'){
-            $this->dbState()->validateDB();
-        }
-        
-    }
-        /**
-     * Deletes the database (and optionally creates new data)
-     * 
-     * @param string $dbType  the rdbms type
-     * @param boolean $data if false does not create the data
-     */
-    public function initAction($dbType='sqlite', $data = \TRUE) {
-        $this->__tables = $this->prepareInvoices()->createAll($dbType, $data);
-        if($data){
-            $this->dbState()->setCreated();
-        }
-        else{
-            $this->dbState()->setDeleted();
-        }
-    }
-    
-    /**
-     * Deletes the example database
-     * 
-     * @param string $dbType the rdbms type
-     */
-    public function deleteallAction($dbType='sqlite'){
-        $this->__Title = 'Database deleted';
-        $this->setViewScriptName('init');
-        $this->initAction($dbType,\FALSE);
-    }
-    
     /**
      * 
      * @param string $type 
      */
     public function customersAction() {
-        $tCustomers = \models\TCustomers2::GetEntity();
+        $tCustomers = \models\TCustomers::GetEntity();
         $this->__customers = $tCustomers->fetchAll();
     }
 
@@ -82,6 +47,11 @@ class crud extends _dbCrud {
         $this->__invoices = $tInvoices->fetchAll();
     }
 
+    public function productsAction(){
+        $tProducts = \models\TProducts::GetEntity();
+        $this->__products = $tProducts->fetchall();
+    }
+    
     /**
      * In case of a broken database, the action is redirected here
      * 

@@ -32,19 +32,12 @@ namespace modules\db\controllers;
  */
 class show extends _db {
 
-    
-
     protected function _init() {
         $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
         $this->__action = "show";
         $this->dbState()->validateDB();
     }
 
-    
-   
-    
-    
-    
     /**
      * Displays all the invoices (with full details)
      * 
@@ -122,13 +115,13 @@ class show extends _db {
         $container = $this->callViewHelper('dojo_tabContainer', 'container');
         $container->setDim(300, 700);
     }
-    
+
     private function _readProduct($product) {
         $prod['Description'] = $product->Description;
         $prod['Price'] = $product->Price;
         $orders = $product->_children_orders__product_id;
         $invs = [];
-        foreach($orders as $order){
+        foreach ($orders as $order) {
             $invoice = $order->_at_invoice_id;
             $invs[] = [
                 'Quantity' => $order->Quantity,
@@ -140,8 +133,7 @@ class show extends _db {
         $prod['Invoices'] = $invs;
         return $prod;
     }
-    
-    
+
     public function eventsAction() {
         $tEvents = \models\TEvents::GetEntity($this->_entityManager);
         $events = $tEvents->fetchAll();
@@ -178,23 +170,11 @@ class show extends _db {
             }
             $ord['Events'] = $evs;
             $ords[] = $ord;
-            /* @var $container \Dojo\views\helpers\TabContainer */
         }
         $this->__orders = $ords;
+        /* @var $container \Dojo\views\helpers\TabContainer */
         $container = $this->callViewHelper('dojo_tabContainer', 'container');
         $container->setDim(300, 700);
     }
-
-    /**
-     * In case of a broken database, the action is redirected here
-     * 
-     * @param int $num
-     */
-    public function errorAction() {
-        $this->__Title = "Error in database";
-        $this->setViewScriptName('/commons/error');
-    }
-
-    
 
 }
