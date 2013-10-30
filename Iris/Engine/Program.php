@@ -97,20 +97,9 @@ class Program {
      * 
      */
     private function _log($program) {
-       ini_set('log_error',\Iris\Errors\Settings::HasLog());
-       $logFile = \Iris\Errors\Settings::GetLogfile();
-       ini_set('error_log',IRIS_ROOT_PATH."/$program/$logFile");
-    }
-
-    /**
-     * Collect, if possible, all information about error before restarting system in 
-     * error state.
-     * 
-     * @param Exception $exception 
-     */
-    private function _errorInformation($exception) {
-        $errorInfo = \Iris\Errors\ErrorInformation::GetInstance();
-        $errorInfo->prepareErrorDiplay($exception);
+        ini_set('log_error', \Iris\Errors\Settings::HasLog());
+        $logFile = \Iris\Errors\Settings::GetLogfile();
+        ini_set('error_log', IRIS_ROOT_PATH . "/$program/$logFile");
     }
 
 }
