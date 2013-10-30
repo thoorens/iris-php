@@ -44,6 +44,11 @@ div#main{
     background-color:#f0f8ff
 }
 
+.onetwo{
+    width:700px;
+    background-color:#f0f8ff
+}
+
 .two2{
     width:740px;
     background-color:#f0f8ff
@@ -220,4 +225,13 @@ p.dbWarning{
 .warningDeleted{
     color:#F00;
     border-color:  #F00;
+}
+
+form#screen{
+    font-size:0.9em;
+}
+
+.dblogo{
+    margin:20px;
+    text-align: center;
 }
