@@ -88,39 +88,47 @@ abstract class _EntityManager {
         $entityName = $entity->getEntityName();
         if (!isset($this->_entityRepository[$entityName])) {
             $this->_entityRepository[$entityName] = $entity;
+            $entity->setEntityManager($this);
         }
     }
 
     /**
-     *
-     * @param string $param1
-     * @param string $alternativeClassName
-     * @param Metadata $metadata
-     * @return _Entity 
+     * Tries to unregister an entity. Throws an exception if it exists and
+     * contains objects. This methods should only be used with caution
+     * and in try catch context
+     * 
+     * @param string $entityName
+     * @throws \Iris\Exceptions\DBException
      */
-    public function retrieveEntity($param1, $alternativeClassName = NULL, $metadata = \NULL) {
-        if (!$param1 instanceof EntityParams) {
-            $param1 = new EntityParams($param1, $alternativeClassName, $metadata);
-        }
-        $entityName = $param1->getEntityName();
+    public function unregisterEntity($entityName){
         if (isset($this->_entityRepository[$entityName])) {
-            return $this->_entityRepository[$entityName];
+            $entity = $this->_entityRepository[$entityName];
+            if($entity->hasObjects()){
+                throw new \Iris\Exceptions\DBException('You cannot unregister an entity when it has instanciated objects');
+            }
+            unset($this->_entityRepository[$entityName]);
+        }
+    }
+    
+    /**
+     * Counts how many entities are registred
+     * 
+     * @return int
+     */
+    public function entityCount(){
+        return count($this->_entityRepository);
+    }
+    
+    public function extractEntity($entityName){
+       if (isset($this->_entityRepository[$entityName])) {
+            $entity = $this->_entityRepository[$entityName];
         }
         else {
-            return _Entity::CreateEntity($param1, $this);
+            $entity = \NULL;
         }
+        return $entity; 
     }
-
-    /**
-     * 
-     * @param EntityParams $params
-     * @return _Entity
-     */
-    public static function GetEntity($params) {
-        $entityManager = $params->getEntityManager();
-        return $entityManager->retrieveEntity($params);
-    }
-
+    
     /**
      * The constructor mustn't be used except in a factory
      * 
@@ -130,12 +138,9 @@ abstract class _EntityManager {
      * @param boolean $default : if TRUE store this EM as default
      * @param string[] $options additional options
      */
-    protected function __construct($dsn, $username, $passwd, &$options = \NULL) {
-        if (!is_null($options)) {
-            $options = array_merge(static::$_Options, $options);
-        }
-        else {
-            $options = static::$_Options;
+    protected function __construct($dsn, $username, $passwd, &$options = []) {
+        foreach(static::$_Options as $key => $value){
+            $options[$key] = $value;
         }
     }
 
@@ -162,19 +167,20 @@ abstract class _EntityManager {
     }
 
     /**
-     * Create the default entity manager as defined in Memory (by means
+     * Creates the default entity manager as defined in Memory (by means
      * of a parameter file)
      * 
      * @return _EntityManager 
      */
     protected static function _AutoInstance() {
         $memory = \Iris\Engine\Memory::GetInstance();
-        $mode = \Iris\Engine\Mode::GetSiteMode();
+        $siteMode = \Iris\Engine\Mode::GetSiteMode();
         $params = $memory->Get('param_database', \NULL);
         if (is_null($params)) {
             throw new \Iris\Exceptions\DBException('No database parameters found');
         }
-        $param = $params[$mode];
+        /* @var $param \Iris\SysConfig\Config */
+        $param = $params[$siteMode];
         $dsn = self::_DsnFormater($param);
         $username = $param->database_username;
         $passwd = $param->database_password;
@@ -183,7 +189,7 @@ abstract class _EntityManager {
 
     /**
      *
-     * @param type $param
+     * @param \Iris\SysConfig\Config $param
      * @return type 
      */
     private static function _DsnFormater($param) {
@@ -193,7 +199,7 @@ abstract class _EntityManager {
 
     /**
      *
-     * @param string[] $param
+     * @param \Iris\SysConfig\Config $param
      * @return string 
      */
     protected static function _GetDsn($param) {
@@ -209,14 +215,14 @@ abstract class _EntityManager {
      * @param mixed $options
      * @return _EntityManager 
      */
-    public static function EMFactory($dsn, $username = NULL, $passwd = NULL, $options = array()) {
+    public static function EMFactory($dsn, $username = \NULL, $passwd = \NULL, $options = array()) {
         if (!is_string($dsn)) {
             throw new \Iris\Exceptions\NotSupportedException('No analyse written of config');
             //@todo extraire le dsn, username et password
         }
         $manager = '\\Iris\\DB\\Dialects\\' . self::_GetDBType($dsn);
         try {
-            $entityManager = new $manager($dsn, $username, $passwd, $default, $options);
+            $entityManager = new $manager($dsn, $username, $passwd, $options);
         }
         catch (Exception $exc) {
             $message = $exc->getMessage();
@@ -323,9 +329,10 @@ abstract class _EntityManager {
     /**
      * Returns the table list of the database
      * 
+     * @parameter boolean $views if false does not list views
      * @return array
      */
-    public abstract function listTables();
+    public abstract function listTables($views = \TRUE);
 
     public abstract function lastInsertedId($entity);
 

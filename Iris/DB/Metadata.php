@@ -35,6 +35,13 @@ namespace Iris\DB;
 class Metadata implements \Serializable, \Countable {
 
     /**
+     * A string containing the table name
+     * 
+     * @var string
+     */
+    private $_tablename = '';
+
+    /**
      *
      * @var MetaItem[] 
      */
@@ -55,11 +62,11 @@ class Metadata implements \Serializable, \Countable {
 
     /**
      * 
-     * @param string $serialized
+     * @param string $tableName
      */
-    public function __construct($serialized = \NULL) {
-        if (!is_null($serialized)) {
-            $this->unserialize($serialized);
+    public function __construct($tableName = \NULL) {
+        if (!is_null($tableName)) {
+            $this->_tablename = $tableName;
         }
     }
 
@@ -94,6 +101,14 @@ class Metadata implements \Serializable, \Countable {
     }
 
     /**
+     * Gets the name of the associated table
+     * @return string
+     */
+    public function getTablename() {
+        return $this->_tablename;
+    }
+
+    /**
      * Getter for the foreign key array
      * 
      * @return array of ForeignKey 
@@ -103,7 +118,7 @@ class Metadata implements \Serializable, \Countable {
     }
 
     /**
-     * Gette for the field items
+     * Getter for the field items
      * 
      * @return array
      */
@@ -190,9 +205,10 @@ class Metadata implements \Serializable, \Countable {
                 }
             }
             // sorry Dijkstra, but each(), current() and other stuffs suck.
-            if($found) break;
+            if ($found)
+                break;
         }
-        
+
         if (!$found) {
             $links = implode(' ', $fkeys);
             throw new \Iris\Exceptions\DBException("A children recordset based on field(s) $links doesn't exist.");
@@ -211,6 +227,7 @@ class Metadata implements \Serializable, \Countable {
      * FOREIGN@0+from1!from2+targettable+to1!to2
      */
     public function serialize() {
+        $strings[] = "TABLE@".$this->_tablename;
         /* @var $item MetaItem */
         foreach ($this->_fields as $item) {
             $strings[] = $item->serialize();
@@ -220,7 +237,7 @@ class Metadata implements \Serializable, \Countable {
         foreach ($this->_foreigns as $foreign) {
             $strings[] = $foreign->serialize();
         }
-        return implode("", $strings);
+        return implode("\n", $strings);
     }
 
     /**
@@ -233,6 +250,9 @@ class Metadata implements \Serializable, \Countable {
         foreach ($items as $item) {
             list($type, $value) = explode('@', $item . '@');
             switch ($type) {
+                case 'TABLE':
+                    $this->_tablename = $value;
+                    break;
                 case 'FIELD':
                     $item = new MetaItem('');
                     $item->unserialize($value);
@@ -261,7 +281,5 @@ class Metadata implements \Serializable, \Countable {
         return count($this->_fields);
     }
 
-
 }
-
 

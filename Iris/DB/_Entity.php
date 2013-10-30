@@ -2,6 +2,8 @@
 
 namespace Iris\DB;
 
+
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -131,66 +133,88 @@ abstract class _Entity {
      */
 
     /**
-     * Finds an entity from possible 3 parameters : entityName, className and entity Manager.
+     * Finds an entity from 3 possible types of parameters : strings, entity Manager and metadata.
      * The entity is taken from the repository or created if necessary.
      * 
+     * @param mixed analysed in code
      * @return _Entity
      * @throws \Iris\Exceptions\DBException
      */
     public static function GetEntity() {
-        $params = new EntityParams(get_called_class());
-        $params->analyseParams(func_get_args());
-        return \Iris\DB\_EntityManager::GetEntity($params);
+        $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());
+        return $entityBuilder->createExplicitModel();
     }
 
     /**
-     * The constructor of an entity is protected and final
+     * The constructor of an entity is protected and final. Every special
+     * behavior may be inserted through the _init() method.
      * 
      */
-    protected final function __construct() {
+    protected final function __construct($entityName) {
+        if (is_null($this->_entityName)) {
+            $this->_entityName = $entityName;
+        }
+        $this->_query = new Query();
         $this->_init();
     }
 
     /**
-     * As the constructor is final, this methods offers a way to add special treatment after the new
+     * A substitute for "new" applied on entity. Should never be called directly. It is part of
+     * the job of GetEntity(), which will first try to find an existing instance and will
+     * initialize various internal properties.
+     * 
+     * This static method distinguishes the class and the table
+     * 
+     * @param string $className
+     * @param string $entityName
+     * @return \Iris\DB\_Entity
+     */
+    public static function GetNewInstance($className, $entityName) {
+        return new $className($entityName);
+    }
+
+    /**
+     * As the constructor is final, this methods offers a way to add special treatment 
+     * after instanciation
      */
     protected function _init() {
         
     }
 
-    /**
-     * A substitute for "new" applied on entity. Should never be called directly. GetEntity
-     * will do the same job but will first try to find an existing instance
-     * 
-     * @param EntityParams $params
-     * @param _EntityManager $entityManager
-     * @return \Iris\DB\_Entity
-     */
-    public static function CreateEntity($params, $entityManager) {
-        if (self::$_DebugLevel == 1) {
-            $params->show();
-            return;
+    /** TO DELETE */
+    public static function NewEntity_OLD($params, $entityManager) {
+        $type = $params->getType();
+        if ($type == EntityParams::METADATA) {
+            $className = $params->getFullClassName();
         }
-        $className = $params->getEntityClass();
+        else {
+            $className = $params->getEntityClass();
+        }
         $classFile = \Iris\System\Functions::Class2File($className);
         $simpleFile = IRIS_PROGRAM_PATH . "/$classFile";
         $specialFile = IRIS_ROOT_PATH . '/' . IRIS_LIBRARY . "/$classFile";
         // creates a new entity
         if (file_exists($simpleFile)) {
             $entity = new $className();
-            $params->updateParams($entity);
+            if ($params->getType() == $params::METADATA) {
+                $metadata = $params->getMetadata();
+                $entity->_metadata = $metadata;
+                $entity->_entityName = $metadata->getTablename();
+                $entity->_idNames = $metadata->getPrimary();
+            }
         }
         elseif (file_exists($specialFile)) {
             $entity = new $className();
-            $params->updateParams($entity);
         }
         else {
-            $entity = new InnerEntity();
+            $entityClass = $params->getEntityClass();
+            if (is_null($entityClass)) {
+                $entity = new InnerEntity();
+            }
+            else {
+                $entity = new $entityClass();
+            }
             $entity->_entityName = $params->getEntityName();
-        }
-        if (self::$_DebugLevel == 2) {
-            $params->show();
-            return;
         }
         $entity->_entityManager = $entityManager;
         if (is_null($entity->_entityName)) {
@@ -205,17 +229,22 @@ abstract class _Entity {
         if (self::$_DebugLevel == 3) {
             $params->setEntityName($entity->getEntityName());
             $params->show();
-            return;
         }
         $entity->_query = new Query();
-        if (self::$_DebugLevel)
-            $entityManager->registerEntity($entity);
+        $entityManager->registerEntity($entity);
+        if ($entity->getEntityName() == 'vcustomers') {
+            iris_debug($entity->getMetadata());
+        }
+        if (count($entity->getIdNames()) == 0) {
+            $entity->_idNames = $entity->getMetadata()->getPrimary();
+        }
         return $entity;
     }
 
     /**
      * By default, the entity manager is defined by the system. This methods can
-     * be overwritten in subclasses
+     * be overwritten in subclasses.
+     * THIS METHOD IS MAINLY CALLED THROUGH call_user_func !!!
      * 
      * @return _EntityManager
      */
@@ -334,6 +363,10 @@ abstract class _Entity {
         else {
             return NULL;
         }
+    }
+
+    public function hasObjects() {
+        return count($this->_objectRepository) > 0;
     }
 
     /**
@@ -532,11 +565,12 @@ abstract class _Entity {
      * Add a serie of pairs field=>value to the where clause
      * 
      * @param string[] $conditions
+     * @param booelan $operator if True (def), consider an equal operator
      * @return _Entity (fluent interface)
      */
-    public function wherePairs($conditions) {
+    public function wherePairs($conditions, $operator = '=') {
         foreach ($conditions as $field => $value) {
-            $this->_query->where("$field=", $value);
+            $this->_query->where("$field$operator", $value);
         }
         return $this;
     }
@@ -814,13 +848,13 @@ abstract class _Entity {
     /**
      * Obtain the metadata from either <ul>
      * <li> the result stored after a precedent analysis or
-     * <li> a string stored by hand in the entity or
+     * <li> a metadata stored by hand in the entity (see overloading of _readMetadata()
      * <li> an analysis of the database
      * </ul>
      * 
      * @return MetaData 
      */
-    public function getMetadata($metadata = \NULL) {
+    public final function getMetadata($metadata = \NULL) {
         if (is_null($this->_metadata)) {
             $this->_metadata = $this->_readMetadata($metadata);
             // add optional form properties
@@ -841,15 +875,31 @@ abstract class _Entity {
         return $this->_metadata;
     }
 
+    public function setMetadata($metadata) {
+        $this->_metadata = $metadata;
+    }
+
+    public function setEntityManager(\Iris\DB\_EntityManager $entityManager) {
+        $this->_entityManager = $entityManager;
+        return $this;
+    }
+
     /**
-     * Reads the metadata for a table using the suitable entity manager
+     * Reads the metadata for a table using the suitable entity manager.
+     * This method may be overridden to provide a metadata generated elsewhere
+     * @see \models\TMetadataModel in WB
+     * 
      * @param Metadata $metadata
      * @return Metadata 
      */
     protected function _readMetadata($metadata = \NULL) {
         if (is_null($metadata)) {
+            // reflection entities are only used for views
+            if (is_null($this->_reflectionEntity)) {
+                $this->_reflectionEntity = $this->_entityName;
+            }
             /* @var $metadata Metadata */
-            $metadata = $this->_entityManager->readFields($this->_entityName);
+            $metadata = $this->_entityManager->readFields($this->_reflectionEntity);
             foreach ($this->_entityManager->getForeignKeys($this->_reflectionEntity) as $foreignKey) {
                 $metadata->addForeign($foreignKey);
             }
@@ -870,9 +920,9 @@ abstract class _Entity {
                 }
             }
         }
+
         return $metadata;
     }
 
 }
-
 

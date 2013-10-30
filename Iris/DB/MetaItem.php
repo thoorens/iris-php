@@ -290,7 +290,7 @@ class MetaItem implements \Serializable {
         $string[] = "autoIncrement:" . ($this->_autoIncrement ? '*TRUE*' : '*FALSE*');
         $string[] = "primary:" . ($this->_primary ? '*TRUE*' : '*FALSE*');
         $string[] = "foreignPointer:" . (is_null($this->_foreignPointer) ? '*NULL*' : $this->_foreignPointer);
-        return "FIELD@" . implode('!', $string) . "\n";
+        return "FIELD@" . implode('!', $string);
     }
 
     /**

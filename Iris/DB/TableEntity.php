@@ -30,8 +30,19 @@ namespace Iris\DB;
  * @version $Id: $ */
 class TableEntity extends _Entity {
 
-    
+    /**
+     * Creates or finds an entity corresponding to the parameters given. $string exclusive_or $metadata must be provided
+     * 
+     * @param string $table A table name
+     * @param string/Metadata $metadata An optional Metadata definition as an object or a serialized string (opt)
+     * @param _EntityManager $entityManager An optional entity manager (if not provided, the default EM is used)
+     * @return _Entity
+     * @throws \Iris\Exceptions\DBException
+     */
+    public static function GetEntity() {
+        $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());
+        return $entityBuilder->createTable();
+    }
 
 }
-
 
