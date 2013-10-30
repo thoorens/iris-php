@@ -1,0 +1,4 @@
+{REM}3 possible partials: errorsimple, errordetails or errorfull{/REM}
+{partial('defaultErrors/development/'.$secondPart, $this)}
+
+{errorMark("development/standard|$secondPart")}

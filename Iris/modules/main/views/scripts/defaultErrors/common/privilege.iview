@@ -1,5 +1,4 @@
-{REM}old Error_privilege{/REM}
-{assign(ErrorType,'Priv')}
+{REM}title defined in Settings{/REM}
 <h1>{title}</h1>
 <p>
     You don't have the privilege to access this page. You may want to 
@@ -11,3 +10,4 @@
     <li>browse this site by means of hyperlinks or button instead of guessing URL by yourself</li>
 </ul>
     
+{errorMark('common/privilege')}

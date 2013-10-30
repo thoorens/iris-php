@@ -8,6 +8,11 @@
     </head>
     <body {dojo_body()}>
         <div class="page_margins">
+                <div id="footer">
+                    <div>
+                        {errorToolbar()}
+                    </div>
+                </div><!--footer-->
             <div class="page">
                 <div id="header">
                     {ILO_logo('Error80')}
@@ -17,7 +22,8 @@
                 </div><!--main-->
                 <div id="footer">
                     <div>
-                        {errorToolbar()}{ILO_goInternal('main')}
+                        {errorToolbar()}
+                        {ILO_goInternal('main')}
                     </div>
                 </div><!--footer-->
 

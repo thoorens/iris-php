@@ -27,13 +27,12 @@ namespace Iris\modules\main\controllers;
  * @version $Id: $ */
 
 /**
- * An error controller
- * 
+ * An abstract controller used by any error management controler. It provides
+ * tools and an API. It has 3 predefined types of error and 2 modes:
  */
 abstract class _Error extends \Iris\MVC\_Controller {
 
-    
-    protected $_isDevelopment;
+    protected $_isProduction;
 
     /**
      *
@@ -48,106 +47,123 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * error display mechanism. These can be overidden in _init() or predispatch().
      */
     protected final function _moduleInit() {
-        $this->_isDevelopment = \Iris\Engine\Mode::IsDevelopment();
+        $this->_isProduction = \Iris\Errors\Handler::IsProduction();
         $this->_setLayout('error');
         $this->__title = \Iris\Errors\Settings::GetTitle();
         $this->_exception = \Iris\Engine\Memory::Get('untreatedException', new \Iris\Exceptions\InternalException('Unkown exception'));
+        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
+        \Iris\SysConfig\Settings::DisableMD5Signature();
     }
 
     /**
-     * Error screens must be visible by all. Security does nothing. Daughnter
-     * class cannot change this behavior.
+     * Error screens must be visible by all. Security does nothing. Daughter
+     * classes cannot change this behavior.
      */
     public final function security() {
         
     }
 
+    protected final function _verifyAcl() {
+    }
+
+    
     /**
      * The default treatment for general error 
      */
     public final function standardAction() {
-        if ($this->_isDevelopment) {
-            $this->_standardDevelopment();
+        if ($this->_isProduction) {
+            $this->_standardProduction();
         }
         else {
-            $this->_standardProduction();
+            $this->_standardDevelopment();
         }
     }
 
+    /**
+     * What happens in standard production context :
+     * to be defined in subclasses
+     */
     protected abstract function _standardProduction();
 
+    /**
+     * What happens in standard developement context :
+     * to be defined in subclasses
+     */
     protected abstract function _standardDevelopment();
 
     /**
-     * A default treatment for privilege error
+     * A default treatment for privilege error: it uses two methods
+     * to be defined in a subclass
      */
     public final function privilegeAction() {
-        if ($this->_isDevelopment) {
-            $this->_privilegeDevelopment();
+        if ($this->_isProduction) {
+            $this->_privilegeProduction();
         }
         else {
-            $this->_privilegeProduction();
+            $this->_privilegeDevelopment();
         }
     }
 
+    /**
+     * The privilege error in production mode has to be defined in a subclass
+     */
     protected abstract function _privilegeProduction();
 
+    /**
+     * The privilege error in development mode has to be defined in a subclass
+     */
     protected abstract function _privilegeDevelopment();
 
     /**
-     * A treatment for a fatal error (usually an error in error display)
+     * A treatment for a fatal error (usually an error in error display).
      * Not used in development
      */
     public final function fatalAction() {
-        $this->setViewScriptName('Errors/fatal');
+        $this->setViewScriptName('defaultErrors/common/fatal');
     }
-
-//    public function indexDevAction() {
-//        $this->setViewScriptName('indexDev');
-//        /* @var $exception \Exception */
-//        $exception = \Iris\Engine\Memory::Get('untreatedException', \NULL);
-//        if (is_null($exception)) {
-//            $this->reroute('/');
-//        }
-//        $this->__message = $exception->getMessage();
-//        $this->__file = $exception->getFile();
-//        $this->__line = $exception->getLine();
-//        if ($exception instanceof \Iris\Exceptions\_Exception) {
-//            $this->__type = $exception->getExceptionName();
-//        }
-//        else {
-//            $this->__type = "PHP";
-//        }
-//        //iris_debug($exception->getTrace());
-//    }
 
     /**
-     * A default treatment for privilege error in development
-     * Same as in production (but may be overriden)
+     * This action permits to test an error privilege even if there
+     * is no acl policy on the site (only for test)
      */
-    public function privilegeDevAction() {
-        $this->setViewScriptName('privilege');
+    public final function impossibleAction() {
+        $this->displayError(\Iris\Errors\Settings::TYPE_PRIVILEGE);
     }
 
+    /**
+     * A standard way to display error information:<ul>
+     * <li> file
+     * <li> line
+     * <li> type
+     * <li> message
+     * </ul>
+     */
     protected function _exceptionDescription() {
         $this->__file = $this->_exception->getFile();
         $this->__line = $this->_exception->getLine();
-        $this->__type = $this->_exception->getExceptionName();
+        if(is_a($this->_exception, '\Iris\Exceptions\_Exception')){
+            $this->__type = $this->_exception->getExceptionName();
+        }
+        else{
+            $this->__type = get_class($this->_exception);
+        }
         $this->__message = $this->_exception->getMessage();
     }
 
     /**
-     * 
-     * @param \Iris\Exceptions\_Exception $exception
+     * Will display or not the stack execution level required or all of them
      */
     protected final function _displayStackLevel() {
         $stackLevel = \Iris\Errors\Settings::GetStackLevel();
+        // no stack (default state)
         if (is_null($stackLevel)) {
             $this->_noStack();
         }
+        // all the levels (?ERRORSTACK=-1 in URL)
         elseif ($stackLevel == -1) {
             $this->_stackInTabs();
         }
+        // the required level (?ERRORSTACK= number in URL)
         else {
             $this->_stackDetails($stackLevel);
         }
@@ -157,7 +173,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * No stack display
      */
     protected function _noStack() {
-        $this->__partialName = 'errorsimple';
+        $this->__secondPart = 'errorsimple';
     }
 
     /**
@@ -166,8 +182,9 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * @param int $stackLevel
      */
     protected function _stackDetails($stackLevel) {
-        $this->__partialName = 'errordetails';
-        $this->__stack = "Level $stackLevel";
+        $this->__secondPart = 'errordetails';
+        $this->__stack = $stackLevel;
+        $this->__details = $this->callViewHelper('error')->details[$stackLevel];
         //$this->__stack = $this->_exception->getTrace()[$stackLevel];
     }
 
@@ -175,29 +192,28 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * Display all stack levels
      */
     protected function _stackInTabs() {
-        $this->__partialName = 'errorfull';
+        $this->__secondPart = 'errorfull';
         $tabs = $this->callViewHelper('dojo_tabContainer', 'tabs');
         $tabs->setDefault('desc')
                 ->setItems(array('desc' => 'Description', 'stack' => 'Error stack', 'det' => 'Details'));
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        
-        $errorInformation = \Iris\Errors\ErrorInformation::GetInstance();
+        //$errorInformation = \Iris\Errors\ErrorInformation::GetInstance();
         $subHelper = \Iris\Subhelpers\ErrorDisplay::GetInstance();
-        if (!$errorInformation->errorDisplayReady($url)) {
-            $url = $subHelper->prepareExceptionDisplay($errorInformation->getException());
-            // in case of error in eval
-            if (!\Iris\MVC\View::GetEvalStack()->isEmpty()) {
-                $evaledFile = \Iris\MVC\View::GetEvalStack()->pop()->getReadScriptFileName();
-                $subHelper->addMessage("<br/>See file $evaledFile");
-            }
+        if (!\Iris\MVC\View::GetEvalStack()->isEmpty()) {
+            $evaledFile = \Iris\MVC\View::GetEvalStack()->pop()->getReadScriptFileName();
+            $subHelper->addMessage("<br/>See file $evaledFile");
         }
         $this->__tooltip = $this->callViewHelper('dojo_toolTip');
         // ---------------------------------------------
         $lines = count($subHelper->details);
-        for ($n = 0; $n < $lines-1; $n++) {
+        for ($n = 0; $n < $lines - 1; $n++) {
             $tabs->addItem("det_$n", "Level $n");
         }
-        $this->__ignore = $lines-1;
+        $this->__ignore = $lines - 1;
+    }
+
+    protected function _createStack($subHelper) {
+        
     }
 
 }

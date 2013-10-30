@@ -1,6 +1,7 @@
 <?php
 // !! no Iris prefix (as in application)
 namespace modules\main\controllers;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -26,35 +27,52 @@ namespace modules\main\controllers;
  * @version $Id: $ */
 
 /**
- * The default error controller concrete class
- * 
+ * The default error controller concrete class defines the default error
+ * management for standard and privilege errors, both in production and development
+ * mode. 
  */
 class Error extends \Iris\modules\main\controllers\_Error {
 
 
-    
+    /**
+     * By default, the standard error mechanism for production uses
+     * a predefined script. It is possible to write another script
+     * with the same path and name in the main part of the application
+     * folder, to display another text. 
+     */
     protected function _standardProduction() {
-        $this->setViewScriptName('Errors/production');
-        $this->__ErrorType = "Standard";
+        $this->setViewScriptName('defaultErrors/production/standard');
     }
 
+    /**
+     * In development, the predefined standard error script can be replaced by
+     * another script with the same path and name in the main part of the application
+     * folder. But it is advisable to keep it as it is.
+     */
     protected function _standardDevelopment() {
-        $this->setViewScriptName('Errors/development');
-        $this->__ErrorType = "Developement";
+        $this->setViewScriptName('defaultErrors/development/standard');
         $this->_exceptionDescription();
         $this->_displayStackLevel();
 
         
     }
 
+    /**
+     * By default, the same script is used to display an error message
+     * relative to authorisation problem in both production and development
+     * mode.
+     */
     protected function _privilegeProduction() {
-        $this->setViewScriptName('Errors/privilege');
-        $this->__ErrorType = "Privilege";
+        $this->setViewScriptName('defaultErrors/common/privilege');
     }
 
+    /**
+     * By default, the same script is used to display an error message
+     * relative to authorisation problem in both production and development
+     * mode
+     */
     protected function _privilegeDevelopment() {
-        $this->setViewScriptName('Errors/privilege');
-        $this->__ErrorType = "PrivDev";
+        $this->setViewScriptName('defaultErrors/common/privilege');
     }
 
 

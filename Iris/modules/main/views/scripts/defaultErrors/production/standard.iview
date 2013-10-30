@@ -1,3 +1,4 @@
+{REM}A default error page : with non specific information{/REM}
 {assign(ErrorType,'Dev')}
 <h1>{_('Error',TRUE)}</h1>
 {_('An error has occured. We apologize for the inconvenience.',TRUE)}

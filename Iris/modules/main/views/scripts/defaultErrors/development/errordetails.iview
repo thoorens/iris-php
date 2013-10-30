@@ -1,0 +1,8 @@
+{REM} A partial for a display of error traces in tabs (in development mode) {/REM}
+<div>
+    {error()->render()}
+</div>
+<div class="iris_detail">
+    <h3>Level {stack}</h3>
+    {details}
+</div>

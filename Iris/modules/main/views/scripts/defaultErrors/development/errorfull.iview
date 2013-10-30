@@ -10,6 +10,7 @@
 {REM}Stack TOC{/REM}
 <div {tabs->item("stack")}>
     <pre class="errortrace">
+<br>
         {error()->trace}
     </pre>
 </div>    
@@ -19,7 +20,7 @@
 {foreach($this->error()->details: key, detail)}
     {if($n<$ignore)}
         <div {tabs->item("det_".$n++)}>
-             <h4>{key}</h4>
+            <h4>{key}</h4>
             {? print_r($detail) ?} 
         </div>    
     {/if}
