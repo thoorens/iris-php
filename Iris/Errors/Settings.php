@@ -69,9 +69,9 @@ class Settings extends \Iris\SysConfig\_Settings {
     const FATAL = 16;
 
     /**
-     * Determines if it is convenient to display flags in error toolbar
+     * If true production simulation is activated in error management
      */
-    const FLAGS = 32;
+    const PRODSIM = 32;
 
     /**
      * Default values
@@ -90,12 +90,14 @@ class Settings extends \Iris\SysConfig\_Settings {
         \Iris\SysConfig\BooleanSetting::CreateSetting('hang', \FALSE);
         // In case of fatal error, a message has to be fired in development
         \Iris\SysConfig\BooleanSetting::CreateSetting('fatal', \FALSE);
-        // Default error controller
+        // Production mode simulation is disabled by default
+        \Iris\SysConfig\BooleanSetting::CreateSetting('prodSim', \FALSE);
+        // Default error controller (begins with /)
         \Iris\SysConfig\StandardSetting::CreateSetting('controller', '/Error');
         // Title for error screen
         \Iris\SysConfig\StandardSetting::CreateSetting('title', 'Iris - Error');
         // The stack level to display
-        \Iris\SysConfig\StandardSetting::CreateSetting('stackLevel', 0);
+        \Iris\SysConfig\StandardSetting::CreateSetting('stackLevel', \NULL);
         $this->_forceSettings();
     }
 
@@ -104,8 +106,9 @@ class Settings extends \Iris\SysConfig\_Settings {
      * modifies the settings accordingly
      */
     private function _forceSettings() {
+        /* @var $data \Iris\SysConfig\_Setting[] */
+        $data = \Iris\SysConfig\_Setting::GetGroup(self::$_GroupName);
         if (isset($_GET['ERROR'])) {
-            $data = \Iris\SysConfig\_Setting::GetGroup(self::$_GroupName);
             $errorValue = $_GET['ERROR'];
             if (is_numeric($errorValue)) {
                 if ($errorValue & self::KEEP)
@@ -116,6 +119,8 @@ class Settings extends \Iris\SysConfig\_Settings {
                     $data['mail']->enable();
                 if ($errorValue & self::HANG)
                     $data['hang']->enable();
+                if ($errorValue & self::PRODSIM)
+                    $data['productionsimulation']->enable();
             }
             else {
                 if ($errorValue == 'NOTFATAL') {
@@ -127,7 +132,7 @@ class Settings extends \Iris\SysConfig\_Settings {
             }
         }
         if (isset($_GET['ERRORSTACK'])) {
-            $this->_data['stacklevel']->set($_GET['ERRORSTACK']);
+            $data['stacklevel']->set($_GET['ERRORSTACK']);
         }
     }
 
@@ -150,10 +155,9 @@ class Settings extends \Iris\SysConfig\_Settings {
             $flags += self::HANG;
         if (self::HasFatal())
             $flags += self::FATAL;
+        if (self::HasProdSim())
+            $flags += self::PRODSIM;
         return $flags;
     }
 
 }
-
-// Auto init
-Settings::__ClassInit();

@@ -42,18 +42,25 @@ class Handler implements \Iris\Design\iSingleton {
     use \Iris\Engine\tInitedSingleton,
         \Iris\Translation\tSystemTranslatable;
 
-    public static $_Trace = array();
+    private static $_Trace = [];
 
     /**
+     * Returns true if in production or if ProdSim is enabled
      * 
      * @var boolean
      */
     private $_isProduction;
 
-    
-
+    /**
+     * The production status may be simulated through the ProdSim setting
+     */
     protected function _init() {
-        $this->_isProduction = \Iris\Engine\Mode::IsProduction();
+        if (Settings::hasProdSim()) {
+            $this->_isProduction = \TRUE;
+        }
+        else {
+            $this->_isProduction = \Iris\Engine\Mode::IsProduction();
+        }
     }
 
     /**
@@ -64,8 +71,8 @@ class Handler implements \Iris\Design\iSingleton {
      * @param string $ErrorURI The URI of the current error (NULL if first error)
      */
     public function treatException($program, $exception, $ErrorURI) {
-        $errorInformation = \Iris\Errors\ErrorInformation::GetInstance();
-        $errorInformation->prepareErrorDiplay($exception);
+        $subHelper = \Iris\Subhelpers\ErrorDisplay::GetInstance();
+        $subHelper->prepareExceptionDisplay($exception);
         $this->_wipeAllText();
         $errorController = \Iris\Errors\Settings::GetController();
         // First level of error
@@ -78,7 +85,12 @@ class Handler implements \Iris\Design\iSingleton {
             if (!$this->_isProduction) {
                 $message = sprintf("%s <br>In <b>%s</b> (line <b>%s</b>)", $exception->getMessage(), $exception->getFile(), $exception->getLine());
                 //iris_debug($exception->getTrace());
-                \Iris\Engine\Debug::ErrorBoxDie($message, $exception->getTitle());
+                if($exception instanceof \Iris\Exceptions\_Exception){
+                    \Iris\Engine\Debug::ErrorBoxDie($message, $exception->getTitle());
+                }
+                else{
+                    \Iris\Engine\Debug::ErrorBoxDie($message, 'PHP native exception');
+                }
             }
             else {
                 try {
@@ -94,6 +106,8 @@ class Handler implements \Iris\Design\iSingleton {
         }
     }
 
+    
+    
     /* ==========================================================================  */
 
     public function getExceptionName() {
@@ -106,7 +120,7 @@ class Handler implements \Iris\Design\iSingleton {
     }
 
     public function trapError($level, $message, $file, $line) {
-        
+        die('Trapping error');
     }
 
     /**
@@ -130,7 +144,7 @@ class Handler implements \Iris\Design\iSingleton {
      * @param type $line 
      */
     public function error2Exception($no, $mes, $file, $line) {
-        $errorExc = new \Iris\Exceptions\ErrorException($mes, $no, E_ERROR, $file, $line);
+        $errorExc = new \ErrorException($mes, $no, E_ERROR, $file, $line);
         //$errorExc = new \Iris\Exceptions\ErrorException($mes, $no, \E_ERROR, $file, $line, \NULL);
         if (\Iris\Engine\Mode::IsProduction()) {
             $throw = TRUE;
@@ -255,6 +269,21 @@ class Handler implements \Iris\Design\iSingleton {
         $trace["ACTION"] = $response->getActionName();
         $trace["PARAMETERS"] = $response->getParameters();
         self::$_Trace[] = $trace;
+    }
+
+    
+    public static function GetSystemTrace(){
+        return self::$_Trace;
+    }
+    
+    /**
+     * Error handler has its own way to determine if the site is in production. This
+     * feature permits to simulate an error in production on a development site
+     * 
+     * @return boolean
+     */
+    public static function IsProduction() {
+        return self::GetInstance()->_isProduction;
     }
 
 }
