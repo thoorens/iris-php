@@ -4,6 +4,7 @@ namespace Iris\DB\Dialects;
 
 use Iris\DB\Object,
     Iris\DB\_Entity;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -70,7 +71,6 @@ use Iris\DB\Object,
 class MyPDOStatement extends \PDOStatement {
 
     private $_preBindingStatement;
-    
     public static $LastSQL = \NULL;
 
     private function __construct($stmt) {
@@ -99,8 +99,11 @@ class MyPDOStatement extends \PDOStatement {
             foreach ($input_parameters as $stmt_parameter => $stmt_value) {
                 $this->_preBindingStatement = str_replace("{$stmt_parameter}", "'{$stmt_value}'", $this->_preBindingStatement);
             }
+            \Iris\Log::Debug($this->_preBindingStatement, \Iris\Engine\Debug::DB, 'SQL');
             $result = parent::execute($input_parameters);
-        } else {
+        }
+        else {
+            \Iris\Log::Debug($this->_preBindingStatement, \Iris\Engine\Debug::DB, 'SQL');
             $result = parent::execute();
         }
 
@@ -108,7 +111,6 @@ class MyPDOStatement extends \PDOStatement {
 //                $this->logQuery();
 //            }
 
-        \Iris\Log::Debug($this->_preBindingStatement, \Iris\Engine\Debug::DB,'SQL');
         self::$LastSQL = $this->_preBindingStatement;
         return $result;
     }

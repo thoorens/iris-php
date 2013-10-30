@@ -39,9 +39,9 @@ use Iris\Exceptions as ie;
  */
 class Em_PDOOracle extends \Iris\DB\Dialects\_Em_PDO {
 
-    protected function __construct($dsn, $username = NULL, $passwd = NULL, $default = TRUE, &$options = NULL) {
+    protected function __construct($dsn, $userName = NULL, $passwd = NULL, $default = TRUE, &$options = []) {
         throw new ie\NotSupportedException('Not yet implemented');
-        parent::__construct($dsn, '', '', $default, $options);
+        parent::__construct($dsn, $userName, $passwd, $default, $options);
     }
 
     /** @todo need to be implemented */

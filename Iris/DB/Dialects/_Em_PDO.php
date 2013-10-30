@@ -46,15 +46,14 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      * The constructor for PDO entity manager.
      * 
      * @param String $dsn : Data Source Name
-     * @param String $username : user login name
+     * @param String $userName : user login name
      * @param String $passwd : user password
-     * @param boolean $default : if TRUE store this EM as default
      * @param mixed[] $options additional options
      */
-    protected function __construct($dsn, $username, $passwd, &$options = \NULL) {
-        parent::__construct($dsn, $username, $passwd, $options);
+    protected function __construct($dsn, $userName, $passwd, &$options = []) {
+        parent::__construct($dsn, $userName, $passwd, $options);
         try {
-            $pdo = new \PDO($dsn, $username, $passwd, $options);
+            $pdo = new \PDO($dsn, $userName, $passwd, $options);
             $pdo->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array('\Iris\DB\Dialects\MyPDOStatement', array($this)));
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->_connexion = $pdo;

@@ -1,6 +1,7 @@
 <?php
 
 namespace Iris\DB\Dialects;
+
 use Iris\Exceptions as ie;
 
 /*
@@ -31,12 +32,14 @@ use Iris\Exceptions as ie;
  * @version $Id: $ */
 class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
 
+    /**
+     * In the case of mySQL, it is necessary to add an option to have ytf8 characters
+     * 
+     * @var array
+     */
     protected static $_Options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
 
-    protected function __construct($dsn, $username, $passwd, &$options = NULL) {
-        parent::__construct($dsn, $username, $passwd, $options);
-    }
-
+    
     /*
       Example of SHOW COLUMNS FROM output:
      * 
@@ -59,15 +62,16 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
         $pdo = $this->_connexion;
         $results = $pdo->query("show columns from $tableName");
         $fields = $results->fetchAll(\PDO::FETCH_OBJ);
-        $metadata = new \Iris\DB\Metadata();
+        $metadata = new \Iris\DB\Metadata($tableName);
         foreach ($fields as $line) {
             $MetaItem = new \Iris\DB\MetaItem($line->Field);
             $MetaItem->setType($line->Type)
                     ->setPrimary($line->Key == 'PRI')
                     ->setNotNull($line->Null == 'NO')
-                    ->setDefaultValue($line->Default);
+                    ->setDefaultValue($line->Default)
+                    // if field Extra contains 'auto_increment'
+                    ->setAutoIncrement(strpos($line->Extra,'auto_increment')!== \FALSE);
             if ($line->Key == 'PRI') {
-                //@todo manage AUTOINCREMENT
                 $metadata->addPrimary($line->Field);
             }
             $metadata->addItem($MetaItem);
@@ -104,27 +108,32 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
         }
         return $foreignKeys;
     }
-/**
+
+    /**
      * Returns the table list of the database
      * 
      * @return array
      */
-    public function listTables() {
-        
+    public function listTables($views = \TRUE) {
+        $connexion = $this->getConnexion();
+        $results = $connexion->query("SHOW FULL TABLES");
+        $data = $results->fetchAll(\PDO::FETCH_NUM);
+        $tables = [];
+        foreach ($data as $line) {
+            if ($views or $line[1] == 'BASE TABLE') {
+                $tables[] = $line[0];
+            }
+        }
+        return $tables;
     }
 
     public function lastInsertedId($entity) {
         return $this->_connexion->lastInsertId();
     }
 
-    
-
     public function bitXor() {
         throw new ie\NotSupportedException('XOR not supported in mySQL');
     }
 
-    
-    
 }
-
 
