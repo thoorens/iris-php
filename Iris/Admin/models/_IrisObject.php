@@ -29,7 +29,7 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDeletable{
 
-    const DB_PARAM_FILE = "/config/base/adminparams.sqlite";
+    const DB_PARAM_FILE = "application/config/base/adminparams.sqlite";
 
     protected static $_InsertionKeys;
 
