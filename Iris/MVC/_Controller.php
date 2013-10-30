@@ -98,7 +98,7 @@ class _Controller extends _BaseController {
             }
             catch (\Iris\Exceptions\LoaderException $l_ex) {
                 throw new \Iris\Exceptions\LoaderException('Problem with layout with message ' .
-                        $l_ex->getMessage(), $l_ex);
+                        $l_ex->getMessage(), 0, $l_ex);
             }
             catch (Exception $ex) {
                 throw $ex;
