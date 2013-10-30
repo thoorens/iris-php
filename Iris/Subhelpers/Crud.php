@@ -86,9 +86,15 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
 
     /**
      *
-     * @var type 
+     * @var string 
      */
-    protected $_subType = '';
+    protected $_subTypeDesc = '';
+
+    /**
+     *
+     * @var mixed
+     */
+    protected $_subTypeId;
 
     /**
      * May force a language for explanations
@@ -210,11 +216,12 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
 
     /**
      *
-     * @param String $link : l'id de l'élément à modifier/utiliser
+     * @param String $subType : l'id de l'élément à modifier/utiliser
      * @return \Iris\views\helpers\CrudIcon (fluent interface)
      */
-    public function setSubtype($link) {
-        $this->_subType = $link;
+    public function setSubtype($subTypeId, $subType = \NULL) {
+        $this->_subTypeDesc = is_null($subType) ? $subTypeId : $subType;
+        $this->_subTypeId = $subTypeId;
         return $this;
     }
 
@@ -310,7 +317,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
         
         $opParam = $this->_operationParams[$operation];
         $params['operation'] = $operation;
-        $format = $this->_treatCategory($opParam[0], $this->_subType);
+        $format = $this->_treatCategory($opParam[0], $this->_subTypeDesc);
         // Additional operation may have a special directory for icons
         switch ($opParam[1]) {
             case self::EXT:
@@ -325,7 +332,8 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
                 }        
                 break;
             case self::PARAM:
-                $params['id'] = $params['object'] = $this->_subType;
+                $params['id'] = $this->_subTypeId;
+                $params['object'] = '';
                 break;
             default:
                 $params['id'] = $params['object'] = '';
@@ -356,7 +364,7 @@ class Crud extends \Iris\Subhelpers\_LightSubhelper {
      */
     public function testCLI($operation) {
         $opParam = $this->_operationParams[$operation];
-        $format = $this->_treatCategory($opParam[0], $this->_subType);
+        $format = $this->_treatCategory($opParam[0], $this->_subTypeDesc);
         $objectName = "someName";
         return $this->_makeHelp($format, $objectName);
     }
