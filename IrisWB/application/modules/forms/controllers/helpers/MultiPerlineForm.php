@@ -1,6 +1,11 @@
 <?php
 
-namespace models;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace Iris\controllers\helpers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -22,22 +27,23 @@ namespace models;
  */
 
 /**
- * Small invoice manager for test purpose: the Customers table
+ * Description of newIrisClass
+ * 
+ * Project IRIS-PHP
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
-class TFunnyName extends \Iris\DB\_Entity {
+ * @version :$Id:
+ */
+class MultiPerlineForm extends \modules\forms\controllers\helpers\_MakeForm {
 
-    /**
-     *
-     * @var string
-     */
-    protected $_entityName = 'customers';
-    
-    protected $_id = 'id';
-
+    protected function _collectComponent() {
+        $this->_radioIndex();
+        $this->_radioLabel();
+        $this->_multiCheck();
+        $this->_buttons();
+        $this->_submit();
+    }    
 }
-
 

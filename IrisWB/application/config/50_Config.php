@@ -11,10 +11,10 @@
 //\Dojo\Manager::SetSource(0);
 // To have an Admintoolbar without Ajax, uncomment the next line
 //\ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
-
-
 // MD5 signature is an important feature of Work Bench
 \Iris\SysConfig\Settings::EnableMD5Signature();
 
 
 //\Iris\Errors\Settings::GetInstance()->setDefaultController('/errordemo/Error');
+//echo "Error modified";
+//\Iris\Errors\Settings::SetController('/errordemo/Error');

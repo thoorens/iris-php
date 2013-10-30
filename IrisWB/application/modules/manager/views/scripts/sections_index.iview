@@ -1,18 +1,22 @@
 {php}$icone = $this->crudIcon(){/php}
-<h1>Edit the sections</h1>
+<h2>Edit the categories</h2>
 <div>
-    {(icone->create())} Create a new section
+    {(icone->create())} Create a new category
 </div>
+<hr/>
 <div>
-    Edit the existing sections
+    Edit the existing categories
     {foreach(data,section)}
-    <ul class="crud">
-        <li>
-            {(icone->setData($section)->read())}
-            {(icone->update())}
-            {(icone->delete())}
-            {(section->GroupName)}
-        </li>
-    </ul>
+        <table>
+            <tr>
+                <td>
+                    {(icone->setData($section)->update())}
+                    {(icone->delete())}
+                </td>
+                <td>
+                    <i>{(section->GroupName)}</i>
+                </td>
+            </tr>
+        </table>
     {/foreach}
 </div>

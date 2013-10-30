@@ -1,14 +1,20 @@
 {php}$icone = $this->crudIcon(){/php}
 <h2>Edit a screen in <i>{category}</i></h2>
 <div>
-    {(icone->create(10))} Create a new screen
-    <ul class="crud">
+    {(icone->create())} Create a new screen
+    <hr/>
+    Edit an existing screen:
+    <table>
         {foreach(screens,screen)}            
-            <li>
-                {(icone->setData($screen)->update())}
-                {(icone->delete())}
-                {(screen->Description)}
-            </li>
-            {/foreach}
-        </ul>
-    </div>
+            <tr>
+                <td>
+                    {(icone->setData($screen)->update())}
+                    {(icone->delete())}
+                </td>
+                <td>
+                    <i>{(screen->Description)}</i>
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+</div>

@@ -72,7 +72,7 @@ class VVcustomers extends \Iris\DB\ViewEntity {
         $sqlFormat = static::$_SQLCreate[_invoiceManager::GetDefaultDbType()];
         $sql1 = sprintf($sqlFormat, 'vcustomers', '< 3');
         _invoiceManager::Say($sql1);
-        $em->directSQL($sql2);
+        $em->directSQL($sql1);
         $sql2 = sprintf($sqlFormat, 'vcustomers2', '> 1');
         $em->directSQL($sql2);
     }

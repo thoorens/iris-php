@@ -1,6 +1,0 @@
-<div>
-    <h2>Content of <tt>$_POST</tt></h2>
-    <pre>
-        <?print_r($_POST)?>
-    </pre>
-</div>

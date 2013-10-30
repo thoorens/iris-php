@@ -12,16 +12,17 @@ namespace modules\errors\controllers;
  */
 class _errors extends \modules\_application {
 
-    
     /**
      * This method can contain module level
      * settings
      */
     protected function _moduleInit() {
-        
+
         $this->_setLayout('wberror');
         $this->__bodyColor = 'ORANGE3';
-         \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\Errors\Settings::SetController('/errordemo/Error');
+        \Iris\Errors\Settings::EnableKeep();
     }
 
 }

@@ -18,10 +18,8 @@ class _forms extends \modules\_application {
      */
     protected final function _moduleInit() {
         // You should modify this demo layout
-        $this->_setLayout('main');
+        $this->_setLayout('post3');
         $this->__bodyColor = 'ORANGE3';
-        // choose Dojo type forms
-        \Iris\SysConfig\Settings::SetDefaultFormClass('\\Dojo\\Forms\\FormFactory');
     }
 
 }

@@ -1,4 +1,0 @@
-<h1>{_('Error',TRUE)}</h1>
-{_('A fatal error has occured. We apologize for the inconvenience.',TRUE)}
-{dummy}
-

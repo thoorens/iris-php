@@ -1,0 +1,6 @@
+<div>
+    {foreach(post, key, value)}
+        <b>{key}</b> :<br/>
+        <tt>{value}</tt><br/>
+    {/foreach}
+</div>

@@ -9,5 +9,5 @@
 {if($sectionMode)}    
     {button('Manage the screens','/manager/screens','Modify the screens contained in the sections')}
 {else}
-    {button('Manage the sections','/manager/sections','Modify the sections containing the screens')}
+    {button('Manage the categories','/manager/sections','Modify the categories containing the screens')}
 {/if}

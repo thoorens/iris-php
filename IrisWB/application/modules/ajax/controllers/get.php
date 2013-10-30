@@ -27,11 +27,12 @@ namespace modules\ajax\controllers;
 class get extends \Iris\MVC\_AjaxController {
 
     /**
-     * These message action are meant to be read by Ajax requests 
+     * These message actions are meant to be read by Ajax requests 
      */
     public function message1Action() {
         $this->setAjaxType('text/html'); // default value
-        $this->__message = 'This text has been read directly from the server.';
+        $this->__message = 'This text has been read directly from the server. It contains UTF8 chars: <br/> <b>Françoise aime l\'été.</b>';
+        //$this->_renderLiteral('Hello');
         $this->_renderScript('message');
     }
 

@@ -47,6 +47,8 @@ class _application extends \Iris\MVC\_Controller {
         // set the model for MD5
         \Iris\views\helpers\Signature::SetModel('TSequence', 'URL', 'Md5');
         \ILO\views\helpers\AdminToolBar::GetInstance()->setMenu(\TRUE);
+        \Iris\Errors\Settings::SetController('/Error');
+
     }
 
     

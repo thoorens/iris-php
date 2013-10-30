@@ -1,6 +1,7 @@
 <?php
 
-namespace modules\manager\controllers;
+namespace models;
+
 /*
  * This file is part of IRIS-PHP.
  *
@@ -18,42 +19,25 @@ namespace modules\manager\controllers;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
- *
- * 
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 
 /**
+ * Small invoice manager for test purpose: the Customers table
  * 
- * Created for IRIS-PHP 0.9 - beta
- * Description of sides
- * 
- * @author jacques
- * @license not defined
- */
-class islSides extends \Iris\MVC\_Islet {
+ * @author Jacques THOORENS (irisphp@thoorens.net)
+ * @see http://irisphp.thoorens.net
+ * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id: $ */
+class TExplicitModel extends \Iris\DB\_Entity {
 
     /**
-     * Lists all the sections and a button to go to the other mode 
-     * (sections or screens)
-     * 
-     * @param boolean $sectionMode a button will be used 
+     *
+     * @var string
      */
-    public function leftAction($sectionMode = \TRUE) {
-        $tSections = \Iris\DB\TableEntity::GetEntity('sections');
-        $tSections->where('id>', 0);
-        $this->__sections = $tSections->fetchAll();
-        $this->__sectionMode = $sectionMode;
-    }
-
-    /**
-     * List all the the screens grouped by section
-     */
-    public function rightAction() {
-       $this->callViewHelper('dojo_Mask');
-       $this->__sequence = $this->getScreenList();
-    }
+    protected $_entityName = 'customers';
+    
+    protected $_id = 'id';
 
 }
+
+

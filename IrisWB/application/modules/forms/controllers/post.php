@@ -10,10 +10,12 @@ namespace modules\forms\controllers;
  * @author jacques
  * @license not defined
  */
-class index extends \Iris\MVC\_Subcontroller {
+class post extends \Iris\MVC\_AjaxController {
 
     
     
-    public function indexAction() {
+    public function formAction() {
+        $this->__post = \Iris\Engine\Superglobal::GetSession('oldPost', \NULL);
+        $this->_renderScript('post');
     }
 }

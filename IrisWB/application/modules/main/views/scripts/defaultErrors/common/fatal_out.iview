@@ -1,0 +1,9 @@
+{REM}Rename it to fatal.iview to test a customized error script{/REM}
+
+<h1>{_('Error',TRUE)}</h1>
+{_('A fatal error has occured. We apologize for the inconvenience.',TRUE)}
+<hr/>
+{ILO_goInternal('main')}
+{errorMark('common/fatal - for WB')}
+
+

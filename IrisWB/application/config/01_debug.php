@@ -18,7 +18,7 @@ return;
  * \Iris\Log::POS_AUTO : where it occurs (may spoil the layout)
  * \Iris\Log::POS_NONE : no message
 */
-\Iris\Log::GetInstance()->setPosition(\Iris\Log::POS_NONE);
+\Iris\Log::GetInstance()->setPosition(\Iris\Log::POS_FILE);
 
 /*
  * Choose the type of message you want to see
@@ -38,9 +38,9 @@ return;
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
 //
 /* database (SQL queries) messages */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
+\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
 
 /* All messages (they are many) */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ALL)
+//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ALL);
 
 
