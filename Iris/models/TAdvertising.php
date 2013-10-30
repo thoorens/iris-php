@@ -46,7 +46,7 @@ class TAdvertising extends \Iris\DB\_Entity{
     public static function __ClassInit() {
         $client = new \Iris\System\Client();
         self::$_Language = $client->getLanguage();
-        $em = \Iris\DB\_EntityManager::EMFactory('sqlite:/library/IrisInternal/iris/irisad.sqlite');
+        $em = \Iris\DB\_EntityManager::EMFactory('sqlite:library/IrisInternal/iris/irisad.sqlite');
         self::$_Model = self::GetEntity($em);
     }
 
