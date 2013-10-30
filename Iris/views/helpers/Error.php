@@ -33,26 +33,8 @@ class Error extends \Iris\views\helpers\_ViewHelper implements \Iris\Subhelpers\
 
     use \Iris\Subhelpers\tSubhelperLink;
 
+        
     protected $_subhelperName = '\Iris\Subhelpers\ErrorDisplay';    
-//    private $_subhelper;
-//    protected static $_Singleton = TRUE;
-//
-//    /**
-//     * 
-//     */
-//    protected function _init() {
-//        $this->_subhelper = \Iris\Subhelpers\ErrorDisplay::GetInstance($this);
-//    }
-//
-//    /**
-//     * Returns the instance to get its pseudo variable (using __get) or it
-//     * methods
-//     * 
-//     * @return Error
-//     */
-//    public function help() {
-//        return $this->_subhelper;
-//    }
 
     /**
      * Similar to getParameters from the subhelper, but transform the array
@@ -73,17 +55,17 @@ class Error extends \Iris\views\helpers\_ViewHelper implements \Iris\Subhelpers\
      */
     public function comment() {
         return;
-        $commentName = \Iris\Engine\Memory::Get('ErrorComment', 'noComment');
-        $commentClass = \Iris\Translation\_Messages::GetSender('error');
-        $comment = new $commentClass;
-        $message = $comment->$commentName();
-        if ($message == '')
-            return '';
-        return <<< MESSAGE
-        <div class="iris_error iris_explanation">
-            $message
-        </div>
-MESSAGE;
+//        $commentName = \Iris\Engine\Memory::Get('ErrorComment', 'noComment');
+//        $commentClass = \Iris\Translation\_Messages::GetSender('error');
+//        $comment = new $commentClass;
+//        $message = $comment->$commentName();
+//        if ($message == '')
+//            return '';
+//        return <<< MESSAGE
+//        <div class="iris_error iris_explanation">
+//            $message
+//        </div>
+//MESSAGE;
     }
 
     public function render(array $arg1, $arg2) {

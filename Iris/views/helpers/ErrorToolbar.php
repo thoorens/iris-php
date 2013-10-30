@@ -36,7 +36,7 @@ class ErrorToolbar extends \Iris\views\helpers\_ViewHelper {
 
     public function help() {
         $html = '';
-        if (!\Iris\Engine\Mode::IsProduction()) {
+        if (!\Iris\Errors\Handler::IsProduction()) {
             /* @var $settings \Iris\Errors\Settings */
             $settings = \Iris\Errors\Settings::GetInstance();
             $html = sprintf("Flags : %b &diams; ", $settings->getErrorflags());
@@ -55,6 +55,7 @@ class ErrorToolbar extends \Iris\views\helpers\_ViewHelper {
                 $html .= $this->callViewHelper('button', 'REDO', "/$oldURL", "Repeat error in normal mode");
                 $html .= $this->callViewHelper('button', 'HANG', "/$oldURL?ERROR=HANG", "Program will stop at first error.");
                 $html .= $this->callViewHelper('button', 'NO WIPE', "/$oldURL?ERROR=KEEP", "All echoed text will be kept.");
+                $html .= $this->callViewHelper('button', 'PRODSIM', "/$oldURL?ERROR=PRODSIM", "Simulate error in production mode.");
                 $html .= ' &diams; Stack level:';
                 for ($level = 0; $level < count($trace); $level++) {
                     $html .= $this->callViewHelper('button', "$level", "/$oldURL?ERRORSTACK=$level", "Display stack information from level " . $level);
