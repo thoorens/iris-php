@@ -27,7 +27,7 @@ namespace modules\manager\controllers;
  * @version $Id: $ */
 
 /**
- * 
+ * This class will manage the screen definitions of the work bench
  */
 class screens extends _manager {
 
@@ -36,32 +36,86 @@ class screens extends _manager {
     public function indexAction($section = 10) {
         $icons = \Iris\Subhelpers\Crud::getInstance();
         $icons
-                // définition du contrôleur
+                // controller responsible of the data management
                 ->setController('/manager/screens')
-                // définition du préfixe d'action (on aura par exemple insert_media)
+                // the action suffix : here action will be e.g. insert_screen
                 ->setActionName('screen')
-                // précision du genre de l'entité (M, F ou M' F' pour les élisions)
-                // et de son intitulé
-                ->setEntity("M'_écran")
-                // champ de l'intitulé servant à décrire l'objet affecté
+                // entity name and its gender in human language (localized)
+                ->setEntity("N_screen")
+                // the description field for human messsage
                 ->setDescField('Description')
-                // champ constituant la clé primaire
+                // the primary key field name
                 ->setIdField('id');
         $tSequence = \Iris\DB\TableEntity::GetEntity('sequence');
         $tSequence->where('section_id=', $section);
         $screens = $tSequence->fetchAll();
         $this->__screens = $screens;
-        $this->__category = $screens[0]->_at_section_id->GroupName;
+        $category = $screens[0]->_at_section_id->GroupName;
+        $this->__category = $category;
+        $this->__sectionMode = \FALSE;
+        $icons->setSubtype($section, $category);
     }
 
-    protected function _customize($actionName) {
-        $parameters = $this->getResponse()->getParameters();
-        $tSequence = \Iris\DB\_EntityManager::GetEntity('sequence');
-        $section = $tSequence->find($parameters[0])->section_id;
-        if (!is_null($section))
-            $this->__section = $section;
-        else
-            $this->__section = 0;
+    /**
+     * Project of renumber routine
+     * 
+     * @param type $from
+     * @param type $to
+     * @param int $value
+     */
+    public function renumberAction($from, $to, $value){
+        $tSequence = \models\TSequence::GetEntity();
+        $tSequence->whereBetween('id', $from, $to);
+        $screens = $tSequence->fetchAll();
+/* @var $screen \Iris\DB\Object */
+        foreach($screens as $screen){
+            $screen->extraField('NewId', $value);
+            $value +=10;
+            echo $screen->id.': '.$screen->NewId." ".$screen->Description.'<br>';
+        }
+        die('ok');
     }
+    /**
+     * Customizes some values in the CrudManager according to function
+     * 
+     * @param string $actionName
+     */
+    protected function _customize($actionName) {
+        $this->__sectionMode = \FALSE;
+        $parameters = $this->getParameters();
+
+        switch ($actionName) {
+
+            case 'create':
+                $param0 = $parameters[0];
+                $section = is_null($param0) ? 10 : $param0;
+                $category = \models\TSections::GetSection($section);
+                $this->__Operation = "Add a new screen in $category";
+                break;
+            case 'update':
+                $this->__Operation = "Modify a screen content";
+                $tSequence = \models\TSequence::GetEntity();
+                $screen = $tSequence->find($parameters[0]);
+                $section = $screen->section_id;
+                if (!is_null($section)){
+                    $this->__section = $section;
+                }
+                else{
+                    $this->__section = 0;
+                }
+                break;
+            case 'delete':
+                $this->__Operation = "Delete a screen";
+                $tSequence = \Iris\DB\TableEntity::GetEntity('sections');
+                $screen = $tSequence->find($parameters[0]);
+                $section = $screen->section_id;
+                if (!is_null($section))
+                    $this->__section = $section;
+                else
+                    $this->__section = 0;
+                break;
+        }
+    }
+    
 
 }

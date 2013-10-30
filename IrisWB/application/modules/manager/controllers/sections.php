@@ -1,4 +1,5 @@
 <?php
+
 namespace modules\manager\controllers;
 
 /*
@@ -25,7 +26,6 @@ namespace modules\manager\controllers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 
-
 /**
  * 
  * Created for IRIS-PHP 0.9 - beta
@@ -35,28 +35,46 @@ namespace modules\manager\controllers;
  * @license not defined
  */
 class sections extends _manager {
-use \Iris\DB\DataBrowser\tCrudManager;
 
+    use \Iris\DB\DataBrowser\tCrudManager;
 
-    
     public function indexAction() {
         $icons = \Iris\Subhelpers\Crud::getInstance();
         $icons
-                // définition du contrôleur
+                // controller responsible of the data management
                 ->setController('/manager/sections')
-                // définition du préfixe d'action (on aura par exemple insert_media)
+                // the action suffix : here action will be e.g. insert_section
                 ->setActionName('section')
-                // précision du genre de l'entité (M, F ou M' F' pour les élisions)
-                // et de son intitulé
+                // entity name and its gender in human language (localized)
                 ->setEntity("F_section")
-                // champ de l'intitulé servant à décrire l'objet affecté
+                // the description field for human messsage
                 ->setDescField('GroupName')
-                // champ constituant la clé primaire
+                // the primary key field name
                 ->setIdField('id');
         $tSection = \Iris\DB\TableEntity::GetEntity('sections');
         $tSection->where('id<>', 0);
         $this->__data = $tSection->fetchAll();
+        $this->__sectionMode = \TRUE;
     }
 
+    /**
+     * Customizes some values in the CrudManager according to function
+     * 
+     * @param string $actionName
+     */
+    protected function _customize($actionName) {
+        $this->__sectionMode = \TRUE;
+        switch($actionName){
+            case 'create':
+                $this->__Function = "Add a new category";
+                break;
+            case 'update':
+                $this->__Function = "Modify a category";
+                break;
+            case 'delete':
+                $this->__Function = "Delete a category";
+                break;
+        }
+    }
     
 }
