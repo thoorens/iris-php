@@ -30,9 +30,12 @@ namespace Iris\Users;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class TUsers extends \Iris\DB\_Entity {
+abstract class TUsers extends \Iris\DB\_Entity{
 
-    public static $systemUserEntity = null;
+    
+    
+    
+    public static $systemUserEntity = \NULL;
     
     protected $_idField = 'id';
     protected $_nameField = 'Username';

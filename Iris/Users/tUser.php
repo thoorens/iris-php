@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\Users;
 
 /*
@@ -38,47 +36,81 @@ trait tUser {
      * @var string
      */
     protected $_mailAddress;
+
     /**
      * The user's name
      * @var string
      */
     protected $_name;
+
     /**
      * The role of the user
      * @var string
      */
     protected $_role;
+
     /**
      * The user's id
      * @var string
      */
     protected $_id;
+
     /**
      * The time value of the last activity for the current user
      * 
      * @var $string
      */
     protected $_timer;
+
     /**
      * The number of 
      * @var int 
      */
-    
+
     /**
      * Accessor get for the id
      * @return string
      */
     public function getId() {
-        return $this->_id;
+        return $this->_getData('_id');
     }
-    
+
+    /**
+     * Generic accessor for a named variable
+     * 
+     * @param string $variable
+     * @return string
+     */
+    private function _getData($variable) {
+        if (is_null($this->_entity)) {
+            return $this->$variable;
+        }
+        else {
+            switch($variable){
+                case '_id':
+                    $nameField = $this->_entity->getIdField();
+                    break;
+                case '_name':
+                    $nameField = $this->_entity->getNameField();
+                    break;
+                case '_role':
+                    $nameField = $this->_entity->getRoleField();
+                    break;
+                case '_email':
+                    $nameField = $this->_entity->getEmailField();
+                    break;
+            }
+            return $this->$nameField;
+        }
+    }
+
     /**
      * Accessor get for the email address
      * 
      * @return string 
      */
     public function getEmailAddress() {
-        return $this->_mailAddress;
+        return $this->_getData('_mailAddress');
     }
 
     /**
@@ -87,7 +119,7 @@ trait tUser {
      * @return string 
      */
     public function getName() {
-        return $this->_name;
+        return $this->_getData('_name');
     }
 
     /**
@@ -96,29 +128,29 @@ trait tUser {
      * @return string
      */
     public function getRole() {
-        return $this->_role;
+        return $this->_getData('_role');
     }
 
-     /**
+    /**
      * Test a role accepting inheritance
      * 
      * @param string $expectedRoleName the role concerned by the test
      * @return boolean 
      */
-    public function playRole($expectedRoleName){
+    public function playRole($expectedRoleName) {
         return $this->hasRole($expectedRoleName, FALSE);
     }
-    
+
     /**
      * Test a role strictly
      * 
      * @param string $expectedRoleName the role concerned by the test
      * @return boolean 
      */
-    public function hasRole_Strict($expectedRoleName){
+    public function hasRole_Strict($expectedRoleName) {
         return $this->hasRole($expectedRoleName, TRUE);
     }
-    
+
     /**
      * Determines if the connected user has a role (strickly or by inheritance)
      * The alias playRole and hasRole_Strict methods may be used for more clarity.
@@ -127,7 +159,7 @@ trait tUser {
      * @param boolean $strict true if no inheritance accepted
      * @return boolean
      */
-    public function hasRole($expectedRoleName, $strict=TRUE) {
+    public function hasRole($expectedRoleName, $strict = TRUE) {
         $roleName = $this->getRole();
         $hasIt = $expectedRoleName == $roleName;
         if (($strict or $hasIt)) {
@@ -138,7 +170,5 @@ trait tUser {
         return array_search($expectedRoleName, $ancetres) !== FALSE;
     }
 
-    
 }
-
 

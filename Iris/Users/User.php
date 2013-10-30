@@ -30,8 +30,10 @@ namespace Iris\Users;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class User extends \Iris\DB\Object implements iUser {
+
     use tUser;
-    
+
+    protected $_entity = \NULL;
 
     public function getEmailAddress() {
         $emailField = $this->_entity->getEmailField();
@@ -55,5 +57,4 @@ class User extends \Iris\DB\Object implements iUser {
     }
 
 }
-
 

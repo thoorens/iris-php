@@ -1,6 +1,7 @@
 <?php
 
 namespace Iris\Users;
+
 use \Iris\SysConfig\Settings;
 
 /*
@@ -31,19 +32,29 @@ use \Iris\SysConfig\Settings;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Somebody implements iUser {
+
     use tUser;
-    
-    
-    protected $_emailAddress = 'info@irisphp.org';
+
+    /**
+     * Unlike other iUser, somebody does not use an entity to 
+     * get its member data.
+     * 
+     * @var \Iris\DB\_Entity
+     */
+    protected $_entity = \NULL;
 
     /**
      *
      * @param string $serialized 
      */
     public function __construct($serialized = NULL) {
-        $this->_name = Settings::GetDefaultUserName();
-        $this->_role = Settings::GetDefaultRoleName();
-        if (!is_null($serialized)) {
+        if (is_null($serialized)) {
+            $this->_name = Settings::GetDefaultUserName();
+            $this->_role = Settings::GetDefaultRoleName();
+            $this->_emailAddress = Settings::GetDefaultUserEmail();
+            $this->_id = 0;
+        }
+        else {
             $data = explode('&', $serialized);
             $this->_name = $data[0];
             $this->_mailAddress = $data[1];
@@ -92,8 +103,6 @@ class Somebody implements iUser {
     public function __get($propName) {
         return "$propName of " . $this->getName();
     }
-
-
 
 }
 

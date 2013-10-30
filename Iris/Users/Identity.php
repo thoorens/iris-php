@@ -34,23 +34,29 @@ use Iris\Engine as ie;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Identity implements iUser, \Serializable {
+
     use tUser;
+
+    protected $_entity = \NULL;
+
     /**
      * The default time out for development (4 hours)
      */
+
     const DEFAULT_TIMEOUT = 14400;
     /**
      * The default time out for production (10 minutes)
      */
     const DEFAULT_PRODUCTION_TIMEOUT = 600;
 
-
     private static $_Timeout = self::DEFAULT_TIMEOUT;
+
     /**
      *
      * @var type 
      */
     private static $_ProductionTimeout = self::DEFAULT_PRODUCTION_TIMEOUT;
+
     /**
      *
      * @var type 
@@ -76,15 +82,15 @@ class Identity implements iUser, \Serializable {
      * @staticvar type $created
      * @return Identiy
      */
-    public static function CreateInstance($identity){
+    public static function CreateInstance($identity) {
         static $created = \FALSE;
-        if(! $created){
+        if (!$created) {
             self::$_Instance = new Identity($identity);
             $created = \TRUE;
         }
         return self::$_Instance;
     }
-    
+
     /**
      * The private constructor
      * 
@@ -139,7 +145,7 @@ class Identity implements iUser, \Serializable {
      * @param type $duration
      * @param type $prodDuration
      */
-    public static function SetTImeOut($duration, $prodDuration=NULL) {
+    public static function SetTImeOut($duration, $prodDuration = NULL) {
         if (!is_null($duration)) {
             self::$_Timeout = $duration;
         }
@@ -148,7 +154,6 @@ class Identity implements iUser, \Serializable {
         }
     }
 
-   
     /**
      * Copies all data (except itmeout) from a user to the current identity object.
      * 
@@ -245,11 +250,11 @@ class Identity implements iUser, \Serializable {
      * @param string $id
      * @return \Iris\Users\Identity for fluent interface
      */
-    public function setId($id){
+    public function setId($id) {
         $this->_id = $id;
         return $this;
     }
-    
+
     /**
      * Accessor set for timer
      * 
@@ -261,8 +266,6 @@ class Identity implements iUser, \Serializable {
         return $this;
     }
 
-    
-
     /**
      * A static syntax for playRole and hasRole_Strict
      * 
@@ -270,12 +273,12 @@ class Identity implements iUser, \Serializable {
      * @param boolean $strict (by default, manages inheritance)
      * @return boolean
      */
-    public static function IsA($expectedRole,$strict=FALSE){
-        if($strict)
-            return self::GetInstance()->hasRole_Strict ($expectedRole);
+    public static function IsA($expectedRole, $strict = FALSE) {
+        if ($strict)
+            return self::GetInstance()->hasRole_Strict($expectedRole);
         else
-            return self::GetInstance ()->playRole ($expectedRole);
+            return self::GetInstance()->playRole($expectedRole);
     }
-}
 
+}
 
