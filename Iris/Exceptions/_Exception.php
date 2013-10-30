@@ -32,105 +32,33 @@ namespace Iris\Exceptions;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-abstract class _Exception extends \Exception {
-    
-    private static $_ErrorCode = 0;
+abstract class _Exception extends \Exception implements iException{
     
     /**
-     * This mode corresponds to getTraceAsString from \Exception
+     *
+     * @var int The default error code for this class
      */
-
-    const MODE_STRING = 1;
-    /**
-     * In this mode, each trace is placed as a string in an array
-     */
-    const MODE_ARRAY = 2;
-    /**
-     * This mode combines both to be displayed with tooltips
-     */
-    const MODE_BOTH = 3;
-
-    /**
-     * To avoid memory problems, the size of the trace string is limited
-     * to 5 000 characters (only the beginning is interesting)
-     */
-    const MAX_TRACE_STRING_SIZE = 5000;
-
+    public static $ErrorCode = 11111111;
+    
+    
+    
     /**
      *
      * @param string $message
      * @param int $code
      * @param \Exception $previous 
      */
-    public function __construct($message, $code = \NULL, $previous = NULL) {
+    public function __construct($message, $code = \NULL, $previous = \NULL) {
         \Iris\Log::Save(); // all output are going to be wiped out
         if(is_null($code)){
-            $code = static::$_ErrorCode;
+            $code = static::$ErrorCode;
         }
         parent::__construct($message, $code, $previous);
     }
 
-    /**
-     * A substitute for getTrace and getTraceAsString.
-     * @param int $mode
-     * @return type 
-     */
-    public function getIrisTrace($mode, $lineTitle = FALSE) {
-        switch ($mode) {
-            // in this mode, we have a single string prepared by the
-            // classical method
-            case self::MODE_STRING:
-                $trace = $this->getTraceAsString();
-                break;
-            // in this mode, the trace consists in an array (whose components
-            // are transformed in string with html entities)
-            case self::MODE_ARRAY:
-                $trace = $this->_formatedTrace($lineTitle);
-                break;
-            // in this mode, the array has indices which are the string found in string mode
-            // and values those of array mode (intented to be displayed throug dojo_TootTips)
-            case self::MODE_BOTH:
-                $traceIndex = explode("\n", htmlentities($this->getTraceAsString()));
-                $traceValue = $this->_formatedTrace();
-                $traceValue[] = array(); // the next array misses
-                $trace = array_combine($traceIndex, $traceValue);
-        }
-        return $trace;
-    }
+    
 
-    /**
-     * Converts the array of array of getTrace in an array of string with
-     * html entities and an optional title
-     * 
-     * @param boolean $lineTitle
-     * @return array
-     */
-    private function _formatedTrace($lineTitle = FALSE) {
-        $trace = $this->getTrace();
-        array_walk($trace, array($this, '_format'), $lineTitle);
-        return $trace;
-    }
-
-    /**
-     * Formats an array as a string with htmlentities and an optional
-     * title line (to be used by _formatedTrace)
-     * 
-     * @param string[] $value
-     * @param int $key
-     * @param boolean $lineTitle 
-     */
-    private function _format(&$value, $key, $lineTitle) {
-        if ($lineTitle) {
-            $title = "<h6>Line $key</h6>";
-        }
-        else {
-            $title = '';
-        }
-        $format = print_r($value, TRUE);
-        $format = strlen($format) > self::MAX_TRACE_STRING_SIZE ? substr($format, 0, self::MAX_TRACE_STRING_SIZE) . CRLF . '[the rest has been skipped]' : $format;
-        $value = $title . '<pre>' . htmlentities($format) . '</pre>';
-    }
-
+    
     /**
      * Gets the last exception thrown
      * 
@@ -164,90 +92,7 @@ abstract class _Exception extends \Exception {
         return $this->getMessage();
     }
 
-    public function getTitle() {
-        return $this->getExceptionName();
-    }
-
-    /**
-     * This method analyses the first Router to get all its parameters
-     * and keep them for later use.
-     * 
-     * @staticvar array $MCAPU
-     * @param type $field
-     * @return type 
-     */
-    protected function _getfirstMCAPU($field) {
-        static $MCAPU = array();
-        if (count($MCAPU) == 0) {
-            $MCAPU = array('', '', '', '', '');
-            $router = \Iris\Engine\Router::GetInstance();
-            if (!is_null($router->getPrevious())) {
-                $router = $router->getPrevious();
-            }
-            $firstUrl = $router->getAnalyzedURI();
-            $MCAPU = explode('/', $firstUrl);
-            $parameters = '== unavailable ==';
-            $trace = \Iris\Errors\Handler::GetSystemTrace();
-            foreach ($trace as $t) {
-                if ($t['MODULE'] . '/' . $t['CONTROLLER'] . '/' . $t['ACTION'] == $firstUrl) {
-                    $parameters = implode('/', $t['PARAMETERS']);
-                    break; // please Dijkstra, don't read this line
-                }
-            }
-            $MCAPU[3] = $parameters;
-            $MCAPU[4] = $firstUrl;
-        }
-        return $MCAPU[$field];
-    }
-
-    /**
-     * Gets the original module name
-     * 
-     * @return string
-     */
-    public function getModule() {
-        return $this->_getfirstMCAPU(0);
-    }
-
-    /**
-     * Gets the original controller name
-     * 
-     * @return string
-     */
-    public function getController() {
-        return $this->_getfirstMCAPU(1);
-    }
-
-    /**
-     * Gets the original action name
-     * 
-     * @return string
-     */
-    public function getAction() {
-        return $this->_getfirstMCAPU(2);
-    }
-
-    /**
-     * Gets the original parameters (as a / separated string)
-     * 
-     * @return string
-     */
-    public function getParameters() {
-        return $this->_getfirstMCAPU(3);
-    }
-
-    public function getErrorComment() {
-        return 'comment';
-    }
-
-    /**
-     * Gets the supposed completed original URL
-     * 
-     * @return string
-     */
-    public function getFirstURL() {
-        return $this->_getfirstMCAPU(4);
-    }
-
+    
+    
 }
 
