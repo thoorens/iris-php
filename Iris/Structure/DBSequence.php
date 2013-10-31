@@ -57,7 +57,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
         if (is_null($url)) {
             return $this->_noLink();
         }
-        $item = \models\TSequence::GetItem($url);
+        $item = \models_internal\TSequence::GetItem($url);
         if (is_null($item)) {
             $label = $defaultLabel;
             $description = 'No description';
@@ -78,7 +78,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
      * @param type $name Description 
      */
     public function getFirst() {
-        return \models\TSequence::GetFirst();
+        return \models_internal\TSequence::GetFirst();
     }
 
     /**
@@ -87,7 +87,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
      * @return string
      */
     public function getLast() {
-        return \models\TSequence::GetLast();
+        return \models_internal\TSequence::GetLast();
     }
 
     /**
@@ -97,7 +97,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
      * @return string/array
      */
     public function getNext($array = TRUE) {
-        return \models\TSequence::GetNext($this->_currentURL, $array);
+        return \models_internal\TSequence::GetNext($this->_currentURL, $array);
     }
 
     /**
@@ -107,7 +107,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
      * @return string/array
      */
     public function getPrevious($array = TRUE) {
-        return \models\TSequence::GetPrevious($this->_currentURL, $array);
+        return \models_internal\TSequence::GetPrevious($this->_currentURL, $array);
     }
 
     /**
@@ -120,7 +120,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
     }
 
     public function getStructuredSequence() {
-        return \models\TSequence::GetStructuredSequence();
+        return \models_internal\TSequence::GetStructuredSequence();
     }
 
     /**
@@ -157,7 +157,7 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
         if (is_null($url)) {
             return '';
         }
-        $row = \models\TSequence::GetItem($url);
+        $row = \models_internal\TSequence::GetItem($url);
         return $row->FR;
     }
 
