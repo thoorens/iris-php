@@ -13,7 +13,7 @@ switch (0) {
             echo '<table border="1">';
 
           //  models\TCustomers::GetEntity();
-          models\TSections::GetEntity();
+          models_internal\TSections::GetEntity();
 //            models\Anything::GetEntity();
 //
 //            models\VVcustomers::GetEntity();
