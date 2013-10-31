@@ -50,9 +50,15 @@ class TSections extends \Iris\DB\_Entity {
         return $list;
     }
 
-    public static function GetSection($idSection) {
+    public static function GetSectionName($idSection) {
         $tSections = TSections::GetEntity();
-        return $tSections->fetchRow("id='$idSection'");
+        $line = $tSections->find($idSection);
+        if(is_null($line)){
+            return '';
+        }
+        else{
+            return $line->GroupName;
+        }
     }
     
 }
