@@ -47,7 +47,7 @@ class md5 extends _manager {
      */
     public function saveAction($module, $controller, $action, $md5) {
         $url = "/$module/$controller/$action";
-        $tSequences = \models\TSequence::GetEntity();
+        $tSequences = \models_internal\TSequence::GetEntity();
         $fields = Signature::GetModelFields();
         $URLField = $fields[Signature::URL];
         $md5Field = $fields[Signature::MD5];

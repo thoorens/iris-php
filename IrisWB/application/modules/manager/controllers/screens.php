@@ -50,7 +50,7 @@ class screens extends _manager {
         $tSequence->where('section_id=', $section);
         $screens = $tSequence->fetchAll();
         $this->__screens = $screens;
-        $category = $screens[0]->_at_section_id->GroupName;
+        $category = \models_internal\TSections::GetSectionName($section);
         $this->__category = $category;
         $this->__sectionMode = \FALSE;
         $icons->setSubtype($section, $category);
@@ -64,7 +64,7 @@ class screens extends _manager {
      * @param int $value
      */
     public function renumberAction($from, $to, $value){
-        $tSequence = \models\TSequence::GetEntity();
+        $tSequence = \models_internal\TSequence::GetEntity();
         $tSequence->whereBetween('id', $from, $to);
         $screens = $tSequence->fetchAll();
 /* @var $screen \Iris\DB\Object */
@@ -89,12 +89,13 @@ class screens extends _manager {
             case 'create':
                 $param0 = $parameters[0];
                 $section = is_null($param0) ? 10 : $param0;
-                $category = \models\TSections::GetSection($section);
+                $category = \models_internal\TSections::GetSectionName($section);
                 $this->__Operation = "Add a new screen in $category";
+                $this->__section = $section;
                 break;
             case 'update':
                 $this->__Operation = "Modify a screen content";
-                $tSequence = \models\TSequence::GetEntity();
+                $tSequence = \models_internal\TSequence::GetEntity();
                 $screen = $tSequence->find($parameters[0]);
                 $section = $screen->section_id;
                 if (!is_null($section)){
