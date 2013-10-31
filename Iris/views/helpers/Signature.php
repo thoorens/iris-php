@@ -151,7 +151,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
         if (is_null(self::$_Model)) {
             return '';
         }
-        $model = "\\models\\" . self::$_Model;
+        $model = self::$_Model;
         $tSequences = $model::GetEntity();
         $urlField = self::$_Fields[self::URL];
         $screen = $tSequences->fetchRow("$urlField=", self::_URL());
