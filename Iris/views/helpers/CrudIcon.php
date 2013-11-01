@@ -35,6 +35,8 @@ class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
     
     protected $_baseDir = '/images/icones';
 
+    protected $_tagAClass = "crudlink";
+    
     /**
      * Defines the subhelper used by the class. One can use another subhelper 
      * in a derived class by defining $_AlternateSubhelper
@@ -64,10 +66,11 @@ class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
         $dir = $params['dir'];
         $ref = $params['ref'];
         $help = $params['help'];
+        $class = $this->_tagAClass;
 
         if ($iconeActive) {
             $icon = $this->callViewHelper('image', $operation . ".png", $operation, $help, $dir);
-            return '<a href="' . $ref . '">' . $icon . '</a>';
+            return "<a href=\"$ref\" class=\"$class\">$icon</a>";
         }
         else {
             $file = $operation . "_des.png";
@@ -87,6 +90,17 @@ class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
     }
 
     /**
+     * Modifies the class for the a tag
+     * 
+     * @param string $tagAClass
+     * @return \Iris\views\helpers\CrudIcon
+     */
+    public function setTagAClass($tagAClass) {
+        $this->_tagAClass = $tagAClass;
+        return $this;
+    }
+
+        /**
      * Translates a message by using its ancestor method with default 
      * to system message
      * 
