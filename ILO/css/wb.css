@@ -20,6 +20,11 @@ div {
     /*outline: 1px dashed red;*/
 }
 
+a.crudlink{
+ text-decoration:none;
+}
+
+
 div#main{
     width :1020px;
     margin: 0 auto;
