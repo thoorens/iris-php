@@ -36,8 +36,6 @@ namespace modules\manager\controllers;
  */
 class sections extends _manager {
 
-    use \Iris\DB\DataBrowser\tCrudManager;
-
     public function indexAction() {
         $icons = \Iris\Subhelpers\Crud::getInstance();
         $icons

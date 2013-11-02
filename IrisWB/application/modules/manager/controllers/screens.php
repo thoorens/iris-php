@@ -31,8 +31,7 @@ namespace modules\manager\controllers;
  */
 class screens extends _manager {
 
-    use \Iris\DB\DataBrowser\tCrudManager;
-
+    
     public function indexAction($section = 10) {
         $icons = \Iris\Subhelpers\Crud::getInstance();
         $icons

@@ -11,7 +11,7 @@ namespace modules\manager\controllers;
  * @license not defined
  */
 class _manager extends \modules\_application {
-
+use \Iris\DB\DataBrowser\tCrudManager;
     
     /**
      * This method can contain module level
@@ -22,6 +22,7 @@ class _manager extends \modules\_application {
         $this->_setLayout('manager');
         $this->__bodyColor = 'ORANGE3';
         \Iris\SysConfig\Settings::DisableMD5Signature();
+        $this->_changeCrudDirectory('\\models_internal\\crud\\');
     }
 
 }
