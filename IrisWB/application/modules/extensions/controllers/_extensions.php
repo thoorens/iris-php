@@ -12,7 +12,6 @@ namespace modules\extensions\controllers;
  */
 class _extensions extends \modules\_application {
 
-    
     /**
      * This method can contain module level
      * settings
@@ -23,6 +22,7 @@ class _extensions extends \modules\_application {
         // and required by the default layout defined in _extension
         $this->__buttons = 1 + 4;
         $this->__logoName = 'mainLogo';
+        $this->callViewHelper('subtitle', 'Extensions');
     }
 
 }

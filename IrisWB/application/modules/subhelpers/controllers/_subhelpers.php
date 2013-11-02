@@ -12,12 +12,12 @@ namespace modules\subhelpers\controllers;
  */
 class _subhelpers extends \modules\_application {
 
-    
     /**
      * This method can contain module level
      * settings
      */
     protected final function _moduleInit() {
+        $this->callViewHelper('subtitle', 'Subhelpers');
     }
 
 }

@@ -33,6 +33,7 @@ class _ajax extends \modules\_application {
         // and required by the default layout defined in _ajax
         $this->__buttons = 1 + 4;
         $this->__logoName = 'mainLogo';
+        $this->callViewHelper('subtitle','Ajax');
     }
 
 }

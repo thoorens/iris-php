@@ -20,6 +20,7 @@ class _forms extends \modules\_application {
         // You should modify this demo layout
         $this->_setLayout('post3');
         $this->__bodyColor = 'ORANGE3';
-    }
+        $this->callViewHelper('subtitle', 'Forms');
+}
 
 }

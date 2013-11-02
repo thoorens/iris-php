@@ -12,12 +12,12 @@ namespace modules\libs\controllers;
  */
 class _libs extends \modules\_application {
 
-    
     /**
      * This method can contain module level
      * settings
      */
     protected final function _moduleInit() {
+        $this->callViewHelper('subtitle', 'Libraries');
     }
 
 }

@@ -23,6 +23,7 @@ class _errors extends \modules\_application {
         \Iris\SysConfig\Settings::DisableMD5Signature();
         \Iris\Errors\Settings::SetController('/errordemo/Error');
         \Iris\Errors\Settings::EnableKeep();
+        $this->callViewHelper('subtitle', 'Error demo');
     }
 
 }

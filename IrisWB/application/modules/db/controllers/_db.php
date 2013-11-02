@@ -52,6 +52,7 @@ abstract class _db extends \modules\_application {
     protected function _moduleInit() {
         $this->_setLayout('database');
         $this->registerSubcontroller(1, 'menu');
+        $this->callViewHelper('subtitle','Databases');
     }
 
     
@@ -129,4 +130,18 @@ STRING;
         return self::GetSampleMetadata($mode);
     }
 
+    
+    /**
+     * Common work on entity
+     * 
+     * @param \Iris\DB\_Entity $eCustomer
+     */
+    protected function _commonWorkOnCustomers($eCustomer, $Sanchez = \TRUE) {
+        $name = $Sanchez ? 'Antonio Sanchez' : 'John Smith';
+        $this->__customer2 = $eCustomer->find(2);
+        $eCustomer->where('Name =', $name);
+        $this->__customer3 = $eCustomer->fetchRow();
+        $this->__customers = $eCustomer->fetchAll();
+        $this->__Entity = get_class($eCustomer);
+    }
 }

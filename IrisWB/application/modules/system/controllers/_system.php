@@ -12,14 +12,12 @@ namespace modules\system\controllers;
  */
 class _system extends \modules\_application {
 
-    
     /**
      * This method can contain module level
      * settings
      */
     protected final function _moduleInit() {
-        // You should modify this demo layout
-        
+        $this->callViewHelper('subtitle', 'System');
     }
 
 }
