@@ -37,13 +37,14 @@ trait tCrudManager {
      * 
      * The simple way to change it consists in a single line in _init() or 
      * customize() methods
-     *      $this->_changeViewScript = 'whatyouwant";
+     *      $this->_changeViewScript('whatyouwant');
      * or
-     *       $this->_changeViewScript = \NULL;
+     *       $this->_changeViewScript(\NULL);
      * 
      * @var string
      */
     protected $_commonViewScript = 'editall';
+    protected $_crudDirectory = _Crud::CRUD_DIRECTORY;
 
     /**
      * This magic method simulates the four createAction, updateAction....
@@ -55,7 +56,7 @@ trait tCrudManager {
     public final function __callAction($actionName, $parameters) {
         $shortAction = preg_replace('/(.*)\_.*Action/', '$1', $actionName);
         $this->_changeViewScript($shortAction);
-        \Iris\DB\DataBrowser\_Crud::DispatchAction($this, $actionName, $parameters, $this->_commonViewScript);
+        \Iris\DB\DataBrowser\_Crud::DispatchAction($this, $actionName, $parameters, $this->_commonViewScript, $this->_crudDirectory);
         $this->_customize($shortAction);
     }
 
@@ -71,6 +72,10 @@ trait tCrudManager {
         }
     }
 
+    protected final function _changeCrudDirectory($directory) {
+        $this->_crudDirectory = $directory;
+    }
+
     /**
      * By overwriting this method, one can modify one or many implicit methods of the
      * CRUD manager or do whatever else (e.g. /IrisWB/application/modules/manager/controllers/screens.php)
@@ -78,10 +83,10 @@ trait tCrudManager {
      * 
      * @param string $actionName one among create/read/update/delete
      */
-    protected function _customize($actionName){
+    protected function _customize($actionName) {
         
     }
-    
+
     /**
      * A default error action to be overwritten.
      * 
