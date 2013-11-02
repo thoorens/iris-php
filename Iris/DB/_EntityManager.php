@@ -81,12 +81,18 @@ abstract class _EntityManager {
     private $_entityRepository = array();
 
     /**
-     * Only first instance is registred
+     * Only first instance is registred. Another instance
+     * will be replaced
+     * 
      * @param _Entity $entity 
      */
-    public function registerEntity($entity) {
+    public function registerEntity(&$entity) {
         $entityName = $entity->getEntityName();
-        if (!isset($this->_entityRepository[$entityName])) {
+        // if another instance exists, replace the new one
+        if (isset($this->_entityRepository[$entityName])) {
+            $entity = $this->_entityRepository[$entityName];
+        }
+        else{
             $this->_entityRepository[$entityName] = $entity;
             $entity->setEntityManager($this);
         }

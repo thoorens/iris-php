@@ -2,8 +2,6 @@
 
 namespace Iris\DB;
 
-
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -48,7 +46,7 @@ abstract class _Entity {
      * 
      * @var Object[] 
      */
-    private $_objectRepository = array();
+    private $_objectRepository = [];
 
     /**
      *
@@ -60,7 +58,7 @@ abstract class _Entity {
      *
      * @var String 
      */
-    protected $_entityName = NULL;
+    protected $_entityName = \NULL;
 
     /**
      * A way to identify related entities when they have special names
@@ -73,7 +71,7 @@ abstract class _Entity {
      * 
      * @var string
      */
-    protected $_reflectionEntity = NULL;
+    protected $_reflectionEntity = \NULL;
 
     /**
      * the _Entity manager used to manage the entity (linked to  
@@ -81,7 +79,7 @@ abstract class _Entity {
      * 
      * @var \Iris\DB\_EntityManager
      */
-    private $_entityManager = NULL;
+    private $_entityManager = \NULL;
 
     /**
      * By default, the row are of type Object
@@ -95,7 +93,7 @@ abstract class _Entity {
      * 
      * @var string[] 
      */
-    protected $_idNames = array();
+    protected $_idNames = [];
 
     /**
      * The foreign keys if not defined in the databases. Each
@@ -103,7 +101,7 @@ abstract class _Entity {
      * @var array
      * @todo This var does not seem to be initialized
      */
-    protected $_foreignKeyDescriptions = array();
+    protected $_foreignKeyDescriptions = [];
 
     /**
      * The name of the field serving for description of an concrete object
@@ -116,8 +114,13 @@ abstract class _Entity {
      * Metadata are stored for performance reasons
      * @var  Metadata
      */
-    protected $_metadata = NULL;
-    protected $_formProperties = array();
+    protected $_metadata = \NULL;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $_formProperties = [];
 
     /**
      * The last inserted Id (only valid after an insertion
@@ -125,7 +128,7 @@ abstract class _Entity {
      * 
      * @var int 
      */
-    protected $_lastInsertedId = NULL;
+    protected $_lastInsertedId = \NULL;
 
     /* =======================================================================================================
      * C O N S T R U C T O R    A N D  F A C T O R Y   M E T H O D S
@@ -349,7 +352,7 @@ abstract class _Entity {
     }
 
     /**
-     * Retrieve an object from the repository (if possible, NULL otherwise)
+     * Retrieve an object from the repository (if possible, \NULL otherwise)
      * 
      * @param  string $entityName
      * @param string[] $idValues
@@ -361,7 +364,27 @@ abstract class _Entity {
             return $this->_objectRepository[$id];
         }
         else {
-            return NULL;
+            return \NULL;
+        }
+    }
+
+    /**
+     * 
+     * @param mixed[] $oldIdValues
+     * @param mixed[] $newIdValues
+     * @param Object $this
+     */
+    public function updateRegistry($oldIdValues, $newIdValues) {
+        $modified = \FALSE;
+        foreach ($oldIdValues as $key => $value) {
+            if ($newIdValues[$key] != $value) {
+                $modified = \TRUE;
+            }
+        }
+        if ($modified) {
+            $oldId = implode('|', $oldIdValues);
+            $this->registerObject($newIdValues, $this->_objectRepository[$oldId]);
+            unset($this->_objectRepository[$oldId]);
         }
     }
 
@@ -492,7 +515,7 @@ abstract class _Entity {
      */
     public function getId($position) {
         throw new \Iris\Exceptions\NotSupportedException('Browser functions needs to be written and tested');
-        static $ids = array(NULL, NULL, NULL, NULL);
+        static $ids = array(NULL, \NULL, \NULL, \NULL);
         if (is_null($ids[$position])) {
             $em = $this->getEntityManager();
             switch ($position) {
@@ -530,7 +553,7 @@ abstract class _Entity {
      * @param type $condition
      * @param Object $value 
      */
-    public function fetchRow($condition = NULL, $value = NULL) {
+    public function fetchRow($condition = \NULL, $value = \NULL) {
         if (!is_null($condition)) {
             if (is_array($condition)) {
                 $this->wherePairs($condition);
@@ -540,7 +563,7 @@ abstract class _Entity {
             }
         }
         $all = $this->fetchAll();
-        return count($all) ? $all[0] : NULL;
+        return count($all) ? $all[0] : \NULL;
     }
 
     /* ======================================================================== 
@@ -556,7 +579,7 @@ abstract class _Entity {
      * @param mixed $value
      * @return _Entity (fluent interface) 
      */
-    public function where($condition, $value = NULL) {
+    public function where($condition, $value = \NULL) {
         $this->_query->where($condition, $value);
         return $this;
     }
@@ -600,7 +623,7 @@ abstract class _Entity {
     }
 
     /**
-     * Add a IS NULL part to Where clause
+     * Add a IS \NULL part to Where clause
      * 
      * @param string $field
      * @return _Entity  (fluent interface) 
@@ -611,7 +634,7 @@ abstract class _Entity {
     }
 
     /**
-     * Add a IS NOT NULL part to Where clause
+     * Add a IS NOT \NULL part to Where clause
      * 
      * @param string $field
      * @return _Entity  (fluent interface) 
@@ -740,15 +763,15 @@ abstract class _Entity {
      *  
      * @return Object 
      */
-    public function createRow($data = NULL) {
+    public function createRow($data = \NULL) {
         $metadata = $this->getMetadata();
         if (is_null($data)) {
-            $data = array();
+            $data = [];
         }
         foreach ($metadata->getFields() as $item) {
             $field = $item->getFieldName();
             if (!isset($data[$field])) {
-                $data[$field] = NULL;
+                $data[$field] = \NULL;
             }
         }
         $objectType = $this->getRowType();
@@ -831,7 +854,7 @@ abstract class _Entity {
         if (is_null($lastId)) {
             $ids = $this->getMetadata()->getPrimary();
             if (count($ids) > 1) {
-                return NULL;
+                return \NULL;
             }
             $select = sprintf('SELECT MAX(%s) as NUM FROM %s;', $ids[0], $this->_entityName);
             $lignes = $this->_entityManager->directSQL($select);

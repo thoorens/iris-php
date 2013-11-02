@@ -400,6 +400,8 @@ class Object {
     protected function _update() {
         $setFields = array();
         $values = array();
+        // id must be the old value
+        $idValues = $this->primaryKeyValue();
         foreach ($this->_fields as $field => $dummy) {
             $offset = $this->_fields[$field];
             if (isset($this->_modifiedContent[$offset])) {
@@ -409,7 +411,8 @@ class Object {
                 unset($this->_modifiedContent[$offset]);
             }
         }
-        $idValues = $this->primaryKeyValue();
+        $newIdValues = $this->primaryKeyValue();
+        $this->_entity->updateRegistry($idValues, $newIdValues);
         return $this->_entity->update($setFields, $values, $idValues); // need to update
     }
 

@@ -36,13 +36,6 @@ use Iris\Exceptions\DBException;
  */
 class EntityBuilder {
 
-    const TABLE = 1;
-    const AUTOVIEW = 2;
-    const AUTOTABLE = 3;
-    const VIEW = 4;
-    const ENTITY = 5;
-    const METADATA = 6;
-
     /**
      *
      * @var int
@@ -63,12 +56,6 @@ class EntityBuilder {
 
     /**
      *
-     * @var type 
-     */
-    private $_explicitModel = 'I';
-
-    /**
-     *
      * @var _EntityManager
      */
     private $_entityManager = \NULL;
@@ -77,19 +64,18 @@ class EntityBuilder {
      *
      * @var type 
      */
-    private $_entityName = \NULL;
+    private $_proposedEntityName = \NULL;
 
     /**
      *
      * @var type 
      */
-    private $_entityClass = \NULL;
+    private $_reflectionEntityName = \NULL;
 
     /**
      *
-     * @var type 
+     * @var string[]
      */
-    private $_reflectionEntity = \NULL;
     private $_strings = [];
 
     /**
@@ -116,22 +102,13 @@ class EntityBuilder {
                 throw new \Iris\Exceptions\DBException('GetEntity must be used with \\Iris\\DB\\TableEntity or \\Iris\\DB\\ViewEntity or a model class.');
                 break;
             case 'Iris\\DB\\TableEntity':
-                $this->_type = self::AUTOTABLE;
-                break;
             case 'Iris\\DB\\ViewEntity':
-                $this->_type = self::AUTOVIEW;
                 break;
-            // must be a models\\...\\Xclassname (with intitial T or V)
+            // must be a models\\...\\className
             default :
                 $className = substr($className, 1 + strrpos($className, '\\'));
-                if ($className[0] == 'V') {
-                    $this->_type = self::VIEW;
-                }
-                // table entity should begin with T, but anything but V is accepted
-                else {
-                    $this->_type = self::TABLE;
-                }
-                $this->_entityName = strtolower(substr($className, 1));
+                // tries to guess the entityName
+                $this->_proposedEntityName = strtolower(substr($className, 1));
         }
         foreach ($params as $param) {
             if ($param instanceof \Iris\DB\_EntityManager) {
@@ -153,7 +130,48 @@ class EntityBuilder {
         }
     }
 
+    /**
+     * 
+     * @return _Entity
+     */
     public function createExplicitModel() {
+        $entity = $this->_createModel(\FALSE);
+        $metadata = $entity->getMetadata();
+        $entity->setMetadata($metadata);
+        $entity->setEntityName($metadata->getTablename());
+        $entity->setIdNames($metadata->getPrimary());
+        return $entity;
+    }
+
+    /**
+     * 
+     * @return _Entity
+     */
+    public function createExplicitView() {
+        $entity = $this->_createModel(\TRUE);
+        $metadata = $this->_metadata;
+        if (is_null($metadata)) {
+            iris_print($this->_reflectionEntityName);
+            $entity->setReflectionEntity($this->_reflectionEntityName);
+//            $reflexionEntity = $this->_seekEntity($this->_reflectionEntityName);
+//            if (is_null($reflexionEntity)) {
+//                $reflexionEntity = $this->_createInstance('\Iris\DB\TableEntity', $this->_reflectionEntityName);
+//            iris_debug($reflexionEntity);
+//            }
+            $metadata = $entity->getMetadata();
+        }
+        $entity->setMetadata($metadata);
+        $entity->setIdNames($metadata->getPrimary());
+
+        return $entity;
+    }
+
+    /**
+     * 
+     * @return ViewEntity
+     * @throws DBException
+     */
+    private function _createModel() {
         // error analysis
         $strings = $this->_strings;
         if (count($strings)) {
@@ -165,47 +183,42 @@ class EntityBuilder {
             throw new DBException($message, DBException::$ErrorCode + 2);
         }
 
-        $entity = $this->_seekEntity($this->_entityName);
+        $entity = $this->_seekEntity($this->_proposedEntityName);
         if (is_null($entity)) {
             $className = $this->_initialClassName;
-            $entity = $this->_createInstance($className, $this->_entityName);
-            // ?? put the rest in createInstance
-            $metadata = $entity->getMetadata();
-            $entity->setMetadata($metadata);
-            $entity->setEntityName($metadata->getTablename());
-            $entity->setIdNames($metadata->getPrimary());
+            $entity = $this->_createInstance($className, $this->_proposedEntityName);
         }
-        
-        
         return $entity;
     }
 
+    /**
+     * This method creates an instance of TableEntity with metadata relative to a table
+     * known by its name or its metadata
+     * 
+     * @return _Entity
+     * @throws DBException
+     */
     public function createTable() {
-        // error analysis
-        $strings = count($this->_strings);
-        if(is_null($this->_metadata)){
-            if($strings != 1){
+        $stringNumber = count($this->_strings);
+        // no metadata : 1 and only 1 string
+        if (is_null($this->_metadata)) {
+            if ($stringNumber != 1) {
                 throw new DBException('TableEntity::CreateEntity() expects a metadata or a table name as parameter.');
             }
+            $this->_proposedEntityName = $this->_strings[0];
         }
-        else{
-            if($strings != 0){
+        // if metadata : no string
+        else {
+            if ($stringNumber != 0) {
                 throw new DBException('TableEntity::CreateEntity() with a metadata parameter cannot have a table name as parameter.');
             }
+            $this->_proposedEntityName = $this->_metadata->getTablename();
         }
-        // later
-        if(is_null($this->_metadata)){
-            $this->_entityName = $this->_strings[0];
-        }
-        else{
-            $this->_entityName = $this->_metadata->getTablename();
-        }
-        
-        $entity = $this->_seekEntity($this->_entityName);
+
+        $entity = $this->_seekEntity($this->_proposedEntityName);
         if (is_null($entity)) {
             $className = $this->_initialClassName;
-            $entity = $this->_createInstance($className, $this->_entityName);
-            // ?? put the rest in createInstance
+            $entity = $this->_createInstance($className, $this->_proposedEntityName);
             $metadata = $entity->getMetadata();
             $entity->setMetadata($metadata);
             $entity->setEntityName($metadata->getTablename());
@@ -214,10 +227,44 @@ class EntityBuilder {
         return $entity;
     }
 
-    public function createView(){
-        
+    /**
+     * This method creates an instance of ViewEntity with metadata relative to a view name and a second parameter (metadata or a reflexion entity name)
+     * 
+     * @return type
+     * @throws DBException
+     */
+    public function createView() {
+        // error analysis
+        $stringNumber = count($this->_strings);
+        if (is_null($this->_metadata)) {
+            if ($stringNumber != 2) {
+                throw new DBException('View::CreateEntity()  without metadata expects an entity name and a reflection entity name as parameters.');
+            }
+            $this->_proposedEntityName = $this->_strings[0];
+            $this->_reflectionEntityName = $this->_strings[1];
+        }
+        else {
+            if ($stringNumber != 1) {
+                throw new DBException('TableEntity::CreateEntity() with metadata expects an entity view name as parameter.');
+            }
+            $this->_proposedEntityName = $this->_strings[0];
+            $this->_reflectionEntityName = $this->_metadata->getTablename();
+        }
+        $entity = $this->_seekEntity($this->_proposedEntityName);
+        if (is_null($entity)) {
+            $className = $this->_initialClassName;
+            $entity = $this->_createInstance($className, $this->_proposedEntityName);
+            $metadata = $this->_metadata;
+            if (is_null($metadata)) {
+                $entity->setReflectionEntity($this->_reflectionEntityName);
+                $metadata = $entity->getMetadata();
+            }
+            $entity->setMetadata($metadata);
+            $entity->setIdNames($metadata->getPrimary());
+        }
+        return $entity;
     }
-    
+
     private function _createInstance($className, $entityName) {
         $classFile = \Iris\System\Functions::Class2File($className);
         $simpleFile = IRIS_PROGRAM_PATH . "/$classFile";
@@ -230,7 +277,6 @@ class EntityBuilder {
             $entity = _Entity::GetNewInstance($className, $entityName);
         }
         $this->_entityManager->registerEntity($entity);
-        $entity->setEntityManager($this->_entityManager);
         return $entity;
     }
 
@@ -262,7 +308,9 @@ class EntityBuilder {
         return !is_null($this->_metadata);
     }
 
-    
+    public function getClass() {
+        return $this->_initialClassName;
+    }
 
 }
 

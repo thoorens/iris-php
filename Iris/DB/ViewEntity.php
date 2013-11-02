@@ -34,32 +34,20 @@ class ViewEntity extends _Entity {
     protected $_reflectionEntity = \NULL;
 
     public static function GetEntity() {
-        iris_debug('NOT IMPLEMENTED');
-        
-        $params = new EntityParams(get_called_class(), func_get_args());
-        $strings = $params->getStrings();
-        /* @var $metadata Metadata */
-        $metadata = $params->getMetadata();
-        if (count($strings) != 1 and is_null($metadata)) {
-            $message = 'Implicit model entities need a table name as string parameter or a metadata expression.';
-            throw new \Iris\Exceptions\DBException($message, \Iris\Exceptions\DBException::$ErrorCode + 11);
+        $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());
+        if ($entityBuilder->getClass() == 'Iris\\DB\\ViewEntity') {
+            return $entityBuilder->createView();
         }
-        else {
-            if (is_null($metadata)) {
-                $params->setEntityName($strings[0]);
-            }
-            else {
-                $params->setEntityName($metadata->getTablename());
-            }
+        else{
+            
+            return $entityBuilder->createExplicitView();
         }
-        return \Iris\DB\_EntityManager::FindEntity($params);
     }
 
     protected function _readMetadata($metadata = \NULL) {
-        iris_debug($metadata, \FALSE);
         if (is_null($this->_metadata)) {
-            $masterEntity = TableEntity::GetEntity($this->_reflectionEntity);
-            $metadata = $masterEntity->_readMetadata();
+            $masterEntity = TableEntity::GetEntity($this->_reflectionEntity, $this->getEntityManager());
+            $metadata = $masterEntity->getMetadata($this->_metadata);
             return $metadata;
         }
         return parent::_readMetadata($metadata);
@@ -68,6 +56,14 @@ class ViewEntity extends _Entity {
     public function getReflectionEntity() {
         return $this->_reflectionEntity;
     }
+
+    public function setReflectionEntity($reflectionEntity) {
+        if(! is_null($reflectionEntity)){
+            $this->_reflectionEntity = $reflectionEntity;
+        }
+        return $this;
+    }
+
 
 }
 
