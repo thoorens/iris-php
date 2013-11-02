@@ -1,6 +1,8 @@
 <?php
 
-namespace models\crud;
+namespace models;
+
+use modules\db\controllers\_db as db;
 
 /*
  * This file is part of IRIS-PHP.
@@ -19,46 +21,27 @@ namespace models\crud;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
- *
- * 
  */
 
 /**
- * 
- * Test of basic crud operations
+ * Small invoice manager for test purpose: the Customers table
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
+ * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Screen extends \Iris\DB\DataBrowser\_Crud {
+class AnythingM extends \Iris\DB\ViewEntity {
 
-    public function __construct($param = NULL) {
-        parent::__construct($param);
-        $entity = \Iris\DB\TableEntity::GetEntity('sequence');
-        $this->setEntity($entity);
-        $this->setActions("erreur", "index");
+
+    /**
+     *
+     * @var string 
+     */
+    protected $_entityName = 'vcustomers';
+
+    protected function _readMetadata($metadata = \NULL){
+        return db::GetSampleMetadata(db::FROM_OBJECT);
     }
-
-    protected function _preCreate($formData, &$object) {
-        $this->_setSection($object);
-    }
-
-    protected function _preDelete(&$object) {
-        $this->_setSection($object);
-    }
-
-    protected function _preDisplay(&$data) {
-        $this->_setSection($data);
-    }
-
-    protected function _preUpdate($formData, &$object) {
-        $this->_setSection($object);
-    }
-
-    private function _setSection($object) {
-        //iris_debug($object);
-        //$section = $object->section_id;
-    }
-
+    
 }
+

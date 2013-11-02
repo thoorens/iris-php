@@ -31,11 +31,13 @@ namespace models;
  * @version $Id: $ */
 class VVcustomers extends \Iris\DB\ViewEntity {
 
+     protected $_reflectionEntity = 'customers';
+
     
     /*
      * W A R N I N G:
      * 
-     * the code of this class is only used to create the table and
+     * the code of this class is only used to create the view and
      * its copy.
      * 
      * It is by no way an illustration of a table management
@@ -54,24 +56,16 @@ class VVcustomers extends \Iris\DB\ViewEntity {
         'CREATE  VIEW %s AS select * from customers WHERE id %s;',
     ];
 
-    protected $_reflectionEntity = 'customers';
-
-
-   
-
     
     /**
-     * Creates a new view in the database
+     * Creates two new views in the database 
      * 
      * @param string $dbType The type of database (by default sqlite)
      * @param \Iris\DB\_EntityManager em
      */
     public static function Create($em) {
-        $class = get_called_class();
-        _invoiceManager::Say("Creating table for class $class");
         $sqlFormat = static::$_SQLCreate[_invoiceManager::GetDefaultDbType()];
         $sql1 = sprintf($sqlFormat, 'vcustomers', '< 3');
-        _invoiceManager::Say($sql1);
         $em->directSQL($sql1);
         $sql2 = sprintf($sqlFormat, 'vcustomers2', '> 1');
         $em->directSQL($sql2);

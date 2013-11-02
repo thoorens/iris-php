@@ -1,7 +1,6 @@
 <?php
 
 namespace models\crud;
-use modules\db\controllers\helpers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -50,9 +49,8 @@ abstract class _localCrud extends \Iris\DB\DataBrowser\_Crud {
     public function __construct($param = NULL) {
         die('CRUD problem');
         parent::__construct($param);
-        $dbType = \Iris\Users\Session::GetInstance()->getValue('dbType', 'sqlite');
         $entity = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder(static::$_TableName, [static::$_IdName],
-                \models\_invoiceManager::getEM($dbType));
+                \models\_invoiceManager::getEM());
         $this->setEntity($entity);
         $this->setActions("error", static::$_TableName);
    

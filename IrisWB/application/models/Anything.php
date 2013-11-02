@@ -28,7 +28,7 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Anything2 extends \Iris\DB\ViewEntity {
+class Anything extends \Iris\DB\ViewEntity {
 
     /**
      *
@@ -42,9 +42,6 @@ class Anything2 extends \Iris\DB\ViewEntity {
      */
     protected $_entityName = 'vcustomers';
 
-    protected function _readMetadata($metadata = \NULL) {
-        return parent::_readMetadata($metadata);
-    }
-
+    
 }
 
