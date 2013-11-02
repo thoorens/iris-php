@@ -48,6 +48,7 @@ class _application extends \Iris\MVC\_Controller {
         \Iris\views\helpers\Signature::SetModel('models_internal\\TSequence', 'URL', 'Md5');
         \ILO\views\helpers\AdminToolBar::GetInstance()->setMenu(\TRUE);
         \Iris\Errors\Settings::SetController('/Error');
+        $this->callViewHelper('title','Iris Work Bench');
 
     }
 
