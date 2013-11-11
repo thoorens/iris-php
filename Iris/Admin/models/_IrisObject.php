@@ -87,7 +87,7 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
     public function markDeleted($tableName, $id = \NULL) {
         $EM = $this->getEntityManager();
         if (is_null($id)) {
-            $EM->directSQL("Update $tableName set Deleted = 1;");
+            $EM->directSQLExec("Update $tableName set Deleted = 1;");
         }
         else{
             throw new \Iris\Exceptions\NotSupportedException('Mark deleted has not been written to Delete individual records');
