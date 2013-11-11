@@ -186,10 +186,10 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
                 $dropTable = "DROP TABLE IF EXISTS %s;";
         }
         try {
-            $em->directSQL(sprintf($dropView, 'vcustomers'));
-            $em->directSQL(sprintf($dropView, 'vcustomers2'));
+            $em->directSQLExec(sprintf($dropView, 'vcustomers'));
+            $em->directSQLExec(sprintf($dropView, 'vcustomers2'));
             foreach ($tables as $table) {
-                $em->directSQL(sprintf($dropTable, $table));
+                $em->directSQLExec(sprintf($dropTable, $table));
             }
         }
         catch (\Exception $exc) {
@@ -205,7 +205,7 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
         $em = self::GetEM();
         $dbType = self::$_DefaultDbType;
         $sql = static::$_SQLCreate[$dbType];
-        $em->directSQL($sql);
+        $em->directSQLExec($sql);
     }
 
     /**

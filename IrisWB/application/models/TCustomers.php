@@ -92,9 +92,9 @@ class TCustomers extends _invoiceManager {
     public static function Copy() {
         $em = self::GetEM();
         $dbType = self::$_DefaultDbType;
-        $result = $em->directSQL(static::$_SQLCopy[$dbType][0], \FALSE);
+        $result = $em->directSQLExec(static::$_SQLCopy[$dbType][0]);
         if (isset(static::$_SQLCopy[$dbType][1])) {
-            $result2 = $em->directSQL(static::$_SQLCopy[$dbType][1], \FALSE);
+            $result2 = $em->directSQLExec(static::$_SQLCopy[$dbType][1]);
         }
         return $result > $result2 ? $result : $result2;
     }
