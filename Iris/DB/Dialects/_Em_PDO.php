@@ -33,14 +33,13 @@ use Iris\DB\Object,
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _Em_PDO extends \Iris\DB\_EntityManager {
-    
+
     /**
      * PDO manages the connexion by using a variable
      * 
      * @var PDO (not only) 
      */
     protected $_connexion = NULL;
-
 
     /**
      * The constructor for PDO entity manager.
@@ -59,12 +58,15 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
             $this->_connexion = $pdo;
         }
         catch (\PDOException $exp) {
-            $message = "DB error : ".$exp->getMessage()." dsn: $dsn " ;
+            $message = "DB error : " . $exp->getMessage() . " dsn: $dsn ";
+            /**
+             * @todo Explain this gap between the two type of exception
+             */
             $code = 0; // Strangely, \PDOException codes are strings and \Exception long
             $myException = new \Iris\Exceptions\DBException($message, 0, $exp);
             throw $myException;
         }
-        catch(\Exception $exp){
+        catch (\Exception $exp) {
             throw $exp;
         }
     }
@@ -84,7 +86,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      * @param string[] $fieldsPH
      * @return array  
      */
-    public function getResults($sql, $fieldsPH=array()) {
+    public function getResults($sql, $fieldsPH = array()) {
         $pdo = $this->_connexion;
         $statement = $pdo->prepare($sql);
         foreach ($fieldsPH as $key => $value) {
@@ -95,6 +97,27 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
         return $results;
     }
 
+    
+
+    /**
+     * Executes a direct SQL query on the connexion
+     * 
+     * @param type $sql
+     * @return \PDOStatement
+     */
+    public function directSQLQuery($sql){
+        return $this->_connexion->query($sql);
+    }
+    
+    /**
+     * Executes a direct SQL exec on the connexion
+     * @param type $sql
+     * @return int (a true boolean or an integer according to the type of command
+     */
+    public function directSQLExec($sql){
+        return $this->_connexion->exec($sql);
+    }
+    
     public function exec($sql, $fieldsPH) {
         $pdo = $this->_connexion;
         $statement = $pdo->prepare($sql);
@@ -105,5 +128,4 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
     }
 
 }
-
 
