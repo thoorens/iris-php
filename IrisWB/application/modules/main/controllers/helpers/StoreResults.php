@@ -31,14 +31,16 @@ namespace Iris\controllers\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
-
     /**
      * Types of results
      */
+
     const TITLE = 0;
     const GOOD = 1;
     const BAD = 2;
-    const PAUSE = 3;
+    const COMMENT = 3;
+    const PAUSE = 4;
+    const SHIFT = 5;
     /**
      * Fields
      */
@@ -52,7 +54,7 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
      */
     const TEXT = 1;
     const CODE = 2;
-    
+
     /**
      * The array containing all the results
      * 
@@ -75,6 +77,7 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
      * @param string $message an explanation of the test or the command present in the test
      * @param string $result a result or an error message (e.g. a message from a exception
      * @param int $mode TEXT or CODE explains the nature of the message
+     * @return \Iris\controllers\helpers\StoreResults (fluent interface)
      */
     public function addGoodResult($message, $result, $mode = self::TEXT) {
         $this->_results[] = [
@@ -83,6 +86,7 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
             self::VALUE => $result,
             self::STYLE => $mode,
         ];
+        return $this;
     }
 
     /**
@@ -91,6 +95,7 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
      * @param string $message an explanation of the test or the command present in the test
      * @param string $result a result or an error message (e.g. a message from a exception
      * @param int $mode TEXT or CODE explains the nature of the message
+     * @return \Iris\controllers\helpers\StoreResults (fluent interface)
      */
     public function addBadResult($message, $result, $mode = self::TEXT) {
         $this->_results[] = [
@@ -99,6 +104,24 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
             self::VALUE => $result,
             self::STYLE => $mode,
         ];
+        return $this;
+    }
+
+    /**
+     * Enters a simple comment in the internal array: 
+     * 
+     * @param string $message an explanation of the test or the command present in the test
+     * @param int $mode TEXT or CODE explains the nature of the message
+     * @return \Iris\controllers\helpers\StoreResults (fluent interface)
+     */
+    public function addComment($message, $mode = self::TEXT) {
+        $this->_results[] = [
+            self::TYPE => self::COMMENT,
+            self::MESSAGE => '',
+            self::VALUE => $message,
+            self::STYLE => $mode,
+        ];
+        return $this;
     }
 
     /**
@@ -106,6 +129,7 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
      * 
      * @param string $content
      * @param int $level from 1 to 6 for a &lt;h#> tag
+     * @return \Iris\controllers\helpers\StoreResults (fluent interface)
      */
     public function addTitle($content, $level = 3) {
         $this->_results[] = [
@@ -113,15 +137,31 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
             self::MESSAGE => $content,
             self::VALUE => $level,
         ];
+        return $this;
     }
 
     /**
      * Introduces a break (closes a table and is ready to open a new one)
+     * 
+     * @return \Iris\controllers\helpers\StoreResults (fluent interface)
      */
     public function addBreak() {
         $this->_results[] = [
             self::TYPE => self::PAUSE,
         ];
+        return $this;
+    }
+
+    /**
+     * Shifts from on raw result display to two raw result display
+     * or vice versa
+     * @return \Iris\controllers\helpers\StoreResults (fluent interface)
+     */
+    public function rawShift() {
+        $this->_results[] = [
+            self::TYPE => self::SHIFT,
+        ];
+        return $this;
     }
 
     /**
@@ -132,7 +172,5 @@ class StoreResults extends \Iris\controllers\helpers\_ControllerHelper {
     public function sendToView($varName = 'results') {
         $this->toView($varName, $this->_results);
     }
-
-    
 
 }

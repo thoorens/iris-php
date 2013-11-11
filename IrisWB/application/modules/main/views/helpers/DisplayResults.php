@@ -1,6 +1,7 @@
 <?php
 
 namespace Iris\views\helpers;
+
 use Iris\controllers\helpers\StoreResults as SR;
 
 /*
@@ -38,15 +39,15 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
      * 
      * @var boolean
      */
-    protected $_singleton = TRUE;
-    
+    protected $_singleton = \TRUE;
+
     /**
      * This string receives all the output of render()
      * 
      * @var string
      */
     private $_html = '';
-    
+
     /**
      * Changes to TRUE or FALSE according the position of the next text
      * in relation to &lt;tab> tags.
@@ -56,17 +57,17 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
     private $_inTable = \FALSE;
 
     /**
-     * The class of the main tab tag
+     * The class of the main table tag
      * @var string
      */
-    private $_tabClass = "show";
-    
+    private $_tableClass = "show";
+
     /**
      * If true, forces each result to be displayed in two separate raws (default)
      * 
      * @var boolean
      */
-    private $_twoRaws = \FALSE;
+    private $_twoRaws = \TRUE;
 
     /**
      * Returns the object or directly renders a result array
@@ -83,10 +84,10 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
     /**
      * Each result is displayed in one single raw
      */
-    public function forceOneLine(){
+    public function forceOneRaw() {
         $this->_twoRaws = \FALSE;
     }
-    
+
     /**
      * An set accessor for the table class (by default 'show')
      * 
@@ -94,7 +95,7 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
      * @return \Iris\views\helpers\DisplayResults (fluent interface)
      */
     public function setTabClass($class) {
-        $this->_tabClass = $class;
+        $this->_tableClass = $class;
         return $this;
     }
 
@@ -111,6 +112,7 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
             switch ($result[SR::TYPE]) {
                 case SR::GOOD:
                 case SR::BAD:
+                case SR::COMMENT:
                     $this->_displayResult($result);
                     break;
                 case SR::TITLE:
@@ -121,6 +123,9 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
                 case SR::PAUSE:
                     $this->_closeTable();
                     $this->_html .= '<br/>' . CRLF;
+                    break;
+                case SR::SHIFT:
+                    $this->_twoRaws = ! $this->_twoRaws;
                     break;
             }
         $this->_closeTable();
@@ -142,13 +147,24 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
             $openTT = $closeTT = '';
             $style = 'text';
         }
+        $classNames = [
+            SR::BAD => 'bad',
+            SR::GOOD => 'good',
+            SR::COMMENT => 'comment',
+        ];
+        $status = $classNames[$result[SR::TYPE]];
         $this->_html .= '   <tr>' . CRLF;
-        $this->_html .= "       <td class=\"$style\">" . CRLF;
-        $this->_html .= '           ' . $openTT . $result[SR::MESSAGE] . $closeTT . CRLF;
-        $this->_html .= '       </td>' . CRLF ;
-        $status = $result[SR::TYPE] == SR::GOOD ? 'good' : 'bad';
-        $this->_separator();
-        $this->_html .= "       <td class=\"$status\">" . CRLF;
+        if ($result[SR::TYPE] != SR::COMMENT) {
+            $this->_html .= "       <td class=\"$style\">" . CRLF;
+            $this->_html .= '           ' . $openTT . $result[SR::MESSAGE] . $closeTT . CRLF;
+            $this->_html .= '       </td>' . CRLF;
+            $colspan = '';
+        }
+        else{
+            $colspan = 'COLSPAN = "2"';
+        }
+            $this->_separator();
+            $this->_html .= "       <td class=\"$status\" $colspan>" . CRLF;
         $this->_html .= '           ' . $result[SR::VALUE] . CRLF;
         $this->_html .= '       </td>' . CRLF . '    </tr>' . CRLF;
     }
@@ -169,7 +185,7 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
     private function _openTable() {
         if (!$this->_inTable) {
             $this->_inTable = \TRUE;
-            $this->_html .= "<table class=\"$this->_tabClass\">" . CRLF;
+            $this->_html .= "<table class=\"$this->_tableClass\">" . CRLF;
         }
     }
 
@@ -177,20 +193,24 @@ class DisplayResults extends \Iris\views\helpers\_ViewHelper {
      * Adds the inner styles for the result display
      */
     private function _addStyle() {
+        $tableClass = $this->_tableClass;
         $this->callViewHelper('styleLoader', "goodbadresult", <<<STYLE
  <style>
-        table.show td{
+        table.$tableClass td{
             background-color: white;
         }
-        table.show td.code{
+        table.$tableClass td.code{
             background-color: #FFE;
         }
-        table.show td.bad{
+        table.$tableClass td.bad{
             background-color:#FDD;
         }        
-        table.show td.good{
+        table.$tableClass td.good{
             background-color:#DFD;
         }
+        table.$tableClass td.comment{
+            background-color:#DFF;
+        }       
         td.code tt{
             font-size:0.8em;
         }
@@ -201,9 +221,9 @@ STYLE
     }
 
     private function _separator() {
-        if($this->_twoRaws){
-        $this->_html .= '    </tr>' . CRLF;
-        $this->_html .= '   <tr>' . CRLF;
+        if ($this->_twoRaws) {
+            $this->_html .= '    </tr>' . CRLF;
+            $this->_html .= '   <tr>' . CRLF;
         }
     }
 
