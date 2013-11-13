@@ -267,7 +267,13 @@ APACHE;
         if (file_exists($scriptName)) {
             throw new \Iris\Exceptions\CLIException("The action $actionName already exists.");
         }
-        $this->_createFile("$source/index_index.iview", $scriptName);
+        $defaultViewName = "$destination/modules/main/views/scripts/_DEFAULTVIEW.iview";
+        if(file_exists($defaultViewName)){
+            $this->_createFile($defaultViewName, $scriptName);
+        }
+        else{
+            $this->_createFile("$source/index_index.iview", $scriptName);
+        }
         if ($actionName != 'index') {
             $controllerPath = "$destinationMod/controllers/$controllerName.php";
             $source = file($controllerPath);
