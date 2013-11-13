@@ -1,0 +1,42 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <table class="show">
+        <tr>
+            <th>Initial address</th>
+            <td><tt></tt></td>
+            <td>{(c1Email[0])}</td>
+        </tr>
+        <tr>
+            <th>Address after sibling modification</th>
+            <td><tt>$c1bis->Email = ...;</tt></td>
+            <td>{(c1Email[1])}</td>
+        </tr>
+        <tr>
+            <th>Address after array component modification</th>
+            <td><tt>$customers[1]->Email = ....;</tt></td>
+            <td>{(c1Email[2])}</td>
+        </tr>
+    </table>
+    <br/>
+    <h4>A new customer</h4>
+    <table class="show">
+        <tr>
+            <th>Id</th>
+            <td>{(new->id)}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{(new->Name)}</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>{(new->Address)}</td>
+        </tr>
+        <tr>
+            <th>Emailn</th>
+            <td>{(new->Email)}</td>
+        </tr>
+    </table>
+
+    {dbWarning()}
+</div>

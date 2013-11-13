@@ -31,10 +31,10 @@ namespace Iris\controllers\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class DbState extends \Iris\controllers\helpers\_ControllerHelper {
-
     /**
      * No know status
      */
+
     const UNKNOWN = 1;
     /**
      * A freshly created database
@@ -44,10 +44,15 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
      * A database modified by the user
      */
     const MODIFIED = 3;
+
+    /**
+     * Certainly modified, but in unknown initial state
+     */
+    const MODIFIED2 = 4;
     /**
      * A deleted database
      */
-    const DELETED = 4;
+    const DELETED = 5;
 
     protected $_singleton = TRUE;
 
@@ -95,6 +100,9 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
             case self::MODIFIED:
                 $message = "The database has been recently created but modifications have been done by the user.";
                 break;
+            case self::MODIFIED2:
+                $message = "The database is perhaps not freshly created, but modifications have been done by the user.";
+                break;
             case self::DELETED:
                 $message = "The database has been deleted. No more management is possible. Please reset it with '/db/sample/init'";
                 break;
@@ -118,6 +126,9 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
             case self::MODIFIED:
                 $class = "warningModified";
                 break;
+            case self::MODIFIED2:
+                $class = "warningModified2";
+                break;
             case self::DELETED:
                 $class = "warningDeleted";
                 break;
@@ -136,7 +147,13 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
      * Sets the status to MODIFIED
      */
     public function setModified() {
-        $this->setCurrentState(self::MODIFIED);
+        $previousState = $this->getCurrentState();
+        if ($previousState == self::CREATED or $previousState == self::MODIFIED) {
+            $this->setCurrentState(self::MODIFIED);
+        }
+        else {
+            $this->setCurrentState(self::MODIFIED2);
+        }
     }
 
     /**

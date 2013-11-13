@@ -31,12 +31,23 @@ namespace modules\db\controllers;
  * @license not defined
  */
 class tables extends _db {
+    /**
+     * Repeated from StoreResults
+     */
+
+    const TEXT = 1;
+    const CODE = 2;
 
     protected function _init() {
         $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
         $this->setViewScriptName('/customers');
         $this->dbState()->validateDB();
     }
+
+    /*
+     * --------------------------------------------------------------------------------------------
+     * TableEntity
+     */
 
     /**
      * Access to table through a table name. There is no corresponding class
@@ -85,6 +96,11 @@ class tables extends _db {
         $this->_commonWorkOnCustomers($eCustomer);
     }
 
+    /*
+     * ==============================================================================================
+     * Model classes
+     */
+
     /**
      * Access to table through a model class. No parameters are defined inside the model.
      */
@@ -115,6 +131,11 @@ class tables extends _db {
         $this->_commonWorkOnCustomers($eCustomer);
     }
 
+    /*
+     * ===========================================================================================
+     * Tests
+     */
+
     /**
      * Verifies the syntax of TableEntity::GetEntity
      */
@@ -123,34 +144,37 @@ class tables extends _db {
         $EM = $this->_entityManager;
         $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
 
+        /* @var $results \Iris\controllers\helpers\StoreResults */
+        $results = $this->storeResults();
+
         $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', $EM);
-        $results["\Iris\DB\TableEntity::GetEntity('customers',&#36;EM)"] = 'OK';
+        $results->addGoodResult("\Iris\DB\TableEntity::GetEntity('customers',&#36;EM)", 'OK', self::CODE);
 
         $eCustomer = \Iris\DB\TableEntity::GetEntity($metadata, $EM);
-        $results["\Iris\DB\TableEntity::GetEntity(&#36;metadata,&#36;EM)"] = 'OK';
+        $results->addGoodResult("\Iris\DB\TableEntity::GetEntity(&#36;metadata,&#36;EM)", 'OK', self::CODE);
 
         try {
             $eCustomer = \Iris\DB\TableEntity::GetEntity($EM);
         }
         catch (\Exception $exception) {
-            $results["\Iris\DB\TableEntity::GetEntity(&#36;EM)"] = $exception->getMessage();
+            $results->addBadResult("\Iris\DB\TableEntity::GetEntity(&#36;EM)", $exception->getMessage(), self::CODE);
         }
 
         try {
             $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', $metadata, $EM);
         }
         catch (\Exception $exception) {
-            $results["\Iris\DB\TableEntity::GetEntity('customers', &#36;metadata, &#36;EM)"] = $exception->getMessage();
+            $results->addBadResult("\Iris\DB\TableEntity::GetEntity('customers', &#36;metadata, &#36;EM)", $exception->getMessage(), self::CODE);
         }
 
         try {
             $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', 'invoices', $EM);
         }
         catch (\Exception $exception) {
-            $results["\Iris\DB\TableEntity::GetEntity('customers', 'invoices',&#36;EM)"] = $exception->getMessage();
+            $results->addBadResult("\Iris\DB\TableEntity::GetEntity('customers', 'invoices',&#36;EM)", $exception->getMessage(), self::CODE);
         }
 
-        $this->__results = $results;
+        $results->sendToView();
     }
 
     /**
@@ -160,77 +184,73 @@ class tables extends _db {
         $this->setViewScriptName('/tests');
         $EM = $this->_entityManager;
         $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
-
+        
+        /* @var $results \Iris\controllers\helpers\StoreResults */
+        $results = $this->storeResults();
 
         $eCustomer = \models\TCustomers::GetEntity($EM);
-        $results["\models\TCustomers::GetEntity(&#36;EM)"] = 'OK';
+        $results->addGoodResult("\models\TCustomers::GetEntity(&#36;EM)", 'OK', self::CODE);
 
         try {
             $eCustomer = \models\TCustomers::GetEntity('customers', $EM);
         }
         catch (\Exception $exception) {
-            $results["\models\TCustomers::GetEntity('customers',&#36;EM)"] = $exception->getMessage();
+            $results->addBadResult("\models\TCustomers::GetEntity('customers',&#36;EM)", $exception->getMessage(), self::CODE);
         }
         try {
             $eCustomer = \models\TCustomers::GetEntity($metadata, $EM);
         }
         catch (\Exception $exception) {
-            $results["\models\TCustomers::GetEntity(&#36;metadata,&#36;EM)"] = $exception->getMessage();
+            $results->addBadResult("\models\TCustomers::GetEntity(&#36;metadata,&#36;EM)", $exception->getMessage(), self::CODE);
         }
         try {
             $eCustomer = \models\TCustomers::GetEntity('customers', $metadata, $EM);
         }
         catch (\Exception $exception) {
-            $results["\models\TCustomers::GetEntity('customers', &#36;metadata, &#36;EM)"] = $exception->getMessage();
+            $results->addBadResult("\models\TCustomers::GetEntity('customers', &#36;metadata, &#36;EM)", $exception->getMessage(), self::CODE);
         }
 
+        try {
+            $eCustomer = \models\TEmptyModel::GetEntity($EM);
+        }
+        catch (\Exception $exception) {
+            $results->addBadResult("\models\TEmptyModel::GetEntity(&#36;EM)", $exception->getMessage(), self::CODE);
+        }
 
-        $this->__results = $results;
+        $results->sendToView();
     }
 
     /**
-     * Verifies the syntax of _Entity::GetEntity
+     * Verifies the syntax of _Entity::GetEntity. Never direct access.
      */
     public function testEntityAction() {
         $this->setViewScriptName('/tests');
         $EM = $this->_entityManager;
         $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
+        
+        /* @var $results \Iris\controllers\helpers\StoreResults */
+        $results = $this->storeResults();
 
         try {
             $eCustomer = \Iris\DB\_Entity::GetEntity('customers', $EM);
         }
         catch (\Exception $ex) {
-            $results["\Iris\DB\_Entity::GetEntity('customers',&#36;EM)"] = $ex->getMessage();
+            $results->addBadResult("\Iris\DB\_Entity::GetEntity('customers',&#36;EM)", $ex->getMessage(), self::CODE);
         }
         try {
             $eCustomer = \Iris\DB\_Entity::GetEntity($metadata, $EM);
         }
         catch (\Exception $ex) {
-            $results["\Iris\DB\_Entity::GetEntity(&#36;metadata,&#36;EM)"] = $ex->getMessage();
+            $results->addBadResult("\Iris\DB\_Entity::GetEntity(&#36;metadata,&#36;EM)", $ex->getMessage(), self::CODE);
         }
         try {
             $eCustomer = \Iris\DB\_Entity::GetEntity($EM);
         }
         catch (\Exception $ex) {
-            $results["\Iris\DB\_Entity::GetEntity(&#36;EM)"] = $ex->getMessage();
+            $results->addBadResult("\Iris\DB\_Entity::GetEntity(&#36;EM)", $ex->getMessage(), self::CODE);
         }
-    
-        $this->__results = $results;
-    }
 
-    
-
-    /**
-     * Common work on entity
-     * 
-     * @param \Iris\DB\_Entity $eCustomer
-     */
-    protected function _commonWorkOnCustomers($eCustomer) {
-        $this->__customer2 = $eCustomer->find(2);
-        $eCustomer->where('Name =', 'Antonio Sanchez');
-        $this->__customer3 = $eCustomer->fetchRow();
-        $this->__customers = $eCustomer->fetchAll();
-        $this->__Entity = get_class($eCustomer);
+        $results->sendToView();
     }
 
 }

@@ -227,6 +227,12 @@ p.dbWarning{
     background-color: #AAA;
 }
 
+.warningModified2{
+    color:#D80;
+    border-color:  #D80;
+    background-color: white;
+}
+
 .warningDeleted{
     color:#F00;
     border-color:  #F00;

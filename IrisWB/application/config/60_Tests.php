@@ -8,7 +8,6 @@ switch (0) {
         echo "<h4>Beginning of entity tests</h4>";
         defined('RT') or define('RT', "<br>");
         for ($level = 1; $level < 4; $level++) {
-            \Iris\DB\_Entity::SetDebugLevel($level);
             echo "<h5>Level $level</h5>";
             echo '<table border="1">';
 

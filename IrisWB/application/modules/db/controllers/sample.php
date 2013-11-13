@@ -24,10 +24,8 @@ namespace modules\db\controllers;
 
 /**
  * This controller inits, presents, verifies and deletes the sample database
- * 
  *
  * @author Jacques THOORENS (jacques@thoorens.net)
- * 
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ */
 class sample extends _db {
@@ -40,14 +38,14 @@ class sample extends _db {
     }
 
     /**
-     * Deletes the database (and optionally creates new data)
+     * Creates (if necessary) all the tables and views for the demo
      * 
      * @param string $dbType  the rdbms type
      * @param boolean $data if false does not create the data
      */
     public function initAction() {
         $this->__action = 'create';
-        $result = $this->prepareInvoices()->createAll();
+        $result = \models\_invoiceManager::CreateAll();
         if (isset($result['Error'])) {
             $this->__error = \TRUE;
         }
@@ -66,12 +64,12 @@ class sample extends _db {
     public function deletedataAction() {
         $this->__Result = 'Database deleted';
         $this->setViewScriptName('status');
-        \models\_invoiceManager::DeleteFile();
+        \models\_invoiceManager::DropAll();
         $this->dbState()->setDeleted();
     }
 
     /**
-     * Deletes the database file (only 
+     * Deletes the database file (only in Sqlite context)
      */
     public function deletefileAction() {
         $this->__Result = 'The database file has been deleted';
