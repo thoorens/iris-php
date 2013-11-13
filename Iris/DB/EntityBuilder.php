@@ -2,7 +2,7 @@
 
 namespace Iris\DB;
 
-use Iris\Exceptions\DBException;
+use Iris\Exceptions\EntityException;
 
 /*
  * This file is part of IRIS-PHP.
@@ -92,14 +92,14 @@ class EntityBuilder {
      *  
      * @param string $className
      * @param string $params
-     * @throws \Iris\Exceptions\DBException
+     * @throws \Iris\Exceptions\EntityException
      */
     public function __construct($className, $params) {
         $this->_initialClassName = $className;
         switch ($className) {
             // GetEntity cannot be used on the abstract mother class _Entity
             case 'Iris\\DB\\_Entity':
-                throw new \Iris\Exceptions\DBException('GetEntity must be used with \\Iris\\DB\\TableEntity or \\Iris\\DB\\ViewEntity or a model class.');
+                throw new \Iris\Exceptions\EntityException('GetEntity must be used with \\Iris\\DB\\TableEntity or \\Iris\\DB\\ViewEntity or a model class.');
                 break;
             case 'Iris\\DB\\TableEntity':
             case 'Iris\\DB\\ViewEntity':
@@ -135,11 +135,11 @@ class EntityBuilder {
      * @return _Entity
      */
     public function createExplicitModel() {
-        $entity = $this->_createModel(\FALSE);
+        $entity = $this->_getModel(\FALSE);
         $metadata = $entity->getMetadata();
-        $entity->setMetadata($metadata);
-        $entity->setEntityName($metadata->getTablename());
+        $entity->setEntityName($metadata->getTablename(), \TRUE);
         $entity->setIdNames($metadata->getPrimary());
+        $entity->validate();
         return $entity;
     }
 
@@ -148,69 +148,78 @@ class EntityBuilder {
      * @return _Entity
      */
     public function createExplicitView() {
-        $entity = $this->_createModel(\TRUE);
+        $entity = $this->_getModel(\TRUE);
         $metadata = $this->_metadata;
         if (is_null($metadata)) {
-            iris_print($this->_reflectionEntityName);
             $entity->setReflectionEntity($this->_reflectionEntityName);
-//            $reflexionEntity = $this->_seekEntity($this->_reflectionEntityName);
-//            if (is_null($reflexionEntity)) {
-//                $reflexionEntity = $this->_createInstance('\Iris\DB\TableEntity', $this->_reflectionEntityName);
-//            iris_debug($reflexionEntity);
-//            }
             $metadata = $entity->getMetadata();
         }
-        $entity->setMetadata($metadata);
         $entity->setIdNames($metadata->getPrimary());
-
+        $entity->validate();
         return $entity;
     }
 
     /**
+     * Takes a model entity from the repository or if necessary, creates it
      * 
+     * @param boolean $view
      * @return ViewEntity
-     * @throws DBException
+     * @throws EntityException
      */
-    private function _createModel() {
+    private function _getModel($view) {
         // error analysis
         $strings = $this->_strings;
         if (count($strings)) {
-            $message = 'An explicit model class cannot have entity specifications. Put parameters in the class if necessary.';
-            throw new DBException($message, DBException::$ErrorCode + 1);
+            if ($view) {
+                $message = 'An explicit view model class cannot have entity specifications. Put parameters in the class if necessary.';
+            }
+            else {
+                $message = 'An explicit model class cannot have entity specifications. Put parameters in the class if necessary.';
+            }
+            throw new EntityException($message, EntityException::$ErrorCode + 1);
         }
         if ($this->_hasMetadata()) {
-            $message = 'An explicit model class cannot have a metadata parameter';
-            throw new DBException($message, DBException::$ErrorCode + 2);
+            if ($view) {
+                $message = 'An explicit view model class cannot have a metadata parameter';
+            }
+            else {
+                $message = 'An explicit model class cannot have a metadata parameter';
+            }
+            throw new EntityException($message, EntityException::$ErrorCode + 2);
         }
-
         $entity = $this->_seekEntity($this->_proposedEntityName);
         if (is_null($entity)) {
             $className = $this->_initialClassName;
+            try{
             $entity = $this->_createInstance($className, $this->_proposedEntityName);
+            }
+            catch (\Exception $ex){
+                die('Table inconnue');
+            }
         }
         return $entity;
     }
 
     /**
-     * This method creates an instance of TableEntity with metadata relative to a table
-     * known by its name or its metadata
+     * Tries to retrive an table entity by using its name or its metadata. If necessary,
+     * it creates it. It does not use any predefined model class.
      * 
      * @return _Entity
-     * @throws DBException
+     * @throws EntityException
      */
     public function createTable() {
         $stringNumber = count($this->_strings);
         // no metadata : 1 and only 1 string
         if (is_null($this->_metadata)) {
             if ($stringNumber != 1) {
-                throw new DBException('TableEntity::CreateEntity() expects a metadata or a table name as parameter.');
+                throw new EntityException('TableEntity::CreateEntity() expects a metadata or a table name as parameter.');
             }
             $this->_proposedEntityName = $this->_strings[0];
         }
         // if metadata : no string
         else {
             if ($stringNumber != 0) {
-                throw new DBException('TableEntity::CreateEntity() with a metadata parameter cannot have a table name as parameter.');
+                throw new EntityException('TableEntity::CreateEntity() with a metadata parameter cannot have a table name as parameter.');
             }
             $this->_proposedEntityName = $this->_metadata->getTablename();
         }
@@ -220,32 +229,33 @@ class EntityBuilder {
             $className = $this->_initialClassName;
             $entity = $this->_createInstance($className, $this->_proposedEntityName);
             $metadata = $entity->getMetadata();
-            $entity->setMetadata($metadata);
             $entity->setEntityName($metadata->getTablename());
             $entity->setIdNames($metadata->getPrimary());
+            $entity->validate();
         }
         return $entity;
     }
 
     /**
-     * This method creates an instance of ViewEntity with metadata relative to a view name and a second parameter (metadata or a reflexion entity name)
+     * Tries to retrieve a view entity by using its name and the metadata to manage it by using explicit metadata or find them in
+     * a second entity known by its name.
      * 
-     * @return type
-     * @throws DBException
+     * @return _Entity
+     * @throws EntityException
      */
     public function createView() {
         // error analysis
         $stringNumber = count($this->_strings);
         if (is_null($this->_metadata)) {
             if ($stringNumber != 2) {
-                throw new DBException('View::CreateEntity()  without metadata expects an entity name and a reflection entity name as parameters.');
+                throw new EntityException('View::CreateEntity()  without metadata expects an entity name and a reflection entity name as parameters.');
             }
             $this->_proposedEntityName = $this->_strings[0];
             $this->_reflectionEntityName = $this->_strings[1];
         }
         else {
             if ($stringNumber != 1) {
-                throw new DBException('TableEntity::CreateEntity() with metadata expects an entity view name as parameter.');
+                throw new EntityException('TableEntity::CreateEntity() with metadata expects an entity view name as parameter.');
             }
             $this->_proposedEntityName = $this->_strings[0];
             $this->_reflectionEntityName = $this->_metadata->getTablename();
@@ -259,12 +269,21 @@ class EntityBuilder {
                 $entity->setReflectionEntity($this->_reflectionEntityName);
                 $metadata = $entity->getMetadata();
             }
-            $entity->setMetadata($metadata);
             $entity->setIdNames($metadata->getPrimary());
+            $entity->setMetadata($metadata);
+            $entity->validate();
         }
         return $entity;
     }
 
+    /**
+     * Creates a new instance of entity using its classname and entity name.
+     * 
+     * @param string $className
+     * @param string $entityName
+     * @return _Entity
+     * @throws \Iris\Exceptions\EntityException
+     */
     private function _createInstance($className, $entityName) {
         $classFile = \Iris\System\Functions::Class2File($className);
         $simpleFile = IRIS_PROGRAM_PATH . "/$classFile";
@@ -275,6 +294,9 @@ class EntityBuilder {
         }
         elseif (file_exists($specialFile)) {
             $entity = _Entity::GetNewInstance($className, $entityName);
+        }
+        else {
+            throw new \Iris\Exceptions\EntityException("There is non $className entity class.");
         }
         $this->_entityManager->registerEntity($entity);
         return $entity;

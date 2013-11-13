@@ -31,19 +31,37 @@ namespace Iris\DB;
  * @version $Id: $ */
 class ViewEntity extends _Entity {
 
+    /**
+     * A reflection Entity is an entity used to create the metadata
+     * 
+     * @var string
+     */
     protected $_reflectionEntity = \NULL;
+
+    /**
+     * By default, a view is read only.
+     * 
+     * @var boolean
+     */
+    protected $_readOnly = \TRUE;
 
     public static function GetEntity() {
         $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());
         if ($entityBuilder->getClass() == 'Iris\\DB\\ViewEntity') {
             return $entityBuilder->createView();
         }
-        else{
-            
+        else {
+
             return $entityBuilder->createExplicitView();
         }
     }
 
+    /**
+     * This overridden method uses the reflection entity to get a new metadata
+     * 
+     * @param Metadata $metadata
+     * @return Metadata
+     */
     protected function _readMetadata($metadata = \NULL) {
         if (is_null($this->_metadata)) {
             $masterEntity = TableEntity::GetEntity($this->_reflectionEntity, $this->getEntityManager());
@@ -57,11 +75,27 @@ class ViewEntity extends _Entity {
         return $this->_reflectionEntity;
     }
 
+    /**
+     * Tries to init the reflection entity name. This accessor will never
+     * erase a previously inited name (set in the model definition for instance)
+     * 
+     * @param string $reflectionEntity
+     * @return \Iris\DB\ViewEntity (fluent interface)
+     */
     public function setReflectionEntity($reflectionEntity) {
-        if(! is_null($reflectionEntity)){
+        if (!is_null($reflectionEntity)) {
             $this->_reflectionEntity = $reflectionEntity;
         }
         return $this;
+    }
+
+    /**
+     * Tests if the object created with this entity are read only
+     * 
+     * @return boolean
+     */
+    public function isReadOnly() {
+        return $this->_readOnly;
     }
 
 

@@ -39,7 +39,6 @@ abstract class _Entity {
     const NEXT = 2;
     const LAST = 3;
 
-    private static $_DebugLevel;
 
     /**
      * An array repository with all objects
@@ -141,7 +140,7 @@ abstract class _Entity {
      * 
      * @param mixed analysed in code
      * @return _Entity
-     * @throws \Iris\Exceptions\DBException
+     * @throws \Iris\Exceptions\EntityException
      */
     public static function GetEntity() {
         $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());
@@ -184,66 +183,7 @@ abstract class _Entity {
         
     }
 
-    /** TO DELETE */
-    public static function NewEntity_OLD($params, $entityManager) {
-        $type = $params->getType();
-        if ($type == EntityParams::METADATA) {
-            $className = $params->getFullClassName();
-        }
-        else {
-            $className = $params->getEntityClass();
-        }
-        $classFile = \Iris\System\Functions::Class2File($className);
-        $simpleFile = IRIS_PROGRAM_PATH . "/$classFile";
-        $specialFile = IRIS_ROOT_PATH . '/' . IRIS_LIBRARY . "/$classFile";
-        // creates a new entity
-        if (file_exists($simpleFile)) {
-            $entity = new $className();
-            if ($params->getType() == $params::METADATA) {
-                $metadata = $params->getMetadata();
-                $entity->_metadata = $metadata;
-                $entity->_entityName = $metadata->getTablename();
-                $entity->_idNames = $metadata->getPrimary();
-            }
-        }
-        elseif (file_exists($specialFile)) {
-            $entity = new $className();
-        }
-        else {
-            $entityClass = $params->getEntityClass();
-            if (is_null($entityClass)) {
-                $entity = new InnerEntity();
-            }
-            else {
-                $entity = new $entityClass();
-            }
-            $entity->_entityName = $params->getEntityName();
-        }
-        $entity->_entityManager = $entityManager;
-        if (is_null($entity->_entityName)) {
-            $className = basename(str_replace('\\', '/', get_class($entity)));
-            $entity->_entityName = strtolower(substr($className, 1));
-        }
-        // reflection entities are only used for views
-        if (is_null($entity->_reflectionEntity)) {
-            $entity->_reflectionEntity = $entity->_entityName;
-        }
-        $entity->getMetadata($params->getMetadata());
-        if (self::$_DebugLevel == 3) {
-            $params->setEntityName($entity->getEntityName());
-            $params->show();
-        }
-        $entity->_query = new Query();
-        $entityManager->registerEntity($entity);
-        if ($entity->getEntityName() == 'vcustomers') {
-            iris_debug($entity->getMetadata());
-        }
-        if (count($entity->getIdNames()) == 0) {
-            $entity->_idNames = $entity->getMetadata()->getPrimary();
-        }
-        return $entity;
-    }
-
+    
     /**
      * By default, the entity manager is defined by the system. This methods can
      * be overwritten in subclasses.
@@ -262,11 +202,11 @@ abstract class _Entity {
      * 
      * @param mixed[] $params
      * @return array
-     * @throws \Iris\Exceptions\DBException
+     * @throws \Iris\Exceptions\EntityException
      */
     protected static function _AnalyseParameters($params) {
         if (count($params) > 3) {
-            throw new \Iris\Exceptions\DBException('To much parameters for GetEntity().');
+            throw new \Iris\Exceptions\EntityException('To much parameters for GetEntity().');
         }
         $strings = 0;
         $entityName = \NULL;
@@ -290,7 +230,7 @@ abstract class _Entity {
                     $alternativeClassName = $param;
                 }
                 else {
-                    throw new \Iris\Exceptions\DBException('3 strings parameters given for GetEntity');
+                    throw new \Iris\Exceptions\EntityException('3 strings parameters given for GetEntity');
                 }
             }
         }
@@ -330,8 +270,14 @@ abstract class _Entity {
         return "\\$className";
     }
 
-    public static function SetDebugLevel($level) {
-        self::$_DebugLevel = $level;
+    /**
+     * Tests if the object created with this entity are read only.
+     * Always FALSE, except in Views
+     * 
+     * @return boolean
+     */
+    public function isReadOnly() {
+        return \FALSE;
     }
 
     /* =======================================================================================================
@@ -402,15 +348,17 @@ abstract class _Entity {
     }
 
     /**
-     * Accessor set for the id field list
+     * Accessor set for the id field list. NEVER erases a previously set value
      * 
      * @param string[] $idNames 
      */
     public function setIdNames($idNames) {
-        if (!is_array($idNames)) {
-            $idNames = array($idNames);
+        if (count($this->_idNames) == 0) {
+            if (!is_array($idNames)) {
+                $idNames = array($idNames);
+            }
+            $this->_idNames = $idNames;
         }
-        $this->_idNames = $idNames;
     }
 
     /**
@@ -433,12 +381,15 @@ abstract class _Entity {
     }
 
     /**
-     * Accessor set for the entity (table) name
+     * Accessor set for the entity (table) name.
+     * NEVER erases a previously set value
      * 
      * @param string $entityName
      */
-    public function setEntityName($entityName) {
-        $this->_entityName = $entityName;
+    public function setEntityName($entityName, $force = \FALSE) {
+        if (is_null($this->_entityName) or $force) {
+            $this->_entityName = $entityName;
+        }
     }
 
     /**
@@ -507,7 +458,7 @@ abstract class _Entity {
     }
 
     /**
-     * Obtains the id of fiirst, previous, next, last element of the table
+     * Obtains the id of first, previous, next, last element of the table
      * 
      * @staticvar array $ids Conserves the values between calls
      * @param int $position Position of the element 
@@ -522,7 +473,7 @@ abstract class _Entity {
                 case self::FIRST:
                 case self::PREVIOUS:
                     $sql = $em->leftLimits;
-                    $aResult = $em->directSQL($sql);
+                    $aResult = $em->directSQLQuery($sql);
                     $result = $aResult[0];
                     $ids[self::FIRST] = $result['First'];
                     $ids[self::PREVIOUS] = $result['Previous'];
@@ -530,7 +481,7 @@ abstract class _Entity {
                 case self::NEXT:
                 case self::LAST:
                     $sql = $em->rightLimits;
-                    $aResult = $em->directSQL($sql);
+                    $aResult = $em->directSQLQuery($sql);
                     $result = $aResult[0];
                     $ids[self::NEXT] = $result['Next'];
                     $ids[self::LAST] = $result['Last'];
@@ -857,9 +808,11 @@ abstract class _Entity {
                 return \NULL;
             }
             $select = sprintf('SELECT MAX(%s) as NUM FROM %s;', $ids[0], $this->_entityName);
-            $lignes = $this->_entityManager->directSQL($select);
-            $ligne = $lignes[0];
-            return $ligne['NUM'];
+            
+            /* @var $lignes Dialects\MyPDOStatement */
+            $lignes = $this->_entityManager->directSQLQuery($select);
+            $ligne = $lignes->fetchObject();
+            return $ligne->NUM;
         }
     }
 
@@ -870,6 +823,7 @@ abstract class _Entity {
 
     /**
      * Obtain the metadata from either <ul>
+     * <li> a hardcoded metadata or
      * <li> the result stored after a precedent analysis or
      * <li> a metadata stored by hand in the entity (see overloading of _readMetadata()
      * <li> an analysis of the database
@@ -893,15 +847,27 @@ abstract class _Entity {
         if (is_string($this->_metadata)) {
             $metadata = new Metadata();
             $metadata->unserialize($this->_metadata);
-            $this->_metadata = $metadata;
+            $this->setMetadata($metadata);
         }
         return $this->_metadata;
     }
 
+    /**
+     * Accessor Set for metadata (caution : NEVER erases a explicit metadata)
+     * @param Metadata $metadata
+     */
     public function setMetadata($metadata) {
-        $this->_metadata = $metadata;
+        if (is_null($this->_metadata)) {
+            $this->_metadata = $metadata;
+        }
     }
 
+    /**
+     * Accessor Set for the entity manager used by the class
+     * 
+     * @param \Iris\DB\_EntityManager $entityManager
+     * @return \Iris\DB\_Entity
+     */
     public function setEntityManager(\Iris\DB\_EntityManager $entityManager) {
         $this->_entityManager = $entityManager;
         return $this;
@@ -945,6 +911,18 @@ abstract class _Entity {
         }
 
         return $metadata;
+    }
+
+    public function validate() {
+        if (is_null($this->_entityName)) {
+            throw new \Iris\Exceptions\EntityException('The entity has no associated object in the database.');
+        }
+        if (is_null($this->_metadata) or count($this->_metadata->getFields()) == 0) {
+            throw new \Iris\Exceptions\EntityException('No metadata has been provided or found for this entity.');
+        }
+        if (count($this->_idNames) == 0) {
+            throw new \Iris\Exceptions\EntityException('This entity does not have a specified primary key.');
+        }
     }
 
 }

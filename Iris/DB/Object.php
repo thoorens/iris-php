@@ -34,7 +34,6 @@ class Object {
     /**
      * The object exists in memory, but has no relation to the database
      */
-
     const ORM_TRANSIENT = 1;
 
     /**
@@ -121,6 +120,12 @@ class Object {
     protected $_entity;
 
     /**
+     *
+     * @var boolean
+     */
+    protected $_readOnly;
+    
+    /**
      * Constructor for an object
      * 
      * @param \Iris\DB\_Entity $entity The entity corresponding to the object
@@ -130,6 +135,7 @@ class Object {
      */
     public function __construct(_Entity $entity, $idValues, $data, $new = FALSE) {
         $this->_entity = $entity;
+        $this->_readOnly = $entity->isReadOnly();
         if ($new) {
             $this->_ORMState = self::ORM_TRANSIENT;
         }
@@ -240,12 +246,9 @@ class Object {
         $entityManager = $this->_entity->getEntityManager();
         $fKeys = explode(IRIS_FIELDSEP, $keyFields);
         $chldName = array_shift($fKeys);
-//        $chldClassName = $this->_entity->getExternalClassName($chldName);
-//        $chldEntity = $entityManager->retrieveEntity($chldName, $chldClassName);
         $chldEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $chldName);
         list($parentFields, $childFields) =
                 $chldEntity->getMetadata()->getChildrenParams($this->_entity->getEntityName(), $fKeys);
-// placer ici les valeurs et non les noms de champ
         $i = 0;
         foreach ($parentFields as $pField) {
             $value = $this->$pField;
@@ -261,40 +264,6 @@ class Object {
         return $this->_children[$chldId];
     }
 
-    /**
-     * Analyses and uses the pseudo field _children_parent__foreignKey
-     * @param type $pseudoField
-     * @return type 
-     */
-//    protected function _getChildren($pseudoField) {
-//        $fKey = substr($pseudoField, strlen(self::CHILDREN));
-//        $fKeys = explode(IRIS_FIELDSEP, $fKey);
-//        $chldName = array_shift($fKeys);
-//        $parentName = $this->_entity->getEntityName();
-//        $foreignKey = implode('_', $fKeys);
-//        $chldID = $chldName . '_' . $foreignKey;
-//        if (isset($this->_children[$chldID])) {
-//            return $this->_children[$chldID];
-//        }
-//        $entityManager = $this->_entity->getEntityManager();
-//        $chldClassName = $this->_entity->getExternalClassName($chldName);
-//        $chldEntity = $entityManager->retrievetEntity($chldName, $chldClassName);
-//        $chldMetadata = $chldEntity->getMetadata();
-//        $chldForeigns = $chldMetadata->getForeigns();
-//        /*         * @var \Iris\DB\ForeignKey chldForeign */
-//        foreach ($chldForeigns as $chldForeign) {
-//            if ($chldForeign->getTargetTable() == $parentName and
-//                    implode('_', $chldForeign->getFromKeys()) == $foreignKey) {
-//                break;
-//            }
-//        }
-//        $chldToParent = $chldForeign->getFromKeys();
-//        $condition = array_combine($chldToParent, $this->primaryKeyValue());
-//        $chldEntity->wherePairs($condition);
-//        $result = $chldEntity->fetchAll();
-//        $this->_children[$chldID] = $result;
-//        return $result;
-//    }
 
     /**
      * Change a field value if necessary, marking the object
@@ -305,6 +274,9 @@ class Object {
      * @todo Verify if some RDBMS wants to manage true boolean
      */
     public function __set($field, $value) {
+        if($this->_readOnly){
+            throw new \Iris\Exceptions\DBException('A read only object cannot be modified');
+        }
         if (is_bool($value)) {
             $value = $value ? 1 : 0;
         }
@@ -328,19 +300,11 @@ class Object {
     public function save() {
 // Deleted object can't be saved
         if ($this->_ORMState == self::ORM_DELETED) {
-            throw new \Iris\Exceptions\ORMException('Trying to save a deleted object');
+            throw new \Iris\Exceptions\DBException('Trying to save a deleted object');
         }
 
         if ($this->_ORMState == self::ORM_TRANSIENT) {
             $done = $this->_insert();
-            $this->_entity->lastInsertedId();
-//@todo manage AUTOINCREMENT instead
-//            if(is_numeric($newId) and count($this->_entity->getIdNames())==1){
-//                $idFields =$this->_entity->getIdNames(); 
-//                $idField = $idFields[0];
-//                // writing directly in data NOT in newData
-//                $this->_data[$this->_fields[$idField]] = $newId;
-//            }
         }
         elseif ($this->_dirty) {
             $done = $this->_update();
@@ -351,6 +315,15 @@ class Object {
         if ($done) {
             $this->_dirty = FALSE;
 //@todo : mettre à jour les objets dépendants.....
+        }
+        foreach($this->_parents as $parent){
+            $parent->save();
+        }
+        //iris_debug($this->_children);
+        foreach($this->_children as $children){
+            foreach($children as $child){
+                $child->save();
+            }
         }
         return $done;
     }
@@ -456,6 +429,15 @@ class Object {
     public function getEntity() {
         return $this->_entity;
     }
+
+    /**
+     * Says if the object is readonly
+     * @return boolean
+     */
+    public function isReadOnly() {
+        return $this->_readOnly;
+    }
+
 
 }
 

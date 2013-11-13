@@ -104,13 +104,13 @@ abstract class _EntityManager {
      * and in try catch context
      * 
      * @param string $entityName
-     * @throws \Iris\Exceptions\DBException
+     * @throws \Iris\Exceptions\EntityException
      */
     public function unregisterEntity($entityName){
         if (isset($this->_entityRepository[$entityName])) {
             $entity = $this->_entityRepository[$entityName];
             if($entity->hasObjects()){
-                throw new \Iris\Exceptions\DBException('You cannot unregister an entity when it has instanciated objects');
+                throw new \Iris\Exceptions\EntityException('You cannot unregister an entity when it has instanciated objects');
             }
             unset($this->_entityRepository[$entityName]);
         }
@@ -270,23 +270,22 @@ abstract class _EntityManager {
         return $type;
     }
 
+    
     /**
-     * Executes a directs SQL query on the connexion.
+     * Executes a direct SQL query on the connexion
      * 
-     * @param string $sql
-     * @param boolean 
-     * @return Statement/int
+     * @param type $sql
+     * @return \PDOStatement
      */
-    public function directSQL($sql, $statement = \TRUE) {
-        if ($statement) {
-            $result = $this->_connexion->query($sql);
-        }
-        else {
-            $result = $this->_connexion->exec($sql);
-        }
-        return $result;
-    }
-
+    public abstract function directSQLQuery($sql);
+    
+    /**
+     * Executes a direct SQL query on the connexion
+     * 
+     * @param type $sql
+     * @return \PDOStatement
+     */
+    public abstract function directSQLExec($sql);
     /**
      * Execute a select query on the current database, returning an array of
      * Objects (found in the repository or freshly created)

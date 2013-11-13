@@ -37,7 +37,7 @@ class TableEntity extends _Entity {
      * @param string/Metadata $metadata An optional Metadata definition as an object or a serialized string (opt)
      * @param _EntityManager $entityManager An optional entity manager (if not provided, the default EM is used)
      * @return _Entity
-     * @throws \Iris\Exceptions\DBException
+     * @throws \Iris\Exceptions\EntityException
      */
     public static function GetEntity() {
         $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());

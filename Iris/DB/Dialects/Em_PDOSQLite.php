@@ -136,7 +136,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      */
     public function readFields($tableName) {
         $sql = "PRAGMA table_info($tableName)";
-        $results = $this->directSQL($sql);
+        $results = $this->directSQLQuery($sql);
         $results->setFetchMode(\PDO::FETCH_OBJ);
         $metadata = new \Iris\DB\Metadata($tableName);
         foreach ($results as $line) {
@@ -149,7 +149,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
                 try {
                     $metadata->addPrimary($line->name);
                     // exception if no defined sequence in the database
-                    $results = $this->directSQL("select * from sqlite_sequence where name ='$tableName';");
+                    $results = $this->directSQLQuery("select * from sqlite_sequence where name ='$tableName';");
                     $lines = $results->fetchall();
                     if (count($lines) == 1) {
                         $MetaItem->setAutoIncrement();
