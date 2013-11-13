@@ -49,10 +49,9 @@ trait tAutoRenderer{
      */
     public final function autoRender() {
         $args = func_get_args();
-        $max = array_shift($args);
         $function = '_' . array_shift($args);
         $this->_type = $function;
-        $nArgs = $this->_normalize($args, $max);
+        $nArgs = $this->_normalize($args);
         if($nArgs[0] == \NULL){
             return $this;
         }
@@ -81,14 +80,14 @@ trait tAutoRenderer{
      * @param array $args
      * @return type
      */
-    protected function _normalize($args, $max = 4) {
+    protected function _normalize($args) {
         if (is_array($args[0])) {
             $data = $args[0];
         }
         else {
             $data = $args;
         }
-        while (count($data) < $max) {
+        while (count($data) < 5) {
             $data[] = \NULL;
         }
         return $data;

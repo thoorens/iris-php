@@ -81,7 +81,7 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     public function display() {
         $arguments = func_get_args();
         $def = substr($this->_type,1);
-        return $this->autorender(4,$def, $arguments);
+        return $this->autorender($def, $arguments);
     }
 
     /**
@@ -130,8 +130,8 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      */
     protected function _link() {
         $args = func_get_args();
-        list($label, $url, $tooltip, $class) = $this->_normalize($args);
-        $attributes = $this->_standardAttributes($tooltip, $class);
+        list($label, $url, $tooltip, $class, $id) = $this->_normalize($args);
+        $attributes = $this->_standardAttributes($tooltip, $class, $id);
         return sprintf('<a href="%s" %s >%s</a>', $url, $attributes, $label);
     }
 
@@ -143,18 +143,18 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      */
     protected function _button() {
         $args = func_get_args();
-        list($label, $url, $tooltip, $class) = $this->_normalize($args);
+        list($label, $url, $tooltip, $class, $id) = $this->_normalize($args);
         if (!\Iris\Users\Session::JavascriptEnabled() or self::$NoJavaForce) {
             $href = is_null($url) ? '' : "href=\"$url\"";
             if (Client::OldBrowser(self::$OldBrowser)) {
-                return $this->_simulatedButton($label, $href, $tooltip, $class);
+                return $this->_simulatedButton($label, $href, $tooltip, $class, $id);
             }
             else {
-                return $this->_linkButton($label, $href, $tooltip, $class);
+                return $this->_linkButton($label, $href, $tooltip, $class, $id);
             }
         }
         else {
-            return $this->_javascriptButton($label, $url, $tooltip, $class);
+            return $this->_javascriptButton($label, $url, $tooltip, $class, $id);
         }
     }
 
@@ -165,10 +165,11 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * @param string $url The URL where to go
      * @param string $tooltip The optional tooptip
      * @param string $class The optional class
+     * @param string $id The optional id
      * @return string
      */
-    private function _javascriptButton($label, $url, $tooltip, $class) {
-        $attributes = $this->_renderAttributes($tooltip, $class);
+    private function _javascriptButton($label, $url, $tooltip, $class, $id) {
+        $attributes = $this->_renderAttributes($tooltip, $class, $id);
         $onclick = is_null($url) ? '' : "onclick=\"javascript:location.href='$url'\"";
         return "<button $attributes $onclick>$label</button>\n";
     }
@@ -180,18 +181,19 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * @param string $href The href attribute (or empty string)
      * @param string $tooltip The optional tooptip
      * @param string $class The optional class
+     * @param string $id The optional id
      * @return string
      */
-    private function _linkButton($label, $href, $tooltip, $class) {
-        $attributes = $this->_renderAttributes($tooltip, $class);
+    private function _linkButton($label, $href, $tooltip, $class, $id) {
+        $attributes = $this->_renderAttributes($tooltip, $class, $id);
         // Button in a link
         return "<a $href>" .
                 "<button $attributes>$label</button></a>\n";
     }
 
-    private function _simulatedButton($label, $href, $tooltip, $class) {
+    private function _simulatedButton($label, $href, $tooltip, $class, $id) {
         $class .= ' old_nav';
-        $attributes = $this->_renderAttributes($tooltip, $class);
+        $attributes = $this->_renderAttributes($tooltip, $class, $id);
         $this->callViewHelper('styleLoader', 'oldbrowserbuttonn', <<<STYLE
 a.old_nav{
     background-color:#EEE;
@@ -212,12 +214,12 @@ STYLE
 
     
 
-    private function _renderAttributes($tooltip, $class) {
+    private function _renderAttributes($tooltip, $class, $id) {
         $html = '';
         foreach ($this->_attributes as $name => $value) {
             $html .= "$name=\"$value\" ";
         }
-        $html .= $this->_standardAttributes($tooltip, $class);
+        $html .= $this->_standardAttributes($tooltip, $class, $id);
         // ID is wiped out after creating attribute string
         // so that it is not used twice
         $this->removeAttribute('id');
@@ -229,11 +231,13 @@ STYLE
      * 
      * @param type $tooltip
      * @param type $class
+     * @param string $id The optional id
      * @return type
      */
-    private function _standardAttributes($tooltip, $class) {
+    private function _standardAttributes($tooltip, $class, $id) {
         $html = is_null($tooltip) ? '' : " title=\"$tooltip\"";
         $html .= is_null($class) ? '' : " class=\"$class\"";
+        $html .= is_null($id) ? '' : " id=\"$id\"";
         return $html;
     }
 

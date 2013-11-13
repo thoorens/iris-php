@@ -109,7 +109,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
     public function saveButton() {
         $name = self::$_SpanID;
         return $this->callViewHelper('button')->addAttribute('id', "b_$name")
-                        ->autorender(4, 'button', 'Save MD5', \NULL, 'Save the present MD5 signature');
+                        ->autorender('button', 'Save MD5', \NULL, 'Save the present MD5 signature');
     }
 
     /**
