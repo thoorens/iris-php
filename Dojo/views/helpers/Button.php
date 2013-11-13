@@ -36,9 +36,9 @@ class Button extends _DojoHelper {
         $bubble->addModule('dijit/form/Button');
     }
 
-    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL) {
+    public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL, $id = \NULL) {
         $subhelper = \Dojo\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender(4, 'button', $message, $url, $tooltip, $class);
+        return $subhelper->autoRender('button', $message, $url, $tooltip, $class, $id);
     }
 
 }
