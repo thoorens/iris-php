@@ -32,7 +32,7 @@ namespace Iris\Exceptions;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-abstract class _Exception extends \Exception implements iException{
+abstract class _Exception extends \Exception{
     
     /**
      *
