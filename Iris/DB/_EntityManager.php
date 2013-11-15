@@ -51,8 +51,8 @@ abstract class _EntityManager {
     const FK_FROM = 1;
     const FK_TO = 2;
 
-    public static $leftLimits = "SELECT min(%s) First, max(%s) Previous FROM %s WHERE %s < '%s'";
-    public static $rightLimits = "SELECT max(%s) Last, min(%s) Next FROM %s WHERE %s > '%s'";
+    public static $LeftLimits = "SELECT min(%s) First, max(%s) Previous FROM %s WHERE %s < '%s'";
+    public static $RightLimits = "SELECT max(%s) Last, min(%s) Next FROM %s WHERE %s > '%s'";
 
     /**
      * Mainly for test purpose (permits to place models in other places)

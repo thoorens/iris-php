@@ -39,7 +39,6 @@ abstract class _Entity {
     const NEXT = 2;
     const LAST = 3;
 
-
     /**
      * An array repository with all objects
      * 
@@ -54,7 +53,8 @@ abstract class _Entity {
     private $_query;
 
     /**
-     *
+     * The name of the entity (the table or view used in SQL queries)
+     * 
      * @var String 
      */
     protected $_entityName = \NULL;
@@ -183,7 +183,6 @@ abstract class _Entity {
         
     }
 
-    
     /**
      * By default, the entity manager is defined by the system. This methods can
      * be overwritten in subclasses.
@@ -238,6 +237,12 @@ abstract class _Entity {
         return [$entityName, $alternativeClassName, $entityManager, $metadata];
     }
 
+    /**
+     * Not documented
+     * 
+     * @param string $entityName
+     * @param string $alternativeClassName
+     */
     protected static function _SpecificPlugIn(&$entityName, &$alternativeClassName) {
         if ($alternativeClassName == 'Iris\DB\_Entity') {
             if ($entityName[0] != '\\') {
@@ -254,10 +259,11 @@ abstract class _Entity {
     }
 
     /**
-     * Forces an specific class file for the parent or children
+     * Forces an specific class file for the parent or children 
      * 
      * @param string $entityName
      * @return string
+     * 
      * @todo see if that trick is necessary
      */
     public function getExternalClassName($entityName) {
@@ -464,23 +470,30 @@ abstract class _Entity {
      * @param int $position Position of the element 
      * @return mixed
      */
-    public function getId($position) {
-        throw new \Iris\Exceptions\NotSupportedException('Browser functions needs to be written and tested');
+    public function getId($position, $current) {
         static $ids = array(NULL, \NULL, \NULL, \NULL);
         if (is_null($ids[$position])) {
             $em = $this->getEntityManager();
+            $idNames = $this->_idNames;
+            if (count($idNames) > 1) {
+                throw new \Iris\Exceptions\EntityException('Browsing method getId does not function with multi field primary keys.');
+            }
+            $idName = $idNames[0];
+            $tableName = $this->getEntityName();
             switch ($position) {
                 case self::FIRST:
                 case self::PREVIOUS:
-                    $sql = $em->leftLimits;
+                    $query = $em::$LeftLimits;
+                    $sql = sprintf($query, $idName, $idName, $tableName , $idName, $current);
                     $aResult = $em->directSQLQuery($sql);
-                    $result = $aResult[0];
-                    $ids[self::FIRST] = $result['First'];
-                    $ids[self::PREVIOUS] = $result['Previous'];
+                    $result = $aResult->fetchObject();
+                    $ids[self::FIRST] = $result->First;
+                    $ids[self::PREVIOUS] = $result->Previous;
                     break;
                 case self::NEXT:
                 case self::LAST:
-                    $sql = $em->rightLimits;
+                    $query = $em::$RightLimits;
+                    $sql = sprintf($query, $idName, $idName, $tableName , $idName, $current);
                     $aResult = $em->directSQLQuery($sql);
                     $result = $aResult[0];
                     $ids[self::NEXT] = $result['Next'];
@@ -808,7 +821,7 @@ abstract class _Entity {
                 return \NULL;
             }
             $select = sprintf('SELECT MAX(%s) as NUM FROM %s;', $ids[0], $this->_entityName);
-            
+
             /* @var $lignes Dialects\MyPDOStatement */
             $lignes = $this->_entityManager->directSQLQuery($select);
             $ligne = $lignes->fetchObject();
@@ -854,6 +867,7 @@ abstract class _Entity {
 
     /**
      * Accessor Set for metadata (caution : NEVER erases a explicit metadata)
+     * 
      * @param Metadata $metadata
      */
     public function setMetadata($metadata) {
@@ -913,6 +927,14 @@ abstract class _Entity {
         return $metadata;
     }
 
+    /**
+     * Verifies an entity has a complete definition: <ul>
+     * <li> a entity name
+     * <li> a primary key
+     * <li> a metadata object with all other specification</ul>
+     * 
+     * @throws \Iris\Exceptions\EntityException
+     */
     public function validate() {
         if (is_null($this->_entityName)) {
             throw new \Iris\Exceptions\EntityException('The entity has no associated object in the database.');
