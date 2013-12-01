@@ -115,7 +115,7 @@ class Image extends _ViewHelper {
         if ($class != '') {
             $class = 'class="' . $class . '"';
         }
-        return sprintf('<img src="%s" title="%s" alt="%s" %s %s/>' . "\n", $fullName, $title, $alt, $class, $attributes);
+        return sprintf('<img src="%s" title="%s" alt="%s" %s %s/>' , $fullName, $title, $alt, $class, $attributes);
     }
 
 }
