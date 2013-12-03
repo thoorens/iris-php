@@ -78,6 +78,8 @@ class Settings extends _Settings {
         BooleanSetting::CreateSetting('sqliteCreateMissingFile', \FALSE);
         // Default settings for forms
         StandardSetting::CreateSetting('defaultFormClass', '\\Iris\\Forms\\StandardFormFactory');
+        // Module, controler and action names may contain '-'
+        BooleanSetting::CreateSetting('admitDash', \FALSE);
     }
 
 }

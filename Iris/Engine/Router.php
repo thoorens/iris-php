@@ -31,7 +31,7 @@ namespace Iris\Engine;
  * @version $Id: $ *  
  */
 class Router {
-
+   
     /**
      * If true, indicates the internal status of the module. False by default
      * 
@@ -129,6 +129,7 @@ class Router {
         }
         $URLslices = explode('/', $url);
         array_shift($URLslices); // drop first empty chunk made by initial /
+        \Iris\SysConfig\Settings::HasAdmitDash() and $this->_removeDash($URLslices);
         return $URLslices;
     }
 
@@ -175,6 +176,13 @@ class Router {
         return array($slices, $modules);
     }
 
+    private function _removeDash(&$URLSlices){
+        for($i=0; $i<3; $i++){
+            $URLSlices[$i] = str_replace('-', '_', $URLSlices[$i]);
+        }
+    }
+    
+    
     /**
      * Add the path to the modules in the loader
      * 
