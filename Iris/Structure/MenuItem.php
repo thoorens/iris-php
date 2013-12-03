@@ -36,7 +36,8 @@ class MenuItem extends Menu {
         'label' => NULL,
         'title' => NULL,
         'visible' => TRUE,
-        'default' => FALSE
+        'default' => FALSE,
+        'id'=> ''
     );
 
     /**
@@ -71,6 +72,23 @@ class MenuItem extends Menu {
         $this->_data['label'] = $label;
     }
 
+    /**
+     * Accessor get for the optional id
+     * 
+     * @return string
+     */
+    public function getId(){
+        return $this->_data['id'];
+    }
+    
+    /**
+     * Accessor set for the optional id
+     * @param string $id
+     */
+    public function setId($id){
+        $this->_data['id'] = $id;
+    }
+    
     /**
      * Accessor get to URI
      * @return string 

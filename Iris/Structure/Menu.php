@@ -158,10 +158,11 @@ class Menu {
 
     public function asArray() {
         $data = [];
-        foreach ($this->_items as $item) {
+        foreach ($this->_items as $key=>$item) {
             if ($this->_defaultUri == $item->getUri()) {
                 $item->setDefault();
             }
+            $item->setId($key);
             $data[] = $item->asArray();
         }
         return $data;
