@@ -31,7 +31,7 @@ namespace Iris\Engine;
  * @version $Id: $ *  
  */
 class Router {
-   
+
     /**
      * If true, indicates the internal status of the module. False by default
      * 
@@ -176,13 +176,14 @@ class Router {
         return array($slices, $modules);
     }
 
-    private function _removeDash(&$URLSlices){
-        for($i=0; $i<3; $i++){
+    private function _removeDash(&$URLSlices) {
+        $max = count($URLSlices);
+        $max = $max < 3 ? $max : 3;
+        for ($i = 0; $i < $max; $i++) {
             $URLSlices[$i] = str_replace('-', '_', $URLSlices[$i]);
         }
     }
-    
-    
+
     /**
      * Add the path to the modules in the loader
      * 
@@ -263,5 +264,4 @@ class Router {
     }
 
 }
-
 
