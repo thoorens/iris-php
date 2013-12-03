@@ -35,6 +35,7 @@ class Audio5 extends _ViewHelper {
     const MP4 = 1;
     const MP3 = 2;
     const OGG = 4;
+    const WAV = 8;
     
     public function help($fileName = NULL, $id='', $mode = self::ALL, $autoplay = \TRUE, $controls = \TRUE) {
         if(is_null($fileName)){
@@ -57,6 +58,9 @@ class Audio5 extends _ViewHelper {
         }
         if($mode & self::OGG){
             $html .= "\t <source src=\"$fileName.ogg\" type=\"audio/ogg\">\n";
+        }
+        if($mode & self::WAV){
+            $html .= "\t <source src=\"$fileName.wav\" type=\"audio/wav\">\n";
         }
         $html .= "</audio>\n";
         return $html;
