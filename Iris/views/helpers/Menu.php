@@ -32,12 +32,12 @@ use \Iris\Structure as is;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * @todo definir un subhelper
  */
-class Menu extends _ViewHelper{
+class Menu extends _ViewHelper {
 
     protected $_activeClass;
-    
     protected $_mainTag;
-    
+    protected $_withId = \FALSE;
+
     /**
      * Inits the active class and main tag names from settings
      */
@@ -45,7 +45,7 @@ class Menu extends _ViewHelper{
         $this->_activeClass = \Iris\SysConfig\Settings::GetMenuActiveClass();
         $this->_mainTag = \Iris\SysConfig\Settings::GetMenuMainTag();
     }
-    
+
     /**
      * Accessor to modify the active class of the menu
      * 
@@ -68,7 +68,11 @@ class Menu extends _ViewHelper{
         return $this;
     }
 
-        
+    public function enableId($value = \TRUE) {
+        $this->_withId = $value;
+        return $this;
+    }
+
     /**
      * Permits to add a same id to all URI of the menu
      * 
@@ -83,6 +87,7 @@ class Menu extends _ViewHelper{
      * @var boolean
      */
     protected static $_Singleton = FALSE;
+
     /**
      * Get a complete menu (identified by its name) from
      * an initialized menu collection and render it
@@ -92,20 +97,22 @@ class Menu extends _ViewHelper{
      * @return string
      */
     public function help($name = '#def#', $recursive = \FALSE) {
-        if($name == '')
-            return '';
-        if ($name == \NULL)
+        if (is_null($name)) {
             return $this;
+        }
+        if ($name == '') {
+            return '';
+        }
         $menu = is\MenuCollection::GetInstance()->getMenu($name);
         $data = $menu->asArray();
         \Iris\Log::Debug("ACL ------------------------------------------------", \Iris\Engine\Debug::ACL);
         return $this->_render($data, $recursive);
     }
 
-    public function render($name = '#def#', $recursive = \FALSE){
+    public function render($name = '#def#', $recursive = \FALSE) {
         return $this->help($name, $recursive);
     }
-        
+
     /**
      * A recursive HTML rendering of a hierarchical menu
      * as an array
@@ -135,18 +142,20 @@ class Menu extends _ViewHelper{
     protected function _renderItem($item, $recursive) {
         $active = $this->_activeClass;
         $uri = $this->_simplifyUri($item['uri']);
-        if($this->_specialId!=''){
-            $uri .= '/'.$this->_specialId;
+        if ($this->_specialId != '') {
+            $uri .= '/' . $this->_specialId;
         }
         $label = $this->_($item['label']);
         $title = $this->_($item['title']);
         $class = $item['default'] ? "class=\"$active\"" : '';
+        $id = $item['id'];
+        $id = $this->_withId ? "id=\"$id\"" : '';
         $submenu = '';
         if (isset($item['submenu']) and $recursive) {
             $submenu = $this->_render($item['submenu'], $recursive);
         }
         if ($item['uri'] != '') {
-            $text = "<li $class><a href=\"$uri\" title=\"$title\" $class>$label</a></li>";
+            $text = "<li $class $id><a href=\"$uri\" title=\"$title\" $class>$label</a></li>";
             $text .= $submenu;
         }
         else {
@@ -182,20 +191,20 @@ class Menu extends _ViewHelper{
                 if ($uri[count($uri) - 1] == 'index') {
                     array_pop($uri);
                 }
-                $newURI ='/' . implode('/', $uri);
+                $newURI = '/' . implode('/', $uri);
             }
         }
-        if($this->_specialId!=''){
-            $newURI .= '/'.$this->_specialId;
+        if ($this->_specialId != '') {
+            $newURI .= '/' . $this->_specialId;
         }
         return $newURI;
     }
 
-    public function setSpecialId($id){
+    public function setSpecialId($id) {
         $this->_specialId = $id;
         return $this;
     }
-    
+
     /**
      *
      * @param type $acl
