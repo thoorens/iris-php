@@ -155,8 +155,8 @@ class Menu extends _ViewHelper {
             $submenu = $this->_render($item['submenu'], $recursive);
         }
         if ($item['uri'] != '') {
-            $text = "<li $class $id><a href=\"$uri\" title=\"$title\" $class>$label</a></li>";
-            $text .= $submenu;
+            $text = "<li $class $id><a href=\"$uri\" title=\"$title\" $class>$label</a>";
+            $text .= $submenu."</li>";
         }
         else {
             $text = "<li $class><span title=\"$title\" $class>$label</span>";
