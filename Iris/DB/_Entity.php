@@ -452,11 +452,12 @@ abstract class _Entity {
      */
     public function find($idValues) {
         if (!\is_array($idValues)) {
-            $idValues = [$this->_idNames[0] => $idValues];
+            $idValues = [$idValues];
         }
         // try to find object in repository
         $object = $this->retrieveObject($idValues);
         if (is_null($object)) {
+            $idValues = array_combine($this->_idNames, $idValues);
             $this->wherePairs($idValues);
             $object = $this->fetchRow();
         }
