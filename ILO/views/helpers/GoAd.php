@@ -55,7 +55,10 @@ class GoAd extends _ViewHelper {
         $client = new \Iris\System\Client();
         $lang = $client->getLanguage();
         $title = $this->_('Site powered by Iris-PHP', \TRUE);
-        if($local)
+        if(is_string($local)){
+            $url = $local;
+        }
+        elseif($local === \TRUE)
             $url = "/!iris/index/index/$lang";
         else
             $url = 'http://irisphp.org';
