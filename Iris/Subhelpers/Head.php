@@ -93,6 +93,7 @@ use \Iris\Engine\tSingleton;
      * @todo add the other meta
      */
     private function _render() {
+        $this->_prepareIE();
         $this->_contentType();
         $this->_prepareSiteIcon();
         $this->_prepareTitle();
@@ -215,6 +216,18 @@ use \Iris\Engine\tSingleton;
     }
 
     /**
+     * Compatibility for IE in HTML5
+     */
+    private function _prepareIE() {
+        $minVersion = 9;
+        $this->_html[] = <<< HTML
+    <!--[if lt IE $minVersion]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+HTML;
+    }
+
+    /**
      * Retrieves a value by its name among the components, if it exists. 
      * Returns a default value otherwise. The components is erased.
      * 
@@ -272,7 +285,7 @@ use \Iris\Engine\tSingleton;
         try {
             /* @var $auto Head */
             $auto = self::GetInstance();
-            if($ajaxMode){
+            if ($ajaxMode) {
                 return;
             }
             $loaders = $auto->_render();
