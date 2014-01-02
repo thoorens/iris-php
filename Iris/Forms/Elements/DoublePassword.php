@@ -1,10 +1,5 @@
 <?php
-
-
-
 namespace Iris\Forms\Elements;
-
-use Iris\Forms as ifo;
 
 /*
  * This file is part of IRIS-PHP.
@@ -53,10 +48,10 @@ class DoublePassword extends \Iris\Forms\Elements\_ElementGroup {
      * Overridden method to register the two components as soon as possible,
      * add them Required validator et 
      * 
-     * @param ifo\iFormContainer $container
+     * @param iFormContainer $container
      * @return DoublePassword 
      */
-    public function addTo(ifo\iFormContainer $container) {
+    public function addTo(iFormContainer $container) {
         parent::addTo($container);
         $this->_createSubcomponents();
         return $this; // fluent interface

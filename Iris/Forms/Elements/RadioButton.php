@@ -1,8 +1,5 @@
 <?php
-
 namespace Iris\Forms\Elements;
-
-use Iris\Forms as ifo;
 
 /*
  * This file is part of IRIS-PHP.
@@ -31,8 +28,6 @@ use Iris\Forms as ifo;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class RadioButton extends \Iris\Forms\_Element {
-
-    protected $_contantValue = \NULL;
 
     /**
      * Radio box share a common name

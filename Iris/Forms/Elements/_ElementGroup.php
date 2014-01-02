@@ -1,10 +1,5 @@
 <?php
-
-
 namespace Iris\Forms\Elements;
-
-use Iris\Forms as ifo;
-use Iris\Forms\Validators as iv;
 
 /*
  * This file is part of IRIS-PHP.

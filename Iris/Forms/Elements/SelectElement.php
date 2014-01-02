@@ -1,8 +1,5 @@
 <?php
-
 namespace Iris\Forms\Elements;
-
-use Iris\Forms as ifo;
 
 /*
  * This file is part of IRIS-PHP.

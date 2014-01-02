@@ -1,10 +1,5 @@
 <?php
-
-
-
 namespace Iris\Forms\Elements;
-
-use Iris\Forms as ifo;
 
 /*
  * This file is part of IRIS-PHP.
@@ -51,7 +46,7 @@ class InputElement extends \Iris\Forms\_Element {
                 $this->_canDisable = FALSE;
                 break;
             case 'date':
-                $this->addValidator(new ifo\Validators\Date());
+                $this->addValidator(new Validators\Date());
                 $this->_subtype = 'date';
                 break;
             case 'number':
