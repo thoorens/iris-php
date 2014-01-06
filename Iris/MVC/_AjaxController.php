@@ -44,8 +44,26 @@ abstract class _AjaxController extends \Iris\MVC\_Controller {
     const HTML = 'text/html';
     const CSS = 'text/css';
 
-    protected $_text = ''; 
+    /**
+     * The text produced by the action 
+     * @var string
+     */
+    protected $_text = '';
+
+    /**
+     * The MIME type of the produced ouput
+     * 
+     * @var string
+     */
     protected $_type = self::HTML;
+
+    /**
+     * By default Ajax controller has ACL, this behaviour is controlled
+     * by this var
+     * 
+     * @var boolean
+     */
+    protected $_hasACL = \TRUE;
 
     /**
      * Application init cannot be rewritten
@@ -122,6 +140,16 @@ abstract class _AjaxController extends \Iris\MVC\_Controller {
      */
     public function setAjaxType($type) {
         $this->_type = $type;
+    }
+
+    
+    /**
+     * Controls the verifcation of ACL according to the setting of _hasACL var.
+     */
+    protected function _verifyAcl() {
+        if ($this->_hasACL) {
+            parent::_verifyAcl();
+        }
     }
 
 }
