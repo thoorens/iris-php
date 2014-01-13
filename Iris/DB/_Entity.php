@@ -496,9 +496,9 @@ abstract class _Entity {
                     $query = $em::$RightLimits;
                     $sql = sprintf($query, $idName, $idName, $tableName , $idName, $current);
                     $aResult = $em->directSQLQuery($sql);
-                    $result = $aResult[0];
-                    $ids[self::NEXT] = $result['Next'];
-                    $ids[self::LAST] = $result['Last'];
+                    $result = $aResult->fetchObject();
+                    $ids[self::NEXT] = $result->Next;
+                    $ids[self::LAST] = $result->Last;
                     break;
             }
         }
