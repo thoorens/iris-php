@@ -61,7 +61,7 @@ abstract class _db extends \modules\_application {
      * 
      * @param int $num
      */
-    public function errorAction() {
+    public function errorAction($num) {
         $this->__Title = "Error in database";
         $this->setViewScriptName('/commons/error');
     }
