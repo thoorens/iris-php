@@ -62,18 +62,7 @@ abstract class _Group extends _Element implements iFormContainer {
         $this->_container->registerElement($element);
     }
 
-    public function getLayout() {
-        return $this->_container->getLayout();
-    }
-
-//    public function render() {
-//        $layout = $this->getLayout();
-//        $text = '';
-//        $text .= $layout->getGroupEntry(' class="group"');
-//        $text .= parent::render();
-//        $text .= $layout->getGroupExit();
-//        return $text;
-//    }
+    
 
     public function render($layout=\NULL) {
         if (is_null($layout)) {
