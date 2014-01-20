@@ -15,7 +15,7 @@
 
 <ul>
     {foreach(invoices,invoice)}
-        {(icons->setData($invoice)->__)}
+        {(icons->setData($invoice))}
         <li>
             {(icons->update())} 
             {(icons->delete())}

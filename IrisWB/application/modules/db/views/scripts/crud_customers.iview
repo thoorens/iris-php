@@ -15,7 +15,7 @@
 
 <ul>
     {foreach(customers,customer)}
-        {(icons->setData($customer)->__)}
+        {(icons->setData($customer))}
         <li>
             {(icons->update())} 
             {(icons->delete())}
