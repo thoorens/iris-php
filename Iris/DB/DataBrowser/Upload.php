@@ -2,7 +2,6 @@
 
 namespace Iris\DB\DataBrowser;
 
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -37,10 +36,11 @@ namespace Iris\DB\DataBrowser;
 class Upload extends _Crud {
 
     /**
-     * Standard destination directory inited by constructor or modified by an accessor
+     * Default destination directory
+     * 
      * @var string
      */
-    protected $_destinationDirectory;
+    protected $_destinationDirectory = '/';
 
     /**
      * What to do when the target directory is missing
@@ -53,7 +53,7 @@ class Upload extends _Crud {
      * @var int
      */
     protected $_replaceExistentFile;
-    
+
     /**
      * A 4 element array shared by different methods (it may grow in subclasses
      * All data are meant to be significant only during the moving of an uploaded file
@@ -67,15 +67,13 @@ class Upload extends _Crud {
         'name' => NULL // The final name of the uploaded file
     );
 
- 
     /**
      * This parameters may be used in subclasses
      * 
      * @param mixed $param 
      */
-    public function __construct($param=\NULL) {
+    public function __construct($param = \NULL) {
         $this->setReplaceExistentFile(\Iris\FileSystem\File::MOVEMODE_REPLACE);
-        $this->_destinationDirectory = IRIS_PROGRAM_PATH . '/data';
         parent::__construct($param);
     }
 
@@ -166,7 +164,7 @@ class Upload extends _Crud {
         $tempFile = new \Iris\FileSystem\File(basename($filePath), dirname($filePath));
         $tempFile->setCreateMissingDir($this->_createMissingDir);
         $newFile = $this->_getFilePath();
-        
+
         //die("Mode: ".$this->_replaceExistentFile);
         $tempFile->moveToFile($newFile, $this->_replaceExistentFile);
         $this->_sharedData['name'] = $tempFile->getBaseName();
@@ -180,7 +178,6 @@ class Upload extends _Crud {
     protected function _postUpload() {
         
     }
-
 
     /**
      * 
@@ -205,10 +202,10 @@ class Upload extends _Crud {
      */
     protected function _getFileDir(\Iris\Forms\Elements\FileElement $fileElement) {
         if (is_null($fileElement->getSpecificDirectory())) {
-            $newPath = IRIS_PROGRAM_PATH.'/data/'.$this->_destinationDirectory;
+            $newPath = \Iris\SysConfig\Settings::GetDataFolder() . $this->_destinationDirectory;
         }
         else {
-            $newPath = IRIS_ROOT_PATH.'/'.$fileElement->getSpecificDirectory();
+            $newPath = IRIS_ROOT_PATH . '/' . $fileElement->getSpecificDirectory();
         }
         return $newPath;
     }
@@ -258,7 +255,7 @@ class Upload extends _Crud {
      * 
      * @param boolean $createDirectory 
      */
-    public function setCreateMissingDir($createDirectory=TRUE) {
+    public function setCreateMissingDir($createDirectory = TRUE) {
         $this->_createMissingDir = $createDirectory;
     }
 
