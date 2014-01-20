@@ -38,9 +38,10 @@ use tViewHelperCaller;
 
     /**
      * A terminator for using fluent methods in {(  )} context
+     * (method __toString() renders it unnecessary)
      * @var string
      */
-    public $__ = '';
+    public $__cut = '';
     
     /**
      * The private construct may be completed in subclasses through
@@ -118,6 +119,14 @@ use tViewHelperCaller;
     }
 
 
+    /**
+     * Permits to cut the fluent interface in a script context
+     *  
+     * @return string
+     */
+    public function __toString() {
+        return '';
+    }
     
     
 }
