@@ -116,12 +116,11 @@ class Manager {
         if (!is_null(self::$_Instance)) {
             throw new _IEx_\FileException('One Document File Manager may be active at a time.');
         }
-        $this->_baseDirectory = IRIS_PROGRAM_PATH . "/data";
+        $this->_baseDirectory = \Iris\SysConfig\Settings::GetDataFolder();
         self::$_Instance = $this;
     }
 
     public function getFile($save, $params) {
-
         $pubpri = array_shift($params);
         if ($pubpri == 'public') {
             $pathName = sprintf("%s/public/%s", $this->_baseDirectory, implode('/', $params));
@@ -141,9 +140,9 @@ class Manager {
         if (file_exists($pathName)) {
             return $this->_execRead($save, $pathName, $mime);
         }
-        if (\Iris\Engine\Mode::IsProduction()) {
+        ///if (\Iris\Engine\Mode::IsProduction()) {
             return self::NOTFOUND;
-        }
+        ///}
     }
 
     public function getResource($params) {
@@ -185,7 +184,7 @@ class Manager {
         header("content-type:$mime");
         header("Content-Length: " . filesize($pathName));
         header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-        header("Expires: Sat, 26 Jul 2012 07:00:00 GMT"); // Date dans le passé
+        header("Expires: Sat, 26 Jul 2012 07:00:00 GMT"); // Date in the past
         if ($save) {
             header('Content-Disposition: attachment; filename="' . basename($pathName) . '"');
         }
