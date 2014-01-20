@@ -33,18 +33,28 @@ namespace Iris\DB\DataBrowser;
 abstract class _Login extends _Crud {
     const LOGIN = 5;
 
+    const DIGIT = 1;
+    const ASCIILETTER = 2;
+    const ACCENT = 3;
+    const BLANK = 4;
+    
+    protected static $_IdField = 'id';
+    protected static $_NameField = 'Username';
+    protected static $_PasswordField = 'Password';
+    protected static $_EmailField = "Email";
+    protected static $_RoleField = "Role";        
+    
     /**
-     * Effectue le travail d'un login en vérifiant le mot de passe
-     * en fonction de l'utisateur. renvoie l'action (ou l'erreur)
-     * à faire suivre.
-     * @return <String> l'action a effectuer
+     * A method to test a username and password against the database
+     * 
+     * @return string an URL to go to (or NULL in case of unknown user)
      */
     public function login() {
         $this->_initObjects(self::LOGIN);
         if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
             $formData = $this->_form->getDataFromPost();
             if ($this->_form->isValid($formData)) {
-                return $this->_postLogin($formData);
+                return $this->_validateLogin($formData);
             }
             return NULL;
         }
@@ -58,14 +68,74 @@ abstract class _Login extends _Crud {
      * <li> $this->finalTreatment if username and password matched
      * <li> $this->errorTreatment if password doesn't match
      * </ul>
+     * 
      * @param mixed[] $data
      * @return mixed 
      */
-    protected function _postLogin($data) {
-        return $this->_errorTreatment;
+    protected function _validateLogin($data) {
+        $userName = $this->_clean($data[self::$_NameField], self::ASCIILETTER + self::DIGIT);
+        $password = $this->_clean($data[self::$_PasswordField], self::ASCIILETTER + self::DIGIT);
+        $entity = $this->_entity;
+        $entity->where(self::$_NameField.'=', $userName);
+        $userObject = $entity->fetchRow();
+        // user unknown
+        if ($userObject == null) {
+            return null;
+        }
+        $encrypt = $userObject->Password;
+        if (\Iris\Users\_Password::VerifyPassword($password, $encrypt)) {
+            $this->_postLogin($userObject, $userName);
+            $identity = \Iris\Users\Identity::GetInstance();
+            $idField = self::$_IdField;
+            $roleField = self::$_RoleField;
+            $emailField = self::$_EmailField;
+            $identity->setName($userName)
+                    ->setEmailAddress($userObject->$emailField)
+                    ->setRole($userObject->$roleField)
+                    ->setId($userObject->$idField)
+                    ->sessionSave();
+            // OK
+            return $this->_endTreatment;
+        }
+        else {
+            // bad password
+            return $this->_errorTreatment;
+        }
     }
-
+    /**
+     * 
+     * @param \Iris\DB\Object $userObject
+     * @param string $userName
+     * @return boolean
+     */
+    protected abstract function _postLogin($object, $username);
     
+    
+    /**
+     * Keeps only accepted characters 
+     * 
+     * @param type $toClean
+     * @param type $admited
+     * @param type $specials
+     * @return type
+     */
+    protected function _clean($toClean, $admited, $specials='') {
+        $accept = '/[^';
+        if ($admited && self::DIGIT) {
+            $accept .= "\\d";
+        }
+        if ($admited && self::ASCIILETTER) {
+            $accept .="a-zA-Z";
+        }
+        if ($admited && self::ACCENT) {
+            $accept .="âêîôûŷäëïöüÿáéíóúýàèìòùỳçÂÊÎÔÛŶÄËÏÖÜŸÁÉÍÓÚÝÀÈÌÒÙỲÇ";
+        }
+        if ($admited && self::BLANK) {
+            $accept .=" ";
+        }
+        $accept .= ']/si';
+        return trim(preg_replace($accept, '', $toClean));
+    }
 }
 
 
