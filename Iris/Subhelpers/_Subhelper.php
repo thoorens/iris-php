@@ -38,6 +38,7 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
 
     /**
      * A terminator for using fluent methods in {(  )} context
+     * (method __toString() renders it unnecessary)
      * @var string
      */
     public $__ = '';
@@ -55,5 +56,14 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
         return static::$_Instance;
     }
 
+    /**
+     * Permits to cut the fluent interface in a script context
+     *  
+     * @return string
+     */
+    public function __toString() {
+        return '';
+    }
+    
 }
 
