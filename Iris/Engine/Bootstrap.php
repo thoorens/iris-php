@@ -17,10 +17,10 @@ namespace Iris\Engine;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  *
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -30,7 +30,7 @@ namespace Iris\Engine;
  * First class to be called, it loads the Autoloader,
  * reads all the configuration files
  * and permits to create an instance of Program.
- * 
+ *
  */
 defined('CRLF') or define('CRLF', "\n");
 
@@ -39,8 +39,8 @@ abstract class core_Bootstrap {
     /**
      * The name of the standard loader which can be replace by another
      * one written by the developper
-     * 
-     * @var string 
+     *
+     * @var string
      */
     protected $_standardLoaderPath = 'Iris/Engine/LoadLoader.php';
 
@@ -48,7 +48,7 @@ abstract class core_Bootstrap {
      * An ordered array of config files to be read automaticaly (instead
      * of the files in /config). It is not deprecated, but /config offers
      * a more convenient way to manage parameter files.
-     * 
+     *
      * @var string[]
      */
     private $_configToRead = NULL;
@@ -56,7 +56,7 @@ abstract class core_Bootstrap {
     /**
      * Implied in the internal overridden class mechanism
      * @var string[]
-     * 
+     *
      * @deprecated will be soon replaced by another mechanism
      */
     public static $AlternativeClasses = array();
@@ -79,7 +79,7 @@ abstract class core_Bootstrap {
      * to modify $_standardLoaderPath or add custom libraries
      */
     public function init() {
-        
+
     }
 
     /**
@@ -87,14 +87,14 @@ abstract class core_Bootstrap {
      * It is sometimes easier to create an application/config/00_debug.php file.
      */
     public function debug() {
-        
+
     }
 
     /**
      * Create a new application and read config files
-     * 
+     *
      * @param string $programName The program name (by default : 'application'
-     * @return Program 
+     * @return Program
      */
     public function newProgram($programName = 'application') {
         // if necessary, load the overridden class names
@@ -120,7 +120,7 @@ abstract class core_Bootstrap {
     /**
      * May be overriden to make some tasks before reading config
      * and if it returns FALSE, normal _readConfig() is not called
-     * 
+     *
      * @param string $programName The application name
      */
     public function _preConfig($programName) {
@@ -129,18 +129,18 @@ abstract class core_Bootstrap {
 
     /**
      * May be overriden to make some adjustments after reading config
-     * 
+     *
      * @param string $programName The application name
      */
     public function _postConfig($programName) {
-        
+
     }
 
     /**
      * Reads some files containing various parameters
      * Only considers ini and php files
-     * 
-     * @param string[] $filess 
+     *
+     * @param string[] $filess
      */
     private function _readConfig($programName) {
         sort($this->_configToRead);
@@ -164,7 +164,7 @@ abstract class core_Bootstrap {
                     }
                     break;
                 case 'classes':
-                    // has been read before 
+                    // has been read before
                     break;
             }
         }
@@ -172,8 +172,8 @@ abstract class core_Bootstrap {
 
     /**
      * Read all file names in {applicationName}/config for further processing.
-     * 
-     * @param string $applicationName 
+     *
+     * @param string $applicationName
      */
     private function _takeAllConfig($applicationName) {
         $dir = new \DirectoryIterator(IRIS_ROOT_PATH . '/' . $applicationName . '/config/');
@@ -186,7 +186,7 @@ abstract class core_Bootstrap {
 
     /**
      * Add a file to the list of files to process at start time.
-     * @param string $fileName 
+     * @param string $fileName
      */
     public function addConfigFile($fileName) {
         $index = basename($fileName);
@@ -194,7 +194,7 @@ abstract class core_Bootstrap {
     }
 
     /**
-     * 
+     *
      */
     protected function _configureErrors() {
         /* @var $errorHandler \Iris\Errors\Handler */
