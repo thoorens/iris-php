@@ -17,15 +17,15 @@ namespace Iris\Forms;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  */
 
 /**
- * An abstract class common for all type of forms and grouping 
+ * An abstract class common for all type of forms and grouping
  * all shared facilities
- * 
- * 
+ *
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -52,7 +52,7 @@ abstract class _Form implements iFormContainer {
 
     /**
      * the direct components of the form (which may be iFormContainer)
-     * 
+     *
      * @var _Element[]
      */
     protected $_components = array();
@@ -60,20 +60,20 @@ abstract class _Form implements iFormContainer {
     /**
      * These are elements whose value must be calculated from their components
      * value.
-     * 
+     *
      * @var _Element[]
      */
     protected $_aidedComponents = array();
 
     /**
-     * the elements contained (directly or in container) by the form 
+     * the elements contained (directly or in container) by the form
      * @var _Element[]
      */
     protected $_registry = array();
 
     /**
      * the layout used to render the form and its elements
-     * 
+     *
      * @var _FormLayout
      */
     protected $_layout = NULL;
@@ -81,14 +81,14 @@ abstract class _Form implements iFormContainer {
     /**
      * the factory used to create the form (its methods can create appropriate
      * elements and validators)
-     * 
+     *
      * @var _FormFactory
      */
     protected $_formFactory = NULL;
 
     /**
      * An associative array of facultative attributes
-     * 
+     *
      * @var string[]
      */
     protected $_attributes = array();
@@ -96,10 +96,10 @@ abstract class _Form implements iFormContainer {
     /**
      * A constructor for a file (never called directly by new, use
      * a form factory instead)
-     * 
+     *
      * @param string $name
      * @param string $action
-     * @param string $method 
+     * @param string $method
      */
     public function __construct($name, $action = NULL, $method = 'post') {
         $this->_name = $name;
@@ -112,10 +112,10 @@ abstract class _Form implements iFormContainer {
     /**
      * The form can uses all its factory methods directly
      * (specially element and validator builders)
-     * 
+     *
      * @param type $name
      * @param type $arguments
-     * @return _Form 
+     * @return _Form
      */
     public function __call($name, $arguments) {
         return call_user_func_array(array($this->_formFactory, $name), $arguments);
@@ -123,7 +123,7 @@ abstract class _Form implements iFormContainer {
 
     /**
      * Renders a form with all the elements included
-     * 
+     *
      * @return string the html code to display the form controllers and content
      */
     public function render() {
@@ -140,7 +140,7 @@ abstract class _Form implements iFormContainer {
     /**
      * Renders the form in "display" mode ie no possibility to enter
      * data
-     * 
+     *
      * @return string the html code to display the form content
      */
     public function display() {
@@ -155,8 +155,8 @@ abstract class _Form implements iFormContainer {
 
     /**
      * A substitute for render for debugging purpose
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function show($doRender = TRUE) {
         if ($doRender) {
@@ -172,8 +172,8 @@ abstract class _Form implements iFormContainer {
 
     /**
      * Add an element (or a container element) to the form
-     * 
-     * @param _Element $element 
+     *
+     * @param _Element $element
      */
     public function addElement(_Element $element) {
         $this->_components[$element->getName()] = $element;
@@ -183,8 +183,8 @@ abstract class _Form implements iFormContainer {
 
     /**
      * Add an element before the last element (usually the submit button)
-     * 
-     * @param _Element $element 
+     *
+     * @param _Element $element
      * @deprecated (use PlaceHolder instead, it is more versatile)
      */
     public function appendElement(_Element $element) {
@@ -196,14 +196,14 @@ abstract class _Form implements iFormContainer {
     /**
      * Render the <form> tag : to override with a specific
      * method for each form type
-     * 
+     *
      */
     abstract protected function _formTag();
 
     /**
      * The action to be taken after the user fills the form
-     * 
-     * @param string $actionURI 
+     *
+     * @param string $actionURI
      */
     public function setAction($actionURI) {
         $this->_action = $actionURI;
@@ -211,9 +211,9 @@ abstract class _Form implements iFormContainer {
 
     /**
      * Checks each data in formdata against the element validators
-     * 
+     *
      * @param mixed[] $formData
-     * @return boolean 
+     * @return boolean
      */
     public function isValid($formData) {
         $this->fill($formData);
@@ -230,8 +230,8 @@ abstract class _Form implements iFormContainer {
     /**
      * Fill the form values with the data provided (or by default
      * with $_POST values)
-     * 
-     * @param mixed[] $formData 
+     *
+     * @param mixed[] $formData
      */
     public function fill($formData = NULL) {
         if ($formData == NULL) {
@@ -246,7 +246,7 @@ abstract class _Form implements iFormContainer {
 
     /**
      * Mark each element as disabled (if possible)
-     * 
+     *
      */
     public function makeReadOnly() {
         foreach ($this->_registry as $element) {
@@ -259,8 +259,8 @@ abstract class _Form implements iFormContainer {
     /**
      * Register an element to a form (throwing an exception if it is already
      * registred).
-     * 
-     * @param _Element $element 
+     *
+     * @param _Element $element
      */
     public function registerElement(_Element $element) {
         $name = $element->getName();
@@ -277,7 +277,7 @@ abstract class _Form implements iFormContainer {
      * Get a component of the registry by its name
      * (it can be embedded in a container). If it is doesn't exist no
      * error, return NULL
-     * 
+     *
      * @param string $name
      * @return _Element
      */
@@ -293,17 +293,17 @@ abstract class _Form implements iFormContainer {
     /**
      * Get a component of the registry by its name
      * (synonymous of getComponent used as a magic method)
-     * 
+     *
      * @param type $name
-     * @return _Element 
+     * @return _Element
      */
     public function __get($name) {
-        return $this->_registry($name);
+        return $this->_registry[$name];
     }
 
     /**
      *
-     * @return _FormFactory 
+     * @return _FormFactory
      */
     public function getFormFactory() {
         return $this->_formFactory;
@@ -311,8 +311,8 @@ abstract class _Form implements iFormContainer {
 
     /**
      * Get the layout of the form (used to display the elements)
-     * 
-     * @return _FormLayout 
+     *
+     * @return _FormLayout
      */
     public function getLayout() {
         if (is_null($this->_layout))
@@ -321,9 +321,9 @@ abstract class _Form implements iFormContainer {
     }
 
     /**
-     * Set the layout of the form 
-     * 
-     * @param type $layout 
+     * Set the layout of the form
+     *
+     * @param type $layout
      */
     public function setLayout($layout) {
         $this->_layout = $layout;
@@ -332,8 +332,8 @@ abstract class _Form implements iFormContainer {
     /**
      * Get the form factory used to create the form (permits to create elements
      * and validators in harmony with the form type).
-     * 
-     * @param _FormFactory $formFactory 
+     *
+     * @param _FormFactory $formFactory
      */
     public function setFormFactory($formFactory) {
         $this->_formFactory = $formFactory;
@@ -352,9 +352,9 @@ abstract class _Form implements iFormContainer {
 
     /**
      * Add a new attribute to the form tag
-     * 
+     *
      * @param string $key
-     * @param string $value 
+     * @param string $value
      */
     public function addAttribute($key, $value) {
         $this->_attributes[$key] = $value;
