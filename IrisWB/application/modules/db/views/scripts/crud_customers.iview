@@ -17,7 +17,7 @@
     {foreach(customers,customer)}
         {(icons->setData($customer))}
         <li>
-            {(icons->update())} 
+            {(icons->update())}
             {(icons->delete())}
             {(customer->Name)}
         </li>
