@@ -1,6 +1,6 @@
 {wbHeader()}
 <style>
-    td pre 
+    td pre
     {
         font-size: .6em;
     }
@@ -43,7 +43,7 @@
         <tr>
             <td>
                 {rem} An example of use of terminator ->__  {/rem}
-                {image()->setFolder('/!documents/file/images/wbicons')->__}
+                {image()->setFolder('/!documents/file/images/wbicons')}
                 {image('WBIco_0.png')}
             </td>
             <td>
