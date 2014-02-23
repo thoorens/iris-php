@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -21,30 +22,29 @@ namespace Iris\Subhelpers;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  */
-
 
 /**
  * This trait provides an autorender mechanism for sub helper:
  * the first element in the args array is the name of a method to be called
  * in the subhelper as a final render.
- * 
+ *
  * Project IRIS-PHP
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-trait tAutoRenderer{
-    
+trait tAutoRenderer {
+
     protected $_type = \NULL;
-    
-     /**
+
+    /**
      * Entry point to the subhelper auto rendering
-     * 
+     *
      * @return string
      */
     public final function autoRender() {
@@ -52,10 +52,10 @@ trait tAutoRenderer{
         $function = '_' . array_shift($args);
         $this->_type = $function;
         $nArgs = $this->_normalize($args);
-        if($nArgs[0] == \NULL){
+        if ($nArgs[0] == \NULL) {
             return $this;
         }
-        if($this->_dontRender($nArgs)){
+        if ($this->_dontRender($nArgs)) {
             return '';
         }
         return $this->$function($nArgs);
@@ -63,26 +63,27 @@ trait tAutoRenderer{
 
     /**
      * This subroutine may be overwritten to display nothing if necessary
-     * 
+     *
      * @param array $args
      * @return boolean
      */
-    protected function _dontRender($args){
+    protected function _dontRender($args) {
         return \FALSE;
-    }   
-    
+    }
+
     /**
      * Modifies the array so that <ul>
-     * <li> it has 4 elements (filling with NULLs)
+     * <li> it has 5 elements (filling with NULLs)
      * <li> if the first is an array, ignores the rest
      * </ul>
-     * 
+     *
      * @param array $args
      * @return type
      */
     protected function _normalize($args) {
         if (is_array($args[0])) {
-            $data = $args[0];
+            $first = array_shift($args);
+            $data = array_merge($first, $args);
         }
         else {
             $data = $args;
@@ -92,5 +93,6 @@ trait tAutoRenderer{
         }
         return $data;
     }
-    
+
 }
+
