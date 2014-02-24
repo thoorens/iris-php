@@ -19,18 +19,19 @@ use \Iris\System\Client as Client;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  */
 
 /**
- * This class is a subhelper for the helper Link family. 
- * 
+ * This class is a subhelper for the helper Link family.
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Link extends \Iris\Subhelpers\_Subhelper {
+
     use tAutoRenderer;
 
     /**
@@ -38,29 +39,30 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * @var boolean
      */
     public static $NoJavaForce = \FALSE;
+
     /**
      * In NoJava mode, simulate an "old" browser
      * @var boolean
      */
     public static $OldBrowser = \FALSE;
-    
+
     /**
      * A special array corresponding to a non existent button/link
-     * 
+     *
      * @var string[]
      */
     public static $NoLink = ['!!!!NONE!!!!', '', ''];
-    
+
     /**
      * HTML arguments may be added and removed from here
-     * 
+     *
      * @var string[]
      */
     protected $_attributes = array();
 
     /**
      * Each subhelper class has its own unique instance
-     * 
+     *
      * @var static
      */
     protected static $_Instance = NULL;
@@ -70,7 +72,6 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * @var string
      */
     protected $_imageFolder = \NULL;
-    
 
     /**
      * Displays the final rendering for a link/button according to its type
@@ -80,13 +81,13 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      */
     public function display() {
         $arguments = func_get_args();
-        $def = substr($this->_type,1);
+        $def = substr($this->_type, 1);
         return $this->autorender($def, $arguments);
     }
 
     /**
      * Realizes a link or a button with an image inside
-     * 
+     *
      * @param string $fileName or an array of up to five elements
      * @param string/array $label The label of the image or an array of up to four elements
      * @param string $url The URL of the link
@@ -95,10 +96,10 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * @return type
      */
     public function image($fileName, $label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL) {
-        if(is_array($fileName)){
+        if (is_array($fileName)) {
             $args = $fileName;
         }
-        else{
+        else {
             $args = func_get_args();
         }
         $fileName = array_shift($args);
@@ -112,9 +113,9 @@ class Link extends \Iris\Subhelpers\_Subhelper {
     //public function autoRender($args){ // is in tAutoRenderer
 
     /**
-     * Stops the rendering if the link is null 
+     * Stops the rendering if the link is null
      * Overwrites the method in tAutoRenderer
-     * 
+     *
      * @param string[] $args
      * @return boolean
      */
@@ -124,20 +125,23 @@ class Link extends \Iris\Subhelpers\_Subhelper {
 
     /**
      * A simple link HTML a link with href, title and class attributes
-     * 
+     *
      * @param array/4strings $args The arguments : message, url, tooltip and class
      * @return string
      */
     protected function _link() {
         $args = func_get_args();
         list($label, $url, $tooltip, $class, $id) = $this->_normalize($args);
+        if (is_null($url)) {
+            $url = $label;
+        }
         $attributes = $this->_standardAttributes($tooltip, $class, $id);
         return sprintf('<a href="%s" %s >%s</a>', $url, $attributes, $label);
     }
 
     /**
      * A button HTML a link with href, title and class attributes
-     * 
+     *
      * @param array/4strings $args The arguments : message, url, tooltip and class
      * @return string
      */
@@ -160,7 +164,7 @@ class Link extends \Iris\Subhelpers\_Subhelper {
 
     /**
      * Displays a standard HTML button with a javascript onclick URL
-     * 
+     *
      * @param string $label The label of the button
      * @param string $url The URL where to go
      * @param string $tooltip The optional tooptip
@@ -176,7 +180,7 @@ class Link extends \Iris\Subhelpers\_Subhelper {
 
     /**
      * Displays a HTML button encapsulated in a link &lt;a> tag (if JS not active)
-     * 
+     *
      * @param string $label The label of the button
      * @param string $href The href attribute (or empty string)
      * @param string $tooltip The optional tooptip
@@ -212,8 +216,6 @@ STYLE
         return "<a $href $attributes>&nbsp;$label&nbsp;</a>\n";
     }
 
-    
-
     private function _renderAttributes($tooltip, $class, $id) {
         $html = '';
         foreach ($this->_attributes as $name => $value) {
@@ -228,7 +230,7 @@ STYLE
 
     /**
      * Prepares the standard attributes tooltip and class
-     * 
+     *
      * @param type $tooltip
      * @param type $class
      * @param string $id The optional id
@@ -241,11 +243,9 @@ STYLE
         return $html;
     }
 
-    
-
     /**
      * Adds an attribute to the link
-     * 
+     *
      * @param string $name The attribute name
      * @param mixed $value The attribute value
      * @return \Iris\Subhelpers\Link for a fluent interface
@@ -256,9 +256,9 @@ STYLE
     }
 
     /**
-     * Removes an attribute, if it exists. May be usefull when 
+     * Removes an attribute, if it exists. May be usefull when
      * the link singleton is used to create various links.
-     * 
+     *
      * @param string $name
      * @return \Iris\Subhelpers\Link
      */
@@ -272,7 +272,7 @@ STYLE
     /**
      * Sets the ID of the current link (erased after generation of
      * the attribute string).
-     * 
+     *
      * @param string $idName
      * @return \Iris\Subhelpers\Link
      */
@@ -283,7 +283,7 @@ STYLE
 
     /**
      * Specifies an alternative folder for images
-     * 
+     *
      * @param string $imageFolder The image folder name
      * @return \Iris\Subhelpers\Link For fluent interface
      */
@@ -291,7 +291,6 @@ STYLE
         $this->_imageFolder = $imageFolder;
         return $this;
     }
-
 
 }
 
