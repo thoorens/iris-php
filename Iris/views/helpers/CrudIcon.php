@@ -17,99 +17,28 @@ namespace Iris\views\helpers;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2013 Jacques THOORENS
+ *
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
- * This helper is part of the CRUD facilites offered by Iris. It serves to 
+ * This helper is part of the CRUD facilites offered by Iris. It serves to
  * display icons for the different actions. The most part of its job is
- * done by \Iris\Subhelpers\Crud.
+ * done by \Iris\Subhelpers\CrudIconManager.
  *
  */
-class CrudIcon extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
+class CrudIcon extends _ViewHelper{
 
     use \Iris\Subhelpers\tSubhelperLink;
 
-    protected static $_AlternateSubhelper = \NULL;
-    
-    protected $_baseDir = '/images/icones';
-
-    protected $_tagAClass = "crudlink";
-    
     /**
-     * Defines the subhelper used by the class. One can use another subhelper 
+     * Defines the subhelper used by the class. One can use another subhelper
      * in a derived class by defining $_AlternateSubhelper
      */
     protected function _init() {
-        if (!is_null(static::$_AlternateSubhelper)) {
-            $this->_subhelperName = static::$_AlternateSubhelper;
-        }
-        else {
-            $this->_subhelperName = '\Iris\Subhelpers\Crud';
-        }
-    }
-
-    public static function SetAlternateSubhelper($subhelperName){
-        static::$_AlternateSubhelper = $subhelperName;
+        $this->_subhelperName = \models\crud\CrudIconManager::GetInstance();
     }
 
 
-    /**
-     *
-     * @param string[] $params : nom de l'opération et de l'icône
-     * @param boolean $iconeActive: choix d'une icone désactivée (ce n'est pas un lien 
-     * @return String (cette méthode brise la chaîne)
-     */
-    public function render(array $params, $iconeActive = TRUE) {
-        $operation = $params['operation'];
-        $dir = $params['dir'];
-        $ref = $params['ref'];
-        $help = $params['help'];
-        $class = $this->_tagAClass;
-
-        if ($iconeActive) {
-            $icon = $this->callViewHelper('image', $operation . ".png", $operation, $help, $dir);
-            return "<a href=\"$ref\" class=\"$class\">$icon</a>";
-        }
-        else {
-            $file = $operation . "_des.png";
-            $help = $this->_("Operation not possible in context", TRUE);
-            $desc = "$operation inactive";
-            return $this->callViewHelper('image', $file, $desc, $help, $dir);
-        }
-    }
-
-    /**
-     * Accessor set for icon folder
-     * 
-     * @param type $baseDir the folder name.
-     */
-    public function setBaseDir($baseDir) {
-        $this->_baseDir = $baseDir;
-    }
-
-    /**
-     * Modifies the class for the a tag
-     * 
-     * @param string $tagAClass
-     * @return \Iris\views\helpers\CrudIcon
-     */
-    public function setTagAClass($tagAClass) {
-        $this->_tagAClass = $tagAClass;
-        return $this;
-    }
-
-        /**
-     * Translates a message by using its ancestor method with default 
-     * to system message
-     * 
-     * @param string $message Message to display
-     * @param boolean $system System message (by default yes)
-     * @return string 
-     */
-    public function _($message, $system = \TRUE) {
-        return parent::_($message, $system);
-    }
 
 }

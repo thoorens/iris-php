@@ -1,0 +1,40 @@
+<div>
+    <p class="warning warningSevere">
+        None of the links in the following table is meant to be functional.
+    </p>
+    <table class="show center">
+        <tr>
+            <th>Operation</th>
+            <th colspan="2">Active Icon</th>
+            <th>URL</th>
+            <th>ToolTip</th>
+        </tr>
+        <tr>
+            <th/>
+            <th>yes</th>
+            <th>no</th>
+            <th/>
+        </tr>
+        {foreach(operations, operation)}
+            {php}
+                if($operation == 'create2'){
+                    $operation = 'create';
+                    $icon->setSubtype('s1','Special');
+                }
+                if($operation == 'action2'){
+                    $icon->setSubtype('s2','Special2');
+                }
+            {/php}   
+            <tr>
+                <td>{operation}</td>
+                <td>{(icon->$operation())}</td>
+                <td>{(icon->$operation(\FALSE))}</td>
+                <td>{(icon->makeReference($operation,'?'))}</td>
+                <td>{(icon->makeTooltip($operation))}</td>
+            </tr>
+        {/foreach}
+
+    </table>
+
+
+</div>

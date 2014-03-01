@@ -17,7 +17,7 @@ namespace Iris\SysConfig;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  */
 
@@ -29,8 +29,8 @@ namespace Iris\SysConfig;
  * <li> settings can be added at later stage (one at a time or through an ini file)
  * <li> a non defined setting reading throws an exception
  * </ul>
- * 
- * 
+ *
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -41,11 +41,11 @@ class Settings extends _Settings {
     protected static $_Instance = \NULL;
 
     protected function _init() {
-        // Admin toolbar may be Ajax or simple javascript 
+        // Admin toolbar may be Ajax or simple javascript
         BooleanSetting::CreateSetting('adminToolbarAjaxMode', \TRUE);
         // Pages usually don't have a MD5 signature (usefull in debugging or caching)
         BooleanSetting::CreateSetting('MD5Signature', \FALSE);
-        // In development, it may be usefull to compute Program Time Excecution, 
+        // In development, it may be usefull to compute Program Time Excecution,
         // by default managed by Javascript (not Ajax)
         BooleanSetting::CreateSetting('displayRuntimeDuration', \TRUE);
         StandardSetting::CreateSetting('runtimeDisplayMode', \Iris\Time\RuntimeDuration::INNERCODE);
@@ -61,12 +61,12 @@ class Settings extends _Settings {
         StandardSetting::CreateSetting('defaultUserName', 'somebody');
         StandardSetting::CreateSetting('defaultRoleName', 'browse');
         StandardSetting::CreateSetting('defaultUserEmail', 'info@irisphp.org');
-        // 
+        //
         StandardSetting::CreateSetting('errorDebuggingLevel', 1);
         // To minimize execution templates can be cached (not by default)
         StandardSetting::CreateSetting('cacheTemplate', \Iris\MVC\Template::CACHE_NEVER);
-        // Some icons are used internally (e.g. in CRUD), a default directory is specified
-        StandardSetting::CreateSetting('iconSystemDir', '/!documents/file/images/icons');
+        // Application icons are placed in a /images/icons
+        StandardSetting::CreateSetting('iconDir', '/icons');
         // By default all messages are in US english
         StandardSetting::CreateSetting('defaultLanguage', 'en-us');
         // Defaults settings for menu
@@ -81,7 +81,7 @@ class Settings extends _Settings {
         // Module, controler and action names may contain '-'
         BooleanSetting::CreateSetting('admitDash', \FALSE);
         // The default folder for document files managed through the program
-        StandardSetting::CreateSetting('dataFolder', IRIS_ROOT_PATH.'/data');
+        StandardSetting::CreateSetting('dataFolder', IRIS_ROOT_PATH . '/data');
     }
 
 }
