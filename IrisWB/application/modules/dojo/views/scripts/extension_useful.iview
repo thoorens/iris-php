@@ -1,8 +1,9 @@
+{wbHeader()}
 <div id="page">
     <p>
-        {colorPaletteU(0)}
+        {colorPaletteU('wbexplain',0)}
     </p>
     <p>
-        {colorPaletteU(1)}
+        {colorPaletteU('main',1)}
     </p>
 </div>     

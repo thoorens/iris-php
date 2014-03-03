@@ -11,7 +11,13 @@ class ColorPaletteU extends \Iris\views\helpers\_ViewHelper {
     const MODE7_10 = 0;
     const MODE3_4 = 1;
 
-    public function help($mode = self::MODE7_10) {
+    /**
+     * 
+     * @param string $objectID The object id to change the color of
+     * @param int $mode The palette size
+     * @return string
+     */
+    public function help($objectID, $mode = self::MODE7_10) {
         if (is_numeric($mode)) {
             $mode = $mode ? '3x4' : '7x10';
         }
@@ -23,7 +29,7 @@ class ColorPaletteU extends \Iris\views\helpers\_ViewHelper {
                 
    var myPalette = new ColorPalette({
         palette: "$mode",
-        onChange: function(val){style.set('main','backgroundColor',val); }
+        onChange: function(val){style.set('$objectID','backgroundColor',val); }
     }, "$id");       
 CODE
         );
