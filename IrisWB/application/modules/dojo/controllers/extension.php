@@ -16,24 +16,29 @@ class extension extends _dojo {
         $this->_setLayout('simple');
     }
 
-    
+    /*
+     * An example of declarative use of a Dijit: just display a color palette: 
+     * all code in view helper.
+     * Clicking the palette display color code 
+     */
     public function declarativeAction() {
-        $this->_setLayout('simple');
-        // this Title var is required by the default layout defined in _dojo
-        $this->__Title = $this->callViewHelper('welcome',1);
     }
     
+    /*
+     * An example of programmatic use of a Dijit: just display a color palette: 
+     * all code in view helper. 
+     * Clicking the palette display color code 
+     */
     public function programmatiqueAction(){
-        
     }
 
+    /**
+     * Here the color palette modifies a part of the screen, whose ID is passed
+     * as a parameter to the view helper
+     */
     public function usefulAction() {
-        // these parameters are only for demonstration purpose
-        $this->__(NULL, array(
-            'Title' => "'<h1>dojo - extension - usefull</h1>'",
-            'buttons' => 1+4,
-            'logoName' => 'mainLogo'));
     }
+
     public function editorAction() {
         $ff = new \Dojo\Forms\FormFactory();
         $form = $ff->createForm('montest');
