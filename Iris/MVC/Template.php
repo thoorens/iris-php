@@ -131,6 +131,7 @@ class Template implements \Iris\Translation\iTranslatable {
         // A PHP closing tag followed by an opening tag is not accepted in this context).
         ['/{section\((.+?)\)}/', "<?php switch($$1): case '':?>"],
         ['{/section}', '<?php endswitch;?>'],
+        ['/{block\(\)}/', '<?php default :?>'],
         ['/{block\((.+?)\)}/', '<?php case $1 :?>'],
         ['{/block}', '<?php break;?>'],
         // special variables
