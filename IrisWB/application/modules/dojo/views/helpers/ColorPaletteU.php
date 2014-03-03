@@ -22,7 +22,7 @@ class ColorPaletteU extends \Iris\views\helpers\_ViewHelper {
         $bubble->defFunction(<<<CODE
                 
    var myPalette = new ColorPalette({
-        palette: "7x10",
+        palette: "$mode",
         onChange: function(val){style.set('main','backgroundColor',val); }
     }, "$id");       
 CODE
