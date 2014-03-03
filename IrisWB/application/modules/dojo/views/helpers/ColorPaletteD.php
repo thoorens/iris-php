@@ -17,16 +17,12 @@ class ColorPaletteD extends \Iris\views\helpers\_ViewHelper {
         }
         $id = \Dojo\Engine\Bubble::NewObjectName('CP');
         $bubble = \Dojo\Engine\Bubble::GetBubble($id);
-        $bubble->addModule('dijit/ColorPalette','ColorPalette');
-        $bubble->defFunction(<<<CODE
-                
-   var myPalette = new ColorPalette({
-        palette: "7x10",
-        onChange: function(val){ alert(val); }
-    }, "$id");       
-CODE
-        );
-        $code = "<span id=\"$id\">this will be replaced</span>";
+        $bubble->addModule('dijit/ColorPalette', 'ColorPalette');
+        $code = <<<CODE
+<div data-dojo-type="dijit/ColorPalette" 
+    data-dojo-props="onChange:function(){alert(this.value);}, palette:'$mode'">
+</div>
+CODE;
         return $code;
     }
 
