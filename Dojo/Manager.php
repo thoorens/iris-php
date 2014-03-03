@@ -145,28 +145,7 @@ class Manager implements \Iris\Design\iSingleton {
         return $source;
     }
 
-    /**
-     * Add a requisite for Dojo (using a Bubble)
-     *
-     * @param type $index
-     * @param type $name
-     * @return Manager (for fluent interface)
-     */
-    public function addRequisite($index, $name = NULL) {
-        //throw new \Iris\Exceptions\DeprecatedException('addRequisite in Dojo is deprecated: here in '.$name);
-        if (is_null($name)) {
-            $requisite = $index;
-        }
-        elseif (is_array($name)) {
-            $requisite = implode('","', $name);
-        }
-        else {
-            $requisite = $name;
-        }
-        $bubble = \Dojo\Engine\Bubble::getBubble($index);
-        $bubble->addModule($requisite);
-        return $this;
-    }
+    
 
     /**
      * Add a style for Dojo

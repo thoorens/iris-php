@@ -110,7 +110,6 @@ class SlideShowManager extends \Iris\Subhelpers\_SlideShowManager {
         $this->_manager = \Dojo\Manager::GetInstance();
         $source = $this->_manager->getURL();
         $this->_manager->addStyle("$source/dojox/image/resources/image.css");
-        //$this->_manager->addRequisite('slideshow', 'dojox/image/SlideShow');
         $this->setAltImage('nopicture.jpg', 'Image not available', NULL, '/!documents/file/images');
     }
 
@@ -207,7 +206,6 @@ HTML;
      * @return \Dojo\views\helpers\SlideShow for fluent interface
      */
     public function setFile($fileName) {
-        //$this->_manager->addRequisite('slideshow', 'dojo/data/ItemFileReadStore');
         $this->_mode = self::FILEMODE;
         $this->_source = $fileName;
         return $this;

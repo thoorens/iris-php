@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Dojo\Forms\Elements;
 
 use \Iris\Forms as ifo;
@@ -32,9 +30,11 @@ use \Iris\Forms as ifo;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
+
 class Password_____ extends \Iris\Forms\Elements\InputElement {
+
     use \Dojo\Forms\tDojoDijit;
-    
+
     /**
      *
      * @param string $name name of the element
@@ -44,13 +44,10 @@ class Password_____ extends \Iris\Forms\Elements\InputElement {
     public function __construct($name, $subType, $options = array()) {
         parent::__construct($name, 'password', $options);
         $type = "dojox.form.PasswordValidator";
-        $dojoManager = \Dojo\Manager::GetInstance();
-        $dojoManager->addRequisite("PasswordValidator", $type);
+        \Dojo\Engine\Bubble::GetBubble($type)
+                ->addModule('dojox/form/PasswordValidator');
         $this->setDijitType($type);
         $this->setPwType($subType);
     }
 
-
-
 }
-

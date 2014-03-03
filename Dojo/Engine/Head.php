@@ -17,33 +17,33 @@ namespace Dojo\Engine;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2011-2013 Jacques THOORENS
  *
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ * 
+ * @version $Id: $ *
  */
 
 /**
- * This class loads all Dojo script files necessary to 
+ * This class loads all Dojo script files necessary to
  * run the active parts of the page.
  * All file names have been collected in Dojo\Manager and Dojo\Bubble
- * by the respective dojo helpers. 
+ * by the respective dojo helpers.
  *
  */
 class Head {
+
     use \Iris\views\helpers\tLoaderRegister;
-    
- 
+
     /**
      * A call to the method register() has been added to the creation
      * of the unique instance. This job is usually done by _subclassInit()
      * in the helpers who  are tLoaderRegister. This class is not a helper
      * since it can be called through {dojo_head()}.
-     * 
+     *
      * @staticvar \Dojo\views\helpers\Head $Instance
      * @return \Dojo\views\helpers\Head
      */
@@ -55,11 +55,11 @@ class Head {
         }
         return $Instance;
     }
-    
+
     /**
      * The render collects all javascript and style defined in Dojo\Mananager,
      * \Dojo\Engine\NameSpaceItem and \Dojo\Engine\Bubble
-     * 
+     *
      * @param type $ajaxMode
      * @return string
      */
@@ -98,5 +98,4 @@ BASE;
     }
 
 }
-
 

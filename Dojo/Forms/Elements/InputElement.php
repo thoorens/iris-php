@@ -57,8 +57,9 @@ class InputElement extends \Iris\Forms\Elements\InputElement {
         if (isset($this->_equivalence[$type])) {
             $dojoName = $this->_equivalence[$type];
             $this->setDijitType("dijit.form.$dojoName");
-            $dojoManager = \Dojo\Manager::GetInstance();
-            $dojoManager->addRequisite("$dojoName", 'dijit/form/' . $dojoName);
+            \Dojo\Engine\Bubble::GetBubble("dijit.form.$dojoName")
+                    ->addModule("dojo/parser")
+                    ->addModule("dijit/form/$dojoName");
         }
     }
 

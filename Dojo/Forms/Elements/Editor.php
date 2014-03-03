@@ -51,13 +51,6 @@ class Editor extends \Iris\Forms\Elements\AreaElement {
                 ->addModule("dijit/form/TextBox")
                 ->addModule('dojo/domReady!')
                 ->addModule('dijit/_editor/plugins/AlwaysShowToolbar');
-//        $dojoManager = \Dojo\Manager::GetInstance();
-//        $this->_dojoManager = $dojoManager;
-//        $dojoManager->addRequisite('dojo_editor',[
-//        "dijit/Editor",
-//        'dojo/domReady!',
-//        'dijit/_editor/plugins/AlwaysShowToolbar']);
-//        //$dojoManager->addInitCode('editor_hidden', <<<JSEditor
         $bubble->defFunction(<<<JSEditor
             dojo.addOnLoad(function() {
             var editor = dijit.byId("$editorName");
@@ -80,13 +73,10 @@ JSEditor
     }
 
     public function getValue() {
-        return trim($this->_hiddenCompanion->getValue());
+        return trim(str_replace('&quot;','"',$this->_hiddenCompanion->getValue()));
     }
 
-    public function setValue($value) {
-        $this->_value = trim($value);
-        return $this;
-    }
+    // setValue() is never used (why??)
 
    
 
@@ -180,32 +170,31 @@ JSEditor
                 case 'hiliteColor':
                 case 'foreColor':
                     $this->_bubble->addModule('dijit/_editor/plugins/TextColor');
-                    //$this->_dojoManager->addRequisite("editor_color", "dijit._editor.plugins.TextColor");
                     $this->_addPlugin($function);
                     break;
                 case "createLink":
                 case "insertImage":
-                    $this->_dojoManager->addRequisite("editor_link", 'dijit._editor.plugins.LinkDialog');
+                    $this->_bubble->addModule("dijit/_editor/plugins/LinkDialog");
                     $this->_addPlugin($function);
                     break;
                 case "toggleDir":
-                    $this->_dojoManager->addRequisite("editor_link", 'dijit._editor.plugins.ToggleDir');
+                    $this->_bubble->addModule("dijit/_editor/plugins/ToggleDir");
                     $this->_addPlugin($function);
                     break;
                 case "fullscreen":
-                    $this->_dojoManager->addRequisite("editor_full", 'dijit._editor.plugins.FullScreen');
+                    $this->_bubble->addModule("dijit/_editor/plugins/FullScreen");
                     $this->_addPlugin($function);
                     break;
                 case "print":
-                    $this->_dojoManager->addRequisite("editor_print", 'dijit._editor.plugins.Print');
+                    $this->_bubble->addModule("dijit/_editor/plugins/Print");
                     $this->_addPlugin($function);
                     break;
                 case "viewsource":
-                    $this->_dojoManager->addRequisite("editor_source", 'dijit._editor.plugins.ViewSource');
+                    $this->_bubble->addModule("dijit/_editor/plugins/ViewSource");
                     $this->_addPlugin($function);
                     break;
                 case "newpage":
-                    $this->_dojoManager->addRequisite("editor_new", 'dijit._editor.plugins.NewPage');
+                    $this->_bubble->addModule("dijit/_editor/plugins/NewPage");
                     $this->_addPlugin($function);
                     break;
                 case 'fontName':
@@ -213,7 +202,6 @@ JSEditor
                 case 'formatBlock':
                     //$this->_bubble->addModule('editor_font');
                     $this->_bubble->addModule('dijit/_editor/plugins/FontChoice');
-                    //$this->_dojoManager->addRequisite("editor_font", 'dijit._editor.plugins.FontChoice');
                     $this->_addExtraPlugin($function, "extraPlugins:['fontName', 'fontSize', 'formatBlock']");
                     break;
 

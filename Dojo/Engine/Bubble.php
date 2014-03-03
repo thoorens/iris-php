@@ -19,7 +19,7 @@ use Iris\System\tRepository;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2011-2013 Jacques THOORENS
  */
 
@@ -27,7 +27,7 @@ use Iris\System\tRepository;
  * This class is used internally by all Dojo helpers to manage the
  * components to load. Each bubble has its proper environment, prerequisites and
  * internal function. It includes the Ajax functions.
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -45,24 +45,24 @@ class Bubble {
     const PARSER = 14;
 
     /**
-     * A list of requisites for the bubble. 
-     * 
+     * A list of requisites for the bubble.
+     *
      * @var string[]
      */
     private $_modules = array();
 
     /**
      *
-     * @var type 
+     * @var type
      */
     private $_internalFunction = \NULL;
     private $_done = \FALSE;
 
     /**
      * Syntaxic sugar for GetObject
-     * 
+     *
      * @param string $objectName
-     * 
+     *
      * @return Bubble
      */
     public static function GetBubble($objectName) {
@@ -73,7 +73,7 @@ class Bubble {
     /**
      * Adds a requisite to the bubble, corresponding to a Dojo module and
      * optionaly to a var in the corresponding function signature
-     * 
+     *
      * @param string $moduleName the module name (with path)
      * @param mixed $linkedVar the variable mapped to the object created with the module
      * @return \Dojo\Engine\Bubble for fluent interface
@@ -86,7 +86,7 @@ class Bubble {
     /**
      * Some modules are supported as special and identified by predefined constants
      * (eg JSON or XML). Text modules are implicit and doesn't need a specific module.
-     * 
+     *
      * @param int $type The number corresponding to the speciale module.
      * @return \Dojo\Engine\Bubble for fluent interface
      */
@@ -115,7 +115,7 @@ class Bubble {
 
     /**
      * Creates the javascript code for all bubbles in the application.
-     * 
+     *
      * @return string
      */
     public function render($closed = \TRUE) {
@@ -159,7 +159,7 @@ class Bubble {
     /**
      * Stores the text for the internal function of the bubble (only needed
      * in case the is linked modules and code to use them.
-     * 
+     *
      * @param string $text
      */
     public function defFunction($text) {
@@ -168,7 +168,7 @@ class Bubble {
 
     /**
      * Renders all objects in repository as a unique string
-     * 
+     *
      * @return string
      */
     public static function RenderAll() {
