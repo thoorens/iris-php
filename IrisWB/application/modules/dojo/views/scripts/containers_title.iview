@@ -1,3 +1,4 @@
+{wbHeader()}
 {titlepane->divTitle('An expandable section')}
 {loremIpsum(10)}
 {titlepane->endDiv()}
