@@ -17,7 +17,7 @@ namespace Dojo;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2011-2013 Jacques THOORENS
  */
 define('URL_DOJO_GOOGLE', "https://ajax.googleapis.com/ajax/libs/dojo/");
@@ -28,7 +28,7 @@ define('URL_DOJO_YANDEX', "http://yandex.st/dojo");
 /**
  * This class is used internally by all Dojo helpers to manage the
  * components to load.
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -48,30 +48,30 @@ class Manager implements \Iris\Design\iSingleton {
      */
     protected static $_Instance = NULL;
 
-    
-
     /**
      * The JS init code for the dojo witgets used in the program
-     * @var string[] 
+     * @var string[]
      */
     protected $_initCode = array();
 
     /**
      * The style file used by Dojo
-     * 
-     * @var string[] 
+     *
+     * @var string[]
      */
     protected $_styleFiles = array();
 
     /**
      * when _dojoActive is false, no dojo tags nor attributes
      * are displayed in view or template
-     * 
-     * @var boolean  
+     *
+     * @var boolean
      */
     protected static $_DojoActive = FALSE;
 
-    
+    public static function __ClassInit() {
+        Engine\Head::GetInstance();
+    }
 
     /**
      * The constructor is private (singleton). It inits the basic CSS
@@ -84,7 +84,7 @@ class Manager implements \Iris\Design\iSingleton {
             $this->addStyle('/!documents/files/css/iris_nojs.css');
         }
         // init dojo_head to register it in Iris\Subhelpers\Head
-        Engine\Head::GetInstance();
+        //Engine\Head::GetInstance();
     }
 
     /**
@@ -92,26 +92,22 @@ class Manager implements \Iris\Design\iSingleton {
      */
     public static function SetActive() {
         self::$_DojoActive = \TRUE;
+        //Engine\Head::GetInstance();
     }
 
     /**
      * Tests the necessity to load Dojo
-     * @return type 
+     * @return type
      */
     public static function IsActive() {
         return self::$_DojoActive;
     }
 
-    
-
-
-   
-
     /**
      * Returns the source URL for the main script of dojo,
      * whose name is not the same in local or remote URL.
-     *  
-     * @return string 
+     *
+     * @return string
      */
     public function getScript() {
         $source = $this->getURL();
@@ -126,8 +122,8 @@ class Manager implements \Iris\Design\iSingleton {
     /**
      * Creates the URL from where to load the first file of the
      * Dojo framework
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function getURL() {
         $version = \Dojo\Engine\Settings::GetVersion();
@@ -135,7 +131,7 @@ class Manager implements \Iris\Design\iSingleton {
             case self::GOOGLE:
                 $source = URL_DOJO_GOOGLE . $version;
                 break;
-//            AOL disappeared            
+//            AOL disappeared
 //            case self::AOL:
 //                $source = URL_DOJO_AOL . $version;
 //                break;
@@ -151,12 +147,13 @@ class Manager implements \Iris\Design\iSingleton {
 
     /**
      * Add a requisite for Dojo (using a Bubble)
-     * 
+     *
      * @param type $index
      * @param type $name
      * @return Manager (for fluent interface)
      */
     public function addRequisite($index, $name = NULL) {
+        //throw new \Iris\Exceptions\DeprecatedException('addRequisite in Dojo is deprecated: here in '.$name);
         if (is_null($name)) {
             $requisite = $index;
         }
@@ -173,8 +170,8 @@ class Manager implements \Iris\Design\iSingleton {
 
     /**
      * Add a style for Dojo
-     * 
-     * @param string $file 
+     *
+     * @param string $file
      * @return Manager (for fluent interface)
      */
     public function addStyle($file) {
@@ -185,7 +182,7 @@ class Manager implements \Iris\Design\iSingleton {
     /**
      * Add an init code for Dojo
      * @param string $index unique label to avoid duplicates
-     * @param string $content 
+     * @param string $content
      * @return Manager (for fluent interface)
      */
     public function addInitCode($index, $content) {
@@ -194,7 +191,6 @@ class Manager implements \Iris\Design\iSingleton {
         }
         return $this;
     }
-
 
     /**
      * Accessor get for initcode
@@ -207,7 +203,7 @@ class Manager implements \Iris\Design\iSingleton {
 
     /**
      * Accessor get for style files
-     * 
+     *
      * @return array
      */
     public function getStyleFiles() {
