@@ -1,5 +1,8 @@
 <div id="page">
     <p>
-        {colorPaletteD()}
+        {colorPaletteD(0)}
+    </p>
+    <p>
+        {colorPaletteD(1)}
     </p>
 </div>
