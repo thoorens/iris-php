@@ -1,22 +1,7 @@
 <?php
 
 /* =========================================================================
- * This file contains 3 functions
- * 
- *      - __autoload
- *      - iris_assert
- *      - iris_debug
- * 
- * 1 trait
- *      - tSingleton
- * 
- * and 4 classes:
- * 
- *      - Debug
- *      - Mode
- *      - PathArray
- *      - Loader
- * 
+ *  
  * This file is part of IRIS-PHP.
  *
  * IRIS-PHP is free software: you can redistribute it and/or modify
@@ -32,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -41,7 +26,7 @@
  * @version $Id: $ * 
  * =========================================================================
  */
-$irisLibrary =IRIS_ROOT_PATH.'/'.IRIS_LIBRARY;
+$irisLibrary = IRIS_ROOT_PATH . '/' . IRIS_LIBRARY;
 $irisEngineDir = "$irisLibrary/Iris/Engine/";
 
 
@@ -52,5 +37,7 @@ include_once $irisEngineDir . '/Debug.php';
 include_once $irisEngineDir . '/PathArray.php';
 include_once $irisEngineDir . '/Mode.php';
 include_once $irisEngineDir . '/_coreLoader.php';
+// If you use your own copy of LoadLoader, this is the place to specify
+// the path to your personal version of \Iris\Engine\Loader
 $customDir = $irisEngineDir;
 include_once $customDir . '/Loader.php';
