@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  *
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
@@ -50,7 +50,7 @@ abstract class Debug {
     const SETTINGS = 128;
 
     /**
-     * Display a var_dump between <pre> tags
+     * Display a var_dump between &lt;pre> tags
      * @param mixed $var : a var or text to dump
      */
     public static function Dump($var) {
@@ -60,7 +60,7 @@ abstract class Debug {
     }
 
     /**
-     * Display a var_dump between <pre> tags and die
+     * Display a var_dump between &lt;pre> tags and die
      *
      * @param mixed $var A printable message or variable
      * @param string $dieMessage
@@ -102,6 +102,13 @@ abstract class Debug {
         return $text;
     }
     
+    /**
+     * Same as ErrorBox, except that it does not return  the box text but displays it
+     * at once and kill the program
+     * 
+     * @param string $message : error description
+     * @param string $title : box title
+     */
     public static function ErrorBoxDie($message, $title = "Unkown class"){
         $text = self::ErrorBox($message, $title);
         self::Kill($text);
