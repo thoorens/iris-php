@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\Forms\Elements;
 
 /*
@@ -33,12 +34,12 @@ namespace Iris\Forms\Elements;
  * 
  */
 abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue, \Iris\Translation\iTranslatable {
-    
+
     use \Iris\Translation\tSystemTranslatable;
 
-    protected static $_NeedRegister = FALSE;
+    protected static $_NeedRegister = \FALSE;
     protected $_subComponents = array();
-    protected static $_EndTag = TRUE;
+    protected static $_EndTag = \TRUE;
     protected $_perLine = 4;
     protected $_itemType = '';
 
@@ -82,10 +83,10 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
      * @return _ElementGroup 
      * @throw FormException
      */
-    public function addOptions($pairs, $valuesAsKeys = FALSE) {
+    public function addOptions($pairs, $valuesAsKeys = \FALSE) {
         if (is_null($this->_container)) {
             throw new \Iris\Exceptions\FormException(
-                    $this->_('addOption need the object to be registred before (with addTo()).',FALSE));
+            $this->_('addOption need the object to be registred before (with addTo()).', \FALSE));
         }
         if ($valuesAsKeys) {
             $pairs = array_combine($pairs, $pairs);
@@ -105,7 +106,7 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
      */
     protected function _addOption($key, $value) {
         $createMethod = "create" . $this->_itemType;
-        $innerElement = $this->_formFactory->$createMethod($this->_name.$key)
+        $innerElement = $this->_formFactory->$createMethod($this->_name . $key)
                 ->setValue($value)
                 ->setLabel($value);
         $innerElement->_container = $this;
@@ -124,8 +125,6 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
     public function getValue() {
         return parent::getValue();
     }
-
-    
 
     /**
      * Set the max number of item per line
@@ -146,13 +145,11 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
     }
 
     public function validate() {
-        $valid = TRUE;
+        $valid = \TRUE;
         foreach ($this->_subComponents as $subComponent) {
             $valid = $subComponent->validate();
         }
         return $valid;
     }
 
-    
 }
-
