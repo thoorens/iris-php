@@ -1,6 +1,6 @@
 <?php
 
-namespace models\crud;
+namespace CLI\Fake;
 
 /*
  * This file is part of IRIS-PHP.
