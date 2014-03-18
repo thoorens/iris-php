@@ -16,7 +16,7 @@ use \Iris\DB\DataBrowser\tCrudManager;
     }
     
     public function indexAction() {
-        $icons = \Iris\Subhelpers\Crud::getInstance();
+        $icons = \models\crud\CrudIconManager::getInstance();
         $icons
                 // controller serving as a manager
                 ->setController('/{MODULE}/{CONTROLLER}')
@@ -27,7 +27,7 @@ use \Iris\DB\DataBrowser\tCrudManager;
                 // field containing a significative description 
                 ->setDescField('{=DESCRIPTION=}')
                 // primary key field
-                ->setIdField({ID});
+                ->setIdField('{ID}');
         // Get all the data in {ENTITY}
         $tEntity = \models\T{ENTITY}::GetEntity();
         $this->__lines = $tEntity->fetchAll();
