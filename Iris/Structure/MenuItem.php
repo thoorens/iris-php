@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\Structure;
 
 /*
@@ -37,7 +38,7 @@ class MenuItem extends Menu {
         'title' => NULL,
         'visible' => TRUE,
         'default' => FALSE,
-        'id'=> ''
+        'id' => ''
     );
 
     /**
@@ -47,12 +48,12 @@ class MenuItem extends Menu {
      *  
      * @param string $data 
      */
-    public function __construct($data=NULL) {
+    public function __construct($data = NULL) {
         if (is_string($data)) {
             list($uri, $label, $title) = explode('|', $data . "||");
-            $this->setUri($uri);
-            $this->setTitle($title);
-            $this->setLabel($label);
+            $this->setUri($uri)
+                    ->setTitle($title)
+                    ->setLabel($label);
         }
     }
 
@@ -66,10 +67,13 @@ class MenuItem extends Menu {
 
     /**
      * Accessor set to Label
-     * @param type $label 
+     * 
+     * @param string $label 
+     * @return \Iris\Structure\MenuItem (for fluent interface)
      */
     public function setLabel($label) {
         $this->_data['label'] = $label;
+        return $this;
     }
 
     /**
@@ -77,20 +81,24 @@ class MenuItem extends Menu {
      * 
      * @return string
      */
-    public function getId(){
+    public function getId() {
         return $this->_data['id'];
     }
-    
+
     /**
      * Accessor set for the optional id
+     * 
      * @param string $id
+     * @return \Iris\Structure\MenuItem (for fluent interface)
      */
-    public function setId($id){
+    public function setId($id) {
         $this->_data['id'] = $id;
+        return $this;
     }
-    
+
     /**
      * Accessor get to URI
+     * 
      * @return string 
      */
     public function getUri() {
@@ -99,10 +107,13 @@ class MenuItem extends Menu {
 
     /**
      * Accessor set to URI
-     * @param type $uri 
+     * 
+     * @param string $uri 
+     * @return \Iris\Structure\MenuItem (for fluent interface)
      */
     public function setUri($uri) {
         $this->_data['uri'] = $uri;
+        return $this;
     }
 
     /**
@@ -118,9 +129,11 @@ class MenuItem extends Menu {
      * Accessor set to title (tooltip)
      * 
      * @param string $title 
+     * @return \Iris\Structure\MenuItem (for fluent interface)
      */
     public function setTitle($title) {
         $this->_data['title'] = $title;
+        return $this;
     }
 
     /**
@@ -128,8 +141,9 @@ class MenuItem extends Menu {
      * 
      * @param string $value 
      */
-    public function setDefault($value=TRUE) {
+    public function setDefault($value = TRUE) {
         $this->_data['default'] = $value;
+        return $this;
     }
 
     /**
@@ -139,12 +153,14 @@ class MenuItem extends Menu {
      */
     public function setVisible($value) {
         $this->_data['visible'] = $value;
+        return $this;
     }
 
     /**
-     * Return the iem as an array
+     * Return the item as an array
+     * 
      * @param type $simplify
-     * @return type 
+     * @return array 
      */
     public function asArray() {
         $data = $this->_data;
@@ -155,4 +171,3 @@ class MenuItem extends Menu {
     }
 
 }
-
