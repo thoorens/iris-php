@@ -204,7 +204,7 @@ ul.crud li a {
     color: #00A;
 }
 
-p.dbWarning{
+p.dbWarning, p.warning{
     font-size:0.8em;
     border-style: double;
     padding:5px;
@@ -233,7 +233,7 @@ p.dbWarning{
     background-color: white;
 }
 
-.warningDeleted{
+.warningDeleted, .warningSevere{
     color:#F00;
     border-color:  #F00;
 }
@@ -245,4 +245,11 @@ form#screen{
 .dblogo{
     margin:20px;
     text-align: center;
+}
+table.center tr td{
+    text-align: center;
+}
+
+pre.presmall{
+    font-size:0.8em;
 }
