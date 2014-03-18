@@ -5,7 +5,7 @@ namespace modules;
 /**
  * {PROJECTNAME}
  * Created for IRIS-PHP {IRISVERSION}
- * Description of {CONTROLLER}
+ * {CONTROLLER_DESCRIPTION}
  * {COMMENT} 
  * @author {AUTHOR}
  * @license {LICENSE}

@@ -23,7 +23,7 @@ namespace modules\{MODULE}\controllers;
  */
 
 /**
- * Description of {CONTROLLER}
+ * {CONTROLLER_DESCRIPTION}
  * 
  *
  * @author Jacques THOORENS (jacques@thoorens.net)
