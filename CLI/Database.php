@@ -22,7 +22,7 @@ define('IRIS_DB_PARAMFILE', 'db.ini');
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2011-2013 Jacques THOORENS
  *
  */
@@ -33,16 +33,16 @@ define('IRIS_DB_PARAMFILE', 'db.ini');
  * <li>creation of ini file
  * <li>creation of CRUD management with controller/model/crud file et scripts
  * </ul>
- * 
+ *
  * @author Jacques THOORENS (jacques@thoorens.net)
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
- * @version $Id: $ * 
+ * @version $Id: $ *
  */
 class Database extends _Process {
+
     /**
      * Symbolic names for the database settings
      */
-
     const DEF = 0;
     const CALL = 1;
     const EXTERNAL = 2;
@@ -56,7 +56,7 @@ class Database extends _Process {
 
     /**
      * Selects a database for the default project
-     * 
+     *
      * @throws \Iris\Exceptions\CLIException
      */
     protected function _selectbase() {
@@ -66,7 +66,7 @@ class Database extends _Process {
         $dbConfigs = $this->_readDBConfigs();
         if (!isset($dbConfigs[$baseId])) {
             throw new \Iris\Exceptions\CLIException("
-No database with id $baseId has been found in the system. 
+No database with id $baseId has been found in the system.
 Choose another name ('iris.php -B list' to see the existing names)
 or create it before whith 'iris.php -B create $baseId'.");
         }
@@ -78,7 +78,7 @@ or create it before whith 'iris.php -B create $baseId'.");
 
     /**
      * Creates a 10_datase.ini file containing current database settings
-     * 
+     *
      * @throws \Iris\Exceptions\CLIException
      */
     protected function _makedbini() {
@@ -138,14 +138,14 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $applicationDir = $parameters->getApplicationName();
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/';
         $destination = $projectDir . '/' . $applicationDir;
-        $controller = $this->_analyser->promptUser(
-                "Choose the controller which will manage the CRUD operations", $parameters->getControllerName());
-        $module = $this->_analyser->promptUser(
-                "Choose the module into which $controller will be inserted", $parameters->getModuleName());
-        if($module != $parameters->getModuleName()){
+        $controller = Analyser::PromptUser(
+                        "Choose the controller which will manage the CRUD operations", $parameters->getControllerName());
+        $module = Analyser::PromptUser(
+                        "Choose the module into which $controller will be inserted", $parameters->getModuleName());
+        if ($module != $parameters->getModuleName()) {
             \FrontEnd::GetInstance()->preloadClasses(['CLI/Code']);
             $code = new Code($this->_analyser);
-            $code->makeNewCode($module, \NULL,\NULL);
+            $code->makeNewCode($module, \NULL, \NULL);
         }
         $entityName = ucfirst($parameters->getEntityName());
         // files to copy
@@ -156,7 +156,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
             "controller_index.iview" => "/modules/$module/views/scripts/$controller" . "_index.iview",
             "controller_editall.iview" => "/modules/$module/views/scripts/$controller" . "_editall.iview",
         ];
-        // 
+        //
         $pairs = [
             '{PHP_TAG}' => '<?php',
             '{ENTITY}' => $entityName,
@@ -177,8 +177,8 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
     }
 
     /**
-     * The entry point for database management subfunctions 
-     * 
+     * The entry point for database management subfunctions
+     *
      * @param string $function one among show, list, create
      * @throws \Iris\Exceptions\CLIException
      */
@@ -210,7 +210,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
     /**
      * Lists all the known databases used by all the project
      * Correspond to --database list
-     * 
+     *
      * @throws \Iris\Exceptions\CLIException
      */
     private function _subListDatabase() {
@@ -232,17 +232,16 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
     }
 
     /**
-     * Creates a database definition in db.ini for later use. This definition will be associated with 
+     * Creates a database definition in db.ini for later use. This definition will be associated with
      * a project.
      * Correspond to --database create
-     * 
+     *
      * @throws \Iris\Exceptions\CLIException
      */
     private function _subCreateDatabase() {
         $parameters = Parameters::GetInstance();
-        $analyser = $this->_analyser;
         $configs = $this->_readDBConfigs(\TRUE);
-        $dbid = $analyser->promptUser('Database id (unique internal value)', '');
+        $dbid = Analyser::PromptUser('Database id (unique internal value)', '');
         if ($dbid == '') {
             throw new \Iris\Exceptions\CLIException('The database id must be at least one letter long.');
         }
@@ -250,30 +249,30 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
             throw new \Iris\Exceptions\CLIException("A database with the id $dbid is already referenced. You can use it.");
         }
         $config = new \Iris\SysConfig\Config($dbid);
-        $config->adapter = $analyser->promptUser('Adapter name ', 'sqlite');
+        $config->adapter = Analyser::PromptUser('Adapter name ', 'sqlite');
         if ($config->adapter == 'sqlite') {
             $applicationDir = $parameters->getApplicationName();
-            $dbdir = $analyser->promptUser('Directory ', "/$applicationDir" . IRIS_DB_FOLDER);
-            $dbfile = $analyser->promptUser('Database file ', IRIS_DB_DEMOFILE);
+            $dbdir = Analyser::PromptUser('Directory ', "/$applicationDir" . IRIS_DB_FOLDER);
+            $dbfile = Analyser::PromptUser('Database file ', IRIS_DB_DEMOFILE);
             $config->dbname = $dbdir . $dbfile;
             if (!file_exists($parameters->getProjectDir() . $config->dbname)) {
                 echo "Warning {$parameters->getProjectDir()}$config->dbname does not exist.\n";
             }
         }
         else {
-            $config->dbname = $analyser->promptUser("Database name ", '');
-            $config->hostname = $analyser->promptUser("Host name ", 'localhost');
-            $config->username = $analyser->promptUser("User name ");
-            $config->password = $analyser->promptUser("Password (will be echoed) ");
+            $config->dbname = Analyser::PromptUser("Database name ", '');
+            $config->hostname = Analyser::PromptUser("Host name ", 'localhost');
+            $config->username = Analyser::PromptUser("User name ");
+            $config->password = Analyser::PromptUser("Password (will be echoed) ");
         }
-        $config->maindb = $analyser->promptUserLogical("Database managed by config INI file ", "TRUE");
+        $config->maindb = Analyser::PromptUserLogical("Database managed by config INI file ", "TRUE");
         $configs[$dbid] = $config;
         $parameters->writeParams($this->_getParamFileName(), $configs);
     }
 
     /**
      * Gives all the known setting of the database associated to the project
-     * Correspond to --database show 
+     * Correspond to --database show
      */
     private function _subShowDatabase() {
         $base = $this->_getDBConfig();
@@ -301,12 +300,12 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
     }
 
     /*
-     * End of subfunctions 
+     * End of subfunctions
      * ------------------------------------------------------------------------- */
 
     /**
      * Returns the database settings associated to the current project.
-     * 
+     *
      * @return \Iris\SysConfig\Config
      * @throws \Iris\Exceptions\CLIException
      */
@@ -327,7 +326,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
 
     /**
      * Returns the name of the file containing the database descriptions
-     * 
+     *
      * @return string
      */
     private function _getParamFileName() {
@@ -338,9 +337,9 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
     }
 
     /**
-     * Returns a setting of the database by its number (symbolic const) to 
+     * Returns a setting of the database by its number (symbolic const) to
      * serve as a replacement value in the template files.
-     * 
+     *
      * @param string $entityName
      * @param int $settingId the field to fetch
      * @return type
@@ -377,16 +376,15 @@ END;
     }
 
     /**
-     * Returns a setting of the crudicon by its number (symbolic const) to 
+     * Returns a setting of the crudicon by its number (symbolic const) to
      * serve as a replacement value in the template files.
-     * 
+     *
      * @param int $settingId the field to fetch
      * @return type
      */
     private function _getIconSettings($settingId) {
         static $settings = \NULL;
         if (is_null($settings)) {
-            $analyser = $this->_analyser;
             $ok = \FALSE;
             $settings = [
                 self::ID => '',
@@ -402,31 +400,43 @@ END;
                     '/Iris/Design/iSingleton',
                     '/Iris/Subhelpers/_Subhelper',
                     '/Iris/Subhelpers/_LightSubhelper',
-                    '/Iris/Subhelpers/Crud',
+                    '/Iris/Subhelpers/Icon',
+                    '/Iris/Subhelpers/_CrudIconManager',
+                    '/CLI/Fake/CrudIconManager',
                     '/Iris/Translation/_Translator',
                     '/Iris/Translation/SystemTranslator',
+                    '/CLI/Fake/CrudIconManager',
                 ];
                 $front = \FrontEnd::GetInstance();
                 $front->preloadClasses($classes);
 
-                $settings[self::ID] = $analyser->promptUser('Primary key name ', $settings[self::ID]);
-                $settings[self::DESCRIPTION] = $analyser->promptUser('Field containing a good description', $settings[self::DESCRIPTION]);
-                $settings[self::TOOLTIP] = $analyser->promptUser('Gender and description ', $settings[self::TOOLTIP]);
+                $settings[self::ID] = Analyser::PromptUser('Primary key name ', $settings[self::ID]);
+                $settings[self::DESCRIPTION] = Analyser::PromptUser('Field containing a good description', $settings[self::DESCRIPTION]);
+                $settings[self::TOOLTIP] = Analyser::PromptUser('Gender and description ', $settings[self::TOOLTIP]);
 
-                $crud = \Iris\Subhelpers\Crud::GetInstance();
+                /* @var $crud \Iris\Subhelpers\_CrudIconManager */
+                $crud = Fake\CrudIconManager::GetInstance();
                 $crud->setEntity($settings[self::TOOLTIP]);
                 echo "Show tooltip:\n";
                 echo "----------------";
                 echo "In french:\n";
-                \Iris\Translation\_Translator::SetLanguage('French');
-                echo $crud->testCLI('create') . "\n";
-                echo $crud->testCLI('delete') . "\n";
-                //@todo show examples in english
-//                echo "In english:\n";
-//                \Iris\Translation\_Translator::SetLanguage('English');
-//                echo $crud->testCLI('create') . "\n";
-//                echo $crud->testCLI('delete') . "\n";
-                $ok = $analyser->promptUserLogical('Is it ok? ', $ok);
+                $id = $settings[self::ID];
+                $description = $settings[self::DESCRIPTION];
+                $crud->setIdField($id);
+                $crud->setDescField($description);
+                $crud->setData([
+                    $id => '1',
+                    $description => "«Field_$description" . " of item $id »",
+                ]);
+                foreach (['french', "english"] as $language) {
+                    echo "Show tooltip:\n";
+                    echo "----------------";
+                    echo "In $language:\n";
+                    $crud->forceLanguage($language);
+                    echo $crud->makeTooltip('create') . "\n";
+                    echo $crud->makeTooltip('update') . "\n";
+                }
+                $ok = Analyser::PromptUserLogical('Is it ok? ', $ok);
             }
         }
         return $settings[$settingId];
@@ -434,9 +444,9 @@ END;
 
     /**
      * Read the settings for all the known database. If no db.ini file found,
-     * creates one or throws an exception according to the optional parameter 
+     * creates one or throws an exception according to the optional parameter
      * (by default, exception)
-     * 
+     *
      * @param boolean $create
      * @return array(Config)
      * @throws \Iris\Exceptions\CLIException

@@ -17,25 +17,25 @@ namespace CLI {
      *
      * You should have received a copy of the GNU General Public License
      * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
-     * 
+     *
      * @copyright 2012 Jacques THOORENS
      */
 
     /**
-     * This class manages a project: creation, deletion, locking and 
+     * This class manages a project: creation, deletion, locking and
      * displaying status
      *
      * @author Jacques THOORENS (jacques@thoorens.net)
      * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
-     * @version $Id: $    
+     * @version $Id: $
      */
     class Project extends _Process {
 
         /**
-         * Permits to display some usefull informations about the current project 
+         * Permits to display some usefull informations about the current project
          */
         protected function _show($option) {
-            $parameters = Parameters::GetInstance();
+            $parameters = $this->getParameters();
             switch ($option) {
 // Recreates the file for Apache
                 case 'virtual':
@@ -49,17 +49,17 @@ namespace CLI {
                 case 'status':
                     $parameters->requireDefaultProject();
                     $project = $parameters->getCurrentProject();
-                    echo "-------------------------------------------------------------\n";
-                    echo sprintf("Status of %s\n", $project->ProjectName);
-                    echo "-------------------------------------------------------------\n";
+                    \echoLine("-------------------------------------------------------------");
+                    \echoLine(sprintf("Status of %s", $project->ProjectName));
+                    \echoLine("-------------------------------------------------------------");
                     $parameters->displayParameters();
                     break;
-// Lists all existing projects                 
+// Lists all existing projects
                 case 'list':
                     $parameters->requireProjects();
-                    echo "-------------------------------------------------------------\n";
-                    echo "List of existing project(s) \n";
-                    echo "-------------------------------------------------------------\n";
+                    \echoLine("-------------------------------------------------------------");
+                    \echoLine("List of existing project(s) ");
+                    \echoLine("-------------------------------------------------------------");
                     $projects = $parameters->getProjects();
                     $defaultProject = $parameters->getCurrentProject();
                     $defaultProjectName = is_null($defaultProject) ? '' : $defaultProject->ProjectName;
@@ -74,15 +74,19 @@ namespace CLI {
                         }
                         printf("%2d. %s %s", $num++, $locked, $projectName);
                         if ($projectName == $defaultProjectName) {
-                            echo " (default)";
+                            \echoLine( " (default)");
                         }
-                        echo "\n";
+                        \echoLine("");
                     }
             }
         }
 
+        protected function _test(){
+            iris_debug($this->_analyser);
+        }
+        
         /**
-         * Locks a project, to prevent its deletion
+         * Locks a project, to prevent its deletion.
          */
         protected function _lockproject() {
             $this->_protectProject(\TRUE);
@@ -98,10 +102,10 @@ namespace CLI {
         /**
          * Marks an existing project as been (un)locked. Exception when project
          * @param boolean $status
-         * @throws \Iris\Exceptions\CLIException 
+         * @throws \Iris\Exceptions\CLIException
          */
         private function _protectProject($status) {
-            $parameters = Parameters::GetInstance();
+            $parameters = $this->getParameters();
             $parameters->requireProjects();
             $configs = $parameters->getProjects();
             $projectName = $parameters->getProjectName();
@@ -111,21 +115,31 @@ namespace CLI {
             $configs[$projectName]->Locked = $status ? 1 : 0;
             $this->_updateConfig($configs);
             $finalState = $status ? 'locked' : 'unlocked';
-            echo "The project $projectName has been $finalState.\n";
+            \echoLine("The project $projectName has been $finalState.");
         }
 
         protected function _docproject() {
-            die('ok for doc');
+            $parameters = $this->getParameters();
+            $parameters->requireProjects();
+            $configs = $parameters->getProjects();
+            $projectName = $parameters->getProjectName();
+            if (!isset($configs[$projectName])) {
+                throw new \Iris\Exceptions\CLIException("The project '$projectName' doesn't exist. Choose another one.\n");
+            }
+            $this->_readProjectDocumentation();
+            $this->_updateConfig($configs);
         }
 
         /**
          * Creates a new project from scratch
-         * 
+         *
          */
         protected function _createproject() {
-            $parameters = Parameters::GetInstance();
+            /* @var $parameters Parameters */
+            $parameters = $this->getParameters();
+            $projects = $this->_createProjectConfig($parameters);
             if ($parameters->getInteractive()) {
-                $this->_document();
+                $this->_readProjectDocumentation();
             }
             $CommandLine = $parameters->getCommandLine();
             $simulating = FALSE;
@@ -140,17 +154,17 @@ namespace CLI {
             if (file_exists($projectDir) and file_exists("$projectDir/.$projectName.irisproject")) {
                 throw new \Iris\Exceptions\CLIException("The folder '$projectDir' seems to contain a possibly broken project. Choose another name.\n");
             }
-            if(file_exists($projectDir)){
-                throw new \Iris\Exceptions\CLIException("A folder '$projectDir' already exists.Choose antoher name\n");
+            if (file_exists($projectDir) and !$parameters->Force) {
+                throw new \Iris\Exceptions\CLIException("A folder '$projectDir' already exists.Choose another name\n");
             }
-            echo "Creating new project $projectName in folder $projectDir\n";
+            \echoLine( "Creating new project $projectName in folder $projectDir");
             if (!file_exists($projectDir)) {
                 $this->_os->mkDir($projectDir);
             }
-            echo "Testing $projectDir/.$projectName.irisproject\n";
+            \echoLine( "Testing $projectDir/.$projectName.irisproject");
 // Create the project file
             $this->_os->touch("$projectDir/.$projectName.irisproject");
-// Creates the three parts of the project + a file for Apache 
+// Creates the three parts of the project + a file for Apache
             require_once Analyser::GetIrisLibraryDir() . '/CLI/Code.php';
             $coder = new Code($parameters);
             $coder->_os = $this->_os;
@@ -160,36 +174,54 @@ namespace CLI {
             $coder->makeVirtualParameter();
 // add a new config to the configs
             if (!$simulating) {
-                $analyser = $parameters;
-                $analyser->requireProjects(\FALSE); // no error if not exists
-                $projects = $analyser->getProjects();
-                if (is_null($projects)) {
-                    $projects['Iris'] = new \Iris\SysConfig\Config('Iris');
-                }
-                $config = $analyser->createNewConfig();
-                $projects[$config->getName()] = $config;
-                $config->ModuleName = 'main';
-                $config->ControllerName = 'index';
-                $config->ActionName = 'index';
-                echo $config->ProjectName;
-                $projects['Iris']->DefaultProject = $config->ProjectName;
                 $this->_updateConfig($projects);
             }
+        }
+
+        /**
+         * Creates a new project configs and puts it in the parameter array
+         * @return array
+         */
+        private function _createProjectConfig() {
+            $parameters = $this->getParameters();
+            $parameters->requireProjects(\FALSE); // no error if not exists
+            $projects = $parameters->getProjects();
+            if (is_null($projects)) {
+                $projects['Iris'] = new \Iris\SysConfig\Config('Iris');
+            }
+            $config = $parameters->createNewConfig();
+            $projects[$config->getName()] = $config;
+            $config->ModuleName = 'main';
+            $config->ControllerName = 'index';
+            $config->ActionName = 'index';
+            $projects['Iris']->DefaultProject = $config->ProjectName;
+            $parameters->setCurrentProject($config);
+            return $projects;
         }
 
         /**
          * Provides an optional way to document more seriously each file
          * created with CLI.
          */
-        private function _document() {
-            $parameters = Parameters::GetInstance();
-            $parameters->putDetailedProjectName($parameters->promptUser(
-                            'More readable project name', $parameters->getDetailedProjectName()));
-            $parameters->putAuthor($parameters->promptUser('Author', $parameters->getAuthor()));
-            $parameters->putLicense($parameters->promptUser('License', $parameters->getLicense()));
-            $parameters->putComment($parameters->promptUser('Comment', $parameters->getComment()));
+
+        /**
+         *
+         * @param type $configs
+         */
+        private function _readProjectDocumentation() {
+            $config = $this->getParameters()->getCurrentProject();
+            $config->Author = Analyser::PromptUser('Author', $config->Author, getenv('USER'));
+            $config->License = Analyser::PromptUser('License', $config->tLicense);
+            $config->Comment = Analyser::PromptUser('Comment', $config->Comment);
         }
 
+        /**
+         * Changes the developper environment so that another project will be
+         * used by default for all the project relative command
+         * Note: --createproject implicitely changed the default project to the new one.
+         * 
+         * @throws \Iris\Exceptions\CLIException
+         */
         protected function _setdefaultproject() {
             $parameters = Parameters::GetInstance();
             $parameters->requireProjects();
@@ -200,7 +232,7 @@ namespace CLI {
             }
             $projects['Iris']->DefaultProject = $projectName;
             $this->_updateConfig($projects);
-            echo "$projectName is now the default project.\n";
+            \echoLine("$projectName is now your default project.");
         }
 
         /**
@@ -233,10 +265,10 @@ namespace CLI {
                 throw new \Iris\Exceptions\CLIException('You must terminate the command removeproject by the word "confirm" to actually delete the project.');
             }
             else {
-                echo "The project $projectName has been completely removed.\n";
+                \echoLine("The project $projectName has been completely removed.");
                 if ($projectName == $defaultProject) {
-                    echo "There is no more default project. 
-Use'iris.php --selectdefaultproject' to define a new one.\n";
+                    \echoLine("There is no more default project.
+Use'iris.php --selectdefaultproject' to define a new one.");
                     $Iris = $projects['Iris'];
                     unset($Iris->DefaultProject);
                 }
@@ -245,8 +277,8 @@ Use'iris.php --selectdefaultproject' to define a new one.\n";
         }
 
         /**
-         * Creates a new module for the default project. 
-         * Verifies whether there is a default project and the 
+         * Creates a new module for the default project.
+         * Verifies whether there is a default project and the
          * module does not exist.
          */
         protected function _generate() {
@@ -287,17 +319,20 @@ Use'iris.php --selectdefaultproject' to define a new one.\n";
         }
 
         /**
-         * création des liens vers la bibliothèque Iris
-         * @param type $projectDir répertoire de base du projet
+         * Creates the link to the IRIS-PHP framework
+         * 
+         * @param string $projectDir Root directory of the project
          */
         private function _makeLibrary($projectDir, $libraryName) {
             $this->_os->symlink(Analyser::GetIrisLibraryDir(), "$projectDir/$libraryName");
         }
 
         /**
-         *
+         * Removes all files in the requested directory. 
+         * CAUTION : if third parameter is TRUE, all files are wiped out
+         *  
          * @param string $dir The path to the base dir from which delete
-         * @param int $level Indentation level (for display only)
+         * @param int $level Indentation level (used in simulation display)
          * @param boolean $simulating If TRUE only display the file to be deleted
          */
         public static function EmptyDir($dir, $level = 0, $simulating = TRUE) {
@@ -310,14 +345,13 @@ Use'iris.php --selectdefaultproject' to define a new one.\n";
             else {
                 if ($simulating) {
                     for ($l = 0; $l < $level; $l++) {
-                        echo "  ";
+                        \echoLine( "  ");
                     }
                     $level++;
-                    echo "Entering $dir\n";
+                    \echoLine( "Entering $dir");
                 }
                 $handle = opendir($dir);
                 while ($elem = readdir($handle)) {
-//ce while vide tous les repertoire et sous rep
                     if (is_dir($dir . '/' . $elem) && substr($elem, -2, 2) !== '..' && substr(
                                     $elem, -1, 1) !== '.') { //si c'est un repertoire
                         self::EmptyDir($dir . '/' . $elem, $level, $simulating);
@@ -332,8 +366,6 @@ Use'iris.php --selectdefaultproject' to define a new one.\n";
                 $os->rmdir($dir);
             }
         }
-
-        
 
     }
 

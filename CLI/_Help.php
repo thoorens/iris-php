@@ -17,23 +17,24 @@ namespace CLI;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  */
 
 /**
  * Common part for the localized help classes
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $/**
  * Common part for the localized help classes
- * 
+ *
  */
 abstract class _Help {
 
     const NOPATH = 1;
+    const DEFAULTLANGUAGE = 'English';
 
     protected $_functions;
 
@@ -76,9 +77,29 @@ abstract class _Help {
                 $this->_searchCore();
                 break;
 
+            case 'database': case 'B':
+                $this->_database();
+                break;
+
+            case 'selectbase': case 'b':
+                $this->_selectBase();
+                break;
+
+            case 'otherdb': case'O':
+                $this->_otherDB();
+                break;
+
+            case 'entitygenerate': case 'e':
+                $this->_entityGenerate();
+                break;
+
+
+            case 'mkdbini': case 'I':
+                $this->_makeDbIni();
+                break;
 
             /** ==============================================================================================
-             * 
+             *
              */
             default:
                 $this->_default($command);
@@ -114,28 +135,38 @@ abstract class _Help {
 
     abstract public function error($number);
 
+    abstract protected function _database();
+
+    abstract protected function _makeDbIni();
+
+    abstract protected function _selectBase();
+
+    abstract protected function _entityGenerate();
+
+    abstract protected function _otherDB();
+
     public function GetInstance() {
         return new self(array());
     }
 
     /**
      * Return the name of the localized class for help
-     * 
+     *
      * @return string
      * @todo Verify if english version works for windows
      */
     public static function DetectLanguage() {
-        $default = 'French';
-        // detection
-        if(\Iris\OS\_OS::$OSName == 'LINUX'){
-            $detected = explode(':',getenv('LANGUAGE'))[1];
+        $default = self::DEFAULTLANGUAGE;
+// detection
+        if (\Iris\OS\_OS::$OSName == 'LINUX') {
+            $detected = explode(':', getenv('LANGUAGE'))[1];
         }
-        // windows
-        else{
-            // What follows is awfull! But write me a nicer way
-            // to windows@thoorens.net
+// windows
+        else {
+// What follows is awfull! But write me a nicer way
+// to windows@thoorens.net
             $text = shell_exec('help dir');
-            switch(explode(" ",$text)[0]){
+            switch (explode(" ", $text)[0]) {
                 case 'Affiche':
                     $detected = 'fr';
                     break;
@@ -155,12 +186,11 @@ abstract class _Help {
                 break;
             default:
                 echo "Sorry, your language is not available. Switching to default: $default.\n";
-                $language = 'French';
+                $language = $default;
                 break;
         }
         return $language;
     }
 
 }
-
 

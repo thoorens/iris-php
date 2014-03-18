@@ -17,7 +17,7 @@ namespace CLI;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  *
  */
@@ -26,7 +26,7 @@ namespace CLI;
  * The main data repository for CLI
  *
  * @author Jacques THOORENS (jacques@thoorens.net)
- * 
+ *
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ */
 class Parameters {
@@ -38,7 +38,7 @@ class Parameters {
     /**
      * An associative array with the types of metadata for a project
      * complete description
-     * 
+     *
      * @var string[]
      */
     private static $_Metadata = array(
@@ -50,27 +50,27 @@ class Parameters {
 
     /**
      * The parameters read n command line.
-     * 
-     * @var string[] 
+     *
+     * @var string[]
      */
     private $_parameters = array();
 
     /**
      * The content of the projects.ini file
-     * 
+     *
      * @var \Iris\SysConfig\Config[]
      */
     private $_projects = NULL;
 
     /**
      * The saved parameters for the current project
-     * 
-     * @var \Iris\SysConfig\Config 
+     *
+     * @var \Iris\SysConfig\Config
      */
     private $_currentProject = \NULL;
 
     /**
-     * 
+     *
      * @staticvar type $instance
      * @return Parameters
      */
@@ -84,7 +84,7 @@ class Parameters {
 
     /**
      * A classical constructor for singleton
-     * 
+     *
      */
     private function __construct() {
         
@@ -104,7 +104,7 @@ class Parameters {
     /**
      * A quick way to access a internal parameter value (for special purposes)
      * If it does not exist, return false
-     * 
+     *
      * @param string $name
      * @return mixed
      */
@@ -114,7 +114,7 @@ class Parameters {
 
     /**
      * A quick way to define a internal parameter
-     * 
+     *
      * @param string $name
      * @param mixed $value
      */
@@ -124,8 +124,8 @@ class Parameters {
 
     /**
      * Reads an ini file and analyses its content in a array of configs
-     * If file does not exist, creates a config array with an initial 'Iris' element 
-     * 
+     * If file does not exist, creates a config array with an initial 'Iris' element
+     *
      * @param string $paramFile the ini file to parse
      * @return array(\Iris\SysConfig\Config)
      */
@@ -142,7 +142,7 @@ class Parameters {
 
     /**
      * (Re)creates a ini file with the content of an array of configs
-     * 
+     *
      * @param type $paramFile the ini file to create/overwrite
      * @param \Iris\SysConfig\Config[] $configs An array of configs
      */
@@ -155,7 +155,7 @@ class Parameters {
      * Tests the existence and loads the projects from the ini files. If there
      * is a default read it. If parameter is TRUE and no project exists, throws
      * an exception.
-     * 
+     *
      * @param boolean $error
      * @throws \Iris\Exceptions\CLIException
      */
@@ -183,7 +183,7 @@ Create one with 'iris.php --createproject");
     /**
      * Tries to read the ini file and to find a default project, otherwise
      * fails.
-     * 
+     *
      * @throws \Iris\Exceptions\CLIException
      */
     public function requireDefaultProject() {
@@ -228,7 +228,7 @@ or create one with 'iris.php --createproject'.");
 
     /**
      * Accessor get for the project name
-     * @return string 
+     * @return string
      */
     public function getProjectName() {
         return $this->_getParameter('ProjectName');
@@ -244,7 +244,7 @@ or create one with 'iris.php --createproject'.");
 
     /**
      * Accessor get for the public directory name
-     * @return string  
+     * @return string
      */
     public function getPublicDir() {
         return $this->_getParameter('PublicDir', 'public');
@@ -252,7 +252,7 @@ or create one with 'iris.php --createproject'.");
 
     /**
      * Accessor get for the public directory name
-     * @return string  
+     * @return string
      */
     public function getLibraryName() {
         return $this->_getParameter('LibraryName', 'library');
@@ -260,7 +260,7 @@ or create one with 'iris.php --createproject'.");
 
     /**
      * Accessor get for the current module name
-     * @return string 
+     * @return string
      */
     public function getModuleName() {
         return $this->_getParameter('ModuleName', 'main');
@@ -327,7 +327,7 @@ or create one with 'iris.php --createproject'.");
      * otherwise in the current project (if it exists)
      * The third parameter permits to access the project value, even if a parameter
      * has been set.
-     * 
+     *
      * @param string $name The name of the parameter
      * @param mixed $default An optional default value
      * @param boolean $projectValue If true, ignore the set parameter
@@ -339,7 +339,7 @@ or create one with 'iris.php --createproject'.");
         if (!$projectValue and isset($this->_parameters[$name])) {
             $value = $this->_parameters[$name];
         }
-        elseif (!is_null($this->_currentProject)) {
+        elseif (!$projectValue and !is_null($this->_currentProject)) {
             $project = $this->_currentProject;
             if (isset($project->$name)) {
                 $value = $project->$name;
@@ -349,26 +349,40 @@ or create one with 'iris.php --createproject'.");
     }
 
     /**
-     * Returns the local URL (by default the name of the base dir
-     * 
+     * Returns the local URL (by default the name of the base dir + .local
+     *
      * @return string
      */
     public function getUrl() {
-        return $this->_getParameter('Url', basename($this->getProjectDir()) . '.local');
+        return $this->_getParameter('Url', basename($this->getProjectDir()) . '.local', \TRUE);
     }
 
     /**
-     *
+     * 
      * @return string
-     * @todo Implement a true user name management
      */
-    public function getAuthor() {
-        if (isset($this->_parameters['Author'])) {
-            return $this->_parameters['Author'];
-        }
-        return getenv('USER');
+    public function getFileName() {
+        return $this->_parameters['FileName'];
     }
 
+    /**
+     * Returns a generic parameter (option -G)
+     * 
+     * @return string
+     */
+    public function getGeneric() {
+        if (isset($this->_parameters['Generic'])) {
+            return $this->_parameters['Generic'];
+        }
+        else {
+            return \NULL;
+        }
+    }
+
+    /**
+     * 
+     * @return type
+     */
     public function getInteractive() {
         if (isset($this->_parameters['Interactive'])) {
             return \TRUE;
@@ -380,7 +394,7 @@ or create one with 'iris.php --createproject'.");
 
     /**
      * Magic method to manage the parameters
-     * 
+     *
      * @param string $name
      * @param mixed[] $arguments
      */
@@ -388,6 +402,14 @@ or create one with 'iris.php --createproject'.");
         if (substr($name, 0, 3) == 'set') {
             $key = substr($name, 3);
             $this->_parameters[$key] = $arguments[0];
+        }
+        elseif (substr($name, 0, 3) == 'put') {
+            $key = substr($name, 3);
+            $this->_parameters[$key] = $arguments[0];
+            iris_debug($this->_parameters);
+        }
+        else {
+            throw new \Iris\Exceptions\CLIException("No function like $name in class Parameter");
         }
     }
 
@@ -401,13 +423,6 @@ or create one with 'iris.php --createproject'.");
             return $this->_parameters['License'];
         }
         return 'not defined';
-    }
-
-    public function getComment() {
-        if (isset($this->_parameters['Comment'])) {
-            return $this->_parameters['Comment'];
-        }
-        return '';
     }
 
     /**
@@ -430,6 +445,18 @@ or create one with 'iris.php --createproject'.");
         return $this->_projects;
     }
 
+    /**
+     * 
+     * @param \Iris\SysConfig\Config $currentProject
+     */
+    public function setCurrentProject($currentProject) {
+        $this->_currentProject = $currentProject;
+    }
+
+    /**
+     * 
+     * @return \Iris\SysConfig\Config 
+     */
     public function getCurrentProject() {
         return $this->_currentProject;
     }
@@ -444,5 +471,3 @@ or create one with 'iris.php --createproject'.");
     }
 
 }
-
-

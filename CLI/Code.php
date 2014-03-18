@@ -18,7 +18,7 @@ namespace CLI;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  *
 
 
@@ -71,13 +71,21 @@ class Code extends _Process {
     /**
      * Composes the virtual parameters for Apache
      * 
-     * @param string $docRoot
-     * @param string $url
-     * @param boolean $development 
+     * @param string $docRoot The Root of the site
+     * @param string $url The URL of the site
+     * @param boolean $development if True, development is on
      */
     private function _virtualApache($docRoot, $url, $development = \TRUE) {
         $setEnv = "SetEnv APPLICATION_ENV development";
         $devEnv = $development ? $setEnv : "# $setEnv";
+        if (\TRUE) {
+            $comap24 = '# ';
+            $comap22 = '';
+        }
+        else {
+            $comap24 = '';
+            $comap22 = '# ';
+        }
         $text = <<<APACHE
 <VirtualHost *:80>
    DocumentRoot "$docRoot"
@@ -85,14 +93,22 @@ class Code extends _Process {
    ServerName $url
 
    <Directory "$docRoot">
-       Options Indexes -MultiViews FollowSymLinks
+       Options Indexes
+       Options -MultiViews
+       Options FollowSymLinks
        AllowOverride All
-       Order allow,deny
-       Allow from all
+                
+       # Parameters for Apache 2.0 and 2.2         
+       {$comap24}Order allow,deny
+       {$comap24}Allow from all
+                
+       # Parameter for Apache 2.4         
+       {$comap22}Require all granted         
    </Directory>
    # This should be omitted in the production environment
    $devEnv
-    
+
+                
 </VirtualHost>
 
 APACHE;
@@ -120,7 +136,7 @@ APACHE;
         $this->_createFile("$source/index.php", "$destination/index.php", ['{APPLICATION}' => $parameters->getApplicationName()]);
         // other files are simply copied
         $this->_createFile("$source/dothtaccess", "$destination/.htaccess");
-        $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php",['{LIBRARY}' => $parameters->getLibraryName()]);
+        $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php", ['{LIBRARY}' => $parameters->getLibraryName()]);
         echo "You may have to edit $publicDir/.htaccess to suit your provider requirement.\n";
     }
 
@@ -128,7 +144,6 @@ APACHE;
      * Creates the application tree
      * 
      * @param String $projectDir the project dir name
-     * @param String $programName the program name (def: program)
      */
     public function makeApplication($projectDir) {
         // directories beginning by '!' have full permissions
@@ -145,6 +160,7 @@ APACHE;
             '_application.php' => "modules/_application.php",
             '01_debug.php' => "config/01_debug.php",
             '20_settings.php' => "config/20_settings.php",
+            'CrudIconManager.php' => 'models/crud/CrudIconManager.php',
         ];
         $parameters = Parameters::GetInstance();
         $programName = $parameters->getApplicationName();
@@ -153,7 +169,7 @@ APACHE;
         echo "Making application directories and files ($programName/...).\n";
         $this->_createDir($directories, $destination);
         foreach ($files as $template => $file) {
-            $this->_createFile("$source/$template", "$destination/$file");
+            $this->_createFile("$source/$template", "$destination/$file",['{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",]);
         }
         $this->_newModule($destination, "main");
     }
@@ -162,9 +178,9 @@ APACHE;
      * Generates a module, a controller and/or an action
      * according to the necessity
      * 
-     * @param string $module
-     * @param string $controller
-     * @param string $action 
+     * @param string $module The module name
+     * @param string $controller The controller name
+     * @param string $action The action name
      */
     public function makeNewCode($module, $controller, $action) {
         $parameters = Parameters::GetInstance();
@@ -210,6 +226,14 @@ APACHE;
         }
     }
 
+    /**
+     * Generates a new module with its default controller and action
+     * 
+     * @param string $destinationn The application directory name 
+     * @param string $moduleName The module name
+     * @param string $controllerName The controller name
+     * @param string $actionName The action name
+     */
     private function _newModule($destination, $moduleName, $controllerName = 'index', $actionName = 'index') {
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $directories = array(
@@ -221,17 +245,27 @@ APACHE;
         $this->_createDir($directories, $destination);
         $destinationMod = "$destination/modules/$moduleName";
         // module controller file
-        $this->_createFile("$source/module.php", "$destinationMod/controllers/_$moduleName.php", array(
+        $this->_createFile("$source/module.php", "$destinationMod/controllers/_$moduleName.php", [
             '{PHP_TAG}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
-            '{MODULECONTROLLER}' => "_$moduleName"
-                )
+            '{MODULECONTROLLER}' => "_$moduleName",
+            '{CONTROLLER_DESCRIPTION}' => "Description of _$moduleName",
+                ]
         );
         if (!is_null($controllerName)) {
             $this->_newController($destination, $moduleName, $controllerName, $actionName);
         }
     }
 
+    /**
+     * Generates a new controller with its default action
+     * 
+     * @param type $destinationn The application directory name
+     * @param string $moduleName The module name
+     * @param string $controllerName The controller name
+     * @param string $actionName The action name
+     * @throws \Iris\Exceptions\CLIException
+     */
     private function _newController($destination, $moduleName, $controllerName, $actionName = 'index') {
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destinationMod = "$destination/modules/$moduleName";
@@ -254,12 +288,22 @@ APACHE;
             '{MODULE}' => $moduleName,
             '{MODULECONTROLLER}' => "_$moduleName",
             '{CONTROLLER}' => $controllerName,
+            '{CONTROLLER_DESCRIPTION}' => "Description of $controllerName",
             '{TITLE}' => "$title"
                 )
         );
         $this->_newAction($destination, $moduleName, $controllerName, $actionName);
     }
 
+    /**
+     * Creates a new action
+     * 
+     * @param string $destination The application directory name
+     * @param string $moduleName The module name
+     * @param string $controllerName The controller name
+     * @param string $actionName The action name
+     * @throws \Iris\Exceptions\CLIException
+     */
     private function _newAction($destination, $moduleName, $controllerName, $actionName) {
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destinationMod = "$destination/modules/$moduleName";
@@ -268,10 +312,10 @@ APACHE;
             throw new \Iris\Exceptions\CLIException("The action $actionName already exists.");
         }
         $defaultViewName = "$destination/modules/main/views/scripts/_DEFAULTVIEW.iview";
-        if(file_exists($defaultViewName)){
+        if (file_exists($defaultViewName)) {
             $this->_createFile($defaultViewName, $scriptName);
         }
-        else{
+        else {
             $this->_createFile("$source/index_index.iview", $scriptName);
         }
         if ($actionName != 'index') {
@@ -301,6 +345,18 @@ END;
         }
     }
 
+    /**
+     * This function has been used to watermak all the library files with
+     * the copyright notice. Each file had to contain a line containing
+     * "* Project IRIS-PHP".
+     * 
+     * It is still functional
+     * 
+     * Example : 
+     * find -name '*.php' -exec iris.php -o {} \;
+     * 
+     * @throws \Iris\Exceptions\CLIException
+     */
     protected function _copyright() {
         $parameters = Parameters::GetInstance();
         $fileName = $parameters->getFileName();
@@ -308,7 +364,14 @@ END;
             throw new \Iris\Exceptions\CLIException('Code.php cannot modify itself!');
         }
         echo "Reading $fileName\n";
-        $gpl = <<<TEXT
+        $genericParameter = $parameters->getGeneric();
+        if (!is_null($genericParameter)) {
+            list($searchtext, $copyrightFile) = explode('|', $genericParameter);
+            $gpl = file_get_contents($copyrightFile);
+        }
+        else {
+            $searchtext = '\* Project IRIS-PHP';
+            $gpl = <<<TEXT
  * This file is part of IRIS-PHP.
  *
  * IRIS-PHP is free software: you can redistribute it and/or modify
@@ -324,14 +387,15 @@ END;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2011-2013 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  *
 
 TEXT;
+        }
         $file = file($fileName);
         $newFile = '';
         foreach ($file as $line) {
-            if (preg_match('/\* Project IRIS-PHP/', $line)) {
+            if (preg_match("/$searchtext/", $line)) {
                 $newFile .= $gpl;
                 echo "Writing copyright information in $fileName\n";
             }

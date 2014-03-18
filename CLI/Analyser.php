@@ -17,7 +17,7 @@ namespace CLI;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  *
  */
@@ -28,14 +28,14 @@ namespace CLI;
  * and ini files in ~user/.iris (iris.ini and projects.ini)
  *
  * @author Jacques THOORENS (jacques@thoorens.net)
- * 
+ *
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ */
 class Analyser {
+
     /**
      * Possible values for the processor
      */
-
     const PROJECT = 1;  // manage a project
     const CORECODE = 2; // create Core class
     const SHOW = 3;
@@ -44,13 +44,14 @@ class Analyser {
     const CODE = 6;
     const PASSWORD = 7;
     const BASE = 8;
+    const GLOBALPARAM = 9;
 
     private $_windows;
     private $_linux;
 
     /**
      * The choiced processor after analysis
-     * 
+     *
      * @var int
      */
     private $_processor = \NULL;
@@ -58,7 +59,7 @@ class Analyser {
     /**
      * An associative array with the types of metadata for a project
      * complete description
-     * 
+     *
      * @var string[]
      */
     private static $_Metadata = array(
@@ -69,20 +70,22 @@ class Analyser {
     );
 
     /**
-     * An associative array with the different options in CLI. The 
+     * An associative array with the different options in CLI. The
      * index is the "short" option name and the value the "long" option.
-     * Option terminating with ':' requires a parameter, with '::' has
-     * an optional parameter (e.g. h::).
-     * 
+     * Option terminating with ':' requires a parameter
+     *
      * @var string[]
      */
     public static $Functions = [
-        'h::' => 'help::',
+        // Help is not considered a normal option
+        //'h:' => 'help:',
         's:' => 'show:',
+        '1:' => 'language:',
         't' => 'test',
         // projects
         'c:' => 'createproject:',
         'r:' => 'removeproject:',
+        'f' => 'forceproject',
         'i' => 'interactive',
         'D' => 'docproject',
         'L:' => 'lockproject:',
@@ -107,33 +110,35 @@ class Analyser {
         'K' => 'searchcore',
         // watermaking
         'o:' => 'copyright:',
+        'G:' => 'genericparameter',
         'w:' => 'password:',
-        // database 
+        // database
         'B:' => 'database:',
         'b:' => 'selectbase:',
         'I' => 'makedbini',
         'O:' => 'otherdb:',
-        'e:' => 'entitygenerate:'
+        'e:' => 'entitygenerate:',
+        
     ];
 
     /**
      * The choiced action for the processor.
-     * 
+     *
      * @var string
      */
-    private $_option;
+    private $_processingOption;
 
     /**
      * The Iris system directory name
-     * 
-     * @var string 
+     *
+     * @var string
      */
     private static $_LibraryDir;
 
     /**
-     * The constructor initializes some defaults vars and then 
+     * The constructor initializes some defaults vars and then
      * analyses the command line
-     * 
+     *
      * @param string $libraryDir the directory containing the framework
      */
     public function __construct($libraryDir) {
@@ -150,7 +155,7 @@ class Analyser {
     }
 
     /**
-     * Analyses command line options and parameters and 
+     * Analyses command line options and parameters and
      * init respective private variables
      */
     private function _AnalyseCmdLine() {
@@ -198,14 +203,16 @@ class Analyser {
                     $parameters->setProjectName($name);
                     $parameters->setProjectDir($dir);
                     $this->_processor = self::PROJECT;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $this->_defaultProject = $name;
                     break;
-
-                // generates portions of project    
+                case 'f': case 'forceproject':
+                    $parameters->setForce(\TRUE);
+                    break;
+                // generates portions of project
                 case 'g': case 'generate':
                     $this->_processor = self::PROJECT;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     break;
 
                 // generates portions of work bench
@@ -216,15 +223,16 @@ class Analyser {
                 // option "interactive" in project creation : metadata are request through
                 // a dialog in console
                 case 'i': case 'interactive':
+                    die($option);
                     $parameters->setInteractive(TRUE);
                     break;
 
                 case 'D': case 'doc':
                     $this->_processor = self::PROJECT;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     break;
 
-                // Set public dir  (default is public)   
+                // Set public dir  (default is public)
                 case 'p': case 'publicdir':
                     $parameters->setPublicDir($value);
                     break;
@@ -234,7 +242,7 @@ class Analyser {
                     $parameters->setApplicationName($value);
                     break;
 
-                // Set library folder name  (default is library)   
+                // Set library folder name  (default is library)
                 case 'l': case 'libraryname':
                     $parameters->setLibraryName($value);
                     break;
@@ -245,9 +253,9 @@ class Analyser {
                     break;
 
                 // project metadata management
-                case 'm': case 'projectmetadata':
-                    $this->_treatMetadata($value);
-                    break;
+//                case 'm': case 'projectmetadata':
+//                    $this->_treatMetadata($value);
+//                    break;
 
 
                 // define module/controller/action
@@ -255,80 +263,85 @@ class Analyser {
                     $parameters->setModuleName($value);
                     $parameters->setControllerName('index');
                     $parameters->setActionName('index');
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $this->_processor = self::PARAM;
                     break;
                 case 'C': case 'controller':
                     $parameters->setControllerName($value);
                     $parameters->setActionName('index');
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $this->_processor = self::PARAM;
                     break;
                 case 'A': case 'action':
                     $parameters->setActionName($value);
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $this->_processor = self::PARAM;
                     break;
 
                 case 'N': case 'menuname':
                     $parameters->setMenuName($value);
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $this->_processor = self::PARAM;
                     break;
 
                 case 'n': case 'makemenu':
                     $this->_processor = self::PROJECT;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $parameters->setItems($value);
                     break;
 
                 // database
                 case 'B': case 'database':
                     $this->_processor = self::BASE;
-                    $this->_option = $option . "_" . $value;
+                    $this->_processingOption = $option . "_" . $value;
                     break;
                 case 'b': case 'selectbase':
                     $this->_processor = self::BASE;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $parameters->setDatabase($value);
                     break;
                 case 'I': case 'makedbini':
                     $this->_processor = self::BASE;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     break;
                 case 'O': case 'otherdb':
                     $this->_processor = self::BASE;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     break;
                 case 'e': case 'entitygenerate':
                     $this->_processor = self::BASE;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $parameters->setEntityName($value);
                     break;
                 // make core_Class
                 case'k': case 'mkcore':
                     $this->_processor = self::CORECODE;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $parameters->setClassName($value);
                     break;
 
                 // recreate the file config/overridden.classes
                 case 'K': case 'searchcore':
                     $this->_processor = self::CORECODE;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     break;
 
                 // watermaking
                 case 'o': case 'copyright':
                     $this->_processor = self::CODE;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     $parameters->setFileName($value);
                     break;
 
+                // generic parameter
+                case 'G': case 'genericparameter':
+                    $parameters->setGeneric($value);
+                    break;
+                
                 // password management
                 case 'w': case 'password':
                     $this->_processor = self::PASSWORD;
-                    $this->_option = $value;
+                    $this->_processingOption = $value;
                     break;
                 // help screen
                 case'h': case 'help':
@@ -337,12 +350,24 @@ class Analyser {
 
                 case 's': case 'show':
                     $this->_processor = self::SHOW;
-                    $this->_option = $option . '_' . $value;
+                    $this->_processingOption = $option . '_' . $value;
                     break;
 
+                case 'language':
+                    $this->_processingOption = $value;
+                    $this->_processor = self::GLOBALPARAM;
+                    $this->_processingOption = $option;
+                    break;
+
+                case 'oldapache':
+                    $this->_processingOption = $value;
+                    $this->_processor = self::GLOBALPARAM;
+                    $this->_processingOption = $option;
+                    break;
+                
                 case 't': case 'test':
                     $this->_processor = self::SHOW;
-                    $this->_option = $option;
+                    $this->_processingOption = $option;
                     break;
             }
         }
@@ -351,10 +376,10 @@ class Analyser {
     /**
      * Process the line by using all the parameters and options
      * of the command line.
-     * 
+     *
      * @throws \Iris\Exceptions\CLIException
      */
-    public function process() {
+    public function processLine() {
         switch ($this->_processor) {
             // Project management
             case self::PROJECT:
@@ -373,7 +398,7 @@ class Analyser {
                 $code = new \CLI\CoreMaker($this);
                 $code->process();
                 break;
-            // Display status    
+            // Display status
             case self::SHOW:
                 require_once self::GetIrisLibraryDir() . '/CLI/Project.php';
                 $project = new \CLI\Project($this);
@@ -391,12 +416,15 @@ class Analyser {
                 break;
             case self::PASSWORD:
                 require_once self::GetIrisLibraryDir() . '/Iris/Users/_Password.php';
-                $password = \Iris\Users\_Password::EncodePassword($this->_option);
-                echo $password . "\n";
+                $password = \Iris\Users\_Password::EncodePassword($this->_processingOption);
+                echoLine($password . "");
                 break;
             // Nothing to do
             case self::WORKDONE:
             case self::PARAM:
+                break;
+            case self::GLOBALPARAM:
+                die('Global');
                 break;
             // CLI not complete
             default:
@@ -405,25 +433,25 @@ class Analyser {
         }
     }
 
-    public function _treatMetadata($value) {
-
-        if (is_array($value)) {
-            foreach ($value as $value1) {
-                $this->_treatMetadata($value1);
-            }
-        }
-        else {
-            $values = explode('=', $value);
-            if (count($values) != 2) {
-                throw new \Iris\Exceptions\CLIException('Invalid project metadata in -m/ --projectmetada option.');
-            }
-            list($parameterName, $parameterValue) = $values;
-            if (isset(self::$_Metadata[$parameterName])) {
-                $this->_parameters[self::$_Metadata->$parameterName] = $parameterValue;
-                $this->_chosenSubOptions .=$parameterName;
-            }
-        }
-    }
+//    public function _treatMetadata($value) {
+//
+//        if (is_array($value)) {
+//            foreach ($value as $value1) {
+//                $this->_treatMetadata($value1);
+//            }
+//        }
+//        else {
+//            $values = explode('=', $value);
+//            if (count($values) != 2) {
+//                throw new \Iris\Exceptions\CLIException('Invalid project metadata in -m/ --projectmetada option.');
+//            }
+//            list($parameterName, $parameterValue) = $values;
+//            if (isset(self::$_Metadata[$parameterName])) {
+//                $this->_parameters[self::$_Metadata->$parameterName] = $parameterValue;
+//                $this->_chosenSubOptions .=$parameterName;
+//            }
+//        }
+//    }
 
     public static function GetIrisLibraryDir() {
         return self::$_LibraryDir;
@@ -431,16 +459,16 @@ class Analyser {
 
     /**
      * Accessor for the option selected for processing
-     * 
+     *
      * @return string
      */
-    public function getOption() {
-        return $this->_option;
+    public function getProcessingOption() {
+        return $this->_processingOption;
     }
 
     /**
      * suppress options from command line
-     * 
+     *
      * @return array
      */
     public function cliOptions() {
@@ -454,7 +482,7 @@ class Analyser {
         // by François Hill
         foreach ($optionsAarray as $option => $argument) {
             // François Hill does not consider long options, I substitute $dash where he has '-'
-            $dash = strlen($option) == 1 ? '-' : '--'; 
+            $dash = strlen($option) == 1 ? '-' : '--';
             // Look for all occurrences of option in argv and remove if found :
             // ----------------------------------------------------------------
             // Look for occurrences of -o (simple option with no value) or -o<val> (no space in between):
@@ -479,13 +507,13 @@ class Analyser {
         }
         // Reindex :
         $GLOBALS['argv'] = array_merge($GLOBALS['argv']);
-        // end of code adapted from php.net 
+        // end of code adapted from php.net
         return $optionsAarray;
     }
 
     /**
      *
-     * @param type $command 
+     * @param type $command
      */
     private function _help($command) {
         $language = \CLI\_Help::DetectLanguage();
@@ -494,26 +522,27 @@ class Analyser {
         $help->display($command);
     }
 
-    /*
+    /**
      * Function: Prompt user and get user input, returns value input by user.
      *            Or if return pressed returns a default if used e.g usage
      * $name = promptUser("Enter your name");
      * $serverName = promptUser("Enter your server name", "localhost");
-     * Note: Returned value requires validation 
+     * Note: Returned value requires validation
      *
-     * @author : Mike Gleaves (Ric)
+     * @author : Mike Gleaves (Ric) (adapted: introduction of initial value)
      * @see http://wiki.uniformserver.com/index.php/PHP_CLI:_User_Input
-     * 
+     *
      * @param string $promptStr the message for the user
      * @param mixed $defaultVal the default value
+     * @param mixedtype $initialVal
      * @return string the value returned (may be the default)
      * @todo This method could be static
      */
-
-    public function promptUser($promptStr, $defaultVal = \FALSE) {
-        ;
-
+    public static function PromptUser($promptStr, $defaultVal = \FALSE, $initialVal = '') {
         if ($defaultVal) {                             // If a default set
+            if (!empty($defaultVal)) {
+                $defaultVal = $initialVal;
+            }
             echo $promptStr . "[" . $defaultVal . "] : "; // print prompt and default
         }
         else {                                        // No default set
@@ -529,20 +558,19 @@ class Analyser {
     }
 
     /**
-     * 
+     * The same as promptUser but manages boolean values
+     *
      * @param string $promptStr the message for the user
      * @param mixed $defaultVal the default value (a boolean or string or int equivalent)
      * @param string $local localised strings synonymous to TRUE (by def in French)
      * @return boolean the value returned (may be the default)
      */
-    public function promptUserLogical($promptStr, $defaultVal = 'FALSE', $local = 'ouivrai') {
+    public static function PromptUserLogical($promptStr, $defaultVal = 'FALSE', $local = 'ouivrai') {
         if (is_bool($defaultVal)) {
             $defaultVal = $defaultVal ? 'TRUE' : 'FALSE';
         }
-        $value = $this->promptUser($promptStr, $defaultVal);
+        $value = strtolower(self::PromptUser($promptStr, $defaultVal));
         return strpos("1\\trueyes" . $local, strtolower($value)) === \FALSE ? \FALSE : \TRUE;
     }
 
 }
-
-

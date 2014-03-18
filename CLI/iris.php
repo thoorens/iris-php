@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
@@ -31,8 +31,14 @@ define('IRIS_USER_PARAMFOLDER', '/.iris/');
 define('IRIS_USER_INI', 'iris.ini');
 define('IRIS_PROJECT_INI', 'projects.ini');
 
+
+/* ============================================================================
+ * C L A S S E S   A N D   F U N C T I O N S
+ * ============================================================================ */
+
 /**
- * To prevent a loading of Loader which contains \Iris\Engine\Debug
+ * A modified version of \Iris\Engine\Debug. The &lt;pre> tag have been 
+ * removed. Static methods ErrorBox and ErroBoxDie have been removed too.
  */
 class Debug {
 
@@ -46,14 +52,16 @@ class Debug {
     }
 
     /**
-     * Display a var_dump between <pre> tags and die
-     * 
-     * @param mixed $var : a var or text to dump
+     * Displays a var_dump tags and optionaly dies
+     *
+     * @param mixed $var A printable message or variable
+     * @param string $dieMessage
+     * @param int $traceLevel If called from iris_debug, trace level is 1 instead of 0
      */
     public static function DumpAndDie($var, $dieMessage = NULL) {
         if (is_null($dieMessage)) {
             $trace = debug_backtrace();
-            $dieMessage = sprintf('Debugging interrupt in file <b> %s </b> line %s', $trace[0]['file'], $trace[0]['line']);
+            $dieMessage = sprintf("Debugging interrupt in file \033[1m%s\033[0m  line \033[1m%s\033[0m\n", $trace[0]['file'], $trace[0]['line']);
         }
         self::Dump($var);
         self::Kill($dieMessage);
@@ -65,25 +73,20 @@ class Debug {
     }
 
     public static function showSections($configs) {
-        echo "Sections in configs\n";
+        echoLine("Sections in configs");
         foreach ($configs as $section => $content) {
-            echo "[$section]\n";
+            echoLine("[$section]");
         }
     }
 
 }
 
-// end if class Debug
-
-/* =============================================================
- * FUNCTIONS
- */
-
 /**
+ * A debugging tool using Debug static methods
  * 
- * @param type $var
- * @param type $die
- * @param type $Message
+ * @param mixed $var
+ * @param boolean $die By default the function ends the program
+ * @param type $Message An optional message
  */
 function iris_debug($var, $die = TRUE, $Message = NULL) {
     if ($die) {
@@ -94,42 +97,53 @@ function iris_debug($var, $die = TRUE, $Message = NULL) {
     }
 }
 
+function echoLine($message) {
+    echo $message . "\n";
+}
+
 /**
+ * A not very clean way to obtain a shell var value in Windows
  * 
  * @param type $var
  * @return type
  */
-function shellvar($var) {
+function winShellVar($var) {
     return str_replace("\n", "", shell_exec("echo %$var%"));
 }
 
+/**
+ * This class offers some necessary functions for the main program
+ */
 class FrontEnd {
 
     private $_userDir;
-    private $_windows;
+    private $_isRunningInWindow;
     private $_paramFileName;
     private $_irisInstallationDir;
 
     public static function GetInstance() {
         static $instance = \NULL;
-        if(is_null($instance)){
+        if (is_null($instance)) {
             $instance = new FrontEnd();
         }
         return $instance;
     }
 
+    /**
+     * The FrontEnd constructor <ul>
+     * <li>detects the running OS
+     * <li>determines the user directory
+     * <li>reads iris.ini (or create it)
+     */
     private function __construct() {
         $this->_osDetect();
         $this->_detectUserDir();
-        $this->readIni();
-    }
 
-    public function readIni() {
         // Analyses iris.ini file
         // Warning this file has only two lines e.g.
         // [Iris]
         // PathIris = /mylibs/iris_library
-        $iniContent = $this->getIrisIniContent();
+        $iniContent = $this->_readOrCreateIrisDotIni();
         if (count($iniContent) < 2) {
             die(BADINI);
         }
@@ -141,13 +155,17 @@ class FrontEnd {
             die(BADINI);
         }
         $this->_irisInstallationDir = str_replace('"', '', trim($value));
-        return $this->_irisInstallationDir;
     }
 
     public function getParamFileName() {
         return $this->_paramFileName;
     }
 
+    /**
+     * Returns the name of the directory containing the iris framework
+     * 
+     * @return string
+     */
     public function getIrisInstallationDir() {
         return $this->_irisInstallationDir;
     }
@@ -157,10 +175,10 @@ class FrontEnd {
      */
     private function _osDetect() {
         if (PHP_OS == 'WINNT') {
-            $this->_windows = \TRUE;
+            $this->_isRunningInWindow = \TRUE;
         }
         else {
-            $this->_windows = \FALSE;
+            $this->_isRunningInWindow = \FALSE;
         }
     }
 
@@ -169,12 +187,12 @@ class FrontEnd {
      */
     private function _detectUserDir() {
         // Check existence of ini file
-        if ($this->_windows) {
+        if ($this->_isRunningInWindow) {
             // expect Vista/7/8  
-            $this->_userDir = shellvar("localappdata");
+            $this->_userDir = winShellVar("localappdata");
             if (!file_exists($this->_userDir)) {
                 // expect 2000/XP
-                $this->_userDir = shellvar("appdata");
+                $this->_userDir = winShellVar("appdata");
                 // impossible to locate the user parameter directory
                 if (!file_exists($this->_userDir)) {
                     $this->_userDir = \NULL;
@@ -191,25 +209,27 @@ class FrontEnd {
     }
 
     /**
-     * Reads the content of the iris.ini file
-     * @return array(string)
+     * Reads the content of the iris.ini file as an array. If necessary creates it 
+     * if it does not exist and if the user has provided a directory containing the framework
+     * 
+     * @return string[]
      */
-    public function getIrisIniContent() {
+    private function _readOrCreateIrisDotIni() {
         $userDir = $this->_userDir;
         if (is_null($userDir)) {
-            echo "iris.php is not able to find where to read or write your parameter files.\n";
+            echoLine("iris.php is not able to find where to read or write your parameter files.");
             die("IRIS PHP CLI will not be functional on your system, sorry.\n");
         }
         $paramDir = "$userDir" . IRIS_USER_PARAMFOLDER;
         if (!file_exists($paramDir)) {
-            echo "Creating $paramDir\n";
+            echoLine("Creating $paramDir");
             mkdir($paramDir);
         }
         $this->_paramFileName = "$paramDir" . IRIS_USER_INI;
         // if not parameter file, create it
         if (!file_exists($this->_paramFileName)) {
             if ($GLOBALS['argc'] == 1) {
-                echo "You must supply the path to your Iris-PHP installation to init your parameter file\n";
+                echoLine( "You must supply the path to your Iris-PHP installation to init your parameter file");
                 die("before beeing able to use this program. See documentation if necessary.\n");
             }
             else {
@@ -222,17 +242,25 @@ class FrontEnd {
 PathIris = $this->_irisInstallationDir
 STOP;
                 file_put_contents($this->_paramFileName, $data);
-                echo "Parameter file $this->_paramFileName has been created\n";
+                echoLine( "Parameter file $this->_paramFileName has been created");
                 die("Now you can use this program (iris.php --help for help)\n");
             }
         }
         return file($this->_paramFileName);
     }
 
-    public function preloadClasses($classes = array()) {
-        // loads some classes (with dependences)
+    /**
+     * Loads the required classes (by default all the classes shared by all
+     * treatments
+     * 
+     * @param string[] $classes
+     */
+    public function preloadClasses($classes = []) {
+        // bu default loads some classes (with dependencies)
         if (count($classes) == 0) {
             $classes = [
+                // Engine
+                'Iris/Engine/Debug',
                 // CLI
                 'CLI/Parameters',
                 'CLI/Analyser',
@@ -264,18 +292,30 @@ STOP;
         }
     }
 
+    /**
+     * Displays an exception message and dies
+     * 
+     * @param \Exception $ex The thrown exception
+     * @param int $type If is 1, specifies the exception occured while reading the parameters
+     */
     public function displayException(\Exception $ex, $type) {
-        echo "IRIS-PHP " . \Iris\System\Functions::IrisVersion() . " CLI error:\n";
+        echoLine("IRIS-PHP " . \Iris\System\Functions::IrisVersion() . " CLI error:");
         if ($type == 1) {
-            echo "Exception during parameters reading\n";
+            echoLine( "Exception during parameters reading");
         }
-        echo $ex->getMessage() . "\n";
+        echoLine($ex->getMessage() . "");
         die($type);
     }
 
 }
 
+/* ============================================================================
+ * M A I N   P R O G R A M
+ * ============================================================================ */
+
+// Gets a unique instance of the front end controller
 $frontEnd = FrontEnd::GetInstance();
+// Loads the classes shared by all treatment
 $frontEnd->PreloadClasses();
 \Iris\OS\_OS::GetInstance();
 
@@ -292,7 +332,7 @@ catch (Exception $ex) {
 
 // process commands
 try {
-    $analyser->process();
+    $analyser->processLine();
 }
 catch (Exception $ex) {
     $frontEnd->displayException($ex, 2);
