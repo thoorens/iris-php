@@ -1,7 +1,7 @@
 {php}$icone = $this->crudIcon(){/php}
-<h1>Example edition</h1>
+<h1>Edition</h1>
 <div>
-    {(icone->create())} Add a new person
+    {(icone->create())} {(icone->makeTooltip('create'))}
     <ul class="crud">
         {foreach(lines,line)}            
             <li>
