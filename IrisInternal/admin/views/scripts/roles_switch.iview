@@ -1,17 +1,17 @@
 <h1>Role switcher</h1>
 <fieldset title="To relog a dummy user having a specific role" name="Test">
     <legend>Choose the role to test</legend>
-<? if (!is_null($form1)): ?>
-    {form1}
-    <?else:?>
-    No ACL or session defined. 
-    <?endif?>
+    {if(!is_null($form1))}
+        {form1}
+    {else}
+        No ACL or session defined. 
+    {/if}
 </fieldset>
 <fieldset title="To relog a real user taken from the list of defined users">
     <legend>Choose the user to test</legend>
-    <?if(!is_null($form2)):?>
-    {form2}
-    <?else:?>
-    Define <tt>\Iris\Users\TUsers::$systemUserEntity</tt> to enable this feature.
-    <?endif?>
+    {if(!is_null($form2))}
+        {form2}
+    {else}
+        Define <tt>\Iris\Users\TUsers::$systemUserEntity</tt> to enable this feature.
+    {/if}
 </fieldset>
