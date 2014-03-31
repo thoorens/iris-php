@@ -17,14 +17,14 @@ namespace Iris\Forms;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  */
 
 /**
  * The abstract class for all the form factories, grouping all
  * common facilities.
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -33,26 +33,24 @@ abstract class _FormFactory {
 
     /**
      * The library in which find the elements
-     * 
-     * @var string 
+     *
+     * @var string
      */
     protected static $_Library = null;
 
     /**
      * The default form factory
-     * 
+     *
      * @var _FormFactory
      */
     protected static $_DefaultFormFactory = NULL;
 
-    
-    public static function __classInit(){
+    public static function __classInit() {
         $formClassName = get_called_class();
-        $nameChunks = explode('\\',$formClassName);
+        $nameChunks = explode('\\', $formClassName);
         array_pop($nameChunks);
         static::$_Library = implode('\\', $nameChunks);
     }
-
 
     /**
      * The current form class becomes the default one
@@ -77,14 +75,14 @@ abstract class _FormFactory {
     /**
      *
      * @param type $name
-     * @return _Form 
+     * @return _Form
      */
     public abstract function createForm($name);
 
     /**
      *
      * @param string $name
-     * @return Element 
+     * @return Element
      */
     public function __call($function, $params) {
         // createElementtype
@@ -99,6 +97,7 @@ abstract class _FormFactory {
             $type = substr($function, 9);
             return $this->_validator($type, $params);
         }
+        iris_debug($function);
         throw new \Iris\Exceptions\NotSupportedException('Element type unknown');
     }
 
@@ -113,7 +112,7 @@ abstract class _FormFactory {
      *
      * @param string $name
      * @param string $subtype
-     * @return Element 
+     * @return Element
      */
     protected function _createInput($name, $subtype, $options = array()) {
         $class = $this->getClass('\\Elements\\InputElement');
@@ -129,7 +128,7 @@ abstract class _FormFactory {
      *
      * @param type $name
      * @param type $options
-     * @return Elements\Checkbox 
+     * @return Elements\Checkbox
      */
     public function createCheckbox($name, $options = array()) {
         $class = $this->getClass('\\Elements\\Checkbox');
@@ -137,10 +136,20 @@ abstract class _FormFactory {
     }
 
     public function createButtonGroup($name, $options = array()) {
-        $class = $this->getClass('\\Elements\ButtonGroup');
+        $class = $this->getClass('\\Elements\\ButtonGroup');
         return new $class($name, 'Submit', $this, $options);
     }
 
+    public function createButtonLinkGroup($name, $options = array()) {
+        $class = $this->getClass('\\Elements\\ButtonLinkGroup');
+        return new $class($name, 'Submit', $this, $options);
+    }
+    
+    public function createLink($name, $key, $options = array()){
+        $class = $this->getClass('\\Elements\\Link');
+        return new $class($name,  $key, $this, $options);
+    }
+    
     public function createRadioButton($name, $options = array()) {
         $class = $this->getClass('\\Elements\\RadioButton');
         return new $class($name, $options);
@@ -152,6 +161,14 @@ abstract class _FormFactory {
         return $class;
     }
 
+    /**
+     * Creates a text area
+     * 
+     * @param string $name Name of the element
+     * @param array $options Array of optons
+     * 
+     * @return \Iris\Forms\Elements\AreaElement
+     */
     public function createArea($name, $options = array()) {
         $class = $this->getClass('\\Elements\\AreaElement');
         return new $class($name, $options);
@@ -170,7 +187,7 @@ abstract class _FormFactory {
     /**
      *
      * @param type $name
-     * @return Elements\MultiCheckbox 
+     * @return Elements\MultiCheckbox
      */
     public function createMultiCheckbox($name, $options = array()) {
         $class = $this->getClass('\\Elements\\MultiCheckbox');
@@ -186,7 +203,7 @@ abstract class _FormFactory {
     /**
      *
      * @param type $name
-     * @return \Iris\Forms\Elements\RadioGroup 
+     * @return \Iris\Forms\Elements\RadioGroup
      */
     public function createRadioGroup($name, $options = array()) {
         $class = $this->getClass('\\Elements\\RadioGroup');

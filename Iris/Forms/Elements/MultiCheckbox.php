@@ -1,6 +1,6 @@
 <?php
-namespace Iris\Forms\Elements;
 
+namespace Iris\Forms\Elements;
 
 /*
  * This file is part of IRIS-PHP.
@@ -29,39 +29,43 @@ namespace Iris\Forms\Elements;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class MultiCheckbox extends _ElementGroup{
+class MultiCheckbox extends _ElementGroup {
 
     protected $_perLine = 4;
     protected $_itemType = 'Checkbox';
-    
+
     public function __construct($name, $type, $formFactory, $options = array()) {
         parent::__construct($name, 'div', $formFactory, $options);
     }
-    
+
     protected function _dispatchValues() {
         $value = $this->_value;
         $key = 1;
         $count = 0;
         $max = count($this->_subComponents);
         // stopping loop on value may miss MSB
-        while ($count<$max) {
+        while ($count < $max) {
             if (isset($this->_subComponents[$key])) {
                 $digit = ($value % 2) ? '1' : '0';
-                $this->_subComponents[$key]->setValue($digit);
+                $this->_subComponents[$key]->setValue($key);
+                if ($digit == 1) {
+                    $this->_subComponents[$key]->checked = "checked";
+                }
                 $count++;
             }
-            $value = floor($value/2);
+            $value = floor($value / 2);
             $key*=2;
         }
 
         return $this;
     }
-    
+
     /**
-     *
+     * Computes the value of the components
+     *  
      * @param mixed[] $data (data from POST) 
      */
-    public function compileValue(&$data=NULL) {
+    public function compileValue(&$data) {
         $sum = 0;
         $i = 1;
         foreach ($this->_subComponents as $element) {
@@ -69,19 +73,54 @@ class MultiCheckbox extends _ElementGroup{
             if (isset($data[$dataName])) {
                 $sum += $i;
             }
-//            if($element->getValue()){
-//                $sum += $i;
-//            }
             $i *= 2;
         }
         return $sum;
     }
 
-    
+    /**
+     * Permits to give a default value to the multicheckbox only if
+     * no previous data can be found in $_POST
+     * 
+     * @param int $defaultValue A serie of bits in an integer serving of initial value
+     * @param boolean $post Seeks values in $_POST, otherwise in $_GET
+     */
+    public function autoSet($defaultValue = 0, $post = \TRUE) {
+        if ($post) {
+            $data = $_POST;
+        }
+        else {
+            $data = $_GET;
+        }
+        $sum = $this->compileValue($data);
+        if (isset($data[$this->getName() . '0'])) {
+            $this->setValue($sum);
+        }
+        else {
+            $this->setValue($defaultValue);
+        }
+    }
 
-
-    
+    /**
+     * Adds options to a the multicheckbox
+     * 
+     * @staticvar boolean $firsTime records a previous execution
+     * @param mixed[] $pairs The names of the differents bits
+     * @param boolean $valuesAsKeys (ignored)
+     * @return \Iris\Forms\Elements\MultiCheckbox
+     */
+    public function addOptions($pairs, $valuesAsKeys = FALSE) {
+        parent::addOptions($pairs, \FALSE);
+        static $firstTime = \FALSE;
+        if (!$firstTime) {
+            $innerElement = $this->_formFactory->createHidden($this->_name . '0');
+            $innerElement->_container = $this;
+            //$this->_container->registerElement($innerElement);
+            $this->_subComponents[0] = $innerElement;
+            $this->_container->registerElement($innerElement);
+        }
+        return $this;
+    }
 
 }
-
 

@@ -46,7 +46,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * Indicate that tag has structure <tag attribues />
      * @var bolean 
      */
-    protected static $_EndTag = FALSE;
+    protected static $_EndTag = \FALSE;
 
     /**
      *
@@ -82,7 +82,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      *
      * @var string
      */
-    protected $_name = NULL;
+    protected $_name = \NULL;
 
     /**
      *
@@ -106,20 +106,13 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      *
      * @var _Form 
      */
-    protected $_container = NULL;
+    protected $_container = \NULL;
 
     /**
      *
      * @var iv\_Validator 
      */
-    protected $_validator = NULL;
-
-    /**
-     * TRUE if the element can be checked
-     * 
-     * @var boolean 
-     */
-    protected $_checkable = FALSE;
+    protected $_validator = \NULL;
 
     /**
      * For input file, indicate max file size
@@ -136,6 +129,13 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     protected $_options = [];
 
     /**
+     * A class to put on each part of the render code
+     * 
+     * @var string
+     */
+    protected $_globalClass = \NULL;
+
+    /**
      *
      * @param string $name name of the widget
      * @param string $type type of the widget
@@ -145,7 +145,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         $this->_type = $type;
         $this->_labelPosition = self::BEFORE;
         $this->setName($name);
-        $this->_canDisable = TRUE;
+        $this->_canDisable = \TRUE;
         $this->_options = $options;
     }
 
@@ -219,6 +219,24 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         return $this;
     }
 
+    /**
+     * Sets a classname common to all parts of the rendering
+     * @param string $className
+     */
+    public function setGlobalClass($className) {
+        $this->_globalClass = $className;
+        return $this;
+    }
+
+    private function _getGlobalClass() {
+        if (is_null($this->_globalClass)) {
+            return '';
+        }
+        else {
+            return ' class="' . $this->_globalClass . '"';
+        }
+    }
+
     /* ----------------------------------------------------------------------
      * Rendering 
      */
@@ -242,7 +260,8 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         // decorating
         $layout->setCurrentElement($this);
         $text = '';
-        $text .= $layout->initialSeparator("id=\"$this->_name-label\"");
+        $global = $this->_getGlobalClass();
+        $text .= $layout->initialSeparator("id=\"$this->_name-label\" $global");
         $text .= $this->_outerLabel();
         $text .= $layout->innerSeparator();
         $text .= $this->_renderError();
@@ -257,7 +276,8 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     public function baseRender($dummy = \NULL) {
         $text = '';
         $text .= $this->_innerLabel(self::BEFORE);
-        $text .= "\t<$this->_type";
+        $global = $this->_getGlobalClass();
+        $text .= "\t<$this->_type $global";
         if ($this->_subtype != '') {
             $text .= " type=\"$this->_subtype\" ";
         }
@@ -341,21 +361,18 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      */
     protected function _renderValue() {
         $value = $this->getValue();
-        $checkMark = '';
         if (!is_null($this->_validator)) {
             $value = $this->_validator->prepareValue($value);
         }
-        if ($this->_checkable) {
-            if ($value == 1) {
-                $checkMark = ' checked = "checked" ';
-            }
-        }
-        $html = "value=\"$value\" $checkMark";
+        $html = "value=\"$value\" ";
         return $html;
     }
 
+    
+
     /**
      * Renders a label (or nothing) according to the position
+     * 
      * @param int $position
      * @param boolean $inner
      * @return string
@@ -406,11 +423,11 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     protected function _innerLabel($position) {
-        return $this->_renderLabel($position, TRUE);
+        return $this->_renderLabel($position, \TRUE);
     }
 
     protected function _outerLabel() {
-        return $this->_renderLabel(self::BEFORE, FALSE);
+        return $this->_renderLabel(self::BEFORE, \FALSE);
     }
 
     /**
@@ -438,7 +455,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         if (!$validator instanceof iv\_Validator) {
             if (is_null($this->_container)) {
                 throw new \Iris\Exceptions\FormException(
-                $this->_('named validators only operate on objects registred with addTo().', TRUE));
+                $this->_('named validators only operate on objects registred with addTo().', \TRUE));
             }
             $creator = "validator$validator";
             $ff = $this->getFormFactory();
@@ -465,7 +482,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
 
     public function validate() {
         if (is_null($this->_validator)) {
-            return TRUE;
+            return \TRUE;
         }
         $val = $this->getValue();
         return $this->_validator->validate($this->getValue());
@@ -511,9 +528,8 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     public function setValue($value) {
-        if ($this->_checkable) {
-            $value = $value === '0' ? 0 : 1;
-        }
+        //iris_debug($value,\FALSE);
+        $value = str_replace('"', '&quot;', $value);
         $this->_value = $value;
         return $this;
     }

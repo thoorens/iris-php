@@ -40,9 +40,7 @@ class Required extends _Validator {
     }
 
     protected function _localValidate(&$value) {
-        $name = $this->_element->getName();
         if ($value == "") {
-            
             $this->_element->setError($this->_('This data is required',TRUE));
             return FALSE;
         }

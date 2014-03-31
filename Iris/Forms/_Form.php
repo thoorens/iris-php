@@ -210,6 +210,20 @@ abstract class _Form implements iFormContainer {
     }
 
     /**
+     * Place a localized action name in the submit button
+     * 
+     * @param type $submitValue The name of the action in the submit button
+     * @param type $submitName The submit button name (by def. Submit)
+     */
+    public function setSubmitMessage($submitValue, $submitName = 'Submit') {
+        $submit = $this->getComponent($submitName);
+        if (is_null($submit)) {
+            throw new \Iris\Exceptions\FormException("The form does not have a $submitName button");
+        }
+        $submit->setValue($submitValue);
+    }
+    
+    /**
      * Checks each data in formdata against the element validators
      *
      * @param mixed[] $formData

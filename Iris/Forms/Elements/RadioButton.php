@@ -35,13 +35,16 @@ class RadioButton extends \Iris\Forms\_Element {
      * @var string
      */
     protected $_commonName = '';
+    
+    protected $_cheched = \FALSE;
+    
+    protected $_value = \NULL;
 
     public function __construct($name, $options = array()) {
         parent::__construct($name, 'input', $options);
         $this->_subtype = 'radio';
         $this->setLabel($name);
         $this->_labelPosition = self::AFTER + self::INNER;
-        $this->_checkable = TRUE;
     }
 
     public function baseRender($key = \NULL) {
@@ -68,5 +71,10 @@ class RadioButton extends \Iris\Forms\_Element {
         $this->_commonName = $commonName;
     }
 
+    
+    
+
+    
+    
 }
 
