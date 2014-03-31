@@ -44,26 +44,12 @@ trait tSystemTranslatable {
     public function _($message, $system=\TRUE) {
         if ($system) {
             $translator = \Tutorial\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
         }
-        $translator = $this->getTranslator();
+        else{
+            $translator = \Iris\Translation\_Translator::GetInstance();
+        }
         return $translator->translate($message);
     }
-
-    /**
-     * Gets the current non systeme translator
-     * 
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
-    
     
 }
 
