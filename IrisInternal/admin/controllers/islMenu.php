@@ -38,7 +38,7 @@ class islMenu extends \IrisInternal\main\controllers\_SecureIslet implements \Ir
         $functions[] = $this->_('Role tester|/!admin/roles/switch|Switch to a dummy user having a specific role',TRUE);
         //$functions[] = $this->_('ACL management|/!admin/roles/acl|Display and edit all Access Control Lists',TRUE);
         $functions[] = $this->_('Structure management|/!admin/structure/index|Manage modules, controllers and action',TRUE);
-        //$sfunctions[] = $this->_('Function 4||Future enhancement',TRUE);
+        $functions[] = $this->_('Sitemap creation|/!admin/sitemap/index|Create a site map for Google indexation',TRUE);
         //$functions[] = $this->_('Function 5||Future enhancement',TRUE);
         foreach($functions as $function){
             $buttons[] = explode('|',$function);
