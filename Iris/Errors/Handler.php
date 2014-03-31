@@ -86,7 +86,7 @@ class Handler implements \Iris\Design\iSingleton {
                 $message = sprintf("%s <br>In <b>%s</b> (line <b>%s</b>)", $exception->getMessage(), $exception->getFile(), $exception->getLine());
                 //iris_debug($exception->getTrace());
                 if($exception instanceof \Iris\Exceptions\_Exception){
-                    \Iris\Engine\Debug::ErrorBoxDie($message, $exception->getTitle());
+                    \Iris\Engine\Debug::ErrorBoxDie($message, $exception->getExceptionName());
                 }
                 else{
                     \Iris\Engine\Debug::ErrorBoxDie($message, 'PHP native exception');
