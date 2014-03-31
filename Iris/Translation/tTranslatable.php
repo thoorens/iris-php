@@ -45,24 +45,18 @@ trait tTranslatable {
      * @return string 
      */
     public function _($message, $system=\FALSE) {
-        if ($system) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
-        }
-        $translator = $this->getTranslator();
+        $translator = $this->getTranslator($system);
         return $translator->translate($message);
     }
 
-    /**
-     *
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
+    public function getTranslator($system = \FALSE){
+        if ($system) {
+            $translator = \Iris\Translation\SystemTranslator::GetInstance();
+        }
+        else{
+            $translator =\Iris\Translation\_Translator::GetInstance();
         }
         return $translator;
     }
+    
 }

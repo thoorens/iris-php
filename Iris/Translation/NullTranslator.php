@@ -4,7 +4,6 @@
 namespace Iris\Translation;
 
 use Iris\Exceptions as ie;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -29,7 +28,7 @@ use Iris\Exceptions as ie;
  * to system translation for messages from the framework). It does nothing
  * except returning the string passed as a parameter to the "translate" method.
  * It can be replaced by another default translator by means of the static method
- * \Iris\Translation\_Translator::SetCurrentTranslator.
+ * \Iris\SysConfig\Settings:SetDefaultTranslator('XXXX');
  * 
  * After calling, \Iris\Translation\NullTranslator::SetMarkers()with appropriate arguments,
  * initial and ending markers wil be preprend and appened to the string as a way to identy

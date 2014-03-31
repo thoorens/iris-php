@@ -38,12 +38,12 @@ interface iTranslatable {
     /**
      * @return _Translator
      */
-  function getTranslator();
+  public function getTranslator();
     
     /**
      * @return string
      */
-  function _($message,$system=\FALSE);
+  public function _($message,$system=\FALSE);
     
 }
 
