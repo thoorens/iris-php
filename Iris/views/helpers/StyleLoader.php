@@ -38,11 +38,26 @@ namespace Iris\views\helpers;
  * </ul>
  */
 class StyleLoader extends _ViewHelper {
-use tLoaderRegister;
+
+    use tLoaderRegister;
+
+    /**
+     * It is critical this help be a singleton
+     * @var boolean
+     */
     protected static $_Singleton = \TRUE;
-    
-    private $_styles = array();
-    private $_styleFiles = array();
+
+    /**
+     * a list of internal style definitions
+     * @var string[] 
+     */
+    private $_styles = [];
+
+    /**
+     * A list of css file to load
+     * @var string[] 
+     */
+    private $_styleFiles = [];
 
     /**
      * Add a new style or a new style file
@@ -58,18 +73,19 @@ use tLoaderRegister;
         else {
             $this->_styles[$name] = $content;
         }
-        if(is_numeric($content)){
+        if (is_numeric($content)) {
             return $this;
         }
     }
 
-    public function load($name, $content = NULL){
+    public function load($name, $content = NULL) {
         return $this->help($name, $content);
     }
-    
+
     /**
-     * Render styles and links to style file
+     * Renders styles and links to style file (only in non Ajax mode
      * 
+     * @param boolean $ajaxMode in Ajax mod, no rendering
      * @return string 
      */
     public function render($ajaxMode) {
@@ -94,13 +110,20 @@ ENDSTYLE;
         return $text;
     }
 
+    /**
+     * A file name is prefixed by '/css/', except if <ul>
+     * <li>it is absolute (beginning by /)
+     * <li>it has a bang operator (!)
+     * <li>it begins with http
+     * </ul>
+     * @param string $file
+     * @return string
+     */
     private function _URL($file) {
-        if ($file[1] == '!') {
+        if ($file[1] == '!' or $file[0] == '/' or strpos($file, 'http') === 0) {
             return $file;
         }
         return "/css/$file";
     }
 
 }
-
-

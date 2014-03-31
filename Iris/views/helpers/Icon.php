@@ -17,10 +17,10 @@ namespace Iris\views\helpers;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  *
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -34,53 +34,83 @@ namespace Iris\views\helpers;
 class Icon extends _ViewHelper {
 
     protected static $_Singleton = TRUE;
-    protected $_baseDir = 'icones/';
+    protected $_baseDir;
     protected $_javaScript = FALSE;
 
-    public function help() {
-        return $this;
+    /**
+     * By default, base directory is the one specified in settings
+     */
+    protected function _init() {
+        $this->_baseDir = \Iris\SysConfig\Settings::GetIconDir();
     }
 
     /**
-     * Création d'un lien-icone
-     * 
-     * @param string $ref
-     * @param string $iconName
-     * @param string $help
-     * @param string $desc
-     * @param string $iconText
-     * @return type 
+     * Creates an icon link or gets object instance to have access to public methods (no parameters provided)
+     *
+     * @param string $ref The URL of the link
+     * @param string $iconName The icon file name (without extension
+     * @param string $help The tooltip text
+     * @param type $desc The alt part of the icon img tab
+     * @param type $iconText A text to be displayed after the icon
+     * @param type $class An optional class for the image
+     * @return \Iris\views\helpers\Icon
+     */
+    public function help($ref = \NULL, $iconName = \NULL, $help = \NULL, $desc = null, $iconText = '', $class = \NULL) {
+        if (is_null($ref)) {
+            return $this;
+        }
+        else {
+            return $this->link($ref, $iconName, $help, $desc, $iconText, $class);
+        }
+    }
+
+    /**
+     * Creates an icon link
+     *
+     * @param string $ref The URL of the link
+     * @param string $iconName The icon file name (without extension
+     * @param string $help The tooltip text
+     * @param type $desc The alt part of the icon img tab
+     * @param type $iconText A text to be displayed after the icon
+     * @param type $class An optional cl
+     * @return string
      */
     public function link($ref, $iconName, $help, $desc = null, $iconText = '', $class = \NULL) {
         $desc = is_null($desc) ? $iconName : $desc;
-        $icon = $this->callViewHelper('image',$this->_baseDir . "$iconName.png", $desc, $help, '', $class) . $iconText;
+        $icon = $this->callViewHelper('image', $this->_baseDir . "/$iconName.png", $desc, $help, '', $class) . $iconText;
         return '<a href="' . $ref . '">' . $icon . '</a>';
     }
 
+    /**
+     * Same as link but this an alternative icon name when mouse over
+     *
+     * @param string $ref The URL of the link
+     * @param string $iconName The icon file names (without extension) separated by '|'
+     * @param string $help The tooltip text
+     * @param type $desc The alt part of the icon img tab
+     * @param type $iconText A text to be displayed after the icon
+     * @param type $class An optional cl
+     * @return string
+     */
     public function link2($ref, $iconNames, $help, $desc = null, $iconText = '', $class = \NULL) {
-        list($icon1, $icon2) = explode('|',$iconNames);
+        list($icon1, $icon2) = explode('|', $iconNames);
         $desc = is_null($desc) ? $icon1 : $desc;
-        $path1 = "/images/".$this->_baseDir."$icon1.png";
-        $path2 = "/images/".$this->_baseDir."$icon2.png";
+        $path1 = "/images" . $this->_baseDir . "/$icon1.png";
+        $path2 = "/images" . $this->_baseDir . "/$icon2.png";
         $attributes = "onmouseover = \"this.src='$path2'\" ";
         $attributes .= "onmouseout=\"this.src='$path1'\" ";
-        $icon = $this->callViewHelper('image',$this->_baseDir . $icon1, $desc, $help, '', $class, $attributes) . $iconText;
+        $icon = $this->callViewHelper('image', $this->_baseDir . "/$icon1.png", $desc, $help, '', $class, $attributes) . $iconText;
         return '<a href="' . $ref . '">' . $icon . '</a>';
     }
-
-    
 
     /**
      * accesseur en écriture pour le répertoire de base des icônes
-     * 
+     *
      * @param type $baseDir : répertoire de base pour les icônes
      */
     public function setBaseDir($baseDir) {
         $this->_baseDir = $baseDir;
     }
 
-    
-
 }
-
 

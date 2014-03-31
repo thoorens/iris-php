@@ -51,7 +51,7 @@ use tLoaderRegister;
      * @param string $content content of the script or file name (ends in .js)
      */
     public function help($index = NULL, $content = NULL) {
-        if (!is_null($index)) {
+        if (!is_null($content)) {
             if (is_string($content) and substr($content, -3) == '.js') {
                 $this->_scriptFiles[$index] = $content;
             }
@@ -59,7 +59,15 @@ use tLoaderRegister;
                 $this->_scripts[$index] = $content;
             }
         }
-        return $this;
+        else{
+            $content = $index;
+            if (is_string($content) and substr($content, -3) == '.js') {
+                $this->_scriptFiles[] = $content;
+            }
+            else {
+                $this->_scripts[] = $content;
+            }
+        }
     }
 
     /**

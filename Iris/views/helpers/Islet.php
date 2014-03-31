@@ -39,24 +39,25 @@ namespace Iris\views\helpers;
  */
 class Islet extends _ViewHelper {
 
-
-    public function help($isletName, $parameters=array(), $actionName='index',$moduleName=NULL) {
+    public function help($isletName, $parameters = [], $actionName = 'index', $moduleName = \NULL) {
         // creates another response
-        $response = \Iris\Engine\Response::GetOtherInstance($isletName, $actionName,$moduleName);
+        $response = \Iris\Engine\Response::GetOtherInstance($isletName, $actionName, $moduleName);
         // creates and uses the islets after verifying the parameters
+
+        /* @var $islet \Iris\MVC\_Islet */
         $islet = $response->makeController();
-        if(is_array($parameters)){
+        if (is_array($parameters)) {
             $islet->setParameters($parameters);
-        }else{
+        }
+        else {
             throw new \Iris\Exceptions\BadParameterException('The parameters transmited to an islet must be in an array');
         }
         // acts as a dispatcher
         $islet->preDispatch();
         $islet->excecuteAction();
-        $output = $islet->dispatch(FALSE);
+        $output = $islet->dispatch(\FALSE);
         $islet->postDispatch();
         return $output;
     }
 
 }
-

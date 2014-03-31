@@ -17,35 +17,39 @@ namespace Iris\views\helpers;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  *
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ * 
+ * @version $Id: $ *
  */
 
 /**
- * 
+ *
  *
  * Creates a button which links to a page or site
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Link extends \Iris\views\helpers\_ViewHelper {
 
-    public function help($message = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL, $id = \NULL) {
-        if(is_null($url)){
-            $url = $message;
-        }
+    /**
+     * @param string $label link label
+     * @param string $url target URL
+     * @param string $tooltip tooltip when mousevoer
+     * @param string $class class of the link
+     * @param string $id id of the linklabel
+     * @return string
+     */
+    public function help($label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL, $id = \NULL) {
         $subhelper = \Iris\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender('link', $message, $url, $tooltip, $class, $id);
+        return $subhelper->autoRender('link', $label, $url, $tooltip, $class, $id);
     }
 
 }
-
 
