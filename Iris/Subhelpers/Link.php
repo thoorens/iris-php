@@ -72,6 +72,12 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * @var string
      */
     protected $_imageFolder = \NULL;
+    
+    /**
+     * A temporary image folder used internally
+     * @var string
+     */
+    protected $_internalImageFolder = \NULL;
 
     /**
      * Displays the final rendering for a link/button according to its type
@@ -105,7 +111,7 @@ class Link extends \Iris\Subhelpers\_Subhelper {
         $fileName = array_shift($args);
         list($label, $url, $tooltip, $class) = $this->_normalize($args);
         $this->callViewHelper('styleLoader', 'nojsbutton', 'span.btnlabel{padding:0 0 20px 20px}');
-        $image = $this->callViewHelper('image', $fileName, $label, $tooltip, $this->_imageFolder, 'btnlabel');
+        $image = $this->callViewHelper('image', $fileName, $label, $tooltip, $this->getImageFolder(), 'btnlabel');
         $helperName = $this->_type;
         return $this->$helperName($image, $url, $tooltip, $class);
     }
@@ -292,5 +298,35 @@ STYLE
         return $this;
     }
 
+    /**
+     * Get an optional image folder (managing a possible temporary one)
+     * 
+     * @return string 
+     */
+    public function getImageFolder() {
+        if(!is_null($this->_internalImageFolder)){
+            $folder = $this->_internalImageFolder;
+            $this->_internalImageFolder = \NULL;
+        }
+        else{
+            $folder = $this->_imageFolder;
+        }
+        return $folder;
+    }
+
+    /**
+     * Specifies an alternative temporary internal folder for images 
+     * It is erased rigth after usage.
+     * 
+     * @param type $internalImageFolder
+     * @return \Iris\Subhelpers\Link For fluent interface
+     */
+    public function setInternalImageFolder($internalImageFolder) {
+        $this->_internalImageFolder = $internalImageFolder;
+        return $this;
+    }
+
+
+    
 }
 

@@ -91,7 +91,6 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      */
     protected $_subCategoryDesc;
 
-    
     /**
      * May force a language for explanations (this feature is required by IrisWB which is independant from context)
      *
@@ -127,20 +126,22 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
 
     protected function __construct() {
         // Main CRUD icons
-        $this->insert(new Icon('create', "Add %U %E| (type %P)",'%P'));
-        $this->insert(new Icon('update', 'Modify %D %E %O','%I'));
-        $this->insert(new Icon('read', 'Display %D %E %O','%I'));
-        $this->insert(new Icon('delete', 'Delete %D %E %O','%I'));
-        $this->insert(new Icon('upload', 'Upload %D %E %O','%I'));
+        $this->insert(new Icon('create', "Add %U %E| (type %P)", '%P'));
+        $this->insert(new Icon('update', 'Modify %D %E %O', '%I'));
+        $this->insert(new Icon('read', 'Display %D %E %O', '%I'));
+        $this->insert(new Icon('delete', 'Delete %D %E %O', '%I'));
+        $this->insert(new Icon('upload', 'Upload %D %E %O', '%I'));
         // extended CRUD icons
         $this->insert(new Icon('first', 'Go to the first «%E»'));
-        $this->insert(new Icon('previous', 'Go to the previous «%E»','%I'));
-        $this->insert(new Icon('next', 'Go to the next «%E»','%I'));
+        $this->insert(new Icon('previous', 'Go to the previous «%E»', '%I'));
+        $this->insert(new Icon('next', 'Go to the next «%E»', '%I'));
         $this->insert(new Icon('last', 'Go to the last «%E»'));
-        $this->_iconDir = \Iris\SysConfig\Settings::GetIconDir();
         // subclasses may add new icons
         $this->_init();
-        if(is_null($this->_iconDir) or is_null($this->_systemIconDir)){
+        if (is_null($this->_iconDir)) {
+            $this->_iconDir = \Iris\SysConfig\Settings::GetIconDir();
+        }
+        if (is_null($this->_systemIconDir)) {
             throw new \Iris\Exceptions\HelperException('CrudIconManager must set values to iconDir and systemIconDir');
         }
     }
@@ -271,7 +272,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      * @return \Iris\Subhelpers\_CrudIconManager (fluent interface)
      */
     public function setSubtype($subCategory, $subCategoryDesc = '') {
-        if($subCategoryDesc == ''){
+        if ($subCategoryDesc == '') {
             $subCategoryDesc = $subCategory;
         }
         $this->_subCategory = $subCategory;
@@ -305,9 +306,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
         $active = count($arguments) ? $arguments[0] : \TRUE;
         /* @var $icon Icon */
         if (!isset($this->_icons[$name])) {
-            $arg = print_r($arguments, \TRUE);
-            iris_debug($name);
-            throw new \Iris\Exceptions\HelperException('Bad ' . $arg);
+            throw new \Iris\Exceptions\HelperException('Operation unknow in CrudIconManager: ' . $name);
         }
         $icon = $this->_icons[$name];
         return $icon->render($active);
@@ -316,53 +315,61 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
     /**
      * Creates the ref part of the link
      * 
-     * @param string $operation
-     * @param boolean $urlParam
+     * @param Icon $icon
      * @return string
      */
-    public function makeReference($operation, $urlParam) {
+    public function makeReference($icon) {
+        // small facility for IrisWB crudlinks test
+        if (!$icon instanceof $icon) {
+            $icon = $this->_icons[$icon];
+        }
+        $operation = $icon->getName();
+        $urlParam = $icon->getUrlParam();
         if ($urlParam == '%I') {
             if ($this->_data instanceof \Iris\DB\Object) {
                 foreach ($this->_idFields as $idField) {
                     $id[] = $this->_data->{$idField};
                 }
-                $id = implode('/',$id);
+                $id = implode('/', $id);
             }
             elseif (is_array($this->_data)) {
                 foreach ($this->_idFields as $idField) {
                     $id[] = $this->_data[$idField];
                 }
-                $id = implode('/',$id);
+                $id = implode('/', $id);
             }
             else {
                 $id = '';
             }
         }
-        elseif($urlParam == '%P') {
+        elseif ($urlParam == '%P') {
             $id = $this->_subCategory;
         }
         // in some case (e.a. IrisWB demo), we need to go back to icon to have $urlParam
-        elseif($urlParam == '?'){
+        elseif ($urlParam == '?') {
             $urlParam = $this->_icons[$operation]->getUrlParam();
             return $this->makeReference($operation, $urlParam);
         }
-        else{
+        else {
             $id = '';
         }
-        return "$this->_controller/$operation" . "_" . "$this->_actionSuffix/" . $id;
+        if (!is_null($icon->getSpecialUrl())) {
+            return $icon->getSpecialUrl() . '/' . $id;
+        }
+        else {
+            return "$this->_controller/$operation" . "_" . "$this->_actionSuffix/" . $id;
+        }
     }
 
     /**
      * Make the tooltip part of the icon/link
-     *
-     * @param type $format
-     * @param type $paramP
-     * @param string $objectName
-     * @return string
+     * 
+     * @param type $operation
+     * @return type
      */
     public function makeTooltip($operation) {
-        $format = $this->_($this->_icons[$operation]->getTooltipTemplate());
-        $format = $this->_treatCategory($format, $this->_subCategoryDesc);
+        $format0 = $this->_($this->_icons[$operation]->getTooltipTemplate());
+        $format1 = $this->_treatCategory($format0, $this->_subCategoryDesc);
         $aEntity = explode('_', $this->_entity);
         // if no gender, push Neutral
         if (count($aEntity) == 1) {
@@ -370,32 +377,21 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
         }
         list($initialGender, $entity) = $aEntity;
         list($defArticle, $undefArticle) = explode('_', $this->_articles($initialGender));
-        $format = str_replace('%U', $undefArticle, $format);
-        $format = str_replace('%D', $defArticle, $format);
-        $format = str_replace('%E', $entity, $format);
+        $format2 = str_replace('%U', $undefArticle, $format1);
+        $format3 = str_replace('%D', $defArticle, $format2);
+        $format4 = str_replace('%E', $entity, $format3);
         if ($this->_data instanceof \Iris\DB\Object) {
             $object = $this->_data->{$this->_descField};
-            $format = str_replace('%O', $object, $format);
+            $toolTip = str_replace('%O', $object, $format4);
         }
         elseif (is_array($this->_data)) {
             $object = $this->_data[$this->_descField];
-            $format = str_replace('%O', $object, $format);
+            $toolTip = str_replace('%O', $object, $format4);
         }
-        return $format;
-    }
-
-    /**
-     * Produces an example for CLI test during database definition
-     *
-     * @param string $operation
-     * @return string
-     */
-    public function testCLI($operation) {
-        iris_debug($this);
-        $opParam = $this->_icons[$operation];
-        $format = $this->_treatCategory($opParam[0], $this->_subCategory);
-        $objectName = "someName";
-        return $this->makeTooltip($format, $objectName);
+        else{
+            $toolTip = $format4;
+        }
+        return $toolTip;
     }
 
     /**
@@ -489,4 +485,3 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
     }
 
 }
-

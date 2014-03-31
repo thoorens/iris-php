@@ -91,6 +91,7 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
         if ($valuesAsKeys) {
             $pairs = array_combine($pairs, $pairs);
         }
+        //iris_debug($pairs);
         foreach ($pairs as $key => $value) {
             $this->_addOption($key, $value);
         }
@@ -99,14 +100,14 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
     }
 
     /**
-     *
-     * @param type $key
-     * @param type $value
-     * @return Element
+     * Creates a new element in the group and returns it.
+     * 
+     * @param mixed $key The element key
+     * @param mixed $value The element value
+     * @return _ElementGroup
      */
     protected function _addOption($key, $value) {
-        $createMethod = "create" . $this->_itemType;
-        $innerElement = $this->_formFactory->$createMethod($this->_name . $key)
+        $innerElement = $this->_createInnerElement($this->_name, $key)
                 ->setValue($value)
                 ->setLabel($value);
         $innerElement->_container = $this;
@@ -118,6 +119,20 @@ abstract class _ElementGroup extends \Iris\Forms\_Element implements iAidedValue
         return $innerElement;
     }
 
+    /**
+     * Creates an internal element belonging to the group. Some
+     * element types may require a proper create method interface.
+     * 
+     * @param  string $name The name of the group
+     * @param mixed $key The specific key value for the element
+     * @return _ElementGroup
+     */
+    protected function _createInnerElement($name, $key){
+        $createMethod = "create" . $this->_itemType;
+        return $this->_formFactory->$createMethod($name.$key);
+    }
+    
+    
     /**
      * Returns the actual value of the controller (as set during form creation)
      * @return mixed 

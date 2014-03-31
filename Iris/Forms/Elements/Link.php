@@ -1,10 +1,6 @@
 <?php
 
-
-
 namespace Iris\Forms\Elements;
-
-use Iris\Forms as ifo;
 
 /*
  * This file is part of IRIS-PHP.
@@ -26,35 +22,33 @@ use Iris\Forms as ifo;
  */
 
 /**
- * A group of buttons intented as a selector between
- * various options
+ * An option in a select group
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ButtonGroup extends _ElementGroup implements iAidedValue {
+class Link extends \Iris\Forms\_Element {
 
-    protected $_perLine = 4;
-    protected $_itemType = 'submit';
+    protected $_baseURL = "NONE";
+    protected $_id;
 
-    protected function _dispatchValues() {
-        
+    public function __construct($name,$id, $options = array()) {
+        $this->_subtype = 'link';
+        $this->_id = $id;
+        $this->setLabel($name);
+        $this->_labelPosition = self::NONE;
     }
 
-    public function compileValue(&$data) {
-        //iris_debug($data,\NULL);
-        $value = '';
-        foreach($this->_subComponents as $name=>$option){
-            $index = $this->_name.$name;
-            //echo "$index : ".$option->getValue()."<br/> ";
-            if(isset($data[$index])){
-                $value = $option->getValue();
-            }
-        }
-        return $value;
+    public function baseRender($key = \NULL) {
+        $link = [$this->_label[0], "$this->_baseURL$this->_id", $this->_label[0]];
+        $html = "\t\t" . \Iris\views\helpers\_ViewHelper::HelperCall('button', $link) . "\n";
+        return $html;
+    }
+
+    public function setBaseURL($baseURL) {
+        $this->_baseURL = $baseURL;
+        return $this;
     }
 
 }
-
-

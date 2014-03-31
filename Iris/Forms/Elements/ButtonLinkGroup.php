@@ -33,21 +33,23 @@ use Iris\Forms as ifo;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ButtonGroup extends _ElementGroup implements iAidedValue {
+class ButtonLinkGroup extends _ElementGroup implements iAidedValue {
 
     protected $_perLine = 4;
-    protected $_itemType = 'submit';
+    protected $_itemType = 'link';
+    protected $_baseURL;
 
     protected function _dispatchValues() {
-        
+        foreach($this->_subComponents as $component){
+            $component->setBaseURL($this->_baseURL);
+        }
     }
 
     public function compileValue(&$data) {
-        //iris_debug($data,\NULL);
         $value = '';
         foreach($this->_subComponents as $name=>$option){
             $index = $this->_name.$name;
-            //echo "$index : ".$option->getValue()."<br/> ";
+            // echo "$index : ".$option->getValue()."<br/> ";
             if(isset($data[$index])){
                 $value = $option->getValue();
             }
@@ -55,6 +57,17 @@ class ButtonGroup extends _ElementGroup implements iAidedValue {
         return $value;
     }
 
+    public function setBaseURL($baseURL) {
+        $this->_baseURL = $baseURL;
+        return $this;
+    }
+
+    protected function _createInnerElement($name, $key) {
+        $createMethod = "create" . $this->_itemType;
+        return $this->_formFactory->$createMethod($name, $key);
+    }
+
+    
 }
 
 
