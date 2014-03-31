@@ -64,9 +64,9 @@ abstract class _Error extends \Iris\MVC\_Controller {
     }
 
     protected final function _verifyAcl() {
+        
     }
 
-    
     /**
      * The default treatment for general error 
      */
@@ -130,6 +130,16 @@ abstract class _Error extends \Iris\MVC\_Controller {
         $this->displayError(\Iris\Errors\Settings::TYPE_PRIVILEGE);
     }
 
+    public final function documentAction($param) {
+        
+            switch ($param) {
+                case 'notfound':
+                    die('Document not found');
+                    break;
+            }
+        
+    }
+
     /**
      * A standard way to display error information:<ul>
      * <li> file
@@ -141,10 +151,10 @@ abstract class _Error extends \Iris\MVC\_Controller {
     protected function _exceptionDescription() {
         $this->__file = $this->_exception->getFile();
         $this->__line = $this->_exception->getLine();
-        if(is_a($this->_exception, '\Iris\Exceptions\_Exception')){
+        if (is_a($this->_exception, '\Iris\Exceptions\_Exception')) {
             $this->__type = $this->_exception->getExceptionName();
         }
-        else{
+        else {
             $this->__type = get_class($this->_exception);
         }
         $this->__message = $this->_exception->getMessage();
@@ -155,15 +165,15 @@ abstract class _Error extends \Iris\MVC\_Controller {
      */
     protected final function _displayStackLevel() {
         $stackLevel = \Iris\Errors\Settings::GetStackLevel();
-        // no stack (default state)
+// no stack (default state)
         if (is_null($stackLevel)) {
             $this->_noStack();
         }
-        // all the levels (?ERRORSTACK=-1 in URL)
+// all the levels (?ERRORSTACK=-1 in URL)
         elseif ($stackLevel == -1) {
             $this->_stackInTabs();
         }
-        // the required level (?ERRORSTACK= number in URL)
+// the required level (?ERRORSTACK= number in URL)
         else {
             $this->_stackDetails($stackLevel);
         }
@@ -185,7 +195,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
         $this->__secondPart = 'errordetails';
         $this->__stack = $stackLevel;
         $this->__details = $this->callViewHelper('error')->details[$stackLevel];
-        //$this->__stack = $this->_exception->getTrace()[$stackLevel];
+//$this->__stack = $this->_exception->getTrace()[$stackLevel];
     }
 
     /**
@@ -196,15 +206,15 @@ abstract class _Error extends \Iris\MVC\_Controller {
         $tabs = $this->callViewHelper('dojo_tabContainer', 'tabs');
         $tabs->setDefault('desc')
                 ->setItems(array('desc' => 'Description', 'stack' => 'Error stack', 'det' => 'Details'));
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        //$errorInformation = \Iris\Errors\ErrorInformation::GetInstance();
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//$errorInformation = \Iris\Errors\ErrorInformation::GetInstance();
         $subHelper = \Iris\Subhelpers\ErrorDisplay::GetInstance();
         if (!\Iris\MVC\View::GetEvalStack()->isEmpty()) {
             $evaledFile = \Iris\MVC\View::GetEvalStack()->pop()->getReadScriptFileName();
             $subHelper->addMessage("<br/>See file $evaledFile");
         }
         $this->__tooltip = $this->callViewHelper('dojo_toolTip');
-        // ---------------------------------------------
+// ---------------------------------------------
         $lines = count($subHelper->details);
         for ($n = 0; $n < $lines - 1; $n++) {
             $tabs->addItem("det_$n", "Level $n");
