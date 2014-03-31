@@ -1,0 +1,10 @@
+{section(language)} 
+    {block('FR')}
+        <h1>Création du fichier sitemap</h1>
+        {button('Création','/!admin/sitemap/create','Crée le fichier de site map')}
+    {/block}
+    {block('EN')}
+        The text is to be written
+    {/block}
+{/section}
+
