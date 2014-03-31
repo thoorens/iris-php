@@ -8,7 +8,7 @@
  * @param type $var
  * @return type
  */
-function shellvar($var) {
+function winShellVar($var) {
     return str_replace("\n", "", shell_exec("echo %$var%"));
 }
 
@@ -70,7 +70,7 @@ switch ($argc) {
 }
 
 if ($windows) {
-    $user = shellvar('username');
+    $user = winShellVar('username');
     echo ("Hello, $user, we hope you have administrator power to install Iris-PHP.\n");
 }
 else {
@@ -118,7 +118,7 @@ else:
         rcopy('Extensions', "$target/Extensions");
         rcopy('Core', "$target/Core");
         if ($windows) {
-            $system32 = shellvar("systemroot");
+            $system32 = winShellVar("systemroot");
             $system32 .= "\\system32";
             $wtarget = str_replace('/', '\\', $target);
             $cmd = "mklink $system32\iris.php $wtarget\\CLI\iris.php";
