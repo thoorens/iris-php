@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dojo\Translation;
 
 /*
@@ -21,6 +20,7 @@ namespace Dojo\Translation;
  * 
  * @copyright 2012 Jacques THOORENS
  */
+
 /**
  * This trait is only valid in PHP 5.4 and is provided as an
  * experimental tool. It's code has to be cut and copied
@@ -32,39 +32,22 @@ namespace Dojo\Translation;
  * @version $Id: $// * 
  * This file is PHP 5.4 only
  */
-
 trait tTranslatable {
-    
+
     /**
      * Translates a message
      * @param string $message
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\TRUE) {
+    public function _($message, $system = \TRUE) {
         if ($system) {
             $translator = \Dojo\Translation\SystemTranslator::GetInstance();
-            return $translator->translate($message);
         }
-        $translator = $this->getTranslator();
+        else {
+            $translator = \Iris\Translation\_Translator::GetInstance();
+        }
         return $translator->translate($message);
     }
 
-    /**
-     * Gets the current non systeme translator
-     * 
-     * @staticvar \Iris\Translation\_Translator $translator
-     * @return \Iris\Translation\_Translator
-     */
-    public function getTranslator() {
-        static $translator = NULL;
-        if (is_null($translator)) {
-            $translator = \Iris\Translation\_Translator::GetCurrentTranslator();
-        }
-        return $translator;
-    }
-    
-    
 }
-
-
