@@ -95,9 +95,10 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
                 exit;
                 break;
             case Manager::BADNUMBER:
-                header('location:/ERROR/document/oldlink');
+                header('location:/error/document/oldlink');
             case Manager::NOTFOUND:
-                header('location:/ERROR/document/notfound');
+                header('location:/Error/document/notfound');
+                //header('location:/Error/document/notfound');
         }
     }
 
