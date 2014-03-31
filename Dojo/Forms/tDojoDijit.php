@@ -49,8 +49,8 @@ trait tDojoDijit {
      * @param type $value
      * @return static
      */
-    public function addDijitAttribute($collection, $name, $value) {
-        $this->_dijitAttributes[collection][$name] = $value;
+    public function addDijitAttribute($name, $value) {
+        $this->_dijitAttributes[$name] = $value;
         return $this;
     }
 
@@ -68,7 +68,7 @@ trait tDojoDijit {
         //if(stop) iris_debug($dojoProps);
                 }
                 else {
-                    $dojoProps .= "$attr='$value' ";
+                    $dojoProps .= "$attr:'$value' ";
                 }
             }
         }

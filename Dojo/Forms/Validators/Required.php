@@ -43,14 +43,15 @@ class Required extends \Iris\Forms\Validators\Required {
      * @param \Iris\Forms\_Element $element 
      */
     public function setElement($element) {
-        $element->setRequired('true');
-        if ($element->dijitType != 'dijit.editor') {
-            $element->setDijitType("dijit.form.ValidationTextBox");
-            $bubble = \Dojo\Engine\Bubble::getBubble('ValidationTextBox');
-            $bubble->addModule("dojo/parser")
-                    ->addModule("dijit/form/ValidationTextBox");
-        }
-        parent::setElement($element);
+        //$element->setRequired('true');
+        $element->addDijitAttribute('required','true');
+//        if ($element->dijitType != 'dijit.editor') {
+//            //$element->setDijitType("dijit.form.ValidationTextBox");
+//            $bubble = \Dojo\Engine\Bubble::getBubble('ValidationTextBox');
+//            $bubble->addModule("dojo/parser")
+//                    ->addModule("dijit/form/ValidationTextBox");
+//        }
+        //parent::setElement($element);
     }
 
 }
