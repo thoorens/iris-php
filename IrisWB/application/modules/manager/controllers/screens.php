@@ -33,7 +33,7 @@ class screens extends _manager {
 
     
     public function indexAction($section = 10) {
-        $icons = \Iris\Subhelpers\Crud::getInstance();
+        $icons = \Iris\Subhelpers\CrudIconManager::getInstance();
         $icons
                 // controller responsible of the data management
                 ->setController('/manager/screens')

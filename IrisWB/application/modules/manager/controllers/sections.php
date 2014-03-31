@@ -37,7 +37,7 @@ namespace modules\manager\controllers;
 class sections extends _manager {
 
     public function indexAction() {
-        $icons = \Iris\Subhelpers\Crud::getInstance();
+        $icons = \Iris\Subhelpers\CrudIconManager::getInstance();
         $icons
                 // controller responsible of the data management
                 ->setController('/manager/sections')

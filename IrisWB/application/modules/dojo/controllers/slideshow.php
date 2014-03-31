@@ -14,7 +14,7 @@ class slideshow extends _dojo {
 
     protected function _init() {
         // to be shure we use dojo library
-        \Iris\SysConfig\SettingsSetSlideShowManagerLibrary('\\Dojo\\');
+        \Iris\SysConfig\Settings::SetSlideShowManagerLibrary('\\Dojo\\');
         $this->_setLayout('application');       
         $this->setViewScriptName('all');
     }
@@ -84,9 +84,6 @@ class slideshow extends _dojo {
         $this->__slideShow = $slideShow;
     }
 
-    public function directAction() {
-        $this->_nolayout();
-        $this->setViewScriptName('direct');
-    }
+    
 
 }

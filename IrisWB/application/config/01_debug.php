@@ -2,14 +2,16 @@
 
 /*
  * Put a comment marker // before "return" to enable the debugging facilities,
- * otherwise the reste of this file will be ignored
+ * otherwise the rest of this file will be ignored
  */
+
+
 return;
 
 /*
  * uncomment next line to enable debugging possibilities in development (ignored in production)
  */
-//define('IRIS_DEBUG', TRUE);
+define('IRIS_DEBUG', TRUE);
 
 /*
  * Choose a log display position between
@@ -18,7 +20,7 @@ return;
  * \Iris\Log::POS_AUTO : where it occurs (may spoil the layout)
  * \Iris\Log::POS_NONE : no message
 */
-\Iris\Log::GetInstance()->setPosition(\Iris\Log::POS_FILE);
+\Iris\Log::GetInstance()->setPosition(\Iris\Log::POS_AUTO);
 
 /*
  * Choose the type of message you want to see
@@ -30,7 +32,7 @@ return;
 /*                 (view classes) */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
 /*                 (helper classes) */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
+\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
 /* You can precise here what class to trace when \Debug::LOADER is set */
 //\Iris\Engine\Loader::AddTrace(array('test'));
 
@@ -38,7 +40,7 @@ return;
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
 //
 /* database (SQL queries) messages */
-\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
+//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
 
 /* All messages (they are many) */
 //\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ALL);

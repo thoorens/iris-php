@@ -1,6 +1,6 @@
 {wbHeader()}
 <div>
-{warning}
+    {warning}
 </div>
 <div id="content" {wbBG()}>
     <table class="show">
@@ -12,27 +12,27 @@
             <td>
                 <ul>
                     <li>A single link using explicit parameters:</li>
-                    {link($link_message, $link_URL, $link_title)}
+                        {link($link_label, $link_URL, $link_title)}
                     <li>A single link using an array</li>
-                    {link($link_array)}
+                        {link($link_array)}
                     <li>A single link with an image</li>
-                    {link()->image($image, $link_array)}
+                        {link()->image($image, $link_array)}
                     <li>A NULL link (won't appear)</li>
-                    {link('!!!!NONE!!!!')}
+                        {link('!!!!NONE!!!!')}
                 </ul>
             </td>
             <td>
                 <ul>
                     <li>A button link using explicit parameters</li>
-                    {button($link_message, $link_URL, $link_title)}
+                        {button($link_label, $link_URL, $link_title)}
                     <li>A button link using an array</li>
-                    {button($link_array)}
+                        {button($link_array)}
                     <li>A button link with an image (in internal folders)</li>
-                    {button()->image($internalIcon, $link_array)}
+                        {button()->image($internalIcon, $link_array)}
                     <li>A button link with an image (in alternative folder)</li>
-                    {button()->setImageFolder('/include')->image($icon, $link_array)}
+                        {button()->setImageFolder('/include')->image($icon, $link_array)}
                     <li>With A NULL link : no button</li>
-                    {button('!!!!NONE!!!!')}
+                        {button('!!!!NONE!!!!')}
                 </ul>
             </td>
         </tr>
@@ -43,7 +43,7 @@
             <th>A button without Javascript</th>
             <th>Simulated button in an old browser<th>
         </tr>
-        
+
 
         <tr>
             {php}
@@ -63,4 +63,4 @@
 </div>
 {php}
     \Iris\SubHelpers\Link::$NoJavaForce = \FALSE;
-{/php}       
+{/php}

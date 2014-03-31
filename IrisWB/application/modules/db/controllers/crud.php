@@ -17,16 +17,16 @@ namespace modules\db\controllers;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  *
- * 
+ *
  */
 
 /**
- * 
+ *
  * Test of basic crud operations
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -34,8 +34,8 @@ namespace modules\db\controllers;
 class crud extends _dbCrud {
 
     /**
-     * 
-     * @param string $type 
+     *
+     * @param string $type
      */
     public function customersAction() {
         $tCustomers = \models\TCustomers::GetEntity();
@@ -43,21 +43,23 @@ class crud extends _dbCrud {
     }
 
     public function invoicesAction() {
+        //\Iris\SysConfig\Settings::SetSystemIconDir('/images/icons');
         $tInvoices = \models\TInvoices::GetEntity();
         $this->__invoices = $tInvoices->fetchAll();
     }
 
-    public function productsAction(){
+    public function productsAction() {
         $tProducts = \models\TProducts::GetEntity();
         $this->__products = $tProducts->fetchall();
     }
-    
+
     /**
      * In case of a broken database, the action is redirected here
-     * 
+     *
      * @param int $num
      */
     public function errorAction($num) {
         $this->setViewScriptName('commons/error');
     }
+
 }

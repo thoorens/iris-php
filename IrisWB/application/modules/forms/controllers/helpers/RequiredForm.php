@@ -36,19 +36,14 @@ namespace Iris\controllers\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class SimpleForm extends \modules\forms\controllers\helpers\_MakeForm {
+class RequiredForm extends \modules\forms\controllers\helpers\_MakeForm {
 
     protected function _collectComponent() {
-        $this->_textInput();
-        $this->_passwordInput();
-        $this->_hiddenInput();
-        $this->_dateInput();
-        $this->_timeInput();
-        $this->_checkInput();
-        $this->_initedRadioIndex();
-        $this->_initedRadioLabel();
-        $this->_multiCheck();
-        $this->_buttons();
+        $this->_textInput()->addValidator('Required');
+        $this->_passwordInput()->addValidator('required');
+        //$this->_hiddenInput()->addValidator('required');
+        $this->_dateInput()->addValidator('Required');
+        $this->_timeInput()->addValidator('Required');
         $this->_submit();
     }    
 }

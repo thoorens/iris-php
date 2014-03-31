@@ -18,18 +18,17 @@ class _dbCrud extends \modules\db\controllers\_db {
     );
 
     public function __callAction($actionName, $parameters) {
-        $subhelper = \Iris\Subhelpers\Crud::GetInstance();
+        $subhelper = \Iris\Subhelpers\CrudIconManager::GetInstance();
         list($action, $entity) = explode('_', $actionName);
         $arEntity = explode('Action', $entity);
         $entity = $arEntity[0];
         $subhelper->setActionName($action);
         $subhelper->setEntity($this->_entityDescription[$entity]);
-        $subhelper->setController($entity)->setLanguage('english');
-        $presentation = $subhelper->prepare($action);
-        $this->__crudFunction = $presentation['help'];
+        $subhelper->setController($entity)->forceLanguage('english');
+        //$presentation = $subhelper->prepare($action);
+        $this->__crudFunction = "OOOOOOOooo";//$presentation['help'];
         $this->__title = ucfirst($entity) . " management";
 //        }
-
         \Iris\DB\DataBrowser\_Crud::DispatchAction($this, $actionName, $parameters);
         $this->setViewScriptName('editall');
     }

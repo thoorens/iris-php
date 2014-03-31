@@ -38,25 +38,10 @@ namespace modules\forms\controllers\helpers;
  */
 abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
 
-    const TEXT = 0b00000000001;
-    const HIDDEN = 0b00000000010;
-    const PASSWORD = 0b00000000100;
-    const DATE = 0b00000001000;
-    const TIME = 0b00000010000;
-    const CHECK = 0b00000100000;
-    const RADIONAME = 0b00001000000;
-    const RADIOINDEX = 0b00010000000;
-    const SELECT = 0b00100000000;
-    const MULTI = 0b01000000000;
-    const BUTTONS = 0b10000000000;
-    const MULTIPERLINE = 0b11011000000;
-    const ALL = 0b11111111111;
-
     private $_specialNames = [
         'layout' => 'def',
         'perline' => 4,
     ];
-    
     protected $_layout;
     protected $_perline;
     protected $_formFactory;
@@ -169,11 +154,29 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _radioIndex() {
         // The array index are used to set the names and select the
         // choosed value (see FALSE in addOptions)
+        return $this->_formFactory->createRadioGroup('Radio_index_notinited')
+                        ->setPerLine($this->_perline)
+                        ->addTo($this->_form)
+                        ->setLabel('Radio group (by index) without initialization:')
+                        // could be better inited by validation 
+                        ->setValue(\Iris\Engine\Superglobal::GetPost('Radio_index_notinited', \NULL))
+                        ->setTitle("Choose your prefered operating system")
+                        ->addOptions($this->_sampleData, \FALSE);
+    }
+
+    /**
+     * Four radio button (value is index)
+     * @return \Iris\Forms\_Element
+     */
+    protected function _initedRadioIndex() {
+        // The array index are used to set the names and select the
+        // choosed value (see FALSE in addOptions)
         return $this->_formFactory->createRadioGroup('Radio_index')
                         ->setPerLine($this->_perline)
                         ->addTo($this->_form)
                         ->setLabel('Radio group (by index):')
-                        ->setValue(2)
+                        // could be better inited by validation
+                        ->setValue(\Iris\Engine\Superglobal::GetPost('Radio_index', 2))
                         ->setTitle("Choose your prefered operating system")
                         ->addOptions($this->_sampleData, \FALSE);
     }
@@ -182,14 +185,14 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * Four radio button (value is label)
      * @return \Iris\Forms\_Element
      */
-    protected function _radioLabel() {
+    protected function _initedRadioLabel() {
         // The array values are used to set the names and select the
         // choosed value (see TRUE in addOptions)
         return $this->_formFactory->createRadioGroup('Radio_name')
                         ->setPerLine($this->_perline)
                         ->addTo($this->_form)
                         ->setLabel('Radio group (by content):')
-                        ->setValue('Linux')
+                        ->setValue(\Iris\Engine\Superglobal::GetPost('Radio_name','Linux'))
                         ->setTitle("Choose your prefered operating system")
                         ->addOptions($this->_sampleData, \TRUE);
     }
@@ -233,7 +236,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
                         ->setLabel('Multicheck group:')
                         ->addOptions($this->_sampleData)
                         ->setTitle("Choose your prefered operating system")
-                        ->setValue(2 + 4);
+                        ->autoSet(6);
     }
 
     /**
@@ -264,7 +267,5 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * Will enumerate the actual components of the form
      */
     protected abstract function _collectComponent();
-        
-
 }
 

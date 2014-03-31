@@ -18,9 +18,12 @@ class CrudIconManager extends \Iris\Subhelpers\_CrudIconManager {
         $this->insert($icon2);
         // action3 has a special URL
         $icon3 =new \Iris\Subhelpers\Icon('action3', 'Execute action 3 on %O', '%I');
-        $icon3->setSpecialUrl('special/url');
+        $icon3->setSpecialUrl('special/action3');
         $this->insert($icon3);
-
+        // action4 has a special URL and a special paramater
+        $icon4 =new \Iris\Subhelpers\Icon('action4', 'Execute action 4| (type %P)', '%P');
+        $icon4->setSpecialUrl('special/action4');
+        $this->insert($icon4);
     }
     
     public function otherIcons(){

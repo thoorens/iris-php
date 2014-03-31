@@ -68,6 +68,8 @@ class _application extends \Iris\MVC\_Controller {
         $this->_setLayout(\NULL);
     }
     
+    
+    
 }
 
 

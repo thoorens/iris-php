@@ -17,19 +17,25 @@
         </tr>
         {foreach(operations, operation)}
             {php}
-                if($operation == 'create2'){
-                    $operation = 'create';
-                    $icon->setSubtype('s1','Special');
+                switch($operation){
+                    case 'create2':
+                        $operation = 'create';
+                        $icon->setSubtype('s1','Special');
+                        break;
+                    case 'create2':
+                        $icon->setSubtype('s2','Special2');
+                        break;
+                    case 'create2':
+                        $icon->setSubtype('s4','Special4');
+                        break;
                 }
-                if($operation == 'action2'){
-                    $icon->setSubtype('s2','Special2');
-                }
-            {/php}   
+            {/php}
+
             <tr>
                 <td>{operation}</td>
                 <td>{(icon->$operation())}</td>
                 <td>{(icon->$operation(\FALSE))}</td>
-                <td>{(icon->makeReference($operation,'?'))}</td>
+                <td>{(icon->makeReference($operation))}</td>
                 <td>{(icon->makeTooltip($operation))}</td>
             </tr>
         {/foreach}

@@ -35,4 +35,9 @@ class engine extends _system {
         $this->__changedNameCopy = $singletonCopy->getName();
     }
 
+    public function structuresAction(){
+        $this->__value = 5;
+        // Enable to find errors
+        //\Iris\SysConfig\Settings::SetCacheTemplate(\Iris\MVC\Template::CACHE_ALWAYS);
+    }
 }

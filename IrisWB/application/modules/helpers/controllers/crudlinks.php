@@ -34,7 +34,7 @@ class crudlinks extends _helpers {
         // This new operation could have been placed in \models\crud\CrudIconManager as are action2 and action3
         $icon->insert(new \Iris\Subhelpers\Icon('action1', 'Execute action 1 on %O','%I'));
         $operations = ['create', 'update', 'delete', 'read', 'upload', 'create2',
-            'first', 'previous', 'next', 'last', 'action1', 'action2', 'action3'];
+            'first', 'previous', 'next', 'last', 'action1', 'action2', 'action3', 'action4'];
         $this->__operations = $operations;
         $this->__icon = $icon;
         //iris_debug($icon->makeReference('create', \TRUE));
@@ -59,9 +59,9 @@ class crudlinks extends _helpers {
                 ->setEntity('M_client')
                 ->setData($data);
         $icon->setIconDir('/!documents/file/images/iconplus');
-        $icon->insert(new \Iris\Subhelpers\Icon('action1', "Executer l'action 1 sur %O",'%I'));
+        $icon->insert(new \Iris\Subhelpers\Icon('action1', "Exécuter l'action 1 sur %O",'%I'));
         $operations = ['create', 'update', 'delete', 'read', 'upload', 'create2',
-            'first', 'previous', 'next', 'last', 'action1', 'action2','action3'];
+            'first', 'previous', 'next', 'last', 'action1', 'action2','action3', 'action4'];
         $this->__operations = $operations;
         $this->__icon = $icon;
         $this->setViewScriptName('index');
@@ -90,10 +90,10 @@ class crudlinks extends _helpers {
         $icon->setIconDir('/!documents/file/images/iconplus');
         $icon->insert(new \Iris\Subhelpers\Icon('action1', 'Execute action 1 on %O','%I'));
         $operations = ['create', 'update', 'delete', 'read', 'upload', 'create2',
-            'first', 'previous', 'next', 'last', 'action1', 'action2','action3'];
+            'first', 'previous', 'next', 'last', 'action1', 'action2','action3', 'action4'];
         $this->__operations = $operations;
         $this->__icon = $icon;
         $this->setViewScriptName('index');
     }
-
+    
 }

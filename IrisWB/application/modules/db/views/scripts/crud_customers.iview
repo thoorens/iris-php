@@ -3,10 +3,11 @@
     $icons
         ->setController('/db/crud')
         ->setActionName('customer')
-        ->setEntity("N_customer")
+        ->setEntity($this->_("N_customer"))
         ->setDescField('Name')
         ->setIdField('id')
-        ->setLanguage('english');
+        ->setDefaultIconDir('/images/icones')
+        ->forceLanguage('aaenglish');
 {/php}
 <h1>Customer management</h1>
 

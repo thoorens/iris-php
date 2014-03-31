@@ -1,9 +1,5 @@
 <?php
 
-
-
-namespace Iris\views\helpers;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -20,26 +16,14 @@ namespace Iris\views\helpers;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  *
  * 
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
+
+
 
 /**
- * Get a CSS file for workbench 
- * 
+ * Special classes for Workbench
  */
-class WbCSS extends \Iris\views\helpers\_ViewHelper {
-
-    static $_singleton = FALSE;
-
-    public function help($type = \NULL) {
-        $css = is_numeric($type) ? "wb$type.css" : "wb.css";
-        return $this->callViewHelper('styleLoader',"/!documents/file/css/$css");
-    }
-
-}
-
+namespace wbClasses;

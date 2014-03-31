@@ -6,7 +6,9 @@
         ->setEntity("N'_invoice")
         ->setDescField('')
         ->setIdField('id')
-        ->setLanguage('english');
+        ->forceLanguage('english')
+        // For demo purpose, alternative big icons are used for invoices
+        ->otherIcons('/images/icons');
 {/php}
 <h1>Invoice management</h1>
 
@@ -17,9 +19,9 @@
     {foreach(invoices,invoice)}
         {(icons->setData($invoice))}
         <li>
-            {(icons->update())} 
+            {(icons->update())}
             {(icons->delete())}
-            <b>Invoice #{(invoice->id)}</b> 
+            <b>Invoice #{(invoice->id)}</b>
             {(invoice->_at_customer_id->Name)}
         </li>
     {/foreach}

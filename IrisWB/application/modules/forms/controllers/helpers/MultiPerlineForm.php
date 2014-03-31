@@ -40,7 +40,8 @@ class MultiPerlineForm extends \modules\forms\controllers\helpers\_MakeForm {
 
     protected function _collectComponent() {
         $this->_radioIndex();
-        $this->_radioLabel();
+        $this->_initedRadioIndex();
+        $this->_initedRadioLabel();
         $this->_multiCheck();
         $this->_buttons();
         $this->_submit();

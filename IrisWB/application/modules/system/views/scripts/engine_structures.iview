@@ -1,0 +1,124 @@
+{wbHeader($this)}
+
+<div id="content" {wbBG()}>
+    <p>
+        A value of {value} is going to be used in some tests.
+    </p>
+    <table class=show>
+        <tr>
+            <th colspan="2">if - else</th>
+        </tr>
+        <tr>
+            <td>
+                <pre class="presmall">
+&#123;if($value==5)}
+      &lt;p>The value is FIVE.&lt;/p>
+&#123;else}
+      &lt;p>The test has failed&lt;/p>
+&#123;/if}
+                </pre>
+            </td>
+            <td>
+                {if($value==5)}
+                    <p>The value is FIVE.</p>
+                {else}
+                    <p>The test has failed</p>
+                {/if}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <pre class="presmall">
+&#123;if($value==4)}
+      &lt;p>The test has failed&lt;/p>
+&#123;else}
+      &lt;p>The value is NOT FOUR!&lt;/p>
+&#123;/if}
+                </pre>
+            </td>
+            <td>
+                {if($value==4)}
+                    <p>The test has failed</p>
+                {else}
+                    <p>The value is NOT FOUR!</p>
+                {/if}
+            </td>
+        <tr>
+            <th colspan="2">section bloc</th>
+        </tr>
+        <tr>
+            <td>
+                <pre class="presmall">
+&#123;section(value)}
+     &#123;block(1)}
+          &lt;p>The test has failed&lt;/p>
+     &#123;/block}
+     &#123;block(3)}
+          &lt;p>The test has failed&lt;/p>
+     &#123;/block}
+     &#123;block(5)}
+          &lt;p>The value is FIVE&lt;/p>
+     &#123;/block}
+     &#123;block()}
+          &lt;p>The test has failed&lt;/p> 
+     &#123;/block}
+&#123;/section}
+                </pre>
+            </td>
+            <td>
+                {section(value)}
+                    {block(1)}
+                        <p>The test has failed</p>
+                    {/block}
+                    {block(3)}
+                        <p>The test has failed</p>
+                    {/block}
+                    {block(5)}
+                        <p>The value is FIVE</p>
+                    {/block}
+                    {block()}
+                        <p>The test has failed</p> 
+                    {/block}
+                {/section}
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2">section bloc with default</th>
+        </tr>
+        <tr>
+            <td>
+                <pre class="presmall">
+&#123;section(value)}
+     &#123;block(1)}
+          &lt;p>The test has failed&lt;/p>
+     &#123;/block}
+     &#123;block(3)}
+          &lt;p>The test has failed&lt;/p>
+     &#123;/block}
+     &#123;block(5)}
+          &lt;p>The test has failed&lt;/p>
+     &#123;/block}
+     &#123;block()}
+          &lt;p>The value is FIVE&lt;/p> 
+     &#123;/block}
+&#123;/section}
+                </pre>
+            </td>
+            <td>
+                {section(value)}
+                    {block(2)}
+                        <p>The test has failed</p>
+                    {/block}
+                    {block(4)}
+                        <p>The test has failed</p>
+                    {/block}
+                    {block()}
+                        <p>The value is FIVE</p>
+                    {/block}
+                {/section}
+            </td>        
+        </tr>
+    </table>
+
+
+</div>

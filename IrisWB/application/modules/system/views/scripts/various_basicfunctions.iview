@@ -1,0 +1,36 @@
+<h2>Tests PHP</h2>
+Les tests suivants sont appliqu&eacute;s:
+<ul>
+   <li>Affichage isol&eacute;</li>
+   <li>Affichage dans une cha&icirc;ne</li>
+   <li>is_null()</li>
+   <li>empty()</li>
+   <li>isset()</li>
+   <li>is_numeric</li>
+   <li>is_string</li>
+   <li>is_bool</li>
+   <li>iris_debug</li>
+</ul>
+{assign(num, $num + 1)}
+{output}
+<h3>Division par 0</h3>
+Affichage:<br>
+Vu comme cha&icirc;ne: <br/>
+Est vide<br>
+Est 'set'<br>
+Est bool&eacute;en<br/>
+Est scalaire<br/>
+<pre>
+bool(false)
+</pre>
+
+<h3>Variable non d&eacute;finie $brol</h3>
+Affichage:<br>
+Vu comme cha&icirc;ne:  <br/>
+Est null<br>
+Est vide<br>
+<pre>
+NULL
+</pre>
+
+{button('Next',"/system/various/basicfunctions/$num")}

@@ -20,7 +20,7 @@ class dojo extends _forms {
     public function indexAction() {
         // these parameters are only for demonstration purpose
         /* @var $form \Iris\Forms\_Form */
-        $form = $this->makeForm(new \Iris\Forms\StandardFormFactory());
+        $form = $this->simpleForm(new \Iris\Forms\StandardFormFactory());
         //$form->getComponent($name)
         $this->__form = $form->render();
     }

@@ -47,7 +47,6 @@ abstract class _localCrud extends \Iris\DB\DataBrowser\_Crud {
     protected static $_IdName;
     
     public function __construct($param = NULL) {
-        die('CRUD problem');
         parent::__construct($param);
         $entity = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder(static::$_TableName, [static::$_IdName],
                 \models\_invoiceManager::getEM());
