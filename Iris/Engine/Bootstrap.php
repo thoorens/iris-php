@@ -79,7 +79,7 @@ abstract class core_Bootstrap {
      * to modify $_standardLoaderPath or add custom libraries
      */
     public function init() {
-
+        
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class core_Bootstrap {
      * It is sometimes easier to create an application/config/00_debug.php file.
      */
     public function debug() {
-
+        
     }
 
     /**
@@ -113,6 +113,7 @@ abstract class core_Bootstrap {
             $this->_readConfig($programName);
         }
         $this->_configureErrors();
+        $this->_configureMenus();
         $this->_postConfig($programName);
         return $program;
     }
@@ -133,7 +134,7 @@ abstract class core_Bootstrap {
      * @param string $programName The application name
      */
     public function _postConfig($programName) {
-
+        
     }
 
     /**
@@ -167,7 +168,8 @@ abstract class core_Bootstrap {
                     // has been read before
                     break;
             }
-        }
+        }        
+        $this->_configureMenus();
     }
 
     /**
@@ -203,5 +205,22 @@ abstract class core_Bootstrap {
         $errorHandler->allException();
     }
 
-}
+    /**
+     * Analyses 
+     * @param string $mainMenuNames
+     */
+    protected function _configureMenus($mainMenuNames = \NULL) {
+        if (is_null($mainMenuNames)) {
+            $mainMenuNames = 'main menu';
+        }
+        $param_menu = \Iris\Engine\Memory::Get('param_menu', []);
+        $menus = \Iris\Structure\MenuCollection::GetInstance();
+        foreach ($param_menu as $name => $menu) {
+            if (strpos($mainMenuNames, $name) !== \FALSE) {
+                $name = '#def#';
+            }
+            $menus->addMenu(new \Iris\Structure\Menu($name, $menu));
+        }
+    }
 
+}
