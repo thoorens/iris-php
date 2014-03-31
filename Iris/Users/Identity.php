@@ -71,7 +71,7 @@ class Identity implements iUser, \Serializable {
     public static function GetInstance() {
         // Session has created instance
         if (is_null(self::$_Instance)) {
-            throw new \Iris\Exceptions\SessionException('Session must be active to access Identity');
+            \Iris\Users\Session::GetInstance();
         }
         return self::$_Instance;
     }

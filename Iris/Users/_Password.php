@@ -29,6 +29,34 @@ namespace Iris\Users;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _Password {
+    
+    
+    const UPPER = 'U';
+    const LOWER = 'L';
+    const LETTER = 'C';
+    const DIGIT = '9';
+    const SPECIAL = 'S';
+    const LETTER_DIGIT = '1';
+    const ALL = '.';
+    const UPPER_ALL = 'A';
+    const UPPER_DIGIT = 'D';
+    const LOWER_ALL = 'a';
+    const LOWER_DIGIT = 'd';
+    const LITTERAL = '"';
+
+    private static $_UpperCaseLetters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    private static $_LowerCaseLetters = 'abcdefghijkmnopqrstuvwxyz';
+    private static $_Letters;
+    private static $_Digits = '123456789';
+    private static $_SpecialSigns = ",.:_$";
+    private static $_DigitOrLetter;
+
+    public static function __ClassInit() {
+        self::$_Letters = self::$_LowerCaseLetters . self::$_UpperCaseLetters;
+        self::$_DigitOrLetter = self::$_Digits . self::$_Letters;
+    }
+    
+    
     /**
      * Creates an uncrypted password with salt
      * 
@@ -59,5 +87,94 @@ abstract class _Password {
         return $encrypt == $test;
     }
 
-        
+    /**
+     * Generates a random password using a pattern. These special characters are used <ul>
+     * <li>U : an uppercase letter (no I nor O)
+     * <li>L : a lowercase letter (no l)
+     * <li>9 : a digit (no 0)
+     * <li>D : an uppercase letter or a digit
+     * <li>d : a lowercase letter or a digit 
+     * <li>1 : a digit or a letter
+     * <li>S : a special char among ,.:_$
+     * <li>. : a letter or a digit or a special
+     * <li>A : an uppercase letter or a digit or a special
+     * <li>a : a lowercase letter or a digit or a special
+     * <li>" : take the next char as a literal
+     * </ul>
+     * 
+     * @param string $pattern
+     * @return string
+     */
+    public static function GeneratePassword($pattern) {
+
+        $pattern = str_split($pattern);
+        $length = count($pattern);
+        $password = '';
+        while ($length) {
+            $source = '';
+            switch (array_shift($pattern)) {
+
+                case self::UPPER_ALL:
+                    $source .= self::$_SpecialSigns;
+                case self::UPPER_DIGIT:
+                    $source .= self::$_Digits;
+                case self::UPPER :
+                    $source .= self::$_UpperCaseLetters;
+
+                    $password .= self::GetRandomChar($source);
+                    break;
+
+                case self::LOWER_ALL:
+                    $source .= self::$_SpecialSigns;
+                case self::LOWER_DIGIT :
+                    $source .= self::$_Digits;
+                case self::LOWER:
+                    $source .= self::$_LowerCaseLetters;
+
+                    $password .= self::GetRandomChar($source);
+                    break;
+
+                case self::ALL:
+                    $source .= self::$_SpecialSigns;
+                case self::LETTER_DIGIT:
+                    $source .= self::$_Digits;
+                case self::LETTER:
+                    $source .= self::$_Letters;
+
+                    $password .= self::GetRandomChar($source);
+                    break;
+
+                case self::DIGIT:
+                    $source .= self::$_Digits;
+
+                    $password .= self::GetRandomChar($source);
+                    break;
+
+                case self::SPECIAL:
+                    $source .= self::$_SpecialSigns;
+
+                    $password .= self::GetRandomChar($source);
+                    break;
+
+                case self::LITTERAL:
+                    $password .= (array_shift($pattern));
+                    $length--;
+                    break;
+            }
+            $length--;
+        }
+        return $password;
+    }
+
+    /**
+     * Gets a random character from the source
+     * 
+     * @param string $source
+     * @return string
+     */
+    public static function GetRandomChar($source) {
+        $pos = rand(0, strlen($source) - 1);
+        return $source [$pos];
+    }
+    
 }

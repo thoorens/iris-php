@@ -74,7 +74,6 @@ abstract class TUsers extends \Iris\DB\_Entity{
     public static function UserList(){
         $tusers = static::GetEntity();
         $tusers->select(array($tusers->getIdField(),$tusers->getNameField()));
-        $tusers->whereClause('TRUE');
         $users = $tusers->fetchAll();
         $nameField = $tusers->getNameField();
         foreach($users as $user){
