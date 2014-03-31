@@ -490,4 +490,14 @@ class _BaseController {
         return self::$_MainController;
     }
 
+    /**
+     * this function is usefull in islet or subcontrollers. At this level,
+     * it is provided as in insight of debugging
+     * 
+     * @param type $param
+     * @throws \Iris\Exceptions\ControllerException
+     */
+    public function setParameters($param){
+        throw new \Iris\Exceptions\ControllerException('Normal controllers cannot have external parameters. Your controller must be an Islet or a Subcontroller');
+    }
 }
