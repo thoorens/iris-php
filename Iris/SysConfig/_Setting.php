@@ -353,6 +353,7 @@ abstract class _Setting {
         if (is_null(self::$_CurrentGroup) or !\Iris\Errors\Settings::HasSettingException()) {
             \Iris\Engine\Debug::Kill("Error in settings: $message");
         }
+        die($message);
         throw new \Iris\Exceptions\SettingException($message);
     }
 

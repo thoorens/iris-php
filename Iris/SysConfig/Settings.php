@@ -50,7 +50,7 @@ class Settings extends _Settings {
         BooleanSetting::CreateSetting('displayRuntimeDuration', \TRUE);
         StandardSetting::CreateSetting('runtimeDisplayMode', \Iris\Time\RuntimeDuration::INNERCODE);
         // Unformated dates use japanese format as in 2012-12-31
-        StandardSetting::CreateSetting('dateMode', \Iris\Time\TimeDate::JAPAN); // could be 'japan'
+        StandardSetting::CreateSetting('dateMode', \Iris\Time\TimeDate::JAPAN);// could be 'japan'
         // The default time zone is Brussels
         StandardSetting::CreateSetting('defaultTimezone', 'Europe/Brussels');
         // All Ajax functions need a library to manage them, by default it is Dojo
@@ -82,6 +82,8 @@ class Settings extends _Settings {
         BooleanSetting::CreateSetting('admitDash', \FALSE);
         // The default folder for document files managed through the program
         StandardSetting::CreateSetting('dataFolder', IRIS_ROOT_PATH . '/data');
+        // The default translator is
+        StandardSetting::CreateSetting('defaultTranslator', '\Iris\Translation\NullTranslator');
     }
 
 }

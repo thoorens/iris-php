@@ -65,8 +65,9 @@ abstract class _Settings implements \Iris\Design\iSingleton {
      * Each settings class must be Inited before use
      */
     public static function __ClassInit() {
-        if (!is_null(static::$_GroupName))
+        if (!is_null(static::$_GroupName)) {
             static::GetInstance();
+        }
     }
 
     /**
@@ -95,42 +96,43 @@ abstract class _Settings implements \Iris\Design\iSingleton {
      * @return boolean/mixed
      * @throws \Iris\Exceptions\InternalException
      */
-    public static function __callStatic($name, $arguments) {
-        $name = strtolower($name);
-        $functionName = substr($name, 0, 3);
-        $param = substr($name, self::$_Functions[$functionName]);
-        /* @var $setting _Setting */
-        $setting = _Setting::GetSetting($param, static::$_GroupName);
-        // Non existent setting throws an exception excepting when existence testing
-        if (!$setting->exists() and $functionName != 'exi') {
-            _Setting::ErrorManagement("The requested setting has not been defined: $name");
-        }
-        switch ($functionName) {
-            case 'has':
-                return $setting->has();
-            case 'get':
-                return $setting->get();
-            case 'set':
-                if (count($arguments) != 1) {
-                    _Setting::ErrorManagement("The requested setting function set expects a new value");
-                }
-                $setting->set($arguments[0]);
-                return $setting;
-                break;
-            case 'ena':
-                $setting->enable();
-                return $setting;
-                break;
-            case 'dis':
-                $setting->disable();
-                return $setting;
-                break;
-            case 'exi':
-                return $setting->exists();
-                break;
+    public static function __callStatic($name, $arguments) { 
+        try {
+            $name = strtolower($name);
+            $functionName = substr($name, 0, 3);
+            $param = substr($name, self::$_Functions[$functionName]);
+            /* @var $setting _Setting */
+            $setting = _Setting::GetSetting($param, static::$_GroupName);
+            // Non existent setting throws an exception excepting when existence testing
+            if (!$setting->exists() and $functionName != 'exi') {
+                _Setting::ErrorManagement("The requested setting has not been defined: $name");
+            }
+            switch ($functionName) {
+                case 'has':
+                    return $setting->has();
+                case 'get':
+                    return $setting->get();
+                case 'set':
+                    if (count($arguments) != 1) {
+                        _Setting::ErrorManagement("The requested setting function set expects a new value");
+                    }
+                    $setting->set($arguments[0]);
+                    return $setting;
+                case 'ena':
+                    $setting->enable();
+                    return $setting;
+                case 'dis':
+                    $setting->disable();
+                    return $setting;
+                case 'exi':
+                    return $setting->exists();
+            }
+        
+}
+        catch (Exception $exc) {
+            _Setting::ErrorManagement("Settings has no $name method");
         }
 
-        _Setting::ErrorManagement("Settings has no $name method");
     }
 
     /**
