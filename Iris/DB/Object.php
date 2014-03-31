@@ -158,7 +158,6 @@ class Object {
                 }
                 else {
                     $this->_currentContent[] = $value;
-//$this->_newData[] = NULL;
                     $entity->registerObject($idValues, $this);
                 }
             }
@@ -223,7 +222,9 @@ class Object {
     private function _getParent($keyFields) {
         $entityManager = $this->_entity->getEntityManager();
         list($parentEntityName, $fromKeyNames) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
-        if (!isset($this->_parents[$parentEntityName])) {
+        // Caution : two differents set of FromKeys may go to the same entity
+        $joinID = $parentEntityName.'-'.implode(':',$fromKeyNames);
+        if (!isset($this->_parents[$joinID])) {
             $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
             $i = 0;
             $primaryKey = $parentEntity->getIdNames();
@@ -231,9 +232,9 @@ class Object {
                 $primaryKeys[$primaryKey[$i++]] = $this->$keyName;
             }
             $parent = $parentEntity->find($primaryKeys);
-            $this->_parents[$parentEntityName] = $parent;
+            $this->_parents[$joinID] = $parent;
         }
-        return $this->_parents[$parentEntityName];
+        return $this->_parents[$joinID];
     }
 
     /**

@@ -19,13 +19,13 @@ use Iris\Exceptions as ie;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ *
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
  * Implementation of a mySQL entity manager
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -34,15 +34,14 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
 
     /**
      * In the case of mySQL, it is necessary to add an option to have ytf8 characters
-     * 
+     *
      * @var array
      */
     protected static $_Options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
 
-    
     /*
       Example of SHOW COLUMNS FROM output:
-     * 
+     *
       array(6) {
       ["Field"]=> "id"
       ["Type"]=> "int(11)"
@@ -54,7 +53,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
 
     /**
      * Gets the metadata corresponding to the table
-     * 
+     *
      * @param string $tableName The name of the table
      * @return \Iris\DB\Metadata
      */
@@ -70,7 +69,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
                     ->setNotNull($line->Null == 'NO')
                     ->setDefaultValue($line->Default)
                     // if field Extra contains 'auto_increment'
-                    ->setAutoIncrement(strpos($line->Extra,'auto_increment')!== \FALSE);
+                    ->setAutoIncrement(strpos($line->Extra, 'auto_increment') !== \FALSE);
             if ($line->Key == 'PRI') {
                 $metadata->addPrimary($line->Field);
             }
@@ -84,6 +83,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      * CONSTRAINT `ligne_ibfk_2` FOREIGN KEY (`facture_id`) REFERENCES `facture` (`id`),
      */
 
+    
     public function getForeignKeys($tableName) {
         //@todo find a better way to do it !!!!
         $pdo = $this->_connexion;
@@ -111,7 +111,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
 
     /**
      * Returns the table list of the database
-     * 
+     *
      * @return array
      */
     public function listTables($views = \TRUE) {
@@ -131,6 +131,11 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
         return $this->_connexion->lastInsertId();
     }
 
+    /**
+     * bitXor not implmented in mySQL
+     * 
+     * @return string
+     */
     public function bitXor() {
         throw new ie\NotSupportedException('XOR not supported in mySQL');
     }

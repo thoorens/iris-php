@@ -49,12 +49,12 @@ abstract class _Login extends _Crud {
      * 
      * @return string an URL to go to (or NULL in case of unknown user)
      */
-    public function login() {
+    public function login($specialChars = '') {
         $this->_initObjects(self::LOGIN);
         if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
             $formData = $this->_form->getDataFromPost();
             if ($this->_form->isValid($formData)) {
-                return $this->_validateLogin($formData);
+                return $this->_validateLogin($formData, $specialChars);
             }
             return NULL;
         }
@@ -72,12 +72,13 @@ abstract class _Login extends _Crud {
      * @param mixed[] $data
      * @return mixed 
      */
-    protected function _validateLogin($data) {
+    protected function _validateLogin($data, $specialChars) {
         $userName = $this->_clean($data[self::$_NameField], self::ASCIILETTER + self::DIGIT);
-        $password = $this->_clean($data[self::$_PasswordField], self::ASCIILETTER + self::DIGIT);
+        $password = $data[self::$_PasswordField];
         $entity = $this->_entity;
         $entity->where(self::$_NameField.'=', $userName);
         $userObject = $entity->fetchRow();
+        //iris_debug($userObject);
         // user unknown
         if ($userObject == null) {
             return null;
@@ -114,12 +115,12 @@ abstract class _Login extends _Crud {
     /**
      * Keeps only accepted characters 
      * 
-     * @param type $toClean
-     * @param type $admited
-     * @param type $specials
-     * @return type
+     * @param string $toClean
+     * @param int $admited
+     * @param string $specialChars
+     * @return string
      */
-    protected function _clean($toClean, $admited, $specials='') {
+    protected function _clean($toClean, $admited, $specialChars='') {
         $accept = '/[^';
         if ($admited && self::DIGIT) {
             $accept .= "\\d";
@@ -133,6 +134,7 @@ abstract class _Login extends _Crud {
         if ($admited && self::BLANK) {
             $accept .=" ";
         }
+        $accept .= $specialChars;
         $accept .= ']/si';
         return trim(preg_replace($accept, '', $toClean));
     }

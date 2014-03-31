@@ -20,14 +20,14 @@ use Iris\DB\Object,
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  */
 
 /**
- * This class creates PDO entity manager based on DSN, UserName and 
+ * This class creates PDO entity manager based on DSN, UserName and
  * Password. It must overridden to access concrete RDBMS.
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
@@ -36,14 +36,14 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
 
     /**
      * PDO manages the connexion by using a variable
-     * 
-     * @var PDO (not only) 
+     *
+     * @var PDO (not only)
      */
     protected $_connexion = NULL;
 
     /**
      * The constructor for PDO entity manager.
-     * 
+     *
      * @param String $dsn : Data Source Name
      * @param String $userName : user login name
      * @param String $passwd : user password
@@ -73,8 +73,8 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
 
     /**
      * PDO gets its connexions from a protected variable
-     * 
-     * @return PDO 
+     *
+     * @return PDO
      */
     public function getConnexion() {
         return $this->_connexion;
@@ -84,7 +84,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      *
      * @param String $sql
      * @param string[] $fieldsPH
-     * @return array  
+     * @return array
      */
     public function getResults($sql, $fieldsPH = array()) {
         $pdo = $this->_connexion;
@@ -97,27 +97,25 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
         return $results;
     }
 
-    
-
     /**
      * Executes a direct SQL query on the connexion
-     * 
+     *
      * @param type $sql
      * @return \PDOStatement
      */
-    public function directSQLQuery($sql){
+    public function directSQLQuery($sql) {
         return $this->_connexion->query($sql);
     }
-    
+
     /**
      * Executes a direct SQL exec on the connexion
      * @param type $sql
      * @return int (a true boolean or an integer according to the type of command
      */
-    public function directSQLExec($sql){
+    public function directSQLExec($sql) {
         return $this->_connexion->exec($sql);
     }
-    
+
     public function exec($sql, $fieldsPH) {
         $pdo = $this->_connexion;
         $statement = $pdo->prepare($sql);

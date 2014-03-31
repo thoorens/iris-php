@@ -31,7 +31,7 @@ defined('IRIS_FIELDSEP') or define('IRIS_FIELDSEP', '__');
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
@@ -286,6 +286,7 @@ abstract class _EntityManager {
      * @return \PDOStatement
      */
     public abstract function directSQLExec($sql);
+    
     /**
      * Execute a select query on the current database, returning an array of
      * Objects (found in the repository or freshly created)
@@ -352,12 +353,18 @@ abstract class _EntityManager {
 
     /**
      * Returns a format string to manage bitwise OR operations
+     * 
      * @return string
      */
     public function bitOr() {
         return "%s | %s";
     }
 
+    /**
+     * Returns a format string to manage bitwise XOR operations
+     * 
+     * @return string
+     */
     public abstract function bitXor();
 }
 

@@ -433,13 +433,18 @@ abstract class _Entity {
         //die($sql);
         $data = $this->_entityManager->fetchAll($this, $sql, $this->_query->getPlaceHolders());
         $this->_query->reset();
-        if ($array) {
+        if ($array === \TRUE) {
             foreach ($data as $object) {
                 $finalData[] = $object->asArray();
             }
         }
-        else {
+        elseif($array === \FALSE) {
             $finalData = $data;
+        }
+        else{
+            foreach ($data as $object) {
+                $finalData[$index] = $array($object);
+            }
         }
         return $finalData;
     }

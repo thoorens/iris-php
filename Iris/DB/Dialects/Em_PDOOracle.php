@@ -20,7 +20,7 @@ use Iris\Exceptions as ie;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
@@ -38,6 +38,18 @@ use Iris\Exceptions as ie;
  * 
  */
 class Em_PDOOracle extends \Iris\DB\Dialects\_Em_PDO {
+
+    /**
+     * By default, Oracle only recognise BITAND() function. To use
+     * BITOR() or BITXOR(), the SGBD has to be extended as described in
+     * https://community.oracle.com/thread/498773?start=0&tstart=0
+     * To use these extended functions, the application must set
+     * \DB\Dialects\Em_PDOOracle::$BitWiseExtensionEnabled = \TRUE
+     * in a config file.
+     * 
+     * @var boolean
+     */
+    public static $BitWiseExtensionEnabled = \FALSE;
 
     protected function __construct($dsn, $userName = NULL, $passwd = NULL, $default = TRUE, &$options = []) {
         throw new ie\NotSupportedException('Not yet implemented');
@@ -72,21 +84,41 @@ class Em_PDOOracle extends \Iris\DB\Dialects\_Em_PDO {
         $this->_connexion->lastInsertId();
     }
 
-    /** @todo need to be implemented */
+    /**
+     * Returns a format string to manage bitwise AND operations
+     *
+     * @return sting
+     */
     public function bitAnd() {
         return ' BITAND(%s,%s) ';
     }
 
-    /** @todo need to be implemented */
+    /**
+     * Returns a format string to manage bitwise OR operations
+     * 
+     * @return string
+     */
     public function bitOr() {
-        throw new \Iris\Exceptions\NotSupportedException('BitOr not supportad by Oracle');
+        if (self::$BitWiseExtensionEnabled) {
+            return ' BITOR(%s,%s) ';
+        }
+        else {
+            throw new \Iris\Exceptions\NotSupportedException('BitOr not supportad by default in Oracle');
+        }
     }
 
-    /** @todo need to be implemented */
+    /**
+     * Returns a format string to manage bitwise XOR operations
+     * 
+     * @return string
+     */
     public function bitXor() {
-        throw new \Iris\Exceptions\NotSupportedException('BitXor not supported by Oracle');
+        if (self::$BitWiseExtensionEnabled) {
+            return ' BITXOR(%s,%s) ';
+        }
+        else {
+            throw new \Iris\Exceptions\NotSupportedException('BitXor not supported by Oracle');
+        }
     }
 
 }
-
-

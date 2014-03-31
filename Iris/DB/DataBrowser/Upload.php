@@ -155,6 +155,7 @@ class Upload extends _Crud {
     /**
      * Each file is moved to its destination directory and is given a 
      * name 
+     * @todo Verify use of move_uploaded_file
      * 
      */
     protected function _processFile() {
@@ -166,6 +167,7 @@ class Upload extends _Crud {
         $newFile = $this->_getFilePath();
 
         //die("Mode: ".$this->_replaceExistentFile);
+        // why not move_uploaded_file() ?
         $tempFile->moveToFile($newFile, $this->_replaceExistentFile);
         $this->_sharedData['name'] = $tempFile->getBaseName();
     }

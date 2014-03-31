@@ -70,25 +70,47 @@ class Metadata implements \Serializable, \Countable {
         }
     }
 
+    /**
+     * Returns the primary key fields
+     * 
+     * @return string[]
+     */
     public function getPrimary() {
         return $this->_primary;
     }
 
+    /**
+     * Add a primary key field
+     * 
+     * @param string $field
+     * @return \Iris\DB\Metadata (for fluent interface)
+     */
     public function addPrimary($field) {
         if (array_search($field, $this->_primary) === \FALSE) {
             $this->_primary[] = $field;
         }
+        return $this;
     }
 
     /**
-     * Add a new item to the 
+     * Add a new item to the metadata
+     * 
      * @param MetaItem $item
+     * @return \Iris\DB\Metadata (for fluent interface)
      */
     public function addItem($item) {
         $key = $item->getFieldName();
         $this->_fields[$key] = $item;
+        return $this;
     }
 
+    /**
+     * Magic method permitting to acces metaItems through their name
+     * 
+     * @param string $key
+     * @return MetaItem
+     * @throws \Iris\Exceptions\DBException
+     */
     public function __get($key) {
         if (isset($this->_fields[$key])) {
             return $this->_fields[$key];
@@ -96,6 +118,12 @@ class Metadata implements \Serializable, \Countable {
         throw new \Iris\Exceptions\DBException('Unknown field in metadata : ' . $key);
     }
 
+    /**
+     * Magic method permitting to know the existence of a metaItem field
+     * 
+     * @param string $key
+     * @return booelan
+     */
     public function __isset($key) {
         return isset($this->_fields[$key]);
     }
@@ -126,6 +154,13 @@ class Metadata implements \Serializable, \Countable {
         return $this->_fields;
     }
 
+    /**
+     * Adds a foreign key object to the metadata and returns its offset
+     * 
+     * @param \Iris\DB\ForeignKey $foreign
+     * @param int $number
+     * @return int The foreign key offset in the internal array
+     */
     public function addForeign(ForeignKey $foreign, $number = \NULL) {
         $this->_foreigns[] = $foreign;
         if (is_null($number)) {
@@ -138,33 +173,33 @@ class Metadata implements \Serializable, \Countable {
         return $number;
     }
 
-    public function getForeignKeyValues($fatherTable, $entity, $primaryKeys) {
-        $metadata = $entity->getMetadata();
-        $foreigns = $metadata->getForeigns();
-        $i = 0;
-        $searchKey = array();
-        $found = FALSE;
-        while ($i < count($foreigns) and !$found) {
-            $foreign = $foreigns[$i++];
-            if ($foreign->getTargetTable() == $fatherTable) {
-                $found = TRUE;
-                $toKeys = $foreign->getToKeys();
-                $fromKeys = $foreign->getFromKeys();
-                $searchKey = array();
-                $j = 0;
-                foreach ($primaryKeys as $key => $value) {
-                    if (array_search($key, $toKeys) === FALSE) {
-                        $found = FALSE;
-                    }
-                    else {
-                        $searchKey[$fromKeys[$j]] = $value;
-                    }
-                    $j++;
-                }
-            }
-        }
-        return $searchKey;
-    }
+//    public function getForeignKeyValues($fatherTable, $entity, $primaryKeys) {
+//        $metadata = $entity->getMetadata();
+//        $foreigns = $metadata->getForeigns();
+//        $i = 0;
+//        $searchKey = array();
+//        $found = FALSE;
+//        while ($i < count($foreigns) and !$found) {
+//            $foreign = $foreigns[$i++];
+//            if ($foreign->getTargetTable() == $fatherTable) {
+//                $found = TRUE;
+//                $toKeys = $foreign->getToKeys();
+//                $fromKeys = $foreign->getFromKeys();
+//                $searchKey = array();
+//                $j = 0;
+//                foreach ($primaryKeys as $key => $value) {
+//                    if (array_search($key, $toKeys) === FALSE) {
+//                        $found = FALSE;
+//                    }
+//                    else {
+//                        $searchKey[$fromKeys[$j]] = $value;
+//                    }
+//                    $j++;
+//                }
+//            }
+//        }
+//        return $searchKey;
+//    }
 
     /**
      * Retrieves the parent parameters (entity name and array of primary
@@ -190,9 +225,16 @@ class Metadata implements \Serializable, \Countable {
             throw new \Iris\Exceptions\DBException("A parent record from field(s) $links doesn't exist.");
         }
         $entityName = $foreign->getTargetTable();
-        return array($entityName, $foreign->getFromKeys());
+        return [$entityName, $foreign->getFromKeys()];
     }
 
+    /**
+     * 
+     * @param string $parentName
+     * @param string[] $fkeys
+     * @return array
+     * @throws \Iris\Exceptions\DBException
+     */
     public function getChildrenParams($parentName, $fkeys) {
         $found = \FALSE;
         foreach ($this->_foreigns as $foreign) {
@@ -213,7 +255,7 @@ class Metadata implements \Serializable, \Countable {
             $links = implode(' ', $fkeys);
             throw new \Iris\Exceptions\DBException("A children recordset based on field(s) $links doesn't exist.");
         }
-        return array($foreign->getToKeys(), $foreign->getFromKeys());
+        return [$foreign->getToKeys(), $foreign->getFromKeys()];
     }
 
     /**
@@ -227,7 +269,7 @@ class Metadata implements \Serializable, \Countable {
      * FOREIGN@0+from1!from2+targettable+to1!to2
      */
     public function serialize() {
-        $strings[] = "TABLE@".$this->_tablename;
+        $strings[] = "TABLE@" . $this->_tablename;
         /* @var $item MetaItem */
         foreach ($this->_fields as $item) {
             $strings[] = $item->serialize();
@@ -282,4 +324,3 @@ class Metadata implements \Serializable, \Countable {
     }
 
 }
-

@@ -20,7 +20,7 @@ use Iris\DB\_Entity;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
@@ -39,21 +39,43 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
 
+    // Return codes
     const DISPLAY = 0;
     const END = 1;
     const GOON = 2;
+    // Error codes
     const ERR_NOT_FOUND = 11;
     const ERR_INTEGRITY = 12;
     const ERR_SAVE = 13;
     const ERR_DUPLICATE = 14;
     const ERR_INVALID = 15;
     const ERR_INCOMPLETE = 16;
+    // Functions
+    /**
+     * Create (or insert) a line
+     */
     const CREATE = 1;
+
+    /**
+     * Read (or select) a line
+     */
     const READ = 2;
+
+    /**
+     * Update a line
+     */
     const UPDATE = 3;
+
+    /**
+     * Delete a line
+     */
     const DELETE = 4;
 
+    /**
+     * Default crud directory
+     */
     const CRUD_DIRECTORY = '\\models\\crud\\';
+
     /**
      * The form used to managed the entity
      * 
@@ -83,11 +105,11 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     protected $_entity;
 
     /**
-     * The object currently edited
+     * The object currently edited/displayed
      * 
      * @var \Iris\DB\Object
      */
-    protected $_data;
+    protected $_currentObject;
 
     /**
      * URL of the action managing Crud (will be called various times: to
@@ -141,12 +163,14 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     }
 
     /**
-     *
-     * @param <array> $data
-     * @return <mixed>
+     * Creates a new object using a form (until validation is OK)
+     *  
+     * @param type $type
+     * @param type $data
+     * @return mixed
      */
     public function create($type = \NULL, $data = \NULL) {
-        $this->autoForm('create');
+        $this->forceAutoForm('create');
         try {
             $this->_initObjects(self::CREATE, $type);
             if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
@@ -154,17 +178,19 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
                 if ($this->_form->isValid($formData)) {
                     if ($this->_postValidate(self::CREATE, $formData)) {
                         $model = $this->_entity->createRow($formData);
-                        $this->_preCreate($formData, $model);
-                        try {
-                            $done = $model->save();
-                            if (!$done) {
+                        if (!is_null($this->_preCreate($formData, $model))) {
+                            try {
+                                $done = $model->save();
+                                if (!$done) {
+                                    return self::ERR_DUPLICATE;
+                                }
+                                if (!is_null($this->_postCreate($model))) {
+                                    return self::END;
+                                }
+                            }
+                            catch (_Exception $exc) {
                                 return self::ERR_DUPLICATE;
                             }
-                            $this->_postCreate($model);
-                            return self::END;
-                        }
-                        catch (_Exception $exc) {
-                            return self::ERR_DUPLICATE;
                         }
                     }
                 }
@@ -177,13 +203,17 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
         }
     }
 
+    /**
+     * Displays an object before deleting it
+     * 
+     * @param mixed[] $idValues The primary key to access the object
+     * @return type
+     */
     public function delete($idValues) {
-        $this->autoForm('delete');
-        $this->_find($idValues);
+        $object = $this->getCurrentObject($idValues);
+        $this->forceAutoForm('delete');
         $this->_initObjects(self::DELETE, $idValues);
         if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
-            $formData = $this->_form->getDataFromPost();
-            $object = $this->retrieveData();
             if (is_null($object)) {
                 return self::ERR_NOT_FOUND;
             }
@@ -206,19 +236,19 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
                 return self::ERR_INTEGRITY;
             }
         }
-        $data = $this->retrieveData();
-        if (is_null($data)) {
+        //$object = $this->getCurrentObject($idValues);
+        if (is_null($object)) {
             return self::ERR_NOT_FOUND;
         }
-        $this->_form->fill($data->asArray());
+        $this->_form->fill($object->asArray());
 
 
-        return $this->_preDisplay(\NULL, $data); //data by ref
+        return $this->_preDisplay(\NULL, $object); //data by ref
     }
 
     public function update($idValues) {
-        $this->autoForm('update');
-        $this->_find($idValues);
+        $this->forceAutoForm('update');
+        $object = $this->getCurrentObject($idValues);
         $this->_initObjects(self::UPDATE, $idValues);
         if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
             $formData = $this->_form->getDataFromPost();
@@ -226,7 +256,6 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
                 if (!$this->_postValidate(self::UPDATE, $formData)) {
                     return self::INVALID;
                 }
-                $object = $this->retrieveData();
                 $object->replaceData($formData);
                 $this->_preUpdate($formData, $object);
                 try {
@@ -246,38 +275,49 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
             return self::DISPLAY;
         }
 
-        $data = $this->retrieveData();
-        if (is_null($data)) {
+        if (is_null($object)) {
             return self::ERR_NOT_FOUND;
         }
-        $this->_form->fill($data->asArray());
-        return $this->_preDisplay($idValues, $data); //by ref
+        $this->_form->fill($object->asArray());
+        return $this->_preDisplay($idValues, $object); //by ref
     }
 
     /**
      *
      * @param type $conditions
      * @return type 
-     * @deprecated
      */
     public function read($idValues) {
-        $this->autoForm('read');
-        $this->_find($idValues);
+        $this->forceAutoForm('read');
         $this->_initObjects(self::READ, $idValues);
-        $data = $this->retrieveData();
-        if (is_null($data)) {
+        $object = $this->getCurrentObject();
+        if (is_null($object)) {
             return self::ERR_NOT_FOUND;
         }
-        $this->_form->fill($data->asArray());
-        return $this->_preDisplay($idValues, $data); //by ref
+        $this->_form->fill($object->asArray());
+        return $this->_preDisplay($idValues, $object); //by ref
     }
 
-    public function goFirst($idValues) {
+    public function goFirst() {
         $entity = $this->_entity;
         $id = $entity->getId(_Entity::FIRST);
         $this->read($id);
     }
-
+    public function goNext($idValues) {
+        $entity = $this->_entity;
+        $id = $entity->getId(_Entity::NEXT, $idValues);
+        $this->read($id);
+    }
+    public function goPrevious($idValues) {
+        $entity = $this->_entity;
+        $id = $entity->getId(_Entity::PREVIOUS, $idValues);
+        $this->read($id);
+    }
+    public function goLast() {
+        $entity = $this->_entity;
+        $id = $entity->getId(_Entity::LAST);
+        $this->read($id);
+    }
     /*
      * ------------------------------------------------------------------
      * Accessors
@@ -307,11 +347,13 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * 
      * @param string $submitValue
      */
-    public function autoForm($submitValue) {
+    public function forceAutoForm($submitValue) {
         if (is_null($this->_form)) {
             $this->_form = new \Iris\Forms\AutoForm($this->_entity);
         }
-        $this->_setSubmitMessage($submitValue);
+        $message = self::$_SubmitButtonText[$submitValue];
+        $localizedMessage = $this->_($message, TRUE);
+        $this->_form->setSubmitMessage($localizedMessage);
     }
 
     /**
@@ -387,7 +429,8 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
 
     /**
      * The object need perhaps some modication just before
-     * to be inserted in the database
+     * to be inserted in the database.
+     * If a NULL is returned, the process of creation will be cancelled
      * 
      * @param mixed[] $formData data form the form
      * @param \Iris\DB\Object $object the future object to be inserted
@@ -399,6 +442,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     /**
      * After the object being inserted in the database, maybe other 
      * things have to be done
+     * If a NULL is returned, the process of creation will be cancelled
      * 
      * @param \Iris\DB\Object $object 
      */
@@ -548,7 +592,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      */
     protected function _find($idValues) {
         $data = $this->_entity->find($idValues);
-        $this->_data = $data;
+        $this->_currentObject = $data;
         return $data;
     }
 
@@ -558,8 +602,14 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * 
      * @return object
      */
-    public function retrieveData() {
-        return $this->_data;
+    public function getCurrentObject($idValues = \NULL) {
+        $object = $this->_currentObject;
+        if (is_null($object)) {
+            $object = $this->_entity->find($idValues);
+            $this->_currentObject = $object;
+            return $object;
+        }
+        return $object;
     }
 
     /**
@@ -571,17 +621,18 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * @param mixed[] $parameters the action parameters as received by a __call method
      * @param string $scriptName the optional name of a script used by all operation
      */
-    public static function DispatchAction($controller, $actionName, $parameters, $scriptName = NULL, $crudDirectory = self::CRUD_DIRECTORY) {
-        $id = count($parameters) > 0 ? $parameters[0] : NULL;
+    public static function DispatchAction($controller, $actionName, $parameters, $scriptName = \NULL, $crudDirectory = self::CRUD_DIRECTORY) {
+        $id = count($parameters) > 0 ? $parameters[0] : \NULL;
         // the action name is for instance update_bookAction => update, bookAction
         list($action, $crudName) = explode('_', $actionName);
         //@todo ajouter les opérations de navigation
-        if (strpos('create.update.delete.read', $action) === FALSE) {
+        if (strpos('create.update.delete.read', $action) === \FALSE) {
             throw new \Iris\Exceptions\ControllerException("Unrecognized action");
         }
         // bookAction => \models\crud\Book
         $crudName = $crudDirectory . ucFirst(str_replace('Action', '', $crudName));
         $crud = new $crudName([$controller]);
+        //die($crudName);
         $crud->_preProcess($controller, $action);
         $next = $crud->$action($id);
         // if no unique scriptName, each action has its proper script.
@@ -591,20 +642,6 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
         $crud->process($controller, $next, $scriptName);
     }
 
-    /**
-     * Place the localized action name in the button submit
-     * 
-     * @param type $submitValue The name of the action (one of $_SubmitButtonText)
-     * @param type $submitName The submit button name (by def. Submit)
-     */
-    protected function _setSubmitMessage($submitValue, $submitName = 'Submit') {
-        $submit = $this->_form->getComponent($submitName);
-        if (is_null($submit)) {
-            throw new \Iris\Exceptions\FormException('The form does not have a submit button');
-        }
-        $message = self::$_SubmitButtonText[$submitValue];
-        $submit->setValue($this->_($message, TRUE));
-    }
+    
 
 }
-
