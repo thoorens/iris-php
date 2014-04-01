@@ -13,18 +13,24 @@
                 <ul>
                     <li>A single link using explicit parameters:</li>
                         {link($link_label, $link_URL, $link_title)}
+                    <li>A single link without tooltip:</li>
+                        {link($link_label, $link_URL)}
                     <li>A single link using an array</li>
                         {link($link_array)}
                     <li>A single link with an image</li>
                         {link()->image($image, $link_array)}
                     <li>A NULL link (won't appear)</li>
                         {link('!!!!NONE!!!!')}
+                    <li>A NULL link with an image (won't appear)</li>
+                        {link()->image($image, '!!!!NONE!!!!')}
                 </ul>
             </td>
             <td>
                 <ul>
                     <li>A button link using explicit parameters</li>
                         {button($link_label, $link_URL, $link_title)}
+                    <li>A button link without tooltip</li>
+                        {button($link_label, $link_URL)}
                     <li>A button link using an array</li>
                         {button($link_array)}
                     <li>A button link with an image (in internal folders)</li>
@@ -33,6 +39,8 @@
                         {button()->setImageFolder('/include')->image($icon, $link_array)}
                     <li>With A NULL link : no button</li>
                         {button('!!!!NONE!!!!')}
+                     <li>A NULL link with an image (no button)</li>
+                        {button()->image($image, '!!!!NONE!!!!')}
                 </ul>
             </td>
         </tr>

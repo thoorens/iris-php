@@ -55,7 +55,7 @@ trait tAutoRenderer {
         if ($nArgs[0] == \NULL) {
             return $this;
         }
-        if ($this->_dontRender($nArgs)) {
+        if ($this->_dontRender($nArgs,0)) {
             return '';
         }
         return $this->$function($nArgs);
@@ -64,10 +64,11 @@ trait tAutoRenderer {
     /**
      * This subroutine may be overwritten to display nothing if necessary
      *
-     * @param array $args
+     * @param string[] $args
+     * @param int positions
      * @return boolean
      */
-    protected function _dontRender($args) {
+    protected function _dontRender($args, $position = 0) {
         return \FALSE;
     }
 

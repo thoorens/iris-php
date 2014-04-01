@@ -108,6 +108,9 @@ class Link extends \Iris\Subhelpers\_Subhelper {
         else {
             $args = func_get_args();
         }
+        if($this->_dontRender($args, 1)){
+            return '';
+        }
         $fileName = array_shift($args);
         list($label, $url, $tooltip, $class) = $this->_normalize($args);
         $this->callViewHelper('styleLoader', 'nojsbutton', 'span.btnlabel{padding:0 0 20px 20px}');
@@ -122,11 +125,12 @@ class Link extends \Iris\Subhelpers\_Subhelper {
      * Stops the rendering if the link is null
      * Overwrites the method in tAutoRenderer
      *
-     * @param string[] $args
+     * @param string[] $args The link parameters
+     * @param int $position The position of the label to test
      * @return boolean
      */
-    protected function _dontRender($args) {
-        return ($args[0] == self::$NoLink[0]);
+    protected function _dontRender($args, $position = 0)  {
+        return ($args[$position] == self::$NoLink[0]);
     }
 
     /**
