@@ -22,7 +22,7 @@ class Button extends _ViewHelper {
      * @param string $id id of the link
      * @return string
      */
-    public function help($label = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL, $id = \NULL) {
+    public function help($label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL, $id = \NULL) {
         $subhelper = \Iris\Subhelpers\Link::GetInstance();
         return $subhelper->autoRender('button', $label, $url, $tooltip, $class, $id);
     }
