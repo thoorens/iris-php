@@ -55,7 +55,6 @@ class Program {
         $this->_log($programName);
         $this->_runtimeDuration = new \Iris\Time\RuntimeDuration(NULL);
         self::$ProgramName = $programName;
-        \Iris\Engine\Mode::AutosetSiteMode();
         Loader::GetInstance()->setApplicationName($programName);
     }
 
