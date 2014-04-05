@@ -1,6 +1,7 @@
 <?php
 
 namespace Iris\views\helpers;
+use Iris\Subhelpers\Button as SubButton;
 
 /**
  *
@@ -23,8 +24,8 @@ class Button extends _ViewHelper {
      * @return string
      */
     public function help($label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL, $id = \NULL) {
-        $subhelper = \Iris\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender('button', $label, $url, $tooltip, $class, $id);
+        $subhelper = SubButton::GetInstance();
+        return $subhelper->autoRender($label, $url, $tooltip, $class, $id);
     }
 
 }

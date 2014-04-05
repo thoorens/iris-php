@@ -1,6 +1,7 @@
 <?php
 
 namespace Iris\views\helpers;
+use Iris\Subhelpers\Link as SubLink;
 
 /*
  * This file is part of IRIS-PHP.
@@ -47,8 +48,9 @@ class Link extends \Iris\views\helpers\_ViewHelper {
      * @return string
      */
     public function help($label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL, $id = \NULL) {
-        $subhelper = \Iris\Subhelpers\Link::GetInstance();
-        return $subhelper->autoRender('link', $label, $url, $tooltip, $class, $id);
+        $subhelper = SubLink::GetInstance();
+        $args = func_get_args();
+        return $subhelper->autoRender($args);
     }
 
 }

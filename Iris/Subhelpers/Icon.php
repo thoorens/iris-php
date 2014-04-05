@@ -46,14 +46,14 @@ class Icon {
      * @var string 
      */
     private $_operationName;
-    
+
     /**
      * Determines if the icon/operation is predefined (the icon files are present in ILO)
      * 
      * @var boolean 
      */
     private $_predefined = \FALSE;
-    
+
     /**
      * Determines if the icon/link must use an id (for editing a line)
      * 
@@ -67,7 +67,7 @@ class Icon {
      * @var string
      */
     private $_specialUrl = \NULL;
-    
+
     function __construct($name, $tooltipTemplate, $urlParam = '') {
         $this->_operationName = $name;
         if (strpos('create_read_delete_update_upload_first_previous_next_last', $name) !== \FALSE) {
@@ -95,14 +95,16 @@ class Icon {
         if (!$active) {
             $name = $name . "_des";
             $toolTip = $manager->_('Operation not possible in context');
-            return \Iris\views\helpers\Link::HelperCall('image', ["$name.png", "Icone $name", $toolTip, $dir]);
+            $html = \Iris\views\helpers\Link::HelperCall('image', ["$name.png", "Icone $name", $toolTip, $dir]);
         }
         else {
             $help = $manager->makeTooltip($name);
             $ref = $manager->makeReference($this, $this->_urlParam);
             $linkParams = [$name, $ref, $help];
-            return \Iris\views\helpers\Link::HelperCall('link')->setInternalImageFolder($dir)->image("$name.png", $linkParams);
+            // we force the string conversion now (if not, problem if we have various icons made in sequence)
+            $html = \Iris\views\helpers\Link::HelperCall('link', $linkParams)->setInternalImageFolder($dir)->image("$name.png")->__toString();
         }
+        return $html;
     }
 
     /**
@@ -122,24 +124,20 @@ class Icon {
         return $this->_operationName;
     }
 
-    
     /**
      * Sets a special URL for the operation/icon
      * @param string $url
      */
     public function setSpecialUrl($url) {
-       $this->_specialUrl = $url; 
+        $this->_specialUrl = $url;
     }
 
     public function getSpecialUrl() {
         return $this->_specialUrl;
     }
 
-        
     public function getUrlParam() {
         return $this->_urlParam;
     }
 
-
 }
-

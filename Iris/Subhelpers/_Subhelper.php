@@ -31,11 +31,11 @@ namespace Iris\Subhelpers;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
-    use \Iris\Engine\tSingleton;
+abstract class _Subhelper implements \Iris\Translation\iTranslatable {
     use \Iris\Translation\tSystemTranslatable;
     use \Iris\views\helpers\tViewHelperCaller;
-
+    use \Iris\Engine\tSingleton;
+    
     /**
      * A terminator for using fluent methods in {(  )} context
      * (method __toString() renders it unnecessary)
@@ -43,18 +43,7 @@ abstract class _Subhelper implements \Iris\Design\iSingleton, \Iris\Translation\
      */
     public $__ = '';
 
-    /**
-     * Returns the unique instance of the class and optionally gives it
-     * a renderer
-     * 
-     * @return static 
-     */
-    public static function GetInstance() {
-        if (is_null(static::$_Instance) or !static::$_Instance instanceof static) {
-            static::$_Instance = new static();
-        }
-        return static::$_Instance;
-    }
+    
 
     /**
      * Permits to cut the fluent interface in a script context
