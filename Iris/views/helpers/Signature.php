@@ -62,7 +62,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      * @var string[]
      */
     private static $_Fields = array();
-    
+
     /**
      * The name of the class responsible for the generation of the
      * javascript code for the placement of the good values by the
@@ -108,8 +108,11 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      */
     public function saveButton() {
         $name = self::$_SpanID;
-        return $this->callViewHelper('button')->addAttribute('id', "b_$name")
-                        ->autorender('button', 'Save MD5', \NULL, 'Save the present MD5 signature');
+
+        /* @var $button \Iris\Subhelpers\Button */
+        $button = $this->callViewHelper('button', ['Save MD5', \NULL, 'Save the present MD5 signature'])
+                ->setId("b_$name");
+        return $button->__toString();
     }
 
     /**
@@ -207,7 +210,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
      * @param string $link
      * @return string
      */
-    public static function md5JS($componentId, $class, $md5, $link){
+    public static function md5JS($componentId, $class, $md5, $link) {
         return <<< JS
 <script>
 require(["dojo/dom-class", "dojo/dom", "dojo/on", "dojo/domReady!"],
@@ -223,6 +226,4 @@ function(domClass, dom, on){
 JS;
     }
 
-    
 }
-
