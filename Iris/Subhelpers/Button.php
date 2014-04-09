@@ -45,22 +45,23 @@ class Button extends \Iris\Subhelpers\_SuperLink {
     public function __toString() {
         if ($this->_nodisplay) {
             $this->_image = \FALSE;
-            return '';
-        }
-        $this->_renderImage();
-        $attributes = $this->_renderAttributes();
-        if (!\Iris\Users\Session::JavascriptEnabled() or self::$NoJavaForce) {
-            if (\Iris\System\Client::OldBrowser(self::$OldBrowser)) {
-                return $this->_simulatedButton();
-            }
-            else {
-                return $this->_linkButton();
-            }
+            $text = '';
         }
         else {
-            return $this->_javascriptButton();
+            $this->_renderImage();
+            if (!\Iris\Users\Session::JavascriptEnabled() or self::$NoJavaForce) {
+                if (\Iris\System\Client::OldBrowser(self::$OldBrowser)) {
+                    $text = $this->_simulatedButton();
+                }
+                else {
+                    $text = $this->_linkButton();
+                }
+            }
+            else {
+                $text = $this->_javascriptButton();
+            }
         }
-        return sprintf('<a href="%s" %s >%s</a>', $this->getUrl(), $attributes, $this->getLabel());
+        return $text;
     }
 
     /**
