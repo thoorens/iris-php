@@ -112,7 +112,7 @@ class GoInternal extends _ViewHelper {
         if ($developmentOnly and \Iris\Engine\Mode::IsProduction()) {
             return '';
         }
-        return $this->callViewHelper('button', $text, $uri, $comment);
+        return $this->callViewHelper('button', $text, $uri, $comment)->__toString();
     }
 
     /**
