@@ -50,10 +50,11 @@ class GoAd extends _ViewHelper {
      * 
      * @return type
      */
-    public function help($local = \TRUE, $grey = \FALSE) {
+    public function help($local = \TRUE, $grey = \FALSE, $test = \FALSE) {
         $logoName = $grey ? 'IrisSmallG' : 'IrisSmall';
         $client = new \Iris\System\Client();
         $lang = $client->getLanguage();
+        
         $title = $this->_('Site powered by Iris-PHP', \TRUE);
         if (is_string($local)) {
             $url = $local;
@@ -64,7 +65,7 @@ class GoAd extends _ViewHelper {
         else {
             $url = 'http://irisphp.org';
         }
-        return $this->callViewHelper('link')->image("/!documents/file/logos/$logoName.png", $title, $url);
+        return $this->callViewHelper('link')->image("/!documents/file/logos/$logoName.png", $title, $url)->__toString();
     }
 
 }
