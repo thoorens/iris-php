@@ -199,19 +199,23 @@ class View implements \Iris\Translation\iTranslatable {
     /**
      * Evals the text passed in argument (with a lot of error trapping)
      * 
-     * @param Template $template
+     * Strangely, all the local variables of this method used before eval
+     * are visible in the view namespace, which may be source of variable clash.
+     * This is why they have unlikely names
+     * 
+     * @param Template $unlikelyNameFor_template
      */
-    private function _eval($template) {
-        $phtml = $template->renderTemplate();
+    private function _eval($unlikelyNameFor_template) {
+        $unlikelyNameFor_phtml = $unlikelyNameFor_template->renderTemplate();
         // add external properties if necessary (e.g. from mainView to layout)
         $this->_copyMainViewProperties();
-        foreach ($this->_properties as $name => $_) {
-            ${$name} = &$this->_properties[$name];
+        // strangely, the index variable will be in the view namespace, which explains the unlikely choice of the name
+        foreach ($this->_properties as $unlikelyNameFor_index => &$unlikelyNameFor_value) {
+            ${$unlikelyNameFor_index} = $unlikelyNameFor_value;
         }
-
         try {
-            self::$_EvalStack->push($template);
-            eval("?>" . $phtml);
+            self::$_EvalStack->push($unlikelyNameFor_template);
+            eval("?>" . $unlikelyNameFor_phtml);
             self::$_EvalStack->pop();
         }
         catch (\Iris\Exceptions\LoaderException $l_ex) {
@@ -227,7 +231,7 @@ class View implements \Iris\Translation\iTranslatable {
         catch (\Iris\Exceptions\ErrorException $exception) {
             $errMessage = $exception->getMessage();
             $viewType = static::$_ViewType;
-            $fileName = $template->getReadScriptFileName();
+            $fileName = $unlikelyNameFor_template->getReadScriptFileName();
             $trace = $exception->getTrace();
             // take the line number from the trace containing eval()'d error
             foreach ($trace as $traceItem) {
