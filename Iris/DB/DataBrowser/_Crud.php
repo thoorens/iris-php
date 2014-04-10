@@ -436,7 +436,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * @param \Iris\DB\Object $object the future object to be inserted
      */
     protected function _preCreate($formData, &$object) {
-        
+        return \TRUE;
     }
 
     /**
