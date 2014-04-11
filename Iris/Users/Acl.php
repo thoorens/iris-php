@@ -128,7 +128,7 @@ class Acl implements \Iris\Design\iSingleton {
         }
         
         // the main page is always readable
-        if ($resource == '/main/index') {
+        if ("$resource/$action" == '/main/index/index') {
             return TRUE;
         }
         
