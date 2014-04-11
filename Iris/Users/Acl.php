@@ -126,7 +126,13 @@ class Acl implements \Iris\Design\iSingleton {
         if ($this->_noAcl) {
             return TRUE;
         }
-
+        
+        // the main page is always readable
+        if ($resource == '/main/index') {
+            return TRUE;
+        }
+        
+        // menu title has no URI and are recoded as '//'
         if ($resource == '//') {
             return TRUE;
         }
