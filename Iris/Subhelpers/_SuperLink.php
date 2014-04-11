@@ -153,6 +153,13 @@ use \Iris\Engine\tSingleton;
         return $this;
     }
 
+    public function acl(){
+        $acl = \Iris\Users\Acl::GetInstance();
+        $acl->hasPrivilege(dirname($this->_url), basename($this->_url));
+        $this->_nodisplay = !$acl->hasPrivilege(dirname($this->_url), basename($this->_url));
+        return $this;
+    }
+    
     /*
      * The set accessor do some logics
      */
