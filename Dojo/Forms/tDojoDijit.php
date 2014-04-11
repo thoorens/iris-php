@@ -26,6 +26,8 @@ namespace Dojo\Forms;
  */
 trait tDojoDijit {
 
+    protected $_hasDijit = \TRUE;
+    
     private $_dijitType = \NULL;
     private $_dijitAttributes = [];
 

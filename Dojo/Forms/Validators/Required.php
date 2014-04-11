@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Dojo\Forms\Validators;
 
 /*
@@ -34,8 +32,7 @@ namespace Dojo\Forms\Validators;
  * 
  */
 class Required extends \Iris\Forms\Validators\Required {
-    
-    
+
     protected static $_Html5 = FALSE;
 
     /**
@@ -44,16 +41,12 @@ class Required extends \Iris\Forms\Validators\Required {
      */
     public function setElement($element) {
         //$element->setRequired('true');
-        $element->addDijitAttribute('required','true');
-//        if ($element->dijitType != 'dijit.editor') {
-//            //$element->setDijitType("dijit.form.ValidationTextBox");
-//            $bubble = \Dojo\Engine\Bubble::getBubble('ValidationTextBox');
-//            $bubble->addModule("dojo/parser")
-//                    ->addModule("dijit/form/ValidationTextBox");
-//        }
-        //parent::setElement($element);
+        if (isset($this->_hasDijit)) {
+            $element->addDijitAttribute('required', 'true');
+        }
+        else {
+            parent::setElement($element);
+        }
     }
 
 }
-
-
