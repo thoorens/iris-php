@@ -18,7 +18,7 @@ namespace Iris\Forms;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
@@ -194,7 +194,7 @@ abstract class _Form implements iFormContainer {
     }
 
     /**
-     * Render the <form> tag : to override with a specific
+     * Render the <form> tag and its complete attributes : to override with a specific
      * method for each form type
      *
      */
