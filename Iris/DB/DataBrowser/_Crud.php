@@ -35,14 +35,10 @@ use Iris\DB\_Entity;
  * @version $Id: $ * 
  * 
  */
-abstract class _Crud implements \Iris\Translation\iTranslatable {
+abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
 
-    // Return codes
-    const DISPLAY = 0;
-    const END = 1;
-    const GOON = 2;
     // Error codes
     const ERR_NOT_FOUND = 11;
     const ERR_INTEGRITY = 12;
@@ -50,53 +46,35 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     const ERR_DUPLICATE = 14;
     const ERR_INVALID = 15;
     const ERR_INCOMPLETE = 16;
-    // Functions
+
+    // Function mode
+
     /**
      * Create (or insert) a line
      */
-    const CREATE = 1;
+    const CREATE_MODE = 2;
 
     /**
-     * Read (or select) a line
+     * Read (or select) a line is alias for nooperation
      */
-    const READ = 2;
+    const READ_MODE = self::NOOPERATION_MODE;
 
     /**
      * Update a line
      */
-    const UPDATE = 3;
+    const UPDATE_MODE = 3;
 
     /**
      * Delete a line
      */
-    const DELETE = 4;
+    const DELETE_MODE = 4;
 
     /**
      * Default crud directory
      */
     const CRUD_DIRECTORY = '\\models\\crud\\';
 
-    /**
-     * The form used to managed the entity
-     * 
-     * @var \Iris\Forms\_Form 
-     */
-    protected $_form = NULL;
-
-    /**
-     * The name of the form variable in the view (in auto mode with DispatchAction)
-     * 
-     * @var string
-     */
-    public $_formName = 'form';
-
-    /**
-     * The type of action requested (one of CRUD)
-     * 
-     * @var int 
-     */
-    protected $_mode;
-
+    
     /**
      * The entity behind the object
      * 
@@ -117,7 +95,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * 
      * @var string
      */
-    protected $_currentTreatment;
+//    protected $_currentTreatment;
 
     /**
      * URL where to continue in case of irrecoverable error (not a simple
@@ -125,14 +103,14 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * 
      * @var string URL de la page d'erreur 
      */
-    protected $_errorTreatment = "/ERROR";
+//    protected $_errorTreatment = "/error";
 
     /**
      * URL where to continue in case the action has succeeded
      * 
      * @var string
      */
-    protected $_endTreatment;
+//    protected $_endTreatment;
 
     /**
      * A correspondance between the action and the submit button text
@@ -149,19 +127,46 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     );
 
     /**
-     * This parameter may be used in some subclasses
+     * The parameter may be used in some subclasses
      * 
      * @param mixed $param 
      */
-    public function __construct($param = \NULL) {
-        $response = \Iris\Engine\Response::GetDefaultInstance();
-        $module = $response->getModuleName();
-        $controller = $response->getControllerName();
-        $action = $response->getActionName();
-        $this->_currentTreatment = "/$module/$controller/$action";
-        $this->_endTreatment = $this->_currentTreatment;
-    }
+//    public function __construct($param = \NULL) {
+//        $response = \Iris\Engine\Response::GetDefaultInstance();
+//        $module = $response->getModuleName();
+//        $controller = $response->getControllerName();
+//        $action = $response->getActionName();
+//        $this->_currentTreatment = "/$module/$controller/$action";
+//        $this->_endTreatment = $this->_currentTreatment;
+//    }
 
+    /**
+     * Set the three action associated to the treatment: what to do if <ul>
+     * <li>an error occurs
+     * <li>everything is done
+     * <li>forms need to be modified again
+     * </ul>
+     * 
+     * It is clearer to use the corresponding setters for the 3 treatments
+     * 
+     * @param string $errorTreatment URL for error treatment
+     * @param string $endTreatment URL for next task after data treatment
+     * @param string $continuationTreatment URL for the continuation page when validation fails
+     * @return _CrudBase for fluent entity
+     * @deprecated since version 1 
+     */
+    public function setActions($errorTreatment, $endTreatment = \NULL, $continuationTreatment = \NULL) {
+        $this->_errorURL = $errorTreatment;
+        if ($endTreatment != NULL) {
+            $this->_endURL = $endTreatment;
+        }
+        // usuallay keep the value automatically set by the constructor
+        if ($continuationTreatment == !NULL) {
+            $this->_continuationURL = $continuationTreatment;
+        }
+        return $this;
+    }
+    
     /**
      * Creates a new object using a form (until validation is OK)
      *  
@@ -172,34 +177,42 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     public function create($type = \NULL, $data = \NULL) {
         $this->forceAutoForm('create');
         try {
-            $this->_initObjects(self::CREATE, $type);
+            $this->_initObjects(self::CREATE_MODE, $type);
             if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
                 $formData = $this->_form->getDataFromPost();
-                if ($this->_form->isValid($formData)) {
-                    if ($this->_postValidate(self::CREATE, $formData)) {
-                        $model = $this->_entity->createRow($formData);
-                        if (!is_null($this->_preCreate($formData, $model))) {
-                            try {
-                                $done = $model->save();
-                                if (!$done) {
-                                    return self::ERR_DUPLICATE;
-                                }
-                                if (!is_null($this->_postCreate($model))) {
-                                    return self::END;
-                                }
-                            }
-                            catch (_Exception $exc) {
-                                return self::ERR_DUPLICATE;
-                            }
-                        }
-                    }
+                if ($this->_form->isValid($formData) and $this->_postValidate(self::CREATE_MODE, $formData)) {
+                    return $this->_createAndSave($formData);
                 }
             }
             $this->_preDisplay($type, $data); //by Ref
-            return self::DISPLAY;
+            return self::RC_DISPLAY;
         }
         catch (_Exception $exc) {
             die("ERREUR");
+        }
+    }
+
+    /**
+     * Creates a new object and saves it in the database 
+     * 
+     * @param string[] $formData The data from the form
+     * @return mixed
+     */
+    protected function _createAndSave($formData) {
+        $model = $this->_entity->createRow($formData);
+        if (!is_null($this->_preCreate($formData, $model))) {
+            try {
+                $done = $model->save();
+                if (!$done) {
+                    return self::ERR_DUPLICATE;
+                }
+                if (!is_null($this->_postCreate($model))) {
+                    return self::RC_END;
+                }
+            }
+            catch (_Exception $exc) {
+                return self::ERR_DUPLICATE;
+            }
         }
     }
 
@@ -212,21 +225,21 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     public function delete($idValues) {
         $object = $this->getCurrentObject($idValues);
         $this->forceAutoForm('delete');
-        $this->_initObjects(self::DELETE, $idValues);
+        $this->_initObjects(self::DELETE_MODE, $idValues);
         if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
             if (is_null($object)) {
                 return self::ERR_NOT_FOUND;
             }
             // some special treatments do not go further
             // for instance no database
-            if ($this->_preDelete($object) == self::END) {
-                return self::END;
+            if ($this->_preDelete($object) == self::RC_END) {
+                return self::RC_END;
             }
             try {
                 $done = $object->delete();
                 if ($done) {
                     $this->_postDelete($object);
-                    return self::END;
+                    return self::RC_END;
                 }
                 else {
                     return self::ERR_INTEGRITY;
@@ -249,12 +262,12 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     public function update($idValues) {
         $this->forceAutoForm('update');
         $object = $this->getCurrentObject($idValues);
-        $this->_initObjects(self::UPDATE, $idValues);
+        $this->_initObjects(self::UPDATE_MODE, $idValues);
         if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
             $formData = $this->_form->getDataFromPost();
             if ($this->_form->isValid($formData)) {
-                if (!$this->_postValidate(self::UPDATE, $formData)) {
-                    return self::INVALID;
+                if (!$this->_postValidate(self::UPDATE_MODE, $formData)) {
+                    return self::ERR_INVALID;
                 }
                 $object->replaceData($formData);
                 $this->_preUpdate($formData, $object);
@@ -262,7 +275,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
                     $done = $object->save();
                     if ($done) {
                         $this->_postUpdate($object);
-                        return self::END;
+                        return self::RC_END;
                     }
                     else {
                         return self::ERR_SAVE;
@@ -272,7 +285,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
                     return self::ERR_SAVE;
                 }
             }
-            return self::DISPLAY;
+            return self::RC_DISPLAY;
         }
 
         if (is_null($object)) {
@@ -289,7 +302,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      */
     public function read($idValues) {
         $this->forceAutoForm('read');
-        $this->_initObjects(self::READ, $idValues);
+        $this->_initObjects(self::READ_MODE, $idValues);
         $object = $this->getCurrentObject();
         if (is_null($object)) {
             return self::ERR_NOT_FOUND;
@@ -303,44 +316,44 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
         $id = $entity->getId(_Entity::FIRST);
         $this->read($id);
     }
+
     public function goNext($idValues) {
         $entity = $this->_entity;
         $id = $entity->getId(_Entity::NEXT, $idValues);
         $this->read($id);
     }
+
     public function goPrevious($idValues) {
         $entity = $this->_entity;
         $id = $entity->getId(_Entity::PREVIOUS, $idValues);
         $this->read($id);
     }
+
     public function goLast() {
         $entity = $this->_entity;
         $id = $entity->getId(_Entity::LAST);
         $this->read($id);
     }
-    /*
-     * ------------------------------------------------------------------
-     * Accessors
-     * ------------------------------------------------------------------
-     */
+
+    
 
     /**
      * Get the form used by CRUD
      * 
      * @return \Iris\Forms\_Form
      */
-    public function getForm() {
-        return $this->_form;
-    }
+//    public function getForm() {
+//        return $this->_form;
+//    }
 
     /**
      * Set the form to be used by CRUD
      * 
      * @param \Iris\Forms\_Form $form 
      */
-    public function setForm($form = NULL) {
-        $this->_form = $form;
-    }
+//    public function setForm($form = NULL) {
+//        $this->_form = $form;
+//    }
 
     /**
      * Forces an autoform if necessary
@@ -366,35 +379,44 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     }
 
     /**
-     * Set the entity corresponding to the CRUD
+     * Finishes the CRUD treatment by sending a form render to the view or 
+     * reacting to the error/end code
      * 
-     * @param t\Iris\DB\_Entity $entity 
+     * @param \Iris\MVC\_Controller $controller the controller that has called the CRUD
+     * @param int $code error/continuation code
+     * @param string $scriptName the name of the view script in which display the form 
      */
-    public function setEntity($entity) {
-        $this->_entity = $entity;
+    public function process(\Iris\MVC\_Controller $controller, $code, $scriptName) {
+        //$this->_setSubmitMessage($scriptName);
+        switch ($code) {
+            case self::RC_DISPLAY:
+                if ($this->_mode == self::NOOPERATION_MODE) {
+                    $controller->__($this->_formName, $this->getForm()->display());
+                }
+                else {
+                    $controller->__($this->_formName, $this->getForm()->render());
+                }
+                $controller->setViewScriptName($scriptName);
+                break;
+            // The treatement has come to an end
+            case self::RC_END:
+                // a leading / means a complete rerouting
+                if ($this->_endURL[0] == '/') {
+                    $controller->reroute($this->_endURL);
+                }
+                // without leading /, a local action is taken
+                else {
+                    $controller->redirect($this->_endURL);
+                }
+                break;
+            // all other codes are errors    
+            default:
+                $controller->redirect("$this->_errorURL/$code");
+                break;
+        }
     }
 
-    /**
-     * Set the three action associated to the treatment: what to do if <ul>
-     * <li>an error occurs
-     * <li>everything is done
-     * <li>forms need to be modified again
-     * </ul>
-     * 
-     * @param string $errorTreatment URL for error treatment
-     * @param string $endTreatment URL for next task after data treatment
-     * @param string $currentTreatment URL for the current page when validation fails
-     */
-    public function setActions($errorTreatment, $endTreatment = NULL, $currentTreatment = NULL) {
-        $this->_errorTreatment = $errorTreatment;
-        if ($endTreatment != NULL) {
-            $this->_endTreatment = $endTreatment;
-        }
-        if ($currentTreatment == !NULL) {
-            $this->_currentTreatment = $currentTreatment;
-        }
-    }
-
+    
     /**
      * 
      * @param int $mode one of the four in CRUD
@@ -403,14 +425,13 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     protected function _initObjects($mode, $id = NULL) {
 
         $this->_mode = $mode;
-        if ($mode == self::DELETE) {
+        if ($mode == self::DELETE_MODE) {
             $this->_form->makeReadOnly();
         }
-        if ($mode == self::READ) {
+        if ($mode == self::READ_MODE) {
             $this->_form->makeReadOnly();
         }
-        $this->_form->setAction($this->_currentTreatment . "/$id");
-        $this->_formPrepare();
+        parent::_initObjects($mode, $id);
     }
 
     /*
@@ -458,7 +479,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * @return type What to do next (normally go on)
      */
     protected function _preDelete(&$object) {
-        return self::GOON;
+        return self::RC_GOON;
     }
 
     /**
@@ -479,7 +500,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
      * @return int what to do next (by default DISPLAY)
      */
     protected function _preDisplay($param, &$data) {
-        return self::DISPLAY;
+        return self::RC_DISPLAY;
     }
 
     // There is no _postDisplay callback
@@ -546,43 +567,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
         return true;
     }
 
-    /**
-     * Finishes the CRUD treatment by sending a form render to the view or 
-     * reacting to the error/end code
-     * 
-     * @param \Iris\MVC\_Controller $controller the controller that has called the CRUD
-     * @param int $code error/continuation code
-     * @param string $scriptName the name of the view script in which display the form 
-     */
-    public function process(\Iris\MVC\_Controller $controller, $code, $scriptName) {
-        //$this->_setSubmitMessage($scriptName);
-        switch ($code) {
-            case self::DISPLAY:
-                if ($this->_mode == self::READ) {
-                    $controller->__($this->_formName, $this->getForm()->display());
-                }
-                else {
-                    $controller->__($this->_formName, $this->getForm()->render());
-                }
-                $controller->setViewScriptName($scriptName);
-                break;
-            // The treatement has come to an end
-            case self::END:
-                // a leading / means a complete rerouting
-                if ($this->_endTreatment[0] == '/') {
-                    $controller->reroute($this->_endTreatment);
-                }
-                // without leading /, a local action is taken
-                else {
-                    $controller->redirect($this->_endTreatment);
-                }
-                break;
-            // all other codes are errors    
-            default:
-                $controller->redirect("$this->_errorTreatment/$code");
-                break;
-        }
-    }
+    
 
     /**
      * A masked method to read the data (they are cached for later use)
@@ -641,7 +626,5 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
         }
         $crud->process($controller, $next, $scriptName);
     }
-
-    
 
 }

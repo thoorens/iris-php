@@ -96,7 +96,7 @@ class Upload extends _Crud {
                     $this->_processFile();
                     $this->_postUpload();
                 }
-                return self::END;
+                return self::RC_END;
             }
             return NULL;
         }
@@ -114,9 +114,9 @@ class Upload extends _Crud {
      * Desactivated method (\Iris\Documents\ExtendedUpload override it)
      * @ignore
      */
-    public function delete($idValues) {
-        $this->_desactivated('delete');
-    }
+//    public function delete($idValues) {
+//        $this->_desactivated('delete');
+//    }
 
     /**
      * Desactivated method
@@ -259,6 +259,10 @@ class Upload extends _Crud {
      */
     public function setCreateMissingDir($createDirectory = TRUE) {
         $this->_createMissingDir = $createDirectory;
+    }
+
+    protected function _initObjects($mode, $id = \NULL) {
+        
     }
 
 }
