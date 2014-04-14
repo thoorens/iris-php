@@ -35,6 +35,12 @@ class Somebody implements iUser {
 
     use tUser;
 
+    const ID = 0;
+    const NAME = 1;
+    const ROLE = 2;
+    const EMAIL = 3;
+    const TIME = 4;
+    
     /**
      * Unlike other iUser, somebody does not use an entity to 
      * get its member data.
@@ -49,17 +55,17 @@ class Somebody implements iUser {
      */
     public function __construct($serialized = NULL) {
         if (is_null($serialized)) {
+            $this->_id = 0;
             $this->_name = Settings::GetDefaultUserName();
             $this->_role = Settings::GetDefaultRoleName();
             $this->_emailAddress = Settings::GetDefaultUserEmail();
-            $this->_id = 0;
         }
         else {
             $data = explode('&', $serialized);
-            $this->_name = $data[0];
-            $this->_mailAddress = $data[1];
-            $this->_role = $data[2];
-            $this->_id = $data[3];
+            $this->_id = $data[self::ID];
+            $this->_name = $data[self::NAME];
+            $this->_role = $data[self::ROLE];
+            $this->_mailAddress = $data[self::EMAIL];
         }
     }
 

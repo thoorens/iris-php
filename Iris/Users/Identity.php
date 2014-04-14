@@ -77,7 +77,7 @@ class Identity implements iUser, \Serializable {
     }
 
     /**
-     * Should be called once by session singleton (another call would be identical to GetInstance())
+     * Should be called once by Session singleton (another call would be identical to GetInstance())
      * 
      * @staticvar type $created
      * @return Identiy
@@ -158,12 +158,14 @@ class Identity implements iUser, \Serializable {
      * Copies all data (except itmeout) from a user to the current identity object.
      * 
      * @param iUser $user 
+     * @return \Iris\Users\Identity for fluent interface
      */
     public function userClone(iUser $user) {
         $this->_name = $user->getName();
         $this->_mailAddress = $user->getEmailAddress();
         $this->_role = $user->getRole();
         $this->_id = $user->getId();
+        return $this;
     }
 
     /**
@@ -172,11 +174,11 @@ class Identity implements iUser, \Serializable {
      * @return string
      */
     public function serialize() {
-        $data[0] = $this->getName();
-        $data[1] = $this->getEmailAddress();
-        $data[2] = $this->getRole();
-        $data[3] = $this->getId();
-        $data[4] = $this->_timer;
+        $data[Somebody::ID] = $this->getId();
+        $data[Somebody::NAME] = $this->getName();
+        $data[Somebody::ROLE] = $this->getRole();
+        $data[Somebody::EMAIL] = $this->getEmailAddress();
+        $data[Somebody::TIME] = $this->_timer;
         return implode('&', $data);
     }
 
@@ -188,11 +190,11 @@ class Identity implements iUser, \Serializable {
      */
     public function unserialize($serialized) {
         $data = explode('&', $serialized);
-        $this->_name = $data[0];
-        $this->_mailAddress = $data[1];
-        $this->_role = $data[2];
-        $this->_id = $data[3];
-        $this->_timer = $data[4];
+        $this->_id = $data[Somebody::ID];
+        $this->_name = $data[Somebody::NAME];
+        $this->_role = $data[Somebody::ROLE];
+        $this->_mailAddress = $data[Somebody::EMAIL];
+        $this->_timer = $data[Somebody::TIME];
     }
 
     /**
