@@ -67,8 +67,10 @@ class Settings extends _Settings {
         StandardSetting::CreateSetting('cacheTemplate', \Iris\MVC\Template::CACHE_NEVER);
         // Application icons are placed in a /images/icons
         StandardSetting::CreateSetting('iconDir', '/icons');
-        // By default all messages are in US english
-        StandardSetting::CreateSetting('defaultLanguage', 'en-us');
+        // By default all texts are in US english
+        StandardSetting::CreateSetting('defaultLanguage', 'en');
+        // By default only english is available (otherwise, use a string like 'fr-en-es')
+        StandardSetting::CreateSetting('availableLanguages', 'en');
         // Defaults settings for menu
         StandardSetting::CreateSetting('menuActiveClass', 'active');
         StandardSetting::CreateSetting('menuMainTag', 'ul');
