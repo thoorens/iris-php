@@ -113,7 +113,6 @@ abstract class core_Bootstrap {
             $this->_readConfig($programName);
         }
         $this->_configureErrors();
-        $this->_configureMenus();
         $this->_postConfig($programName);
         return $program;
     }
