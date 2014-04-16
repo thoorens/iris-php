@@ -81,9 +81,16 @@ class _BaseController {
     protected static $_MainController = NULL;
 
     /**
+     * This directory may be used to store the view scripts without
+     * explicitely saying so
+     * 
+     * @var string
+     */
+    protected $_defaultScriptDir = \NULL;
+
+    /**
      * 
      * @param \Iris\Engine\Response $response 
-     * PHP 5.4 ready
      */
     public function __construct(\Iris\Engine\Response $response, $actionName = 'index') {
         $this->_response = $response;
@@ -324,6 +331,16 @@ class _BaseController {
         $this->_view->setViewScriptName($scriptName);
     }
 
+    
+    /**
+     * Sets a default directory for all scripts.
+     * 
+     * @param string $defaultScriptDir
+     */
+    public function setDefaultScriptDir($defaultScriptDir) {
+        $this->_view->setDefaultScriptDir($defaultScriptDir);
+    }
+    
     /**
      *
      * @return Iris\Engine\Reponse 
@@ -497,7 +514,10 @@ class _BaseController {
      * @param type $param
      * @throws \Iris\Exceptions\ControllerException
      */
-    public function setParameters($param){
+    public function setParameters($param) {
         throw new \Iris\Exceptions\ControllerException('Normal controllers cannot have external parameters. Your controller must be an Islet or a Subcontroller');
     }
+
+    
+
 }

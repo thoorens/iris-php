@@ -74,7 +74,10 @@ class _Controller extends _BaseController {
         return \Iris\MVC\Layout::GetInstance()->getViewScriptName();
     }
     /**
-     * This class has is 
+     * The view is converted to string (and echoed if requested). In this
+     * class, if a layout has been defined, it is used otherwise, the parent
+     * method is called.
+     * 
      * @param boolean $echoing
      * @return string 
      */

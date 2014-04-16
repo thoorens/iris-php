@@ -65,9 +65,18 @@ class View implements \Iris\Translation\iTranslatable {
     protected $_viewScriptName = '';
 
     /**
+     * This directory may be used to store the view scripts without
+     * explicitely saying so
+     * 
+     * @var string
+     */
+    protected $_defaultScriptDir = \NULL;
+
+    
+    /**
      * The response which has selected the view
      * 
-     * @var Iris\Engine\Response
+     * @var \Iris\Engine\Response
      */
     protected $_response;
 
@@ -98,6 +107,9 @@ class View implements \Iris\Translation\iTranslatable {
         $this->_viewScriptName = $name;
     }
 
+    public function setDefaultScriptDir($defaultScriptDir) {
+        $this->_defaultScriptDir = $defaultScriptDir;
+    }
     /**
      * The magic set method to manage view internal variables
      * 
@@ -145,8 +157,13 @@ class View implements \Iris\Translation\iTranslatable {
      */
     public function render($forcedScriptName = NULL, $absolute = \FALSE) {
         if (strpos($this->_viewScriptName, '/') !== FALSE and !$absolute) {
-            $forcedScriptName = $this->_viewScriptName;
+                $forcedScriptName = $this->_viewScriptName;
         }
+        if(is_null($forcedScriptName) and !is_null($this->_defaultScriptDir)){
+            $scriptName = is_null($this->_viewScriptName) ? $this->_response->getActionName() : $this->_viewScriptName;
+            $forcedScriptName = $this->_defaultScriptDir.'/'.$scriptName;
+        }
+        // In case of Ajax, no render is necessary. There is no view part.
         if ($forcedScriptName == '__AJAX__' or $this->_viewScriptName == '__AJAX__') {
             \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
             return;
@@ -322,5 +339,7 @@ class View implements \Iris\Translation\iTranslatable {
     public static function GetEvalStack() {
         return self::$_EvalStack;
     }
+
+    
 
 }

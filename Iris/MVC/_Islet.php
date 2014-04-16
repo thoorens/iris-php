@@ -18,7 +18,7 @@ namespace Iris\MVC;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
@@ -32,7 +32,7 @@ namespace Iris\MVC;
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 abstract class _Islet extends _BaseController {
 
     /**
@@ -58,7 +58,6 @@ abstract class _Islet extends _BaseController {
     /**
      *
      * @param \Iris\Engine\Response $response 
-     * PHP 5.4 ready
      */
     public function __construct($response, $actionName='index') {
         parent::__construct($response, $actionName);
