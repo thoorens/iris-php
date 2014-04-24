@@ -41,4 +41,13 @@ class Link extends \Iris\Subhelpers\_SuperLink {
         return sprintf('<a href="%s" %s >%s</a>', $this->getUrl(), $attributes, $this->getLabel());
     }
 
+    /**
+     * Permits to change a link into a button at last stage
+     * 
+     * @return string
+     */
+    public function button(){
+        $button = Button::GetInstance();
+        return $button->autorender($this->getLabel(),$this->getUrl(),$this->getTooltip());
+    }
 }
