@@ -170,7 +170,7 @@ use \Iris\Engine\tSingleton;
      * @return string
      */
     public function getLabel() {
-        return $this->_label;
+        return $this->_($this->_label);
     }
 
     /**
@@ -209,7 +209,7 @@ use \Iris\Engine\tSingleton;
         $attributes = '';
         $tooltip = $this->_tooltip;
         if (!empty($tooltip)) {
-            $attributes .= " title=\"$tooltip\"";
+            $attributes .= ' title="'.$this->_($tooltip).'"';
         }
         $class = $this->_class;
         if (!empty($class)) {
