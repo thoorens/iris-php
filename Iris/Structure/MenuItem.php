@@ -57,104 +57,7 @@ class MenuItem extends Menu {
         }
     }
 
-    /**
-     * Accessor get to 
-     * @return string 
-     */
-    public function getLabel() {
-        return $this->_data['label'];
-    }
 
-    /**
-     * Accessor set to Label
-     * 
-     * @param string $label 
-     * @return \Iris\Structure\MenuItem (for fluent interface)
-     */
-    public function setLabel($label) {
-        $this->_data['label'] = $label;
-        return $this;
-    }
-
-    /**
-     * Accessor get for the optional id
-     * 
-     * @return string
-     */
-    public function getId() {
-        return $this->_data['id'];
-    }
-
-    /**
-     * Accessor set for the optional id
-     * 
-     * @param string $id
-     * @return \Iris\Structure\MenuItem (for fluent interface)
-     */
-    public function setId($id) {
-        $this->_data['id'] = $id;
-        return $this;
-    }
-
-    /**
-     * Accessor get to URI
-     * 
-     * @return string 
-     */
-    public function getUri() {
-        return $this->_data['uri'];
-    }
-
-    /**
-     * Accessor set to URI
-     * 
-     * @param string $uri 
-     * @return \Iris\Structure\MenuItem (for fluent interface)
-     */
-    public function setUri($uri) {
-        $this->_data['uri'] = $uri;
-        return $this;
-    }
-
-    /**
-     * Accessor get to Title (tooltip)
-     * 
-     * @return string
-     */
-    public function getTitle() {
-        return $this->_data['title'];
-    }
-
-    /**
-     * Accessor set to title (tooltip)
-     * 
-     * @param string $title 
-     * @return \Iris\Structure\MenuItem (for fluent interface)
-     */
-    public function setTitle($title) {
-        $this->_data['title'] = $title;
-        return $this;
-    }
-
-    /**
-     * Accessor set to Value
-     * 
-     * @param string $value 
-     */
-    public function setDefault($value = TRUE) {
-        $this->_data['default'] = $value;
-        return $this;
-    }
-
-    /**
-     * Acessor set to visibility
-     * 
-     * @param boolean $value 
-     */
-    public function setVisible($value) {
-        $this->_data['visible'] = $value;
-        return $this;
-    }
 
     /**
      * Return the item as an array
@@ -170,4 +73,45 @@ class MenuItem extends Menu {
         return $data;
     }
 
+    /**
+     * This magic method replaces the old set and get methods:<ul>
+     * <li> setUri, setId, setTitle, setLabel
+     * <li> getUri, getId, getTitle, getLabel
+     * </ul>
+     * This permits to add other attributes to menu (not automatically managed in the standard
+     * helper.
+     * 
+     * @param string $name
+     * @param string[] $arguments
+     * @return \Iris\Structure\MenuItem
+     * @throws \Iris\Exceptions\MenuException
+     */
+    public function __call($name, $arguments) {
+        $prefix = substr($name, 0,3 );
+        $variable = substr($name,3);
+        $variable[0] = strtolower($variable[0]);
+        switch($prefix){
+            case 'set':
+                $this->_data[$variable] = $arguments[0];
+                return $this;
+                break;
+            case 'get':
+                return $this->_data[$variable];
+                break;
+            default :
+                throw new \Iris\Exceptions\MenuException('Invalid method call in menu : '.$name);
+        }
+    }
+    
+    /**
+     * Accessor set to Value
+     * 
+     * @param string $value 
+     */
+    public function setDefault($value = TRUE) {
+        $this->_data['default'] = $value;
+        return $this;
+    }
+
+    
 }
