@@ -607,7 +607,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * @param string $scriptName the optional name of a script used by all operation
      */
     public static function DispatchAction($controller, $actionName, $parameters, $scriptName = \NULL, $crudDirectory = self::CRUD_DIRECTORY) {
-        $id = count($parameters) > 0 ? $parameters[0] : \NULL;
+        $id = count($parameters) > 0 ? $parameters : \NULL;
         // the action name is for instance update_bookAction => update, bookAction
         list($action, $crudName) = explode('_', $actionName);
         //@todo ajouter les opérations de navigation

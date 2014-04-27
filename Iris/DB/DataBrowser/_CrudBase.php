@@ -209,6 +209,9 @@ abstract class _CrudBase implements \Iris\Translation\iTranslatable {
      */
     protected function _initObjects($mode, $id = \NULL) {
         $form = $this->getForm();
+        if(is_array($id)){
+            $id = implode('/',$id);
+        }
         $form->setAction($this->_continuationURL . "/$id");
         $this->_formPrepare();
     }
