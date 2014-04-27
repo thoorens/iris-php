@@ -153,10 +153,18 @@ use \Iris\Engine\tSingleton;
         return $this;
     }
 
+    /**
+     * When added, this method display the link only if the user has the right
+     * to access the target.
+     * WARNING : the URL must be in canonical form "/m/c/a/....."
+     * 
+     * @return \Iris\Subhelpers\_SuperLink
+     */
     public function acl(){
         $acl = \Iris\Users\Acl::GetInstance();
-        $acl->hasPrivilege(dirname($this->_url), basename($this->_url));
-        $this->_nodisplay = !$acl->hasPrivilege(dirname($this->_url), basename($this->_url));
+        $aUrl = explode('/', $this->_url.'////');
+        list($module, $controller, $action) = array_slice($aUrl, 1, 3);
+        $this->_nodisplay = !$acl->hasPrivilege("/$module/$controller", $action);
         return $this;
     }
     
