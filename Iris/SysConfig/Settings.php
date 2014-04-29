@@ -22,6 +22,12 @@ namespace Iris\SysConfig;
  */
 
 /**
+ * A new constant for password hash 
+ */
+define('PASSWORD_IRIS', 'IRIS');
+
+
+/**
  * This class offers a way to manage settings:<ul>
  * <li> some are predefined during Settings occurrence initialization
  * <li> there are vanilla settings with <b>ge</b>t and  <b>set</b> methods
@@ -86,6 +92,8 @@ class Settings extends _Settings {
         StandardSetting::CreateSetting('dataFolder', IRIS_ROOT_PATH . '/data');
         // The default translator is
         StandardSetting::CreateSetting('defaultTranslator', '\Iris\Translation\NullTranslator');
+        // Type of Password
+        StandardSetting::CreateSetting('passwordHashType', PASSWORD_BCRYPT);
     }
 
 }

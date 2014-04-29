@@ -29,8 +29,7 @@ namespace Iris\Users;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _Password {
-    
-    
+
     const UPPER = 'U';
     const LOWER = 'L';
     const LETTER = 'C';
@@ -43,7 +42,7 @@ abstract class _Password {
     const LOWER_ALL = 'a';
     const LOWER_DIGIT = 'd';
     const LITTERAL = '"';
-
+    
     private static $_UpperCaseLetters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
     private static $_LowerCaseLetters = 'abcdefghijkmnopqrstuvwxyz';
     private static $_Letters;
@@ -51,12 +50,20 @@ abstract class _Password {
     private static $_SpecialSigns = ",.:_$";
     private static $_DigitOrLetter;
 
+    /**
+     * ClassInitializer  initializes some variables and
+     * load compatibility lib for PHP 5.5 password hash
+     */
     public static function __ClassInit() {
         self::$_Letters = self::$_LowerCaseLetters . self::$_UpperCaseLetters;
         self::$_DigitOrLetter = self::$_Digits . self::$_Letters;
+        if (!defined('PASSWORD_DEFAULT') and \Iris\SysConfig\Settings::GetPasswordHashType() !== PASSWORD_IRIS) {
+            $compatibilityFile = dirname(__FILE__) . '/password.php';
+            include_once $compatibilityFile;
+        }
+        define('NOTCLI', \TRUE);
     }
-    
-    
+
     /**
      * Creates an uncrypted password with salt
      * 
@@ -64,27 +71,38 @@ abstract class _Password {
      * @return string
      */
     public static function EncodePassword($password) {
-        $pos = rand(0, strlen($password) - 2);
-        $subString = substr($password, $pos, $pos + 1);
-        $md5 = md5($subString);
-        $salt = substr($md5, 0, 2);
-        $candidate = md5(crypt($password, $salt));
-        $encrypt = $salt . $candidate;
+        if (defined('NOTCLI') and \Iris\SysConfig\Settings::GetPasswordHashType() !== PASSWORD_IRIS) {
+            $encrypt = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
+        }
+        else {
+            $pos = rand(0, strlen($password) - 2);
+            $subString = substr($password, $pos, $pos + 1);
+            $md5 = md5($subString);
+            $salt = substr($md5, 0, 2);
+            $candidate = md5(crypt($password, $salt));
+            $encrypt = $salt . $candidate;
+        }
         return $encrypt;
     }
 
     /**
      * Verifies an password 
      * 
-     * @param string $clear 
-     * @param string $encrypt
+     * @param string $password 
+     * @param string $hash
      * @return boolean 
      */
-    public static function VerifyPassword($clear, $encrypt) {
-        $salt = substr($encrypt, 0, 2);
-        $candidate = md5(crypt($clear, $salt));
-        $test = $salt . $candidate;
-        return $encrypt == $test;
+    public static function VerifyPassword($password, $hash) {
+        if (defined('NOTCLI') and \Iris\SysConfig\Settings::GetPasswordHashType() !== PASSWORD_IRIS) {
+            $result = password_verify($password, $hash);
+        }
+        else {
+            $salt = substr($hash, 0, 2);
+            $candidate = md5(crypt($password, $salt));
+            $test = $salt . $candidate;
+            $result = $hash == $test;
+        }
+        return $result;
     }
 
     /**
@@ -176,5 +194,5 @@ abstract class _Password {
         $pos = rand(0, strlen($source) - 1);
         return $source [$pos];
     }
-    
+
 }

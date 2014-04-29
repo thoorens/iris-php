@@ -417,7 +417,17 @@ class Analyser {
             case self::PASSWORD:
                 require_once self::GetIrisLibraryDir() . '/Iris/Users/_Password.php';
                 $password = \Iris\Users\_Password::EncodePassword($this->_processingOption);
-                echoLine($password . "");
+                echoLine('Hashed password (internal algorithm): ');
+                echoLine($password);
+                if(defined('PASSWORD_DEFAULT')){
+                    $password = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
+                    echoLine('Hashed password (PHP 5.5 algorithm): ');
+                    echoLine($password);
+                }
+                else{
+                    echoLine('Your system is unable to generate PHP 5.5 password hash.');
+                    echoLine('Use the internal /!admin/password URL to generate this type of hashes.' );
+                }
                 break;
             // Nothing to do
             case self::WORKDONE:
