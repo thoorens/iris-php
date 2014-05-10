@@ -324,7 +324,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     public function addMonth($month, $clone = \FALSE) {
-        return $this->_addInterval($month, 'P%dm', $clone);
+        return $this->_addInterval($month, 'P%dM', $clone);
     }
 
     public function subMonth($month, $clone = \FALSE) {
