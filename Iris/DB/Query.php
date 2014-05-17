@@ -73,6 +73,7 @@ class Query {
      */
     protected $_tokenNumber;
     protected $_extended;
+    protected $_limits = \NULL;
 
     public function __construct() {
         $this->reset();
@@ -89,6 +90,7 @@ class Query {
         $this->_fieldPlaceHolders = array();
         $this->_tokenNumber = 0;
         $this->_extended = FALSE;
+        $this->_limits = \NULL;
     }
 
     public function select($fields) {
@@ -277,6 +279,21 @@ class Query {
         }
     }
 
+    public function renderLimits($syntax) {
+        $limits = $this->_limits;
+        if(is_null($limits)){
+            $sql = '';
+        }
+        else{
+            list($limit, $offset) = $limits;
+            if(is_null($syntax)){
+                throw new \Iris\Exceptions\DBException('Your RDBMS does not support the LIMIT clause.');
+            }
+            $sql = sprintf($syntax, $offset, $limit);
+        }
+        return $sql;
+    }
+    
     public function renderSet($setFields, $values) {
         $pointer = 0;
         $sets = array();
@@ -326,6 +343,12 @@ class Query {
         $this->_preparedFields = array();
         return implode($sep, $where);
     }
+
+    public function limit($limit, $offset) {
+        $this->_limits = [$limit, $offset];
+    }
+
+    
 
 }
 

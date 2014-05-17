@@ -140,5 +140,10 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
         throw new ie\NotSupportedException('XOR not supported in mySQL');
     }
 
+    
+    public function getLimitClause() {
+        return ' LIMIT %d, %d';
+    }
+
 }
 

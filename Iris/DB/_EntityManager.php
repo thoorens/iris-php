@@ -92,7 +92,7 @@ abstract class _EntityManager {
         if (isset($this->_entityRepository[$entityName])) {
             $entity = $this->_entityRepository[$entityName];
         }
-        else{
+        else {
             $this->_entityRepository[$entityName] = $entity;
             $entity->setEntityManager($this);
         }
@@ -106,35 +106,35 @@ abstract class _EntityManager {
      * @param string $entityName
      * @throws \Iris\Exceptions\EntityException
      */
-    public function unregisterEntity($entityName){
+    public function unregisterEntity($entityName) {
         if (isset($this->_entityRepository[$entityName])) {
             $entity = $this->_entityRepository[$entityName];
-            if($entity->hasObjects()){
+            if ($entity->hasObjects()) {
                 throw new \Iris\Exceptions\EntityException('You cannot unregister an entity when it has instanciated objects');
             }
             unset($this->_entityRepository[$entityName]);
         }
     }
-    
+
     /**
      * Counts how many entities are registred
      * 
      * @return int
      */
-    public function entityCount(){
+    public function entityCount() {
         return count($this->_entityRepository);
     }
-    
-    public function extractEntity($entityName){
-       if (isset($this->_entityRepository[$entityName])) {
+
+    public function extractEntity($entityName) {
+        if (isset($this->_entityRepository[$entityName])) {
             $entity = $this->_entityRepository[$entityName];
         }
         else {
             $entity = \NULL;
         }
-        return $entity; 
+        return $entity;
     }
-    
+
     /**
      * The constructor mustn't be used except in a factory
      * 
@@ -145,7 +145,7 @@ abstract class _EntityManager {
      * @param string[] $options additional options
      */
     protected function __construct($dsn, $username, $passwd, &$options = []) {
-        foreach(static::$_Options as $key => $value){
+        foreach (static::$_Options as $key => $value) {
             $options[$key] = $value;
         }
     }
@@ -270,7 +270,6 @@ abstract class _EntityManager {
         return $type;
     }
 
-    
     /**
      * Executes a direct SQL query on the connexion
      * 
@@ -278,7 +277,7 @@ abstract class _EntityManager {
      * @return \PDOStatement
      */
     public abstract function directSQLQuery($sql);
-    
+
     /**
      * Executes a direct SQL query on the connexion
      * 
@@ -286,7 +285,7 @@ abstract class _EntityManager {
      * @return \PDOStatement
      */
     public abstract function directSQLExec($sql);
-    
+
     /**
      * Execute a select query on the current database, returning an array of
      * Objects (found in the repository or freshly created)
@@ -366,5 +365,14 @@ abstract class _EntityManager {
      * @return string
      */
     public abstract function bitXor();
-}
 
+    /**
+     * By default, LIMIT is not supported. May be overriden in some EM.
+     * 
+     * @return string
+     */
+    public function getLimitClause() {
+        return \NULL;
+    }
+
+}

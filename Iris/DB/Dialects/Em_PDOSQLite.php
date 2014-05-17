@@ -238,5 +238,16 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
         throw new \Iris\Exceptions\NotSupportedException('BitAnd not implemented');
     }
 
+    
+    /**
+     * Creates a LIMIT clause for SQLite, in mysql syntax. The syntax with
+     * OFFSET keyword is not uses.
+     * 
+     * @return string
+     */
+    public function getLimitClause() {
+        return ' LIMIT %d , %d';
+    }
+    
 }
 

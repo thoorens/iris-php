@@ -38,6 +38,7 @@ abstract class _Entity {
     const PREVIOUS = 1;
     const NEXT = 2;
     const LAST = 3;
+    const CONT = -1;
 
     /**
      * An array repository with all objects
@@ -108,6 +109,8 @@ abstract class _Entity {
      * @var string 
      */
     protected $_descriptionField = '';
+    
+    protected static $_DescriptionField2 = '';
 
     /**
      * Metadata are stored for performance reasons
@@ -128,6 +131,13 @@ abstract class _Entity {
      * @var int 
      */
     protected $_lastInsertedId = \NULL;
+
+    /**
+     * If FALSE, do not register objects on fetch/find
+     * 
+     * @var boolean
+     */
+    protected $_register = \TRUE;
 
     /* =======================================================================================================
      * C O N S T R U C T O R    A N D  F A C T O R Y   M E T H O D S
@@ -183,6 +193,8 @@ abstract class _Entity {
         
     }
 
+    
+    
     /**
      * By default, the entity manager is defined by the system. This methods can
      * be overwritten in subclasses.
@@ -299,8 +311,14 @@ abstract class _Entity {
      * @param Object $object 
      */
     public function registerObject($idValues, $object) {
-        $id = implode('|', $idValues);
-        $this->_objectRepository[$id] = $object;
+        if ($this->_register) {
+            $id = implode('|', $idValues);
+            $this->_objectRepository[$id] = $object;
+        }
+    }
+
+    public function doNotRegister() {
+        $this->_register = \FALSE;
     }
 
     /**
@@ -429,6 +447,7 @@ abstract class _Entity {
         $sql = sprintf('SELECT %s FROM %s', $this->_query->renderSelectFields(), $this->_entityName);
         $sql .= $this->_query->renderWhere();
         $sql .= $this->_query->renderOrder();
+        $sql .= $this->_query->renderLimits($this->_entityManager->getLimitClause());
         $sql .= ';';
         //die($sql);
         $data = $this->_entityManager->fetchAll($this, $sql, $this->_query->getPlaceHolders());
@@ -438,14 +457,15 @@ abstract class _Entity {
                 $finalData[] = $object->asArray();
             }
         }
-        elseif($array === \FALSE) {
+        elseif ($array === \FALSE) {
             $finalData = $data;
         }
-        else{
+        else {
             foreach ($data as $object) {
                 $finalData[$index] = $array($object);
             }
         }
+        $this->_register = \TRUE;
         return $finalData;
     }
 
@@ -466,6 +486,7 @@ abstract class _Entity {
             $this->wherePairs($idValues);
             $object = $this->fetchRow();
         }
+        $this->_register = \TRUE;
         return $object;
     }
 
@@ -490,7 +511,7 @@ abstract class _Entity {
                 case self::FIRST:
                 case self::PREVIOUS:
                     $query = $em::$LeftLimits;
-                    $sql = sprintf($query, $idName, $idName, $tableName , $idName, $current);
+                    $sql = sprintf($query, $idName, $idName, $tableName, $idName, $current);
                     $aResult = $em->directSQLQuery($sql);
                     $result = $aResult->fetchObject();
                     $ids[self::FIRST] = $result->First;
@@ -499,7 +520,7 @@ abstract class _Entity {
                 case self::NEXT:
                 case self::LAST:
                     $query = $em::$RightLimits;
-                    $sql = sprintf($query, $idName, $idName, $tableName , $idName, $current);
+                    $sql = sprintf($query, $idName, $idName, $tableName, $idName, $current);
                     $aResult = $em->directSQLQuery($sql);
                     $result = $aResult->fetchObject();
                     $ids[self::NEXT] = $result->Next;
@@ -953,5 +974,15 @@ abstract class _Entity {
         }
     }
 
-}
+    public function limit($limit, $offset = 0) {
+        $indexName = "DB_OFFSET_" . $this->_entityName;
+        // Recuperate previous offset from Session
+        if ($offset == self::CONT) {
+            $offset = \Iris\Engine\Superglobal::GetSession($indexName, 0);
+        }
+        $this->_query->limit($limit, $offset);
+        $_SESSION[$indexName] = $offset + $limit;
+        return $this;
+    }
 
+}
