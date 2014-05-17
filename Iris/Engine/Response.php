@@ -129,6 +129,30 @@ class Response {
         return $this->_actionName;
     }
 
+    /**
+     * Combines all elements of URL in one string, optionally replacing the
+     * current action by another. Parameters may be added if requested
+     * 
+     * @param string $action the alternative action
+     * @param boolean $withParameters specifies if the parameters are needed
+     * @return string
+     */
+    public function getURL($action = \NULL, $withParameters = \FALSE){
+        $url[] = $this->_moduleName;
+        $url[] = $this->_controllerName;
+        if(!is_null($action)){
+            $url[] = $action;
+        }
+        else{
+            $url[] = $this->_actionName;
+        }
+        if($withParameters){
+            $parameters = $this->_parameters;
+            $url = array_merge($url, $parameters);
+        }
+        return '/'.implode('/',$url);
+    }
+    
     public function setAction($action) {
         $this->_actionName = $action;
     }
