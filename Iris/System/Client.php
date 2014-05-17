@@ -146,17 +146,17 @@ class Client {
         /* IE5.0 :  fr  */
         /* IE6 :  fr  */
         $language = \Iris\Engine\Superglobal::GetServer('HTTP_ACCEPT_LANGUAGE', \Iris\SysConfig\Settings::GetDefaultLanguage());
-        $lang2 = strtoupper(substr($language, 0, 2));
+        $lang2 = strtolower(substr($language, 0, 2));
         if (!$full) {
             return $lang2;
         }
         else {
             switch ($lang2) {
-                case 'FR':
+                case 'fr':
                     return 'French';
-                case 'EN':
+                case 'en':
                     return 'English';
-                case 'SP':
+                case 'sp':
                     return 'Spanish';
                 default:
                     return 'English';
