@@ -52,9 +52,11 @@ class MagikLinx extends \Iris\views\helpers\_ViewHelper {
      * Permits to change the default model class (normally \models\TLinks)
      * 
      * @param string $modelClass
+     * @return \Iris\views\helpers\MagikLinx for fluent interface
      */
     public function setModelClass($modelClass) {
         $this->_modelClass = $modelClass;
+        return $this;
     }
 
 }
