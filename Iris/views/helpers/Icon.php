@@ -28,7 +28,12 @@ namespace Iris\views\helpers;
  */
 
 /**
- * Creates an iconic link
+ * Creates an iconic link. The main differences with link(....)->image() are <ul>
+ * <li> the possibility to put a clicable text after the icon
+ * <li> the possibility (through method link2()) of a pair of icon that can switch when mouse is on.
+ * <li> like link(), icons can have class, but no id.
+ * </ul>
+ * 
  *
  */
 class Icon extends _ViewHelper {
@@ -47,35 +52,35 @@ class Icon extends _ViewHelper {
     /**
      * Creates an icon link or gets object instance to have access to public methods (no parameters provided)
      *
+     * @param string $iconName The icon file name (without extension)
      * @param string $ref The URL of the link
-     * @param string $iconName The icon file name (without extension
      * @param string $help The tooltip text
      * @param type $desc The alt part of the icon img tab
      * @param type $iconText A text to be displayed after the icon
      * @param type $class An optional class for the image
      * @return \Iris\views\helpers\Icon
      */
-    public function help($ref = \NULL, $iconName = \NULL, $help = \NULL, $desc = null, $iconText = '', $class = \NULL) {
-        if (is_null($ref)) {
+    public function help($iconName = \NULL, $ref = \NULL, $help = \NULL, $desc = null, $iconText = '', $class = \NULL) {
+        if (is_null($iconName)) {
             return $this;
         }
         else {
-            return $this->link($ref, $iconName, $help, $desc, $iconText, $class);
+            return $this->link($iconName, $ref, $help, $desc, $iconText, $class);
         }
     }
 
     /**
      * Creates an icon link
      *
+     * @param string $iconName The icon file name (without extension)
      * @param string $ref The URL of the link
-     * @param string $iconName The icon file name (without extension
      * @param string $help The tooltip text
      * @param type $desc The alt part of the icon img tab
      * @param type $iconText A text to be displayed after the icon
      * @param type $class An optional cl
      * @return string
      */
-    public function link($ref, $iconName, $help, $desc = null, $iconText = '', $class = \NULL) {
+    public function link($iconName, $ref, $help, $desc = null, $iconText = '', $class = \NULL) {
         $desc = is_null($desc) ? $iconName : $desc;
         $icon = $this->callViewHelper('image', $this->_baseDir . "/$iconName.png", $desc, $help, '', $class) . $iconText;
         return '<a href="' . $ref . '">' . $icon . '</a>';
@@ -84,15 +89,15 @@ class Icon extends _ViewHelper {
     /**
      * Same as link but this an alternative icon name when mouse over
      *
-     * @param string $ref The URL of the link
      * @param string $iconName The icon file names (without extension) separated by '|'
+     * @param string $ref The URL of the link
      * @param string $help The tooltip text
      * @param type $desc The alt part of the icon img tab
      * @param type $iconText A text to be displayed after the icon
      * @param type $class An optional cl
      * @return string
      */
-    public function link2($ref, $iconNames, $help, $desc = null, $iconText = '', $class = \NULL) {
+    public function link2($iconNames, $ref, $help, $desc = null, $iconText = '', $class = \NULL) {
         list($icon1, $icon2) = explode('|', $iconNames);
         $desc = is_null($desc) ? $icon1 : $desc;
         $path1 = "/images" . $this->_baseDir . "/$icon1.png";
@@ -113,4 +118,3 @@ class Icon extends _ViewHelper {
     }
 
 }
-
