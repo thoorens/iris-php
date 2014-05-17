@@ -37,6 +37,7 @@ class Menu extends _ViewHelper {
     protected $_activeClass;
     protected $_mainTag;
     protected $_withId = \FALSE;
+    protected $_all = \FALSE;
 
     /**
      * Inits the active class and main tag names from settings
@@ -44,6 +45,17 @@ class Menu extends _ViewHelper {
     protected function _init() {
         $this->_activeClass = \Iris\SysConfig\Settings::GetMenuActiveClass();
         $this->_mainTag = \Iris\SysConfig\Settings::GetMenuMainTag();
+    }
+
+    /**
+     * Translates a message (no system translation)
+     * @param string $message
+     * @param boolean $system
+     * @return string 
+     */
+    public function _($message, $system = \FALSE) {
+        $translator = $this->getTranslator($system);
+        return $translator->translate($message);
     }
 
     /**
@@ -74,6 +86,17 @@ class Menu extends _ViewHelper {
     }
 
     /**
+     * This setting permits to ignore the visible attribute
+     * 
+     * @param boolen $all
+     * @return \Iris\views\helpers\Menu
+     */
+    public function setAll($all = \TRUE) {
+        $this->_all = $all;
+        return $this;
+    }
+
+    /**
      * Permits to add a same id to all URI of the menu
      * 
      * @var string
@@ -91,10 +114,13 @@ class Menu extends _ViewHelper {
     /**
      * Get a complete menu (identified by its name) from
      * an initialized menu collection and render it
-     * as a imbricated unordered list
+     * as a imbricated unordered list.
+     * If first parameter is null, returns the helper object.
+     * If first parameter is a null string, returns a null string
      * 
-     * @param string $name the menu name in the collection
-     * @return string
+     * @param string $name
+     * @param boolean $recursive
+     * @return \Iris\views\helpers\Menu|string
      */
     public function help($name = '#def#', $recursive = \FALSE) {
         if (is_null($name)) {
@@ -103,14 +129,20 @@ class Menu extends _ViewHelper {
         if ($name == '') {
             return '';
         }
+        return $this->render($name, $recursive);
+    }
+
+    /**
+     * 
+     * @param string $name
+     * @param boolean $recursive
+     * @return string
+     */
+    public function render($name = '#def#', $recursive = \FALSE) {
         $menu = is\MenuCollection::GetInstance()->getMenu($name);
         $data = $menu->asArray();
         \Iris\Log::Debug("ACL ------------------------------------------------", \Iris\Engine\Debug::ACL);
         return $this->_render($data, $recursive);
-    }
-
-    public function render($name = '#def#', $recursive = \FALSE) {
-        return $this->help($name, $recursive);
     }
 
     /**
@@ -124,7 +156,7 @@ class Menu extends _ViewHelper {
         $items = array();
         $acl = \Iris\Users\Acl::GetInstance();
         foreach ($data as $item) {
-            if ($item['visible'] and $this->_testPrivilege($acl, $item)) {
+            if (($this->_all or $item['visible']) and $this->_testPrivilege($acl, $item)) {
                 $items[] = $this->_renderItem($item, $recursive);
             }
         }
@@ -156,7 +188,7 @@ class Menu extends _ViewHelper {
         }
         if ($item['uri'] != '') {
             $text = "<li $class $id><a href=\"$uri\" title=\"$title\" $class>$label</a>";
-            $text .= $submenu."</li>";
+            $text .= $submenu . "</li>";
         }
         else {
             $text = "<li $class><span title=\"$title\" $class>$label</span>";
@@ -230,5 +262,8 @@ class Menu extends _ViewHelper {
         }
     }
 
+    public function getItem($name, $item){
+        $menu = is\MenuCollection::GetInstance()->getMenu($name);
+        return $menu->getItem($item);
+    }
 }
-
