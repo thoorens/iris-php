@@ -35,7 +35,7 @@ namespace Iris\Translation;
 class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\Design\iSingleton {
 
     private static $_Instance = NULL;
-    private $_data = [
+    private $_french = [
         //        
         // Helpers
         //        
@@ -51,7 +51,7 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         //
         'Error' => 'Erreur',
         'An error has occured. We apologize for the inconvenience.' => "Une erreur s'est produite, veuillez nous en excuser.",
-        'A fatal error has occured. We apologize for the inconvenience.'=> "Une erreur fatale s'est produite. Veuillez nous en excuser.",
+        'A fatal error has occured. We apologize for the inconvenience.' => "Une erreur fatale s'est produite. Veuillez nous en excuser.",
         'Forbidden page' => 'Page inaccessible',
         'Impossible access' => 'Accès impossible',
         "Unkwown fatal error" => 'Erreur fatale indéterminée',
@@ -119,7 +119,7 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         'Test des rôles|!admin/roles/switch|Utiliser un autre utilisateur',
         'ACL management|!admin/roles/acl|Display and edit all Access Control Lists' =>
         "Gestion des droits|!admin/roles/acl|Afficher ou modifier les droits d'accès",
-        'Structure management|/!admin/structure/index|Manage modules, controllers and action'=>
+        'Structure management|/!admin/structure/index|Manage modules, controllers and action' =>
         "Structure de l'application|/!admin/structure|Gérer modules, contrôleurs et actionManage modules, controllers and action",
         'Function 4||Future enhancement' =>
         'Fonction 4||A développer',
@@ -152,7 +152,11 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         'Update' => 'Modifier',
         'Read' => 'Lire',
         'Delete' => 'Supprimer',
-        // DEMO
+        // Login
+        'User name:' => "Nom d'utilisateur:",
+        'Password:' => 'Mot de passe:',
+        'Log In' => 'Connexion',
+// DEMO
         'Now you can begin to modify this page...' =>
         'Vous pouvez à présent modifier cette page...',
         'Welcome to IRIS-PHP framework' =>
@@ -160,18 +164,25 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
 // WorkBench
         'This error screen is intentional and expected' =>
         "Cet écran d'erreur est volontaire et attendu",
-        
         // Internal
-        'Site powered by Iris-PHP'=>'Site motorisé par Iris-PHP',
-        
+        'Site powered by Iris-PHP' => 'Site motorisé par Iris-PHP',
         // Admin Toolbar
-        'Available actions'=>'Actions disponibles',
-        'Links to all action in the application'=>'Liens vers les actions de toute l\'application',
-        'User'=>'Utilisateur',
-        'Group'=>'Groupe',
-        'Execution time'=>'Temps d\'exécution',
+        'Available actions' => 'Actions disponibles',
+        'Links to all action in the application' => 'Liens vers les actions de toute l\'application',
+        'User' => 'Utilisateur',
+        'Group' => 'Groupe',
+        'Execution time' => 'Temps d\'exécution',
         'Reset the session' => 'Réinitialiser la session',
         'Toolbar managed by Ajax' => "Barre d'administration en mode Ajax",
+        // Language management
+        'french' => 'français',
+        'english' => 'anglais',
+        'italian' => 'italien',
+        'Choose language ' => 'Le site en ',
+        'Current language : '=> 'Langue en cours : ',
+// JQuery
+        "See more details" => 'Voir plus de détails',
+        'Close window' => 'Fermer la fenêtre',
     ];
 
     public static function GetInstance() {
@@ -188,12 +199,10 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
 
     public function translate($message, $language = NULL) {
         $language = is_null($language) ? self::$CurrentLanguage : $language;
-        if (self::FRAMEWORKLANGUAGE != $language and isset($this->_data[$message])) {
-            return $this->_data[$message];
+        if ($language == 'fr' and isset($this->_french[$message])) {
+            return $this->_french[$message];
         }
         return $message;
     }
 
 }
-
-

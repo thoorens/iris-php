@@ -36,16 +36,16 @@ namespace Iris\Translation;
  * This file is PHP 5.4 only
  */
 trait tSystemTranslatable {
-    
+
     /**
      * Translates a message
      * @param string $message
      * @param boolean $system
      * @return string 
      */
-    public function _($message, $system=\FALSE) {
-            $translator = $this->getTranslator();
-            return $translator->translate($message);
+    public function _($message, $system = \TRUE) {
+        $translator = $this->getTranslator($system);
+        return $translator->translate($message);
     }
 
     /**
@@ -53,15 +53,17 @@ trait tSystemTranslatable {
      * @staticvar \Iris\Translation\_Translator $translator
      * @return \Iris\Translation\_Translator
      */
-    public function getTranslator() {
+    public function getTranslator($system = \TRUE) {
         static $translator = NULL;
         if (is_null($translator)) {
-            $translator = \Iris\Translation\SystemTranslator::GetInstance();
+            if ($system) {
+                $translator = \Iris\Translation\SystemTranslator::GetInstance();
+            }
+            else {
+                $translator = \Iris\Translation\_Translator::GetInstance();
+            }
         }
         return $translator;
     }
-    
-    
+
 }
-
-
