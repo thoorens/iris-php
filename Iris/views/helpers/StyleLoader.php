@@ -104,7 +104,7 @@ ENDSTYLE;
         // render style files
         foreach ($this->_styleFiles as $file => $dummy) {
             $url = $this->_URL($file);
-            $text .= '<link  test="" href="' . $url . '" rel="stylesheet" type="text/css" />';
+            $text .= '<link  href="' . $url . '" rel="stylesheet" type="text/css" />';
             $text .= "\n";
         }
         return $text;
@@ -122,6 +122,9 @@ ENDSTYLE;
     private function _URL($file) {
         if ($file[1] == '!' or $file[0] == '/' or strpos($file, 'http') === 0) {
             return $file;
+        }
+        if(substr($file,-3)!='css'){
+            $file .= '.css';
         }
         return "/css/$file";
     }
