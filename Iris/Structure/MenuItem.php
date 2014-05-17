@@ -94,10 +94,9 @@ class MenuItem extends Menu {
             case 'set':
                 $this->_data[$variable] = $arguments[0];
                 return $this;
-                break;
             case 'get':
-                return $this->_data[$variable];
-                break;
+                $value = isset($this->_data[$variable]) ? $this->_data[$variable] : \NULL;
+                return $value;
             default :
                 throw new \Iris\Exceptions\MenuException('Invalid method call in menu : '.$name);
         }
@@ -113,5 +112,21 @@ class MenuItem extends Menu {
         return $this;
     }
 
-    
+    public function makeLink($alternateLabel = \NULL){
+        if(empty($alternateLabel)){
+            $params[] = $this->getLabel();
+        }
+        else{
+            $getter = "get".$alternateLabel;
+            $label = $this->$getter();
+            if(is_null($label)){
+                $label = $this->getTitle();
+            }
+            $params[] = $label;
+        }
+        $params[] = $this->getUri();
+        $params[] = $this->getTitle();
+        //return $params;
+        return \Iris\views\helpers\Link::HelperCall('link', $params);
+    }
 }
