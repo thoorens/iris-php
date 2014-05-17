@@ -130,7 +130,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
         }
         else {
             $md5 = md5($text);
-            $url = self::_URL();
+            $url = \Iris\Engine\Response::GetDefaultInstance()->getURL();
             $link = 'javascript:location.href=\'' . "/manager/md5/save$url/$md5" . "'";
             if ($md5 == self::_OldMd5()) {
                 $class = 'iris_md5_ok';
@@ -157,7 +157,7 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
         $model = self::$_Model;
         $tSequences = $model::GetEntity();
         $urlField = self::$_Fields[self::URL];
-        $screen = $tSequences->fetchRow("$urlField=", self::_URL());
+        $screen = $tSequences->fetchRow("$urlField=", \Iris\Engine\Response::GetDefaultInstance()->getURL());
         if (is_null($screen)) {
             return '';
         }
@@ -165,18 +165,6 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
         return $screen->$md5Field;
     }
 
-    /**
-     * Gets the present URL
-     * 
-     * @return string
-     */
-    private static function _URL() {
-        $response = \Iris\Engine\Response::GetDefaultInstance();
-        $module = $response->getModuleName();
-        $controller = $response->getControllerName();
-        $action = $response->getActionName();
-        return "/$module/$controller/$action";
-    }
 
     /**
      * Sets the model and URK and md5 field names in the model
