@@ -40,6 +40,7 @@ class islMenu extends \IrisInternal\main\controllers\_SecureIslet implements \Ir
         $functions[] = $this->_('Password generator|/!admin/password/index|Create hash for password',TRUE);
         $functions[] = $this->_('Structure management|/!admin/structure/index|Manage modules, controllers and action',TRUE);
         $functions[] = $this->_('Sitemap creation|/!admin/sitemap/index|Create a site map for Google indexation',TRUE);
+        $functions[] = $this->_('Todo list|/!admin/todo/index|Manage the todo list for the project',TRUE);
         //$functions[] = $this->_('Function 5||Future enhancement',TRUE);
         foreach($functions as $function){
             $buttons[] = explode('|',$function);

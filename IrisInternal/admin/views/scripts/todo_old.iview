@@ -1,0 +1,17 @@
+<h1>{title}</h1>
+<table class="internal">
+    <tr>
+        <th>Priority</th>
+        <th>Todo</th>
+        <th>Mark as undone</th>
+    </tr>
+    {foreach(todos, todo)}
+        <tr class="internal{(todo->Priority)}">
+            <td class="center">{(todo->PriorityDesc)}</td>
+            <td>{(todo->Description)}</td>
+            <td class="center">{button('Reset',"/!admin/todo/markUndone/$todo->id",'Mark the task as to be done')}</td>
+        </tr>
+    {/foreach}
+</table>
+<hr/>
+{partial('todo')}
