@@ -1,5 +1,5 @@
 {section(language)} 
-    {block('FR')}
+    {block('fr')}
         <h1>Administration</h1>
         <p>Le module interne d'administration permet de gérer un certain nombre de paramètres
             de l'application en cours de développement
@@ -14,7 +14,7 @@
             Ces fonctionalités seront étendues dans les prochaines versions du framework.
         </p>
     {/block}
-    {block('EN')}
+    {block('en')}
         The text is to be written
     {/block}
 {/section}
