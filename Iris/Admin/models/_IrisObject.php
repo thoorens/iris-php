@@ -27,9 +27,9 @@ namespace Iris\Admin\models;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDeletable{
+abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDeletable {
 
-    const DB_PARAM_FILE = "application/config/base/adminparams.sqlite";
+    const DB_PARAM_FILE = "/config/base/adminparams.sqlite";
 
     protected static $_InsertionKeys;
 
@@ -37,8 +37,7 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
      * This pragma enabled referential integrity
      * @var string 
      */
-    protected static $_TableDefinition =
-            'PRAGMA foreign_keys = ON;';
+    protected static $_TableDefinition = 'PRAGMA foreign_keys = ON;';
 
 //    protected static function _AnalyseParameters($params) {
 //        die('ToolBar ?');
@@ -46,7 +45,6 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
 //        $params[self::ENTITYMANAGER] = $this->_getSystemEM();
 //    }
 
-        
     /**
      * Returns the EM for the system table database.
      * Its is in /application/config/admin/params.sqlite
@@ -54,31 +52,41 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
      * @return \Iris\DB\_EntityManager 
      */
     public static function DefaultEntityManager() {
-        $dbFile = IRIS_PROGRAM_PATH .self::DB_PARAM_FILE;
-        $newBase = FALSE;
+        $dbFile = IRIS_PROGRAM_PATH . self::DB_PARAM_FILE;
+        $errorBase = $newBase = FALSE;
         if (!file_exists($dbFile)) {
-            touch($dbFile);
-            if (!file_exists($dbFile)) {
-                throw new \Iris\Exceptions\FileException("$dbFile cannot be created (verify directory structure and file permissions.");
+            if (!is_writable(dirname($dbFile))) {
+                $errorBase = \TRUE;
             }
-            $newBase = TRUE;
+            else {
+                touch($dbFile);
+                if (!file_exists($dbFile)) {
+                    $errorBase = \TRUE;
+                }
+                else {
+                    $newBase = TRUE;
+                }
+            }
         }
-        $dsn = "sqlite:" . $dbFile;
-        $EM = \Iris\DB\_EntityManager::EMFactory($dsn);
-        if ($newBase) {
-            // table creation
-            $connexion = $EM->getConnexion();
-            $connexion->exec(TModules::DDLText());
-            $connexion->exec(TControllers::DDLText());
-            $connexion->exec(TActions::DDLText());
-            $connexion->exec(TAdmin::DDLText());
+        if ($errorBase) {
+            throw new \Iris\Exceptions\FileException("$dbFile cannot be created (verify directory structure and file permissions).");
         }
-        return $EM;
+        else {
+            $dsn = "sqlite:" . $dbFile;
+            $EM = \Iris\DB\_EntityManager::EMFactory($dsn);
+            if ($newBase) {
+                // table creation
+                $connexion = $EM->getConnexion();
+                $connexion->exec(TModules::DDLText());
+                $connexion->exec(TControllers::DDLText());
+                $connexion->exec(TActions::DDLText());
+                $connexion->exec(TAdmin::DDLText());
+                $connexion->exec(TTodo::DDLText());
+            }
+            return $EM;
+        }
     }
 
-    
-    
-    
     /**
      * Marks all the records of a table as deleted 
      * 
@@ -89,10 +97,9 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
         if (is_null($id)) {
             $EM->directSQLExec("Update $tableName set Deleted = 1;");
         }
-        else{
+        else {
             throw new \Iris\Exceptions\NotSupportedException('Mark deleted has not been written to Delete individual records');
         }
-            
     }
 
     /**
@@ -139,7 +146,5 @@ SQL;
                 break;
         }
     }
-
-            
 
 }
