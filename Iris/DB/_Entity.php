@@ -441,7 +441,7 @@ abstract class _Entity {
      * Aterward, it reset the object for reusing it from scratch
      * 
      * @param boolean $array if true returns an array of array instead of array of objects
-     * @return miexed 
+     * @return Object[] 
      */
     public function fetchAll($array = FALSE) {
         $sql = sprintf('SELECT %s FROM %s', $this->_query->renderSelectFields(), $this->_entityName);

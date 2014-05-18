@@ -281,26 +281,31 @@ class Query {
 
     public function renderLimits($syntax) {
         $limits = $this->_limits;
-        if(is_null($limits)){
+        if (is_null($limits)) {
             $sql = '';
         }
-        else{
+        else {
             list($limit, $offset) = $limits;
-            if(is_null($syntax)){
+            if (is_null($syntax)) {
                 throw new \Iris\Exceptions\DBException('Your RDBMS does not support the LIMIT clause.');
             }
             $sql = sprintf($syntax, $offset, $limit);
         }
         return $sql;
     }
-    
+
     public function renderSet($setFields, $values) {
         $pointer = 0;
         $sets = array();
         foreach ($values as $value) {
-            $this->_prepareField($value);
-            $prepareField = array_shift($this->_preparedFields);
-            $sets[] = $setFields[$pointer++] . " = " . $prepareField;
+            if ($value == Object::NULL_VALUE) {
+                $sets[] = $setFields[$pointer++] . " = NULL ";
+            }
+            else {
+                $this->_prepareField($value);
+                $prepareField = array_shift($this->_preparedFields);
+                $sets[] = $setFields[$pointer++] . " = " . $prepareField;
+            }
         }
         $set = implode(',', $sets);
         return $set;
@@ -332,9 +337,14 @@ class Query {
      * @return _Entity 
      */
     protected function _prepareField($value, $condition = '') {
-        $tokenNumber = ++$this->_tokenNumber;
-        $this->_preparedFields[] = "$condition :P$tokenNumber";
-        $this->_fieldPlaceHolders[":P$tokenNumber"] = $value;
+        if ($value == Object::NULL_VALUE) {
+            $this->_preparedFields[] = 'NULL';
+        }
+        else {
+            $tokenNumber = ++$this->_tokenNumber;
+            $this->_preparedFields[] = "$condition :P$tokenNumber";
+            $this->_fieldPlaceHolders[":P$tokenNumber"] = $value;
+        }
     }
 
     private function _tokenList($sep = ',') {
@@ -348,8 +358,4 @@ class Query {
         $this->_limits = [$limit, $offset];
     }
 
-    
-
 }
-
-

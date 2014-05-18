@@ -2,7 +2,6 @@
 
 namespace Iris\DB;
 
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -31,6 +30,7 @@ namespace Iris\DB;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Object {
+
     /**
      * The object exists in memory, but has no relation to the database
      */
@@ -45,18 +45,17 @@ class Object {
      * The object taken from the database, has been deleted
      */
     const ORM_DELETED = 3;
-
-
 // The value are linked to the prefixe lengths
     const DATAROW = 4;
     const DATAROWSET = 10;
-
+    const NULL_VALUE = '##NULL##';
 
     /**
      * The pseudo field parent marker.
      * example : _at_customer_id  
      */
     const AT = '_at_';
+
     /**
      * The pseudo field children marker
      * example : _children_invoices__id 
@@ -83,11 +82,11 @@ class Object {
     protected $_modifiedContent = array();
 
     /**
-     * If TRUE, indicates that the object has been modified
+     * If \TRUE, indicates that the object has been modified
      * 
      * @var boolean
      */
-    protected $_dirty = FALSE;
+    protected $_dirty = \FALSE;
 
     /**
      * The state of the object relative to the database
@@ -124,7 +123,7 @@ class Object {
      * @var boolean
      */
     protected $_readOnly;
-    
+
     /**
      * Constructor for an object
      * 
@@ -133,7 +132,7 @@ class Object {
      * @param mixed[] $data The initials values of the object (in an array)
      * @param boolean $new If true the object is new (by default not)
      */
-    public function __construct(_Entity $entity, $idValues, $data, $new = FALSE) {
+    public function __construct(_Entity $entity, $idValues, $data, $new = \FALSE) {
         $this->_entity = $entity;
         $this->_readOnly = $entity->isReadOnly();
         if ($new) {
@@ -148,19 +147,21 @@ class Object {
             if (count($metadata) == 0 OR isset($metadata->$fieldName)) {
                 $fields[] = $fieldName;
                 if ($new) {
-                    $this->_currentContent[] = NULL;
+                    $this->_currentContent[] = \NULL;
                     if (count($metadata) != 0) {
                         $item = $metadataFields[$fieldName];
                         $value = $item->initialize($value);
                     }
-                    $this->_modifiedContent[] = $value;
-                    $this->_dirty = TRUE;
+                    $this->_modifiedContent[] = is_null($value) ? self::NULL_VALUE : $value;
+                    $this->_dirty = \TRUE;
                 }
                 else {
                     $this->_currentContent[] = $value;
-                    $entity->registerObject($idValues, $this);
                 }
             }
+        }
+        if (!$new) {
+            $entity->registerObject($idValues, $this);
         }
         $this->_fields = array_flip($fields);
     }
@@ -212,7 +213,7 @@ class Object {
         }
         return \NULL;
     }
-    
+
     /**
      * Gets the parent accessible from a foreign key in the object
      * 
@@ -223,7 +224,7 @@ class Object {
         $entityManager = $this->_entity->getEntityManager();
         list($parentEntityName, $fromKeyNames) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
         // Caution : two differents set of FromKeys may go to the same entity
-        $joinID = $parentEntityName.'-'.implode(':',$fromKeyNames);
+        $joinID = $parentEntityName . '-' . implode(':', $fromKeyNames);
         if (!isset($this->_parents[$joinID])) {
             $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
             $i = 0;
@@ -248,8 +249,7 @@ class Object {
         $fKeys = explode(IRIS_FIELDSEP, $keyFields);
         $chldName = array_shift($fKeys);
         $chldEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $chldName);
-        list($parentFields, $childFields) =
-                $chldEntity->getMetadata()->getChildrenParams($this->_entity->getEntityName(), $fKeys);
+        list($parentFields, $childFields) = $chldEntity->getMetadata()->getChildrenParams($this->_entity->getEntityName(), $fKeys);
         $i = 0;
         foreach ($parentFields as $pField) {
             $value = $this->$pField;
@@ -265,7 +265,6 @@ class Object {
         return $this->_children[$chldId];
     }
 
-
     /**
      * Change a field value if necessary, marking the object
      * for save
@@ -275,23 +274,26 @@ class Object {
      * @todo Verify if some RDBMS wants to manage true boolean
      */
     public function __set($field, $value) {
-        if($this->_readOnly){
+        if ($this->_readOnly) {
             throw new \Iris\Exceptions\DBException('A read only object cannot be modified');
         }
         if (is_bool($value)) {
             $value = $value ? 1 : 0;
         }
+        if ($value === \NULL) {
+            $value = self::NULL_VALUE;
+        }
         $offset = $this->_fields[$field];
-        if ($this->_currentContent[$offset] != $value) {
+        if ($this->_currentContent[$offset] !== $value) {
             $this->_modifiedContent[$offset] = $value;
-            $this->_dirty = TRUE;
+            $this->_dirty = \TRUE;
         }
     }
 
     public function extraField($fieldName, $value) {
         $nextNumber = count($this->_currentContent);
         $this->_currentContent[$nextNumber] = $value;
-        $this->_modifiedContent[$nextNumber] = NULL;
+        $this->_modifiedContent[$nextNumber] = \NULL;
         $this->_fields[$fieldName] = $nextNumber;
     }
 
@@ -303,7 +305,6 @@ class Object {
         if ($this->_ORMState == self::ORM_DELETED) {
             throw new \Iris\Exceptions\DBException('Trying to save a deleted object');
         }
-
         if ($this->_ORMState == self::ORM_TRANSIENT) {
             $done = $this->_insert();
         }
@@ -311,18 +312,19 @@ class Object {
             $done = $this->_update();
         }
         else {
-            $done = TRUE;
+            $done = \TRUE;
         }
+
         if ($done) {
-            $this->_dirty = FALSE;
+            $this->_dirty = \FALSE;
 //@todo : mettre à jour les objets dépendants.....
         }
-        foreach($this->_parents as $parent){
+        foreach ($this->_parents as $parent) {
             $parent->save();
         }
         //iris_debug($this->_children);
-        foreach($this->_children as $children){
-            foreach($children as $child){
+        foreach ($this->_children as $children) {
+            foreach ($children as $child) {
                 $child->save();
             }
         }
@@ -332,7 +334,7 @@ class Object {
     /**
      * Creates a new object in the database
      * 
-     * @return boolean If TRUE, insertion has been successfully done
+     * @return boolean If \TRUE, insertion has been successfully done
      */
     protected function _insert() {
         $insert = array();
@@ -356,7 +358,7 @@ class Object {
                 $primaryKeyField = $metadata->$pkName;
                 if ($primaryKeyField->isAutoincrement()) {
                     $EM = $this->_entity->getEntityManager();
-                    $newId = $EM->lastInsertedId(NULL);
+                    $newId = $EM->lastInsertedId(\NULL);
                     $this->_currentContent[$this->_fields[$pkName]] = $newId;
                 }
             }
@@ -369,7 +371,7 @@ class Object {
     /**
      * Updates an object in the database
      * 
-     * @return boolean If TRUE, update has been successfully done
+     * @return boolean If \TRUE, update has been successfully done
      */
     protected function _update() {
         $setFields = array();
@@ -393,7 +395,7 @@ class Object {
     /**
      * Deletes an object out of the database
      * 
-     * @return booelan If TRUE, deletion has been successfully done
+     * @return booelan If \TRUE, deletion has been successfully done
      * @throws \Iris\Exceptions\DBException
      */
     public function delete() {
@@ -439,6 +441,4 @@ class Object {
         return $this->_readOnly;
     }
 
-
 }
-
