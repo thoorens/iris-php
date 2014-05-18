@@ -253,3 +253,29 @@ table.center tr td{
 pre.presmall{
     font-size:0.8em;
 }
+
+
+/* ------------------------------- 
+   Column 1 for special screens 
+   ------------------------------- */
+
+div.special_1{
+    font-style: normal;
+    margin: 0 -20px -20px -20px;
+    padding: 10px;
+    background-color: #A00;
+    color : white;
+}
+
+div.special_1 p{
+    padding:10px;
+}
+div.special_1 ol.advice{
+    background-color: #FFC;
+    color : #00A;
+    padding: 10px;
+    padding-left : 30px;
+}
+
+div.special_1 ul.advice ol{
+}
