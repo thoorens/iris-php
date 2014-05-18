@@ -252,7 +252,8 @@ class Router {
         else {
             $actionPara = $this->_actionName;
         }
-        return sprintf('%s/%s/%s', $this->_moduleName, $this->_controllerName, $actionPara);
+        $internal = $this->_internal ? '!' : '';
+        return sprintf('%s%s/%s/%s', $internal, $this->_moduleName, $this->_controllerName, $actionPara);
     }
 
     /**
