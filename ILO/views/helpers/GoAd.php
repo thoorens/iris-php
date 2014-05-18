@@ -65,7 +65,7 @@ class GoAd extends _ViewHelper {
         else {
             $url = 'http://irisphp.org';
         }
-        return $this->callViewHelper('link')->image("/!documents/file/logos/$logoName.png", $title, $url)->__toString();
+        return $this->callViewHelper('link')->image("/!documents/file/logos/$logoName.png", $url, $title)->__toString();
     }
 
 }
