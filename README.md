@@ -16,6 +16,10 @@ Discover it:
 * [A true site realized with Iris-PHP] (http://eci-liege.info) A high school in Liège (Belgium)
 
     ![irisorg] (http://irisphp.org/!documents/file/github/Eci.png)
+* [The site for my son's band, realized with Iris-PHP] (http://ojbm.be) A belgian hip-hop group    
+
+    ![irisorg] (http://irisphp.org/!documents/file/github/Eci.png)
+
 * A brand new site, realized with the simple command `iris.php -c /srv/tutoriel1`
 
     ![irisorg] (http://irisphp.org/!documents/file/github/New.png)
