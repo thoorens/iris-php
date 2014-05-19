@@ -97,7 +97,6 @@ abstract class core_Bootstrap {
      * @return Program
      */
     public function newProgram($programName = 'application') {
-        \Iris\Users\Session::GetInstance();
         // if necessary, load the overridden class names
         $overriddenClasses = "$programName/config/overridden.classes";
         if (file_exists(IRIS_ROOT_PATH . '/' . $overriddenClasses)) {
@@ -115,6 +114,7 @@ abstract class core_Bootstrap {
         }
         $this->_configureErrors();
         $this->_postConfig($programName);
+        \Iris\Users\Session::GetInstance();
         return $program;
     }
 
