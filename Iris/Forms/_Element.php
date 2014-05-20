@@ -115,6 +115,20 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     protected $_validator = \NULL;
 
     /**
+     * TRUE if the element can be checked
+     * 
+     * @var boolean 
+     */
+    protected $_checkable = FALSE;
+
+    /**
+     * Value can be rendered as an attribute (by default NOT)
+     * 
+     * @var boolean
+     */
+    protected $_valueAsAttribute = \FALSE;
+    
+    /**
      * For input file, indicate max file size
      * @var int
      */
@@ -157,19 +171,19 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         return $this->_type;
     }
 
+    /**
+     * This magic methods permits to use setXXXXX() to define an
+     * attribute of the element.
+     * 
+     * @param type $name
+     * @param type $arguments
+     * @return \Iris\Forms\_Element
+     * @throws \Iris\Exceptions\NotSupportedException
+     */
     public function __call($name, $arguments) {
-
-//        if (strpos($name, 'render') === 0) {
-//            //throw new \Iris\Exceptions\NotSupportedException("Illegal method call : $name");
-//            return $this->_renderAttribute(strtolower(substr($name, 6)));
-//        }
-//        else
         if (strpos($name, 'set') === 0) {
             $this->__set(substr($name, 3), $arguments[0]);
             return $this;
-//        } elseif (strpos($name, 'get') === 0) {
-//            $this->__get(strtolower(substr($name, 3)));
-//            return $this;
         }
         else {
             throw new \Iris\Exceptions\NotSupportedException("Illegal method call : $name");
@@ -360,11 +374,18 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * @return string (html) 
      */
     protected function _renderValue() {
+        echo $this->_name.'<br/>';
         $value = $this->getValue();
+        $checkMark = '';
         if (!is_null($this->_validator)) {
             $value = $this->_validator->prepareValue($value);
         }
-        $html = "value=\"$value\" ";
+        if ($this->_checkable) {
+            if ($value == 1) {
+                $checkMark = ' checked = "checked" ';
+            }
+        }
+        $html = "value = \"$value\" $checkMark";
         return $html;
     }
 
@@ -528,7 +549,6 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     public function setValue($value) {
-        //iris_debug($value,\FALSE);
         $value = str_replace('"', '&quot;', $value);
         $this->_value = $value;
         return $this;
