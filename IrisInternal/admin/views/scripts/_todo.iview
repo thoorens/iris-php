@@ -1,3 +1,7 @@
+<hr/>
 {button('New ToDo','/!admin/todo/new','Create a new Todo')}
-{button('Show ToDos','/!admin/todo/index','Show the task still to be done')}
-{button('Show realized tasks','/!admin/todo/old','Show the tasks already realized')}
+{if($old)}
+    {button('Show ToDos','/!admin/todo/index','Show the task still to be done')}
+{else}
+    {button('Show realized tasks','/!admin/todo/old','Show the tasks already realized')}
+{/if}

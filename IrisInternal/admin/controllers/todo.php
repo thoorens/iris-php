@@ -35,32 +35,46 @@ class todo extends _admin {
         2 => 'Bug',
         3 => 'Functional',
         4 => 'Optional',
-        5 => 'Aspect/style'
+        5 => 'Aspect/style',
+        6 => 'Translation',
+        7 => 'System extension',
     ];
 
-    public function indexAction() {
-        $eTodo = \Iris\Admin\models\TTodo::GetEntity();
-        $eTodo->order('Priority, Description')
-                ->whereNull('ExecutionDate');
-        $this->_fetch($eTodo);
+    
+    
+    
+    public function indexAction($priority = \NULL) {
         $this->__title = 'Tasks still to be done';
+        $this->_display($priority, \FALSE);
     }
 
-    public function oldAction() {
-        $eTodo = \Iris\Admin\models\TTodo::GetEntity();
-        $eTodo->order('ExecutionDate, Priority, Description')
-                ->whereNotNull('ExecutionDate');
-        $this->_fetch($eTodo);
+    public function oldAction($priority = \NULL) {
         $this->__title = "Tasks already done";
+        $this->_display($priority, \TRUE);
     }
 
-    private function _fetch($eTodo){
+    private function _display($priority, $old){
+        $this->__priorities = $this->_priorities;
+        $this->setViewScriptName('all');
+        $eTodo = \Iris\Admin\models\TTodo::GetEntity();
+        $eTodo->order('Priority, Description');
+        if ($old) {
+            $eTodo->whereNotNull('ExecutionDate');
+        }
+        else {
+            $eTodo->whereNull('ExecutionDate');
+        }
+        if(!is_null($priority)){
+            $eTodo->where('Priority=',$priority);
+        }
         $todos = $eTodo->fetchAll();
         foreach ($todos as $todo) {
             $todo->extraField('PriorityDesc', $this->_priorities[$todo->Priority] );
         }
         $this->__todos = $todos;
+        $this->__old = $old;
     }
+    
     
     public function createAction() {
         $data = \Iris\Engine\Superglobal::GetPost();

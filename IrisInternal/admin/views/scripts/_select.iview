@@ -1,0 +1,10 @@
+{if($old)}
+    {assign(URL,'/!admin/todo/old')}
+{else}
+    {assign(URL,'/!admin/todo/index')}
+{/if}
+{button('All',"$URL","Show all ToDo")}
+{foreach(priorities, index, priority)}
+    {button($priority,"$URL/$index","Show ToDo with priority $priority")}
+{/foreach}
+<hr/>

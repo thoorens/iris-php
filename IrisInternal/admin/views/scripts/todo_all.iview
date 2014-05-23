@@ -1,4 +1,7 @@
 <h1>{title}</h1>
+
+{partial('select',$this)}
+
 <table class="internal">
     <tr>
         <th>Priority</th>
@@ -9,9 +12,13 @@
         <tr class="internal{(todo->Priority)}">
             <td class="center">{(todo->PriorityDesc)}</td>
             <td>{(todo->Description)}</td>
-            <td class="center">{button('Done',"/!admin/todo/markDone/$todo->id",'Mark the task as done')}</td>
+            {if($old)}
+                <td class="center">{button('Reset',"/!admin/todo/markUndone/$todo->id",'Mark the task as to be done')}</td>
+            {else}
+                <td class="center">{button('Done',"/!admin/todo/markDone/$todo->id",'Mark the task as done')}</td>
+            {/if}
         </tr>
     {/foreach}
 </table>
-<hr/>
-{partial('todo')}
+
+{partial('todo',$this)}
