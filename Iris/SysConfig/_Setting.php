@@ -191,7 +191,6 @@ abstract class _Setting {
     private static function _GetGroupName($groupName) {
         if (is_null($groupName)) {
             if (is_null(self::$_CurrentGroup)) {
-                iris_debug(debug_backtrace());
                 self::ErrorManagement("'SetCurrentRepository' must be used before creating new settings.");
             }
             $groupName = self::$_CurrentGroup;
