@@ -143,6 +143,16 @@ table.internal tr.internal5{
     background-color: #ccffff ;
 }
 
+table.internal tr.internal6{
+    background-color: #999900 ;
+    color: white;
+}
+
+table.internal tr.internal7{
+    background-color: #008 ;
+    color: white;
+}
+
 table.internal tr td.center{
     text-align: center;
 }
