@@ -35,6 +35,7 @@ class Checkbox extends \Iris\Forms\_Element implements iAidedValue{
         $this->setLabel($name);
         $this->_subtype = 'checkbox';
         $this->_labelPosition = self::AFTER + self::INNER;
+        $this->_checkable = TRUE;
     }
 
     /**
