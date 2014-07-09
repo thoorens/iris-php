@@ -31,6 +31,10 @@ namespace Iris\DB;
  * @version $Id: $ */
 class MetaItem implements \Serializable {
 
+    const S_NULL = '*NULL*';
+    const S_FALSE = '*FALSE*';
+    const S_TRUE = '*TRUE*';
+    
     /**
      *
      * @var string
@@ -286,10 +290,10 @@ class MetaItem implements \Serializable {
         $string[] = "type:" . $this->_type;
         $string[] = "size:" . $this->_size;
         $string[] = "defaultValue:" . $this->_defaultValue;
-        $string[] = "notNull:" . ($this->_notNull ? '*TRUE*' : '*FALSE*');
-        $string[] = "autoIncrement:" . ($this->_autoIncrement ? '*TRUE*' : '*FALSE*');
-        $string[] = "primary:" . ($this->_primary ? '*TRUE*' : '*FALSE*');
-        $string[] = "foreignPointer:" . (is_null($this->_foreignPointer) ? '*NULL*' : $this->_foreignPointer);
+        $string[] = "notNull:" . ($this->_notNull ? self::S_TRUE : self::S_FALSE);
+        $string[] = "autoIncrement:" . ($this->_autoIncrement ? self::S_TRUE : self::S_FALSE);
+        $string[] = "primary:" . ($this->_primary ? self::S_TRUE : self::S_FALSE);
+        $string[] = "foreignPointer:" . (is_null($this->_foreignPointer) ? self::S_NULL : $this->_foreignPointer);
         return "FIELD@" . implode('!', $string);
     }
 
@@ -302,11 +306,11 @@ class MetaItem implements \Serializable {
         $properties = explode('!', $serialized);
         foreach ($properties as $property) {
             list($key, $value) = explode(':', $property);
-            if ($value == '*TRUE*')
+            if ($value == self::S_TRUE)
                 $value = \TRUE;
-            elseif ($value == '*FALSE*')
+            elseif ($value == self::S_FALSE)
                 $value = \FALSE;
-            elseif ($value == '*NULL*')
+            elseif ($value == self::S_NULL)
                 $value = \NULL;
             $propertyName = "_$key";
             $this->$propertyName = $value;
