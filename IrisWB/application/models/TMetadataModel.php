@@ -44,15 +44,19 @@ class TMetadataModel extends \Iris\DB\_Entity {
      * @return type
      */
     protected function _readMetadata($metadata = NULL) {
+        $NULL = \Iris\DB\MetaItem::S_NULL;
+        $TRUE = \Iris\DB\MetaItem::S_TRUE;
+        $FALSE = \Iris\DB\MetaItem::S_FALSE;
         switch (DB::FROM_STRING) {
             case DB::FROM_STRING:
                 $string = <<<STRING
 TABLE@customers 
-FIELD@fieldName:id!type:INTEGER!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*TRUE*!primary:*TRUE*!foreignPointer:*NULL* 
-FIELD@fieldName:Name!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
-FIELD@fieldName:Address!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
-FIELD@fieldName:Email!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
+FIELD@fieldName:id!type:INTEGER!size:0!defaultValue:!notNull:$TRUE!autoIncrement:$TRUE!primary:$TRUE!foreignPointer:$NULL 
+FIELD@fieldName:Name!type:TEXT!size:0!defaultValue:!notNull:$TRUE!autoIncrement:$FALSE!primary:$FALSE!foreignPointer:$NULL 
+FIELD@fieldName:Address!type:TEXT!size:0!defaultValue:!notNull:$TRUE!autoIncrement:$FALSE!primary:$FALSE!foreignPointer:$NULL 
+FIELD@fieldName:Email!type:TEXT!size:0!defaultValue:!notNull:$TRUE!autoIncrement:$FALSE!primary:$FALSE!foreignPointer:$NULL 
 PRIMARY@id
+AUTOPK@$TRUE
 STRING;
                 $metadata = new \Iris\DB\Metadata();
                 $metadata->unserialize($string);
