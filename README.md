@@ -18,7 +18,7 @@ Discover it:
     ![irisorg] (http://irisphp.org/!documents/file/github/Eci.jpg)
 * [The site for my son's band, realized with Iris-PHP] (http://ojbm.be) A belgian hip-hop group    
 
-    ![irisorg] (http://irisphp.org/!documents/file/github/ojbm.jpg)
+    ![irisorg] (http://irisphp.org/!documents/file/github/Ojbm.jpg)
 
 * A brand new site, realized with the simple command `iris.php -c /srv/tutoriel1`
 
