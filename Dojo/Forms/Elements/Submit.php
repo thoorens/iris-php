@@ -38,9 +38,10 @@ class Submit extends \Iris\Forms\_Element {
      * This Element uses a closing tab
      * @var boolean
      */
-    protected static $_EndTag = TRUE;
+    protected static $_EndTag = \TRUE;
 
     
+    protected $_valueAsAttribute = \TRUE;
     
 
     /**
@@ -49,16 +50,18 @@ class Submit extends \Iris\Forms\_Element {
      * @param string $type HTML type (input) or subtype (date)
      * @param type $options any option to add to HTML code
      */
-    public function __construct($name, $type, $options = array()) {
+    public function __construct($name, $type, $options = []) {
         parent::__construct($name, 'button', $options);
         $this->_canDisable = FALSE;
         $this->_labelPosition = self::NONE;
         $this->_subtype = 'submit';
-        $dojoName = 'dijit/form/Button';
+        $this->setDijitType('dijit/form/Button');
         \Dojo\Engine\Bubble::GetBubble('formButton')
                 ->addModule("dijit/form/Button")
                 ->addModule("dojo/dom");
     }
+    
+    
 
 }
 
