@@ -37,10 +37,26 @@ class Settings extends \Iris\SysConfig\_Settings {
      * 
      * @var string 
      */
-
     const VERSION = '1.9.0';
 
-
+    /**
+     * A Dojo theme : claro
+     */
+    const CLARO = 'claro';
+    /**
+     * A Dojo theme : nihilo
+     */
+    const NIHILO = 'nihilo';
+    /**
+     * A Dojo theme : tundra
+     */
+    const TUNDRA = 'tundra';
+    /**
+     * A Dojo theme : soria
+     */
+    const SORIA = 'soria';
+    
+    
         
 
     /**
