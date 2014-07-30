@@ -118,6 +118,15 @@ function iris_context($die = \TRUE){
     iris_debug(debug_backtrace(), $die);
 }
 
+/**
+ * Prints a backtrace  item (one single level of call to subroutine) and stops
+ * the program execution
+ * 
+ * @param boolean $die if not true, does not stop the program
+ */
+function iris_contextItem($level, $die = \TRUE){
+    iris_debug(debug_backtrace()[$level], $die);
+}
 
 assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'iris_assert');
