@@ -29,40 +29,89 @@ namespace Iris\Engine;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class Superglobal {
-    
-    
-    
-    public static function GetPost($key=NULL,$default=NULL){
+
+    /**
+     * Gets a value from the superglobal $_POST
+     * If the variable does not exist, a default value is returned
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function GetPost($key = NULL, $default = NULL) {
         return self::_GetData('POST', $key, $default);
     }
-    
-    public static function GetGet($key=NULL,$default=NULL){
+
+    /**
+     * Gets a value from the superglobal $_GET
+     * If the variable does not exist, a default value is returned
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function GetGet($key = NULL, $default = NULL) {
         return self::_GetData('GET', $key, $default);
     }
-    
-    public static function GetServer($key=NULL,$default=NULL){
+
+    /**
+     * Gets a value from the superglobal $_SERVER
+     * If the variable does not exist, a default value is returned
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function GetServer($key = NULL, $default = NULL) {
         return self::_GetData('SERVER', $key, $default);
     }
-    
-    public static function GetSession($key=NULL,$default=NULL){
+
+    /**
+     * Gets a value from the superglobal $_SESSION
+     * If the variable does not exist, a default value is returned
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function GetSession($key = NULL, $default = NULL) {
         return self::_GetData('SESSION', $key, $default);
     }
-    
-    public static function GetEnv($key=NULL,$default=NULL){
+
+    /**
+     * Gets a value from the superglobal $_ENV
+     * If the variable does not exist, a default value is returned
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function GetEnv($key = NULL, $default = NULL) {
         return self::_GetData('ENV', $key, $default);
     }
-    
 
-    
     /**
-     *
-     * @param string $name
-     * @param type $key
-     * @param type $default
-     * @return type 
+     * Gets a value from the superglobal $_COOKIE
+     * If the variable does not exist, a default value is returned
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
      */
-    private static function _GetData($name,$key=NULL,$default=NULL){
-        switch ($name){
+    public static function GetCookie($key = NULL, $default = NULL) {
+        return self::_GetData('COOKIE', $key, $default);
+    }
+
+    /**
+     * A common implementation for reading a superglobal
+     * 
+     * @param string $name
+     * @param string $key
+     * @param mixed $default
+     * @return mixed 
+     */
+    private static function _GetData($name, $key = NULL, $default = NULL) {
+        switch ($name) {
             case 'SERVER':
                 $var = $_SERVER;
                 break;
@@ -79,15 +128,16 @@ abstract class Superglobal {
             case 'ENV':
                 $var = $_ENV;
                 break;
+            case 'COOKIE':
+                $var = $_COOKIE;
+                break;
         }
-        if(is_null($key)){
+        if (is_null($key)) {
             return $var;
-        }else{
+        }
+        else {
             return isset($var[$key]) ? $var[$key] : $default;
         }
     }
-    
-    
+
 }
-
-
