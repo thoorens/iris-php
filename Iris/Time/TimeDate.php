@@ -37,12 +37,13 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     /**
      * A sample date in Japan mode : 2013-08-28
      */
-
     const JAPAN = 1;
+
     /**
      * A sample date in USA mode : 08-28-2013
      */
     const USA = 2;
+
     /**
      * A sample date in Europe mode : 28-08-2013
      */
@@ -559,5 +560,23 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         $this->_internalDate->setDate($year, $month, $day);
     }
 
-}
+    /**
+     * 
+     * @return \DateTimeZone
+     */
+    public function getTimeZone() {
+        return $this->_internalDate->getTimezone();
+    }
 
+    /**
+     * Get the date/time in unix format
+     * 
+     * @return int
+     */
+    public function getUnixTime() {
+        date_default_timezone_set($this->_internalDate->getTimeZone()->getName());
+        return mktime(
+                $this->getHours(), $this->getMinutes(), $this->getSeconds(), $this->getMonth(), $this->getDay(), $this->getYear());
+    }
+
+}
