@@ -92,12 +92,15 @@ class Settings extends \Iris\SysConfig\_Settings {
         \Iris\SysConfig\BooleanSetting::CreateSetting('fatal', \FALSE);
         // Production mode simulation is disabled by default
         \Iris\SysConfig\BooleanSetting::CreateSetting('prodSim', \FALSE);
+        // Execute Development error in production (for desperate debugging purpose)
+        \Iris\SysConfig\BooleanSetting::CreateSetting('forceDevelopment', \FALSE);
         // Default error controller (begins with /)
         \Iris\SysConfig\StandardSetting::CreateSetting('controller', '/Error');
         // Title for error screen
         \Iris\SysConfig\StandardSetting::CreateSetting('title', 'Iris - Error');
         // The stack level to display
         \Iris\SysConfig\StandardSetting::CreateSetting('stackLevel', \NULL);
+
         $this->_forceSettings();
     }
 
@@ -160,4 +163,24 @@ class Settings extends \Iris\SysConfig\_Settings {
         return $flags;
     }
 
+    /**
+     * Switches to development error display mode until the specified time
+     * 
+     * @param string $timeLimit the time limit in HH:MM:SS format
+     * @param string $dateLimit the date in YYYY-MM-DD format
+     */
+    public static function ShowErrorOnProd($timeLimit, $dateLimit){
+        
+        $now = time();
+        list($hour, $minute, $second) = explode(':',"$timeLimit:0:0");
+        list($year, $month, $day) = explode('-',$dateLimit);
+        $date = new \Iris\Time\Date;
+        date_default_timezone_set($date->getTimeZone()->getName());
+        $limit = mktime($hour, $minute, $second, $month, $day, $year);
+        
+        if($now < $limit){
+            \Iris\Errors\Settings::EnableForceDevelopment();
+        }
+        
+    }
 }
