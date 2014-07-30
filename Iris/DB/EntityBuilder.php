@@ -138,7 +138,7 @@ class EntityBuilder {
         $entity = $this->_getModel(\FALSE);
         $metadata = $entity->getMetadata();
         $entity->setEntityName($metadata->getTablename(), \TRUE);
-        $entity->setIdNames($metadata->getPrimary());
+        $entity->setPrimaryKey($metadata->getPrimary());
         $entity->validate();
         return $entity;
     }
@@ -154,7 +154,7 @@ class EntityBuilder {
             $entity->setReflectionEntity($this->_reflectionEntityName);
             $metadata = $entity->getMetadata();
         }
-        $entity->setIdNames($metadata->getPrimary());
+        $entity->setPrimaryKey($metadata->getPrimary());
         $entity->validate();
         return $entity;
     }
@@ -230,7 +230,7 @@ class EntityBuilder {
             $entity = $this->_createInstance($className, $this->_proposedEntityName);
             $metadata = $entity->getMetadata();
             $entity->setEntityName($metadata->getTablename());
-            $entity->setIdNames($metadata->getPrimary());
+            $entity->setPrimaryKey($metadata->getPrimary());
             $entity->validate();
         }
         return $entity;
@@ -269,7 +269,7 @@ class EntityBuilder {
                 $entity->setReflectionEntity($this->_reflectionEntityName);
                 $metadata = $entity->getMetadata();
             }
-            $entity->setIdNames($metadata->getPrimary());
+            $entity->setPrimaryKey($metadata->getPrimary());
             $entity->setMetadata($metadata);
             $entity->validate();
         }

@@ -102,8 +102,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
             $table = $table[1];
             $foreignKey = new \Iris\DB\ForeignKey();
             $foreignKey->setTargetTable($table);
-            $foreignKey->setFromKeys(explode(',', $from));
-            $foreignKey->setToKeys(explode(',', $to));
+            $foreignKey->addKeys($from, $to);
             $foreignKeys[] = $foreignKey;
         }
         return $foreignKeys;

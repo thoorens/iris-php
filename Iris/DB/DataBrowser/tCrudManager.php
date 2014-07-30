@@ -56,8 +56,9 @@ trait tCrudManager {
     public final function __callAction($actionName, $parameters) {
         $shortAction = preg_replace('/(.*)\_.*Action/', '$1', $actionName);
         $this->_changeViewScript($shortAction);
+        $this->_preCustomize($shortAction);
         \Iris\DB\DataBrowser\_Crud::DispatchAction($this, $actionName, $parameters, $this->_commonViewScript, $this->_crudDirectory);
-        $this->_customize($shortAction);
+        $this->_postCustomize($shortAction);
     }
 
     /**
@@ -76,17 +77,34 @@ trait tCrudManager {
         $this->_crudDirectory = $directory;
     }
 
+    
+
     /**
      * By overwriting this method, one can modify one or many implicit methods of the
-     * CRUD manager or do whatever else (e.g. /IrisWB/application/modules/manager/controllers/screens.php)
+     * CRUD manager or do whatever.
+     * This method is fired BEFORE the action dispatching
      * 
+     * The parameter has this aspect: create, update, delete, read
      * 
      * @param string $actionName one among create/read/update/delete
      */
-    protected function _customize($actionName) {
+    protected function _preCustomize($actionName) {
         
     }
-
+    
+    /**
+     * By overwriting this method, one can modify one or many implicit methods of the
+     * CRUD manager or do whatever else (e.g. /IrisWB/application/modules/manager/controllers/screens.php)
+     * This method is fired AFTER the action dispatching
+     * 
+     * The parameter has this aspect: create, update, delete, read
+     * 
+     * @param string $actionName one among create/read/update/delete
+     */
+    protected function _postCustomize($actionName) {
+        
+    }
+    
     /**
      * A default error action to be overwritten.
      * 

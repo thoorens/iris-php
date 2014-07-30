@@ -106,11 +106,7 @@ abstract class _CrudBase implements \Iris\Translation\iTranslatable {
     protected $_callBack = [];
 
     public function __construct($param = \NULL) {
-        $response = \Iris\Engine\Response::GetDefaultInstance();
-        $module = $response->getModuleName();
-        $controller = $response->getControllerName();
-        $action = $response->getActionName();
-        $this->_continuationURL = "/$module/$controller/$action";
+        $this->_continuationURL = \Iris\Engine\Response::GetDefaultInstance()->getURL();
         $this->_endURL = $this->_continuationURL;
     }
 

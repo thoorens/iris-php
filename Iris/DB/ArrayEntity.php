@@ -54,7 +54,7 @@ class ArrayEntity extends ViewEntity {
         foreach ($this->_fields as $field) {
             $metadata->addItem(new \Iris\DB\MetaItem($field));
         }
-        foreach($this->_idNames as $id){
+        foreach($this->getIdNames() as $id){
             $metadata->addPrimary($id);
         }
         return $metadata;

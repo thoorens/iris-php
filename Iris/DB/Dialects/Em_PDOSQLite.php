@@ -193,8 +193,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
                 $foreignKey = $foreignKeys[$id];
             }
             $foreignKey->setTargetTable($line->table);
-            $foreignKey->addFromKey($line->from);
-            $foreignKey->addToKey($line->to);
+            $foreignKey->addKey($line->from, $line->to);
         }
         return $foreignKeys;
     }

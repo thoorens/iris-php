@@ -74,7 +74,6 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      */
     const CRUD_DIRECTORY = '\\models\\crud\\';
 
-    
     /**
      * The entity behind the object
      * 
@@ -166,7 +165,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
         }
         return $this;
     }
-    
+
     /**
      * Creates a new object using a form (until validation is OK)
      *  
@@ -214,6 +213,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
                 return self::ERR_DUPLICATE;
             }
         }
+        return \NULL;
     }
 
     /**
@@ -263,6 +263,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
         $this->forceAutoForm('update');
         $object = $this->getCurrentObject($idValues);
         $this->_initObjects(self::UPDATE_MODE, $idValues);
+        //iris_debug($this->_currentObject);
         if (\Iris\Engine\Superglobal::GetServer('REQUEST_METHOD') == 'POST') {
             $formData = $this->_form->getDataFromPost();
             if ($this->_form->isValid($formData)) {
@@ -335,8 +336,6 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
         $this->read($id);
     }
 
-    
-
     /**
      * Get the form used by CRUD
      * 
@@ -362,7 +361,8 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      */
     public function forceAutoForm($submitValue) {
         if (is_null($this->_form)) {
-            $this->_form = new \Iris\Forms\AutoForm($this->_entity);
+            $autoForm = new \Iris\Forms\AutoForm($this->_entity);
+            $this->_form = $autoForm->prepare();
         }
         $message = self::$_SubmitButtonText[$submitValue];
         $localizedMessage = $this->_($message, TRUE);
@@ -406,7 +406,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
                 }
                 // without leading /, a local action is taken
                 else {
-                    $controller->redirect($this->_endURL);
+                    $controller->reroute(\Iris\Engine\Response::GetDefaultInstance()->getURL($this->_endURL));
                 }
                 break;
             // all other codes are errors    
@@ -416,7 +416,6 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
         }
     }
 
-    
     /**
      * 
      * @param int $mode one of the four in CRUD
@@ -468,7 +467,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * @param \Iris\DB\Object $object 
      */
     protected function _postCreate($object) {
-        
+        return \TRUE;
     }
 
     /**
@@ -563,11 +562,9 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * @param mixed[] $formData data from the form
      * @return boolean (if FALSE go to form display)
      */
-    protected function _postValidate($mode, $formData) {
+    protected function _postValidate($mode, &$formData) {
         return true;
     }
-
-    
 
     /**
      * A masked method to read the data (they are cached for later use)
@@ -576,7 +573,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * @return object
      */
     protected function _find($idValues) {
-        $data = $this->_entity->find($idValues);
+        $data = $this->_entity->find($idValues, \TRUE);
         $this->_currentObject = $data;
         return $data;
     }
@@ -590,7 +587,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
     public function getCurrentObject($idValues = \NULL) {
         $object = $this->_currentObject;
         if (is_null($object)) {
-            $object = $this->_entity->find($idValues);
+            $object = $this->_entity->find($idValues, \TRUE);
             $this->_currentObject = $object;
             return $object;
         }
@@ -608,13 +605,13 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      */
     public static function DispatchAction($controller, $actionName, $parameters, $scriptName = \NULL, $crudDirectory = self::CRUD_DIRECTORY) {
         $id = count($parameters) > 0 ? $parameters : \NULL;
-        // the action name is for instance update_bookAction => update, bookAction
+        // the action name is for instance update_BookAction => update, BookAction
         list($action, $crudName) = explode('_', $actionName);
-        //@todo ajouter les opérations de navigation
+        //@todo add navigation operator
         if (strpos('create.update.delete.read', $action) === \FALSE) {
             throw new \Iris\Exceptions\ControllerException("Unrecognized action");
         }
-        // bookAction => \models\crud\Book
+        // BookAction => \models\crud\Book
         $crudName = $crudDirectory . ucFirst(str_replace('Action', '', $crudName));
         $crud = new $crudName([$controller]);
         //die($crudName);

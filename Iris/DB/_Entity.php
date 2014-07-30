@@ -92,8 +92,15 @@ abstract class _Entity {
      * May safely initialized by hand
      * 
      * @var string[] 
+     * @deprecated
      */
     protected $_idNames = [];
+
+    /**
+     *
+     * @var PrimaryKey
+     */
+    protected $_primaryKey = \NULL;
 
     /**
      * The foreign keys if not defined in the databases. Each
@@ -109,7 +116,6 @@ abstract class _Entity {
      * @var string 
      */
     protected $_descriptionField = '';
-    
     protected static $_DescriptionField2 = '';
 
     /**
@@ -166,6 +172,12 @@ abstract class _Entity {
         if (is_null($this->_entityName)) {
             $this->_entityName = $entityName;
         }
+        if (count($this->_idNames)) {
+            $primaryKey = new PrimaryKey();
+            foreach ($this->_idNames as $field) {
+                $primaryKey->addField($field);
+            }
+        }
         $this->_query = new Query();
         $this->_init();
     }
@@ -193,8 +205,6 @@ abstract class _Entity {
         
     }
 
-    
-    
     /**
      * By default, the entity manager is defined by the system. This methods can
      * be overwritten in subclasses.
@@ -232,7 +242,7 @@ abstract class _Entity {
                 $metadata = $param;
             }
             elseif (is_string($param)) {
-                // the first string will be a entity name
+// the first string will be a entity name
                 if (is_null($entityName)) {
                     $entityName = $param;
                     $strings++;
@@ -306,13 +316,12 @@ abstract class _Entity {
     /**
      * Put an object in the repository
      * 
-     * @param string $entityName
-     * @param string[] $idValues
+     * @param string[] $idFieldsValues
      * @param Object $object 
      */
-    public function registerObject($idValues, $object) {
+    public function registerObject($idFieldsValues, $object) {
         if ($this->_register) {
-            $id = implode('|', $idValues);
+            $id = implode('|', $idFieldsValues);
             $this->_objectRepository[$id] = $object;
         }
     }
@@ -324,8 +333,7 @@ abstract class _Entity {
     /**
      * Retrieve an object from the repository (if possible, \NULL otherwise)
      * 
-     * @param  string $entityName
-     * @param string[] $idValues
+     * @param string[] $idFieldsValues
      * @return Object 
      */
     public function retrieveObject($idValues) {
@@ -352,7 +360,8 @@ abstract class _Entity {
             }
         }
         if ($modified) {
-            $oldId = implode('|', $oldIdValues);
+//$oldId = implode('|', $oldIdValues);
+            $oldId = serialize($idFieldsValues);
             $this->registerObject($newIdValues, $this->_objectRepository[$oldId]);
             unset($this->_objectRepository[$oldId]);
         }
@@ -363,26 +372,39 @@ abstract class _Entity {
     }
 
     /**
-     * Accessor get for the id field list
+     * Gives the list of the primary key fields
      * 
      * @return array
      */
     public function getIdNames() {
-        return $this->_idNames;
+        //return $this->getIdNames();
+        if (is_null($this->_primaryKey)) {
+            return [];
+        }
+        else {
+            return $this->_primaryKey->getFields();
+        }
     }
 
     /**
-     * Accessor set for the id field list. NEVER erases a previously set value
      * 
-     * @param string[] $idNames 
+     * @return PrimaryKey
      */
-    public function setIdNames($idNames) {
-        if (count($this->_idNames) == 0) {
-            if (!is_array($idNames)) {
-                $idNames = array($idNames);
-            }
-            $this->_idNames = $idNames;
+    public function getPrimaryKey() {
+        return $this->_primaryKey;
+    }
+
+    /**
+     * Accessor set for the primary key. NEVER erases a previously set value.
+     * 
+     * @param PrimaryKey $primaryKey
+     * @return \Iris\DB\_Entity
+     */
+    public function setPrimaryKey($primaryKey) {
+        if (is_null($this->_primaryKey)) {
+            $this->_primaryKey = $primaryKey;
         }
+        return $this;
     }
 
     /**
@@ -449,7 +471,7 @@ abstract class _Entity {
         $sql .= $this->_query->renderOrder();
         $sql .= $this->_query->renderLimits($this->_entityManager->getLimitClause());
         $sql .= ';';
-        //die($sql);
+//die($sql);
         $data = $this->_entityManager->fetchAll($this, $sql, $this->_query->getPlaceHolders());
         $this->_query->reset();
         if ($array === \TRUE) {
@@ -476,14 +498,11 @@ abstract class _Entity {
      * @return Object 
      */
     public function find($idValues) {
-        if (!\is_array($idValues)) {
-            $idValues = [$idValues];
-        }
+        $standartIdValues = $this->_primaryKey->getNamedValues($idValues);
         // try to find object in repository
-        $object = $this->retrieveObject($idValues);
+        $object = $this->retrieveObject($standartIdValues);
         if (is_null($object)) {
-            $idValues = array_combine($this->_idNames, $idValues);
-            $this->wherePairs($idValues);
+            $this->wherePairs($standartIdValues);
             $object = $this->fetchRow();
         }
         $this->_register = \TRUE;
@@ -501,7 +520,7 @@ abstract class _Entity {
         static $ids = array(NULL, \NULL, \NULL, \NULL);
         if (is_null($ids[$position])) {
             $em = $this->getEntityManager();
-            $idNames = $this->_idNames;
+            $idNames = $this->getIdNames();
             if (count($idNames) > 1) {
                 throw new \Iris\Exceptions\EntityException('Browsing method getId does not function with multi field primary keys.');
             }
@@ -584,7 +603,7 @@ abstract class _Entity {
      */
     public function wherePairs($conditions, $operator = '=') {
         foreach ($conditions as $field => $value) {
-            $this->_query->where("$field$operator", $value);
+            $this->_query->where("$field $operator", $value);
         }
         return $this;
     }
@@ -789,10 +808,8 @@ abstract class _Entity {
      */
     public function update($setFields, $values, $idValues) {
         $setClause = $this->_query->renderSet($setFields, $values);
-        $iId = 0;
-        foreach ($idValues as $value) {
-            $this->_query->where($this->_idNames[$iId] . "=", $value);
-        }
+        $normalizedId = $this->_primaryKey->getNamedValues($idValues);
+        $this->wherePairs($normalizedId);
         $whereClause = $this->_query->renderWhere();
         $sql = sprintf("UPDATE %s SET %s %s", $this->_entityName, $setClause, $whereClause);
         $done = $this->_entityManager->exec($sql, $this->_query->getPlaceHolders());
@@ -841,9 +858,9 @@ abstract class _Entity {
      */
     public function lastInsertedId() {
         $lastId = $this->_lastInsertedId;
-        // if lost the value, try to get it again
+// if lost the value, try to get it again
         if (is_null($lastId)) {
-            $ids = $this->getMetadata()->getPrimary();
+            $ids = $this->getMetadata()->getPrimary()->getFields();
             if (count($ids) > 1) {
                 return \NULL;
             }
@@ -874,16 +891,16 @@ abstract class _Entity {
     public final function getMetadata($metadata = \NULL) {
         if (is_null($this->_metadata)) {
             $this->_metadata = $this->_readMetadata($metadata);
-            // add optional form properties
+// add optional form properties
             foreach ($this->_formProperties as $field => $property) {
                 list($name, $value) = $property;
                 $this->_metadata[$field]->$name = $value;
             }
-            if (count($this->_idNames) == 0) {
-                $this->_idNames = $this->_metadata->getPrimary();
+            if (count($this->getIdNames()) == 0) {
+                $this->_primaryKey = $this->_metadata->getPrimary();
             }
         }
-        // Metadata can be written in entity class as an unserialized string
+// Metadata can be written in entity class as an unserialized string
         if (is_string($this->_metadata)) {
             $metadata = new Metadata();
             $metadata->unserialize($this->_metadata);
@@ -924,7 +941,7 @@ abstract class _Entity {
      */
     protected function _readMetadata($metadata = \NULL) {
         if (is_null($metadata)) {
-            // reflection entities are only used for views
+// reflection entities are only used for views
             if (is_null($this->_reflectionEntity)) {
                 $this->_reflectionEntity = $this->_entityName;
             }
@@ -933,21 +950,21 @@ abstract class _Entity {
             foreach ($this->_entityManager->getForeignKeys($this->_reflectionEntity) as $foreignKey) {
                 $metadata->addForeign($foreignKey);
             }
-            foreach ($this->_idNames as $field) {
+            foreach ($this->getIdNames() as $field) {
                 $metadata->addPrimary($field);
             }
             // optionaly reads manually added foreign keys
             foreach ($this->_foreignKeyDescriptions as $key => $description) {
                 if (is_string($description)) {
-                    $metadata->unserialize($description);
+                    $foreignKey = new ForeignKey($description);
                 }
                 else {
                     $foreignKey = new ForeignKey();
                     $foreignKey->setNumber($key);
-                    $foreignKey->setFromKeys($description[0]);
-                    $foreignKey->setTargetTable($description[1]);
-                    $foreignKey->setToKeys($description[2]);
+                    $foreignKey->setTargetTable($description[0]);
+                    $foreignKey->addKeys($description[1], $description[2]);
                 }
+                $metadata->addForeign($foreignKey);
             }
         }
 
@@ -969,14 +986,14 @@ abstract class _Entity {
         if (is_null($this->_metadata) or count($this->_metadata->getFields()) == 0) {
             throw new \Iris\Exceptions\EntityException('No metadata has been provided or found for this entity.');
         }
-        if (count($this->_idNames) == 0) {
+        if (count($this->getIdNames()) == 0) {
             throw new \Iris\Exceptions\EntityException('This entity does not have a specified primary key.');
         }
     }
 
     public function limit($limit, $offset = 0) {
         $indexName = "DB_OFFSET_" . $this->_entityName;
-        // Recuperate previous offset from Session
+// Recuperate previous offset from Session
         if ($offset == self::CONT) {
             $offset = \Iris\Engine\Superglobal::GetSession($indexName, 0);
         }

@@ -161,7 +161,9 @@ class Object {
             }
         }
         if (!$new) {
-            $entity->registerObject($idValues, $this);
+            $primaryKey = $metadata->getPrimary();
+            $orderedKey = $primaryKey->getNamedValues($idValues);
+            $entity->registerObject($orderedKey, $this);
         }
         $this->_fields = array_flip($fields);
     }
@@ -222,20 +224,22 @@ class Object {
      */
     private function _getParent($keyFields) {
         $entityManager = $this->_entity->getEntityManager();
-        list($parentEntityName, $fromKeyNames) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
+        list($parentEntityName, $foreignKeyPairs) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
         // Caution : two differents set of FromKeys may go to the same entity
-        $joinID = $parentEntityName . '-' . implode(':', $fromKeyNames);
-        if (!isset($this->_parents[$joinID])) {
-            $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
-            $i = 0;
-            $primaryKey = $parentEntity->getIdNames();
-            foreach ($fromKeyNames as $keyName) {
-                $primaryKeys[$primaryKey[$i++]] = $this->$keyName;
-            }
-            $parent = $parentEntity->find($primaryKeys);
-            $this->_parents[$joinID] = $parent;
+        //$joinID = $parentEntityName . '-' . implode(':', $fromKeyNames);
+        //if (!isset($this->_parents[$joinID])) {
+        $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
+        //$i = 0;
+        //$primaryKey = $parentEntity->getIdNames();
+        foreach ($foreignKeyPairs as $foreignName => $primaryName) {
+            $primaryKeys[$primaryName] = $this->$foreignName;
         }
-        return $this->_parents[$joinID];
+        $joinId = $parentEntityName . ":" . implode(':', $primaryKeys);
+        if (!isset($this->_parents[$joinId])) {
+        $parent = $parentEntity->find($primaryKeys);
+            $this->_parents[$joinId] = $parent;
+        }
+        return $this->_parents[$joinId];
     }
 
     /**
@@ -290,6 +294,18 @@ class Object {
         }
     }
 
+    public function isEmpty($field) {
+        $var = $this->__get($field);
+        return empty($var);
+    }
+
+    /**
+     * Creates a new field in the object (as if it would have been read
+     * from Database and inits it
+     * 
+     * @param string $fieldName
+     * @param mixed $value
+     */
     public function extraField($fieldName, $value) {
         $nextNumber = count($this->_currentContent);
         $this->_currentContent[$nextNumber] = $value;
@@ -324,9 +340,9 @@ class Object {
         }
         //iris_debug($this->_children);
         foreach ($this->_children as $children) {
-            foreach ($children as $child) {
-                $child->save();
-            }
+//            foreach ($children as $child) {
+//                $child->save();
+//            }
         }
         return $done;
     }
@@ -352,7 +368,7 @@ class Object {
         if ($done) {
             $this->_ORMState = self::ORM_PERSISTENT;
             $metadata = $this->_entity->getMetadata();
-            $primary = $metadata->getPrimary();
+            $primary = $metadata->getPrimary()->getFields();
             if (count($primary) == 1) {
                 $pkName = $primary[0];
                 $primaryKeyField = $metadata->$pkName;
@@ -416,7 +432,7 @@ class Object {
      */
     public function primaryKeyValue() {
         $idValues = array();
-        foreach ($this->_entity->getMetadata()->getPrimary() as $idN) {
+        foreach ($this->_entity->getMetadata()->getPrimary()->getFields() as $idN) {
             if (isset($this->_fields[$idN])) {
                 $idValues[$idN] = $this->_currentContent[$this->_fields[$idN]];
             }

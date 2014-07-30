@@ -337,7 +337,7 @@ class Query {
      * @return _Entity 
      */
     protected function _prepareField($value, $condition = '') {
-        if ($value == Object::NULL_VALUE) {
+        if ($value === Object::NULL_VALUE) {
             $this->_preparedFields[] = 'NULL';
         }
         else {

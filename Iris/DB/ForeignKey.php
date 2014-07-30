@@ -18,7 +18,7 @@ namespace Iris\DB;
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * @copyright 2012 Jacques THOORENS
+ * @copyright 2011-2014 Jacques THOORENS
  */
 
 /**
@@ -30,21 +30,8 @@ namespace Iris\DB;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ForeignKey implements \Serializable{
+class ForeignKey implements \Serializable {
 
-    /**
-     * The list of key names in the child table
-     * 
-     * @var string[]
-     */
-    private $_fromKeys = array();
-
-    /**
-     * The list of key names in the father table
-     * @var string[]
-     */
-    private $_toKeys = array();
-    
     /**
      * The name of the father table
      * 
@@ -57,79 +44,159 @@ class ForeignKey implements \Serializable{
      * @var int
      */
     private $_number;
-    
-    
+
+    /**
+     * An array with key names in the father table as indexes and
+     * the key names in the child table as values
+     * 
+     * @var string[]
+     */
+    private $_keys = [];
+
+    /**
+     * If a parameter is provided it is considered as a serialized string
+     * 
+     * @param string $string
+     */
     public function __construct($string = \NULL) {
-        if(!is_null($string)){
+        if (!is_null($string)) {
             $this->unserialize($string);
         }
     }
 
-    
-    
+    /**
+     * Adds a complex foreign key : from two array the child names and the 
+     * parents names (in REFERENCES)
+     * 
+     * Warning : the fields are sorted by child key names 
+     * 
+     * @param string[] $fromKeys
+     * @param string[] $toKeys
+     * @return \Iris\DB\ForeignKey for fluent interface
+     */
+    public function addKeys($fromKeys, $toKeys) {
+        if(is_string($fromKeys)){
+            $fromKeys = explode(',', $fromKeys);
+            $toKeys = explode(',', $toKeys);
+        }
+        $this->_keys = array_combine($fromKeys, $toKeys);
+        ksort($this->_keys);
+        return $this;
+    }
+
+    /**
+     * Adds a foreign key part. 
+     * Warning : the fields are sorted by child key names 
+     * 
+     * @param string $fromKey the name in child record
+     * @param string $Key then name in parent record
+     * @return \Iris\DB\ForeignKey for fluent interface
+     */
+    public function addKey($fromKey, $Key) {
+        $this->_keys[$fromKey] = $Key;
+        ksort($this->_keys);
+        return $this;
+    }
+
+    /**
+     * Returns an array of fields, seen from the child side
+     * 
+     * @return string[]
+     */
     public function getFromKeys() {
-        return $this->_fromKeys;
+        return array_keys($this->_keys);
     }
 
-    public function setFromKeys($_fromKeys) {
-        $this->_fromKeys = $_fromKeys;
+    /**
+     * Returns the various part of the foreign key as an indexed
+     * array. Indexes are child names and values are parent names.
+     * 
+     * @return string[]
+     */
+    public function getKeys() {
+        return $this->_keys;
     }
 
-    public function setToKeys($_toKeys) {
-        $this->_toKeys = $_toKeys;
-    }
-
-    public function addFromKey($fromKey) {
-        $this->_fromKeys[] = $fromKey;
-    }
-
+    /**
+     * Returns an array of fields, seen from the parent side
+     * 
+     * @return string[]
+     */
     public function getToKeys() {
-        return $this->_toKeys;
+        return array_values($this->_keys);
+        //return $this->_toKeys;
     }
 
-    public function addToKey($toKey) {
-        $this->_toKeys[] = $toKey;
-    }
-
+    /**
+     * Returns the target table name of the foreign key
+     * @return string
+     */
     public function getTargetTable() {
         return $this->_targetTable;
     }
 
+    /**
+     * Sets the target table name of the foreign key
+     * 
+     * @param type $targetTable
+     * @return \Iris\DB\ForeignKey for fluent interface
+     */
     public function setTargetTable($targetTable) {
         $this->_targetTable = $targetTable;
+        return $this;
     }
 
+    /**
+     * Serializes the object
+     * 
+     * @return string
+     */
     public function serialize() {
         $strings[] = $this->getNumber();
-        $strings[] = implode('!',$this->_fromKeys);
         $strings[] = $this->_targetTable;
-        $strings[] = implode('!',$this->_toKeys);
-        return "FOREIGN@".implode('+',$strings)."\n";
+        $strings[] = serialize($this->_keys);
+        return "FOREIGN@" . implode('+', $strings) . "\n";
     }
 
-    public function unserialize($serialized) {
-        list($number,$cmpFromKeys,$targetTable,$cmptoKeys) = explode('+',$serialized);
-        $this->setNumber($number);
-        $this->_targetTable = $targetTable;
-        $fromKeys = explode('!',$cmpFromKeys);
-        foreach($fromKeys as $fromKey){
-            $this->addFromKey($fromKey);
+    /**
+     * Unserializes a string to a foreign key. If requested, creates
+     * a new object and returns it
+     * 
+     * @param string $serialized The serialized string
+     * @param boolean $new Specifies if a new object is returned
+     */
+    public function unserialize($serialized, $new = \FALSE) {
+        if ($new) {
+            $object = new ForeignKey;
         }
-        $toKeys = explode('!',$cmptoKeys);
-        foreach($toKeys as $toKey){
-            $this->addToKey($toKey);
+        else {
+            $object = $this;
         }
+        list($number, $targetTable, $keys) = explode('+', $serialized);
+        $object->setNumber($number);
+        $object->_targetTable = $targetTable;
+        $object->_keys = unserialize($keys);
+        return $object;
     }
 
+    /**
+     * Returns the sequential number used in the metadata array
+     * 
+     * @return int
+     */
     public function getNumber() {
         return $this->_number;
     }
 
+    /**
+     * Sets the sequential number used in the metadata array
+     * 
+     * @param type $number
+     * @return \Iris\DB\ForeignKey for fluent interface
+     */
     public function setNumber($number) {
         $this->_number = $number;
+        return $this;
     }
 
-
-    
 }
-

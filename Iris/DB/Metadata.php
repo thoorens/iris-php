@@ -45,20 +45,27 @@ class Metadata implements \Serializable, \Countable {
      *
      * @var MetaItem[] 
      */
-    private $_fields = array();
+    private $_fields = [];
 
     /**
-     * An array consisting of the names of the primary key fieds
+     * A special object containing the primary key description
      * 
-     * @var string[] 
+     * @var PrimaryKey
      */
-    private $_primary = array();
+    private $_primary;
 
     /**
-     *
+     * An array containing the foreign keys of the table
+     * 
      * @var ForeignKey[]
      */
-    private $_foreigns = array();
+    private $_foreigns = [];
+    
+    /**
+     * Spectifies if the table has an auto increment primary key
+     * @var boolean
+     */
+    private $_autoIncrementPrimary = \FALSE;
 
     /**
      * 
@@ -68,12 +75,13 @@ class Metadata implements \Serializable, \Countable {
         if (!is_null($tableName)) {
             $this->_tablename = $tableName;
         }
+        $this->_primary = new PrimaryKey();
     }
 
     /**
      * Returns the primary key fields
      * 
-     * @return string[]
+     * @return PrimaryKey
      */
     public function getPrimary() {
         return $this->_primary;
@@ -86,20 +94,27 @@ class Metadata implements \Serializable, \Countable {
      * @return \Iris\DB\Metadata (for fluent interface)
      */
     public function addPrimary($field) {
-        if (array_search($field, $this->_primary) === \FALSE) {
-            $this->_primary[] = $field;
+        $this->_primary->addField($field);
+        // Multikey primary key are not autoincrement
+        if($this->_primary->isMultiField()){
+            $this->_autoIncrementPrimary = \FALSE;
+            $this->_primary->setAutoIncrement(\FALSE);
         }
         return $this;
     }
 
     /**
-     * Add a new item to the metadata
+     * Adds a new item to the metadata
      * 
      * @param MetaItem $item
      * @return \Iris\DB\Metadata (for fluent interface)
      */
     public function addItem($item) {
         $key = $item->getFieldName();
+        if($item->isAutoIncrement() and $item->isPrimary()){
+            $this->_autoIncrementPrimary = \TRUE;
+            $this->_primary->setAutoIncrement();
+        }
         $this->_fields[$key] = $item;
         return $this;
     }
@@ -173,34 +188,6 @@ class Metadata implements \Serializable, \Countable {
         return $number;
     }
 
-//    public function getForeignKeyValues($fatherTable, $entity, $primaryKeys) {
-//        $metadata = $entity->getMetadata();
-//        $foreigns = $metadata->getForeigns();
-//        $i = 0;
-//        $searchKey = array();
-//        $found = FALSE;
-//        while ($i < count($foreigns) and !$found) {
-//            $foreign = $foreigns[$i++];
-//            if ($foreign->getTargetTable() == $fatherTable) {
-//                $found = TRUE;
-//                $toKeys = $foreign->getToKeys();
-//                $fromKeys = $foreign->getFromKeys();
-//                $searchKey = array();
-//                $j = 0;
-//                foreach ($primaryKeys as $key => $value) {
-//                    if (array_search($key, $toKeys) === FALSE) {
-//                        $found = FALSE;
-//                    }
-//                    else {
-//                        $searchKey[$fromKeys[$j]] = $value;
-//                    }
-//                    $j++;
-//                }
-//            }
-//        }
-//        return $searchKey;
-//    }
-
     /**
      * Retrieves the parent parameters (entity name and array of primary
      * key names) of an object through the metadata analysis
@@ -211,7 +198,7 @@ class Metadata implements \Serializable, \Countable {
     public function getParentRowParams($links) {
         $foreigns = $this->getForeigns();
         $found = \FALSE;
-        /*         * @var ForeignKey $foreign */
+        /** @var ForeignKey $foreign */
         foreach ($foreigns as $foreign) {
             $fk = implode(IRIS_FIELDSEP, $foreign->getFromKeys());
             if ($fk == $links) {
@@ -225,7 +212,7 @@ class Metadata implements \Serializable, \Countable {
             throw new \Iris\Exceptions\DBException("A parent record from field(s) $links doesn't exist.");
         }
         $entityName = $foreign->getTargetTable();
-        return [$entityName, $foreign->getFromKeys()];
+        return [$entityName, $foreign->getKeys()];
     }
 
     /**
@@ -274,11 +261,12 @@ class Metadata implements \Serializable, \Countable {
         foreach ($this->_fields as $item) {
             $strings[] = $item->serialize();
         }
-        $strings[] = "PRIMARY@" . implode('!', $this->_primary) . "\n";
+        $strings[] = $this->_primary->serialize();
         /* @var $foreign ForeignKey */
         foreach ($this->_foreigns as $foreign) {
             $strings[] = $foreign->serialize();
         }
+        $strings[] = 'AUTOPK@' . ($this->_autoIncrementPrimary ? MetaItem::S_TRUE : MetaItem::S_FALSE);
         return implode("\n", $strings);
     }
 
@@ -301,15 +289,15 @@ class Metadata implements \Serializable, \Countable {
                     $this->addItem($item);
                     break;
                 case 'PRIMARY':
-                    $primaries = explode('!', $value);
-                    foreach ($primaries as $primary) {
-                        $this->addPrimary($primary);
-                    }
+                    $this->_primary = new PrimaryKey($value);
                     break;
                 case 'FOREIGN':
                     $foreignKey = new ForeignKey($value);
                     $this->addForeign($foreignKey, $foreignKey->getNumber());
                     break;
+                case 'AUTOPK':
+                    $this->_autoIncrementPrimary = $value === MetaItem::S_TRUE;
+                    $this->_primary->setAutoIncrement($this->_autoIncrementPrimary);
             }
         }
     }
