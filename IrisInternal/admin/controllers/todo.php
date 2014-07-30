@@ -38,6 +38,7 @@ class todo extends _admin {
         5 => 'Aspect/style',
         6 => 'Translation',
         7 => 'System extension',
+        8 => 'Test',
     ];
 
     
