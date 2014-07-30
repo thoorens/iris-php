@@ -41,22 +41,36 @@ class AutoForm extends Elements\Form {
     protected $_labels;
     protected $_formFactory;
     private $_entity;
-
     private static $_PlausibleDescriptions = array(
-            'Description',
-            'Name',
-            'UserName',
-            'Identity',
+        'Description',
+        'Name',
+        'UserName',
+        'Identity',
     );
-    
-    public function __construct(db\_Entity $entity, $labels = array()) {
+
+    /**
+     *
+     * @var ElementSpecs[]
+     */
+    private $_elementTypes;
+
+    public function __construct(db\_Entity $entity, $labels = []) {
         $this->_entity = $entity;
         $this->_name = sprintf("iris_autoform_%d", self::$_Number++);
-        $this->_method = 'post';
-        $metadata = $entity->getMetadata();
         $this->_labels = $labels;
+    }
+
+    /**
+     * Creates the field controller and makes the form ready to be rended.
+     * 
+     * @return \Iris\Forms\AutoForm
+     */
+    public function prepare() {
+        $this->_method = 'post';
+        $metadata = $this->_entity->getMetadata();
         $this->_formFactory = _FormFactory::GetDefaultFormFactory();
         $fields = $metadata->getFields();
+        //iris_debug($metadata->getFields());
         foreach ($fields as $metaItem) {
             /* @var $metaItem \Iris\DB\MetaItem */
             if (is_null($metaItem->getForeignPointer())) {
@@ -79,6 +93,7 @@ class AutoForm extends Elements\Form {
         $element = $this->_formFactory->createSubmit('Submit');
         $element->setValue('Send');
         $element->addTo($this);
+        return $this;
     }
 
     /**
@@ -87,12 +102,20 @@ class AutoForm extends Elements\Form {
      * @param string[] $labels
      */
     private function _makeElement(db\MetaItem $metaItem) {
-        switch ($metaItem->getType()) {
-            case 'text':
-            default :
-                $element = $this->_formFactory->createText($metaItem->getFieldName());
-                $element->setLabel($this->_getLabelText($metaItem));
-                break;
+        if (isset($this->_elementTypes[$metaItem->getFieldName()])) {
+            $element = $this->_elementTypes[$metaItem->getFieldName()]->create($this->_formFactory, $metaItem);
+            if (is_null($element)) {
+                return;
+            }
+        }
+        else {
+            switch ($metaItem->getType()) {
+                case 'text':
+                default :
+                    $element = $this->_formFactory->createText($metaItem->getFieldName());
+                    $element->setLabel($this->_getLabelText($metaItem));
+                    break;
+            }
         }
         if ($metaItem->isAutoIncrement()) {
             $element->setDisabled('disabled');
@@ -101,20 +124,26 @@ class AutoForm extends Elements\Form {
     }
 
     private function _makeSelect(db\MetaItem $metaItem, \Iris\DB\ForeignKey $foreign) {
+        if (isset($this->_elementTypes[$metaItem->getFieldName()]) and $this->_elementTypes[$metaItem->getFieldName()]->mustHide()) {
+            return;
+        }
         /* @var $element \Iris\Forms\Elements\SelectElement */
         $element = $this->_formFactory->createSelect($metaItem->getFieldName());
         $element->setLabel($this->_getLabelText($metaItem));
         $element->addTo($this);
         $entityManager = $this->_entity->getEntityManager();
         $tableName = $foreign->getTargetTable();
-        /* @var $targetTable \Iris\DB\_Entity */
-        $targetTable = \Iris\DB\TableEntity::GetEntity($tableName, $entityManager);
+        /* @var $targetEntity \Iris\DB\_Entity */
+        $targetEntity = \Iris\DB\TableEntity::GetEntity($tableName, $entityManager);
         $idNames = $foreign->getToKeys();
         $idName = $idNames[0];
-        $descField = $this->getDescriptionField($targetTable);
-        $targetTable->select($idName);
-        $targetTable->select($descField);
-        $data = $targetTable->fetchAll();
+        $descField = $this->getDescriptionField($targetEntity);
+        $targetEntity->select($idName);
+        $targetEntity->select($descField);
+        $targetEntity->doNotRegister();
+        $targetEntity->order(1);
+        $data = $targetEntity->fetchAll();
+
         foreach ($data as $ligne) {
             $data2[$ligne->$idName] = $ligne->$descField;
         }
@@ -144,17 +173,17 @@ class AutoForm extends Elements\Form {
      * Add 
      * @param mixed $items (one description field name or an array of names)
      */
-    public static function AddPlausibleDescriptions($items){
-        if(is_array($items)){
-            foreach($items as $item ){
+    public static function AddPlausibleDescriptions($items) {
+        if (is_array($items)) {
+            foreach ($items as $item) {
                 self::AddPlausibleDescriptions($item);
             }
         }
-        else{
+        else {
             self::$_PlausibleDescriptions[] = $items;
         }
     }
-    
+
     /**
      * Returns the name of the field serving for the description of a concrete
      * object
@@ -163,20 +192,50 @@ class AutoForm extends Elements\Form {
      * @return string
      */
     public function getDescriptionField($targetTable) {
-        if($targetTable->getDescriptionField()!=''){
+        /**
+         * Problem: the description fied is only available in an explicite entity
+         */
+        if ($targetTable->getDescriptionField() != '') {
             return $targetTable->getDescriptionField();
         }
         /* @var $field  \Iris\DB\MetaItem */
-        foreach($targetTable->getMetadata()->getFields() as $field){
+        foreach ($targetTable->getMetadata()->getFields() as $field) {
             $fieldName = $field->getFieldName();
-            if(array_search($fieldName, self::$_PlausibleDescriptions)!== \FALSE){
+            if (array_search($fieldName, self::$_PlausibleDescriptions) !== \FALSE) {
                 return $fieldName;
             }
         }
         // by default return the first part of the primary key
-        $ids =$targetTable->getIdNames();
+        $ids = $targetTable->getIdNames();
         return $ids[0];
     }
+
+    /**
+     * 
+     * @param ElementSpecs $elementSpecs
+     */
+    public function addSpecs($elementSpecs, $params = \NULL) {
+        if (!$elementSpecs instanceof ElementSpecs) {
+            $elementSpecs = new ElementSpecs($elementSpecs, $params);
+        }
+        $index = $elementSpecs->getName();
+        $this->_elementTypes[$index] = $elementSpecs;
+    }
+
+    /**
+     * 
+     * @param type $from
+     * @param type $name
+     * @param type $callable
+     */
+    public function cloneSpecs($from, $name, $callable = \NULL) {
+        $original = $this->_elementTypes[$from];
+        $copy = clone $original;
+        $copy->setName($name);
+        if (!is_null($callable)) {
+            $callable($copy);
+        }
+        $this->addSpecs($copy);
+    }
+
 }
-
-

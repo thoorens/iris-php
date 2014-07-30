@@ -319,8 +319,12 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     protected function _renderAttributes() {
         $text = '';
         foreach ($this->_attributes as $key => $value) {
-            if (($key != 'value'))
+            if (($key != 'value' or $this->_valueAsAttribute)) {
                 $text .= " $key = \"$value\" ";
+            }
+        }
+        if($this->_valueAsAttribute){
+            $text .= ' value = "'.$this->getValue().'" ';
         }
         return $text;
     }
@@ -374,7 +378,6 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * @return string (html) 
      */
     protected function _renderValue() {
-        echo $this->_name.'<br/>';
         $value = $this->getValue();
         $checkMark = '';
         if (!is_null($this->_validator)) {
