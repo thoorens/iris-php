@@ -19,7 +19,10 @@ class {ENTITY} extends \Iris\DB\DataBrowser\_Crud {
         parent::__construct($param);
         $entity = \Iris\DB\TableEntity::GetEntity('{ENTITY}'{GETEMCALL});
         $this->setEntity($entity);
-        $this->setActions("erreur", "index");
+        // where to go after CRUD
+        $this->setEndUrl('index');
+        // where to in case of error
+        $this->setErrorURL('error');
     }
 
 
