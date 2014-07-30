@@ -53,6 +53,7 @@ final class Session implements \Iris\Design\iSingleton{
                 $identity = NULL;
             }
             Identity::CreateInstance($identity);
+            Cookie::LoadUnsentCookies();
         }
         return self::$_Instance;
     }
