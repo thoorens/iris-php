@@ -78,7 +78,7 @@ class Analyser {
      */
     public static $Functions = [
         // Help is not considered a normal option
-        //'h:' => 'help:',
+        'h::' => 'help:',
         's:' => 'show:',
         '1:' => 'language:',
         't' => 'test',
