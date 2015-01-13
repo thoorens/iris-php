@@ -67,6 +67,7 @@ class Settings extends _Settings {
         StandardSetting::CreateSetting('defaultUserName', 'somebody');
         StandardSetting::CreateSetting('defaultRoleName', 'browse');
         StandardSetting::CreateSetting('defaultUserEmail', 'info@irisphp.org');
+        StandardSetting::CreateSetting('systemUserEntity', '');
         //
         StandardSetting::CreateSetting('errorDebuggingLevel', 1);
         // To minimize execution templates can be cached (not by default)
