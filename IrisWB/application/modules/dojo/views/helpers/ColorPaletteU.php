@@ -4,6 +4,8 @@ namespace Iris\views\helpers;
 
 /*
  * This code is just an example of the use of a Dojo resource
+ * Use of the resource to have a concrete modification in the page
+ * 
  */
 
 class ColorPaletteU extends \Iris\views\helpers\_ViewHelper {
