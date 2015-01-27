@@ -7,7 +7,7 @@
     <body>
         <div id="main">
             {ILO_adminToolBar()}
-            <div id="{logoName}"></div>    
+            <div id="{logoName}">{ILO_logo()}</div>    
             <div id="title">
                 {Title}
             </div><!-- title -->
