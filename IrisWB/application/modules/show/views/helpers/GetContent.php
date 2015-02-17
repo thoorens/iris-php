@@ -1,6 +1,12 @@
 <?php
 
-namespace modules\show\controllers;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace Iris\views\helpers;;
 
 /*
  * This file is part of IRIS-PHP distributed under the General Public License version 3.
@@ -12,9 +18,8 @@ namespace modules\show\controllers;
  * @copyright 2011-2015 Jacques THOORENS
  */
 
-
 /**
- * The ancestor of the show controllers
+ * Description of GetContent
  *
  * Project IRIS-PHP
  *
@@ -23,15 +28,11 @@ namespace modules\show\controllers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class _show extends \modules\_application {
+class GetContent extends _ViewHelper{
 
-    
-    /**
-     * This method can contain module level
-     * settings
-     */
-    protected final function _moduleInit() {
-        $this->__specialScreen = \TRUE;
+    public function help($name, $pos) {
+        $part = \wbClasses\Part::GetPart($name);
+        return $part->getContent()[$pos];
     }
 
 }
