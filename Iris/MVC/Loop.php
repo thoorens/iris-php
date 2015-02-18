@@ -2,27 +2,13 @@
 
 namespace Iris\MVC;
 
-use Iris\Engine as ie,
-    Iris\Exceptions as ix;
-
-
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -43,8 +29,6 @@ class Loop extends \Iris\MVC\Partial {
      */
     protected static $_ViewType = 'loop';
 
-
-
     /*
      * Returns the name of the directory where to find the script
      * corresponding to the partial
@@ -56,29 +40,16 @@ class Loop extends \Iris\MVC\Partial {
         return "scripts/";
     }
 
-    public function render($dummy=NULL, $absolute = \FALSE) {
+    public function render($dummy = NULL, $absolute = \FALSE) {
         ob_start();
-        $prop = $this->_properties;
-        // Normal processing for associative array
-        if(!is_numeric(key($prop))){
-            foreach ($this->_properties as $key => $propertie) {
-                if(!is_array($propertie)){
-                    $propertie = $this->_properties;
-                }
-                $partial = new Partial($this->_viewScriptName, $propertie, $key);
-                echo $partial->render();
+        foreach ($this->_properties as $key => $propertie) {
+            if (!is_array($propertie)) {
+                $propertie = $this->_properties;
             }
-        }
-        // non associative arrays may be processed too
-        else {
-            unset($this->_properties['CURRENTLOOPKEY']);
-            foreach ($this->_properties as $propertie) {
-                $partial = new Partial($this->_viewScriptName, array(),$propertie);
-                echo $partial->render();
-            }
+            $partial = new Partial($this->_viewScriptName, $propertie, $key);
+            echo $partial->render();
         }
         return ob_get_clean();
     }
 
 }
-

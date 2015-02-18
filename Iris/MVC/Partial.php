@@ -2,26 +2,13 @@
 
 namespace Iris\MVC;
 
-use Iris\Engine as ie,
-    Iris\Exceptions as ix;
-
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -55,7 +42,8 @@ class Partial extends View {
      * @param type $data 
      * @param string $key (in case of loop, this special param is the loop key)
      */
-    public function __construct($viewScriptName, $data, $key=\NULL) {
+    public function __construct($viewScriptName, $data, $key = \NULL) {
+        //iris_debug($key);
         $this->_viewScriptName = $viewScriptName;
         $this->_response = \Iris\Engine\Response::GetDefaultInstance();
         $this->_transmit($data);
@@ -83,21 +71,41 @@ class Partial extends View {
      * @return type 
      */
     public function __get($name) {
-        if ($name == 'ALLDATA') {
-            return $this->_properties;
-        }
-        elseif ($name == 'ITEM') {
-            if (count($this->_properties)) {
-                return $this->_properties[$this->_currentLoopKey];
-            }
-            else {
+        switch ($name) {
+            // Special markers for partials called by loop
+            case 'ALLDATA':
+                return $this->_properties;
+            case 'ITEM':
+                if (is_array($this->_properties)) {
+                    return $this->_properties[$this->_currentLoopKey];
+                }
+                elseif(is_object($this->_properties)){
+                    $currentLoopKey =$this->_currentLoopKey;
+                    return $this->_properties->$currentLoopKey;
+                }
+                else {
+                    return $this->_currentLoopKey;
+                }
+            case 'KEY':
                 return $this->_currentLoopKey;
-            }
+
+            // Special markers for debugging loops    
+            case 'D_ALLDATA':
+                iris_debug($this->_properties);
+            case 'D_ITEM':
+                if (count($this->_properties)) {
+                    iris_debug($this->_properties[$this->_currentLoopKey]);
+                }
+                else {
+                    iris_debug($this->_currentLoopKey);
+                }
+            case 'D_KEY':
+                iris_debug($this->_currentLoopKey);
+
+            // use of normal variables    
+            default:
+                return parent::__get($name);
         }
-        elseif($name == "KEY"){
-            return $this->_currentLoopKey;
-        }
-        return parent::__get($name);
     }
 
     /**
@@ -114,6 +122,9 @@ class Partial extends View {
         elseif (is_array($data)) {
             $this->_properties = $data;
         }
+        elseif(is_object($data)){
+            $this->_properties = $data;
+        }
         else {
             $type = static::$_ViewType;
             throw new \Iris\Exceptions\BadParameterException("A $type data must be an array or a view");
@@ -121,4 +132,3 @@ class Partial extends View {
     }
 
 }
-

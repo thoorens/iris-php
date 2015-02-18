@@ -5,24 +5,13 @@ namespace Iris\MVC;
 use Iris\Engine as ie,
     Iris\Exceptions as ix;
 
-
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -42,17 +31,16 @@ class FunctionLoop extends \Iris\MVC\Partial {
      * @var string
      */
     protected static $_ViewType = 'loop';
-
-    private $_functionName;
+    private $_functionCode;
 
     /**
      *
-     * @param string $functionName
+     * @param string $functionCode
      * @param type $data
      * @param type $key 
      */
-    public function __construct($functionName, $data, $key =\NULL) {
-        $this->_functionName = $functionName;
+    public function __construct($functionCode, $data, $key = \NULL) {
+        $this->_functionCode = $functionCode;
         parent::__construct('_none_', $data, $key);
     }
 
@@ -67,28 +55,21 @@ class FunctionLoop extends \Iris\MVC\Partial {
         return "scripts/";
     }
 
-    public function render($dummy=NULL) {
+    public function render($forcedScriptName = NULL, $absolute = \FALSE) {
         ob_start();
         $prop = $this->_properties;
-        $functionName = $this->_functionName;
+        $functionCode = $this->_functionCode;
         // Normal processing for associative array
-        if(!is_numeric(key($prop))){
-            foreach ($this->_properties as $key => $propertie) {
-                if(!is_array($propertie)){
-                    $propertie = $this->_properties;
-                }
-                echo $this->$functionName($propertie, $key);
+        foreach ($this->_properties as $key => $propertie) {
+            if (is_array($functionCode)) {
+                list($class, $method) = $functionCode;
+                echo $class->$method($propertie, $key);
             }
-        }
-        // non associative arrays may be processed too
-        else {
-            unset($this->_properties['CURRENTLOOPKEY']);
-            foreach ($this->_properties as $propertie) {
-                echo $this->$functionName($propertie);
+            else {
+                echo $functionCode($propertie, $key);
             }
         }
         return ob_get_clean();
     }
 
 }
-
