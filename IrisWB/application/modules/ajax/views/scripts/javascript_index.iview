@@ -16,7 +16,7 @@
         {loremIpsum([0,71,72,73])}
     </div>
     <h3>This zone is yellow (through a new class) added by javascript (and a button event)</h3>
-    {button()->setId('myButton')->display("Change color",\NULL,'Change the zone background color to yellow')}
+    {button("Change color","#",'Change the zone background color to yellow')->setId('myButton')}
     <div id="zone2">
         {loremIpsum([0,71,72,73])}
     </div>
