@@ -4,7 +4,7 @@
         {head()}
         {styleLoader("/!documents/file/css/wb.css",1)->load("/!documents/file/css/errorColor.css",1)->load("/wberror.css")}
     </head>
-    <body {dojo_body()}{bodyOnload()}>
+    <body {dojo_body()}>
         <div id="main">
             {ILO_adminToolBar()}
             <div id="container">

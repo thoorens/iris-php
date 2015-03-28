@@ -5,7 +5,7 @@
         {head()}
         {wbCSS()}
     </head>
-    <body {dojo_body()}{wbColors('ORANGE3')}>
+    <body {dojo_body()}{wbColors('RED3')}>
         <div id="main">
             {ILO_adminToolBar()}
             <div id="container">
@@ -17,7 +17,8 @@
                     {loremIpsum([0,5,10,15])}
                 </div><!-- 1 -->
                 <div class="column two">
-                    {mainView()}
+                    <h1>This layout is only a fake</h1>
+                    {image('bomb128.png','zero','','/!documents/file/images/wbicons')}
                 </div><!-- 2 -->
                 <div class="column three ">
                     <h2>Column 3</h2>
@@ -25,7 +26,7 @@
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/main/views/scripts/lo_module.iview')}
+                {wbFooter('modules/main/views/scripts/lo_module2.iview')}
             </div><!--foot-->
         </div><!--main-->  
     </body>

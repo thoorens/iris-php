@@ -4,7 +4,7 @@
         {head()}
         {wbCSS()}
     </head>
-    <body {dojo_body()}{bodyOnload()}{wbColors($bodyColor)}>
+    <body {dojo_body()}{wbColors($bodyColor)}>
         <div id="main">
             {ILO_adminToolBar()}
             <div id="container">
@@ -12,8 +12,7 @@
                     <h1>{Title}</h1>
                 </div><!-- Title -->
                 <div class="column one">
-                    <h2>Column 1</h2>
-                    {loremIpsum([0,5,10,15])}
+                    {partial('commons/column1', $this)}
                 </div><!-- 1 -->
                 <div class="column two">
                     {mainView()}
