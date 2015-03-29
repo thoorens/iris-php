@@ -36,7 +36,7 @@ namespace models_internal;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TSequence extends \Iris\Structure\_TSequence {
+class TSequences extends \Iris\Structure\_TSequence {
     
     /*
      * CREATE TABLE "sequence" (

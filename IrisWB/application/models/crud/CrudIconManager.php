@@ -1,5 +1,7 @@
 <?php
 
+// VERSION MARS
+
 namespace models\crud;
 
 /**
@@ -9,9 +11,26 @@ namespace models\crud;
  */
 class CrudIconManager extends \Iris\Subhelpers\_CrudIconManager {
 
-    
+  /**
+     * The directory containing the system icons. You can change it but
+     * must provide the necessary image files.
+     * 
+     * @var string
+     */
+    protected $_systemIconDir = '/!documents/file/images/icons';
+
+    /**
+     * The directory containing your extended icons. Any folder may be used. For
+     * each operation a active and a inactive icons have to be provided.
+     * 
+     * @var string
+     */
+    protected $_iconDir = '/images/icons';  
 
     public function _init() {
+        //die("CrudIconManager");
+        
+        
         $this->_systemIconDir = '/!documents/file/images/icons';
         // action2 uses a special parameter
         $icon2 =new \Iris\Subhelpers\Icon('action2', 'Execute action 2| (type %P)', '%P');
@@ -27,8 +46,8 @@ class CrudIconManager extends \Iris\Subhelpers\_CrudIconManager {
     }
     
     public function otherIcons(){
-        $this->_systemIconDir = '/images/icons';
-        return $this;
+//        $this->_systemIconDir = '/images/icons';
+//        return $this;
     }
 
 }

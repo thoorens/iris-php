@@ -1,10 +1,4 @@
 {php}
-    $data = [
-    ['2011','2011 is the year <i>Iris-PHP</i> has been started'],
-    ['1953','The developper of the framework is born in 1953'],
-    ['5.4','5.4 is the <b>minimum version</b> required by Iris-PHP'],
-    ['4','There are 4 ways to specify a <i>layout</i> in Iris-PHP'],
-];
 $det = $this->details->setAspectClass('dojoIrisMask2');
 {/php}
 {wbHeader()}
@@ -12,8 +6,8 @@ $det = $this->details->setAspectClass('dojoIrisMask2');
     <div class="example">
         <p>Clic on "Details" to see more text.</p>
         <ul>
-            {foreach(data,item)}
-                <li>{(det->details($item[0],$item[1]))}</li>
+            {foreach(data,key,item)}
+                <li>{(det->details($key,$item))}</li>
                 {/foreach}
         </ul>
         {(det->connectEvent('onclick'))}

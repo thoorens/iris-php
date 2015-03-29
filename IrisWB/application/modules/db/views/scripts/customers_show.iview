@@ -1,0 +1,33 @@
+{php}
+    /*$icons = $this->crudIcon();
+    $icons
+        ->setController('/db/customers')
+        ->setActionName('customer')
+        ->setEntity($this->_("N_customer"))
+        ->setDescField('Name')
+        ->setIdField('id')
+        ->setDefaultIconDir('/images/icones')
+        ->forceLanguage('english');*/
+{/php}
+{wbHeader()}
+<h1>Customer management</h1>
+<a href="/db/customers/create_customers/"><img src="/!documents/file/images/icons/create.png" title="Add a customer" alt="Image"  /></a> Add a customer
+<h2>Customer list</h2>
+
+<ul>
+    {foreach(customers,customer)}
+        <li>
+            <a href="/db/customers/update_customers/{(customer->id)}">
+                <img alt="Image" title="Modify the customer {(customer->Name)}" src="/!documents/file/images/icons/update.png" />
+            </a>
+            <a href="/db/customers/delete_customers/{(customer->id)}">
+                <img alt="Image" title="Delete the customer {(customer->Name)}" src="/!documents/file/images/icons/delete.png" />
+            </a>
+            <a href="/db/customers/read_customers/{(customer->id)}">
+                <img alt="Image" title="Display the customer {(customer->Name)}" src="/!documents/file/images/icons/read.png" />
+            </a>
+            {(customer->Name)}
+        </li>
+    {/foreach}
+</ul>
+{dbWarning()}

@@ -1,0 +1,15 @@
+{php}$icone = $this->crudIcon(){/php}
+<h1>Edition</h1>
+<div>
+    {(icone->create())} {(icone->makeTooltip('create'))}
+    <ul class="crud">
+        {foreach(lines,line)}            
+            <li>
+                {(icone->setData($line)->update())}
+                {(icone->delete())}
+                {(icone->read())}
+                {(line->Name)}
+            </li>
+        {/foreach}
+    </ul>
+</div>

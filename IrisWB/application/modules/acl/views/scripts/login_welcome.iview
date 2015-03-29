@@ -1,0 +1,6 @@
+<div>
+    Welcome {name}!
+</div>
+<div>
+    {partial('login_index', $this)}
+</div>

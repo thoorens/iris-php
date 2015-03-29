@@ -32,12 +32,17 @@ namespace Iris\views\helpers;
  */
 class WbFooter extends _ViewHelper {
 
-    public function help($layoutName, $buttons = 5) {
+    /**
+     * Corresponds to \ILO\views\helpers\GoInternal::ADMIN + \ILO\views\helpers\GoInternal::RESET
+     */
+    const BUTTONS = 5;
+    
+    public function help($layoutName, $buttons = self::BUTTONS) {
         $sequence = \Iris\Structure\DBSequence::GetInstance();
         if (\Iris\SysConfig\Settings::HasMD5Signature()) {
             $signature = ' - ' . $this->callViewHelper('signature')->display();
             $buttonMD5 = $this->callViewHelper('signature')->saveButton();
-            $buttonCode = $this->callViewHelper('button', $this->_codeButton($sequence));
+            $buttonCode = $this->callViewHelper('button', $this->_codeButton($sequence))->__toString();
         }
         else{
             $signature = $buttonMD5 = $buttonCode= '';
@@ -57,6 +62,8 @@ class WbFooter extends _ViewHelper {
     }
 
     /**
+     * Returns, if possible, an array link to the code presentation
+     * of the present screen.
      * 
      * @param \Iris\Structure\_Sequence $sequence
      * @return array

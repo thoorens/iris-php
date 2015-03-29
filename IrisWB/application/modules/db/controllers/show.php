@@ -66,7 +66,7 @@ class show extends _db {
         $inv = array();
         $inv['id'] = $invoice->id;
         $date = new \Iris\Time\Date($invoice->InvoiceDate);
-        $inv['Date'] = $date->toString('d M Y');
+        $inv['Date'] = $invoice->InvoiceDate;
         $inv['CustName'] = $invoice->_at_customer_id->Name;
         $orders = $invoice->_children_orders__invoice_id;
         foreach ($orders as $order) {

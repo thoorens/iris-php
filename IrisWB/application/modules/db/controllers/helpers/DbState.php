@@ -3,24 +3,12 @@
 namespace Iris\controllers\helpers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
- *
- * 
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -31,15 +19,17 @@ namespace Iris\controllers\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class DbState extends \Iris\controllers\helpers\_ControllerHelper {
+
     /**
      * No know status
      */
-
     const UNKNOWN = 1;
+
     /**
      * A freshly created database
      */
     const CREATED = 2;
+
     /**
      * A database modified by the user
      */
@@ -49,6 +39,7 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
      * Certainly modified, but in unknown initial state
      */
     const MODIFIED2 = 4;
+
     /**
      * A deleted database
      */
@@ -80,17 +71,21 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
      * 
      * @return string[]
      */
-    public function state() {
-        return [$this->_warning(), $this->_cssClass()];
+    public function state($state = \NULL) {
+        return [$this->_warning($state), $this->_cssClass($state)];
     }
 
     /**
      * Prepares a message to be displayed at the page bottom
      * 
+     * @param mixed $state If not null, this state will be used instead of the current state
      * @return string
      */
-    private function _warning() {
-        switch ($this->getCurrentState()) {
+    private function _warning($state = \NULL) {
+        if(is_null($state)){
+            $state = $this->getCurrentState();
+        }
+        switch ($state) {
             case self::UNKNOWN:
                 $message = "WARNING: the database of this example is perhaps not freshly created. Some request may crash the demo.";
                 break;
@@ -104,7 +99,10 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
                 $message = "The database is perhaps not freshly created, but modifications have been done by the user.";
                 break;
             case self::DELETED:
-                $message = "The database has been deleted. No more management is possible. Please reset it with '/db/sample/init'";
+                $message = "The database has been deleted. No more management is possible. Please reset it with '/db/sample/init' or use the button <b>Create the database</b>.";
+                break;
+            default:
+                $message = "Warning! If you choose to make a change to another database system, the current database will be erased.";
                 break;
         }
         return $message;
@@ -115,8 +113,11 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
      * 
      * @return string
      */
-    private function _cssClass() {
-        switch ($this->getCurrentState()) {
+    private function _cssClass($state = \NULL) {
+        if(is_null($state)){
+            $state = $this->getCurrentState();
+        }
+        switch ($state) {
             case self::UNKNOWN:
                 $class = 'warningUnknown';
                 break;
@@ -131,6 +132,9 @@ class DbState extends \Iris\controllers\helpers\_ControllerHelper {
                 break;
             case self::DELETED:
                 $class = "warningDeleted";
+                break;
+            default:
+                $class = "warningDeletion";
                 break;
         }
         return $class;

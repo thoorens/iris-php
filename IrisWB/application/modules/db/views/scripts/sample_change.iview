@@ -1,0 +1,19 @@
+{wbHeader()}
+
+<div class="content" {wbBG()}>
+    <h2>Change database system</h2>
+    <div id="page">
+
+        <p>
+            Choose your database system:
+        </p>
+        <ul>
+            <li>{link('SQLite','/db/sample/sqlite','Change to the SQLite system')->image('/!documents/file/logos/sqlite.png')}</li>
+            <li>{link('MariaDB/mySQL','/db/sample/mysql','Change to the MariaDB or mySQL system (you need a prepared server)')->image('/!documents/file/logos/mySQL.png')}</li>
+            <li>{link('PostgreSQL','/db/sample/postgresql','Change to the PostgreSQL system (you need a prepared server)')->image('/!documents/file/logos/postgresql.png')}</li>
+        </ul>
+        {dbWarning(110)}
+        <br/>
+    </div>
+
+</div>

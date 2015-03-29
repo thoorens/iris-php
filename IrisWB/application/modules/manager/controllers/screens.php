@@ -33,7 +33,7 @@ class screens extends _manager {
 
     
     public function indexAction($section = 10) {
-        $icons = \Iris\Subhelpers\CrudIconManager::getInstance();
+        $icons = \Iris\Subhelpers\_CrudIconManager::getInstance();
         $icons
                 // controller responsible of the data management
                 ->setController('/manager/screens')
@@ -63,7 +63,7 @@ class screens extends _manager {
      * @param int $value
      */
     public function renumberAction($from, $to, $value){
-        $tSequence = \models_internal\TSequence::GetEntity();
+        $tSequence = \models_internal\TSequences::GetEntity();
         $tSequence->whereBetween('id', $from, $to);
         $screens = $tSequence->fetchAll();
 /* @var $screen \Iris\DB\Object */
@@ -79,7 +79,7 @@ class screens extends _manager {
      * 
      * @param string $actionName
      */
-    protected function _customize($actionName) {
+    protected function _postCustomize($actionName) {
         $this->__sectionMode = \FALSE;
         $parameters = $this->getParameters();
 
@@ -94,7 +94,7 @@ class screens extends _manager {
                 break;
             case 'update':
                 $this->__Operation = "Modify a screen content";
-                $tSequence = \models_internal\TSequence::GetEntity();
+                $tSequence = \models_internal\TSequences::GetEntity();
                 $screen = $tSequence->find($parameters[0]);
                 $section = $screen->section_id;
                 if (!is_null($section)){

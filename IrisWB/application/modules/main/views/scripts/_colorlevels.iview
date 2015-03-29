@@ -1,15 +1,30 @@
 <h4>Color mapping</h4>
 <div {wbColors('WHITE')}>
-    <table border="3">
-        <table>
-            <tr>
-                <td {wbColors('ORANGE4')}>Layout defined at application level</td>
-                <td {wbColors('ORANGE3')}>Layout defined at module level</td>
-            </tr>
-            <tr>
-                <td {wbColors('ORANGE2')}>Layout defined at controller level</td>
-                <td {wbColors('ORANGE1')}>Layout defined at action level</td>
-            </tr>
-        </table>
+    <table border="1">
+        <tr><td>
+                <table>
+                    <tr>
+                        <td {wbColors('ORANGE4')}>
+                            Layout defined at application level
+                            {button("Show an example",'/testLayout/layout/applayout')}
+                        </td>
+                        <td {wbColors('ORANGE3')}>
+                            Layout defined at module level
+                            {button("Show an example",'/main/layout/module')}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td {wbColors('ORANGE2')}>
+                            Layout defined at controller level
+                            {button("Show an example",'/main/index/controller')}
+                        </td>
+                        <td {wbColors('ORANGE1')}>
+                            Layout defined at action level
+                            {button("Show an example",'/main/layout/action')}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
     </table>
 </div>

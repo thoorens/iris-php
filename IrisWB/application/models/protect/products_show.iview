@@ -1,0 +1,29 @@
+{php}
+    $icons = $this->crudIcon();
+    $icons
+        ->setController('/db/products')
+        ->setActionName('products')
+        ->setEntity("N'_product")
+        ->setDescField('')
+        ->setIdField('id')
+        ->forceLanguage('english');
+{/php}
+{wbHeader()}
+<h1>Product management</h1>
+
+{(icons->create())} Add a product
+<h2>Product list</h2>
+
+<ul>
+    {foreach(products,product)}
+        {(icons->setData($product))}
+        <li>
+            {(icons->update())}
+            {(icons->delete())}
+             {(icons->read())}
+            <b>Product #{(product->id)}</b>
+            {(product->Description)}
+        </li>
+    {/foreach}
+</ul>
+{dbWarning()}

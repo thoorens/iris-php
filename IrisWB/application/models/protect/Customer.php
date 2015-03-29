@@ -31,14 +31,15 @@ namespace models\crud;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Order extends _localCrud {
- 
+class Customer extends _localCrud {
+
     /**
      * The name of the table
      * 
      * @var string
      */
-    protected static $_TableName = 'orders';
+    protected static $_TableName = 'customers';
+
     /**
      * The list of fields in primary key
      * 
@@ -46,6 +47,6 @@ class Order extends _localCrud {
      */
     protected static $_IdName = ['id'];
 
-
+    
     
 }

@@ -33,31 +33,11 @@ namespace models\crud;
  * @version $Id: $ */
 abstract class _localCrud extends \Iris\DB\DataBrowser\_Crud {
  
-    /**
-     * The name of the table
-     * 
-     * @var string
-     */
-    protected static $_TableName;
-    /**
-     * The list of fields in primary key
-     * 
-     * @var string[]
-     */
-    protected static $_IdName;
+    public static function __ClassInit(){
+        $EM = \models\_dbManager::GetEM();
+        static::$_EntityManager = $EM;
+    }
     
-    public function __construct($param = NULL) {
-        parent::__construct($param);
-        $entity = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder(static::$_TableName, [static::$_IdName],
-                \models\_invoiceManager::getEM());
-        $this->setEntity($entity);
-        $this->setActions("error", static::$_TableName);
-   
-    }
-
-    private function _test(){
-        iris_debug(static::$_TableName);
-    }
     
     protected function _postUpdate($object) {
         $this->_setModified();

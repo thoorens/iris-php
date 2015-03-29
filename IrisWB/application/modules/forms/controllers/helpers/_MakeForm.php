@@ -99,7 +99,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _textInput() {
         return $this->_formFactory->createText('Name')
                         ->addTo($this->_form)
-                        ->setTitle('Enter a description')
+                        ->setTitle('If filled, this element will produce a «Name» field in POST.')
                         ->setLabel("The event name:");
     }
 
@@ -120,7 +120,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _dateInput() {
         return $this->_formFactory->createDate('EventDate')
                         ->setLabel('The event date:')
-                        ->setTitle('Enter a date')
+                        ->setTitle('If filled, this element will produce an «EventDate» field in POST.')
                         ->addTo($this->_form);
     }
 
@@ -131,7 +131,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _timeInput() {
         return $this->_formFactory->createTime('EventHour')
                         ->setLabel('Starting time:')
-                        ->setTitle('Enter an hour')
+                        ->setTitle('If filled, this element will produce an «EventHour» field in POST.')
                         ->addTo($this->_form);
     }
 
@@ -143,7 +143,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _passwordInput() {
         return $this->_formFactory->createPassword('Password')
                         ->addTo($this->_form)
-                        ->setTitle('Enter your password')
+                        ->setTitle('If filled, this element will produce a «Password» field in POST.')
                         ->setLabel("Password:");
     }
 
@@ -206,7 +206,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
         return $this->_formFactory->createCheckbox('Checkbox')
                         ->addTo($this->_form)
                         ->setValue(\TRUE)
-                        ->setTitle('Check if to use with PC')
+                        ->setTitle('If this checkbox is checked, a Checkbox field will appear in POST')
                         ->setLabel("For use with a PC");
     }
 
@@ -248,7 +248,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
                         ->addTo($this->_form)
                         ->setPerLine($this->_perline)
                         ->setLabel('Button group:')
-                        ->setTitle("Choose your prefered operating systems")
+                        ->setTitle("This button will produce a ButtonGroupX in POST where X may be 1, 2, 4 or 8")
                         ->addOptions($this->_sampleData);
     }
 
@@ -260,6 +260,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
         return $this->_formFactory->createSubmit('Submit')
                         ->setValue('Submit')
                         ->setLabel('Brol:')
+                        ->setTitle('This button will produce a «Submit» field in POST')
                         ->addTo($this->_form);
     }
 

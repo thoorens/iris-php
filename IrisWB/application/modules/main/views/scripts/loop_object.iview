@@ -1,0 +1,7 @@
+{wbHeader($this)}
+<div id="content" {wbBG()}>
+    <h4>Fields of the object</h4>
+    <div>
+        {loop('loops/loop_object',$demo)}
+    </div>
+</div>

@@ -37,7 +37,7 @@ namespace modules\manager\controllers;
 class sections extends _manager {
 
     public function indexAction() {
-        $icons = \Iris\Subhelpers\CrudIconManager::getInstance();
+        $icons = \Iris\Subhelpers\_CrudIconManager::getInstance();
         $icons
                 // controller responsible of the data management
                 ->setController('/manager/sections')
@@ -60,7 +60,7 @@ class sections extends _manager {
      * 
      * @param string $actionName
      */
-    protected function _customize($actionName) {
+    protected function _postCustomize($actionName) {
         $this->__sectionMode = \TRUE;
         switch($actionName){
             case 'create':

@@ -36,6 +36,7 @@ class Screen extends \Iris\DB\DataBrowser\_Crud {
     private $_section;
 
     public function __construct($param = NULL) {
+        $this->setCrudEntity('sequences');
         // a crud controller sends itself a first parameter
         /* @var $controller \Iris\MVC\_Controller */
         $controller = $param[0];
@@ -47,9 +48,8 @@ class Screen extends \Iris\DB\DataBrowser\_Crud {
             $section = (int)($param/1000);
         }
         parent::__construct();
-        $entity = \models_internal\TSequence::GetEntity();
-        $this->setEntity($entity);
-        $this->setActions("erreur", "index/" . $section);
+        $this->setErrorURL('erreur');
+        $this->setEndURL("index/" . $section);
         $this->setForm($this->_createForm());
         $this->_section = $section;
     }

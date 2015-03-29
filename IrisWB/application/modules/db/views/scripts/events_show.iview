@@ -1,0 +1,28 @@
+{php}
+    $icons = $this->crudIcon();
+    $icons
+        ->setController('/db/events')
+        ->setActionName('events')
+        ->setEntity("N'_event")
+        ->setDescField('')
+        ->setIdField('id')
+        ->forceLanguage('english');
+{/php}
+{wbHeader()}
+<h1>Event management</h1>
+
+{(icons->create())} Add an event
+<h2>Event list</h2>
+
+<ul>
+    {foreach(events,event)}
+        {(icons->setData($event))}
+        <li>
+            {(icons->update())}
+            {(icons->delete())}
+            <b>Event #{(event->id)}</b>
+            {(event->Description)}
+        </li>
+    {/foreach}
+</ul>
+{dbWarning()}

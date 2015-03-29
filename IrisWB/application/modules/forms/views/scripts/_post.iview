@@ -1,6 +1,7 @@
+{message}
 <div>
     {foreach(post, key, value)}
-        <b>{key}</b> :<br/>
+        <b>{key}</b> :
         <tt>{value}</tt><br/>
     {/foreach}
 </div>

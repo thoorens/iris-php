@@ -41,15 +41,20 @@ class DbLogo extends \Iris\views\helpers\_ViewHelper {
      * @return string
      */
     public function help() {
-        switch(IM::GetDefaultDbType()){
-            case IM::SQLITE:
+        $instance = \wbClasses\AutoEM::GetInstance();
+        switch($instance->getDbType()){
+            case \wbClasses\AutoEM::SQLITE:
                 $file = 'sqlite.png';
                 break;
-            case IM::MYSQL:
+            case \wbClasses\AutoEM::MYSQL:
                 $file = 'mySQL.png';
                 break;
+            case \wbClasses\AutoEM::POSTGRESQL:
+                $file = 'postgresql.png';
+                break;
         }
-        return $this->callViewHelper('image',$file,'Logo',\NULL,'/!documents/file/logos/');
+        return $this->callViewHelper('link','Link to other database','/db/sample/change','Link to other database','Logo')->image('/!documents/file/logos/'.$file);
+        return $this->callViewHelper('link','/db/sample/'.$base,$file,'Logo',\NULL,')/!documents/file/logos/');
     }
 
 }

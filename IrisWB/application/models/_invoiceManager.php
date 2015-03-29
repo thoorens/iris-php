@@ -3,22 +3,12 @@ namespace models;
 
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -30,102 +20,8 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _invoiceManager extends \Iris\DB\_Entity {
+abstract class _invoiceManager extends \models\_dbManager {
     
-
-    /**
-     * The recognized DBMS
-     */
-    const MYSQL = 1;
-    const SQLITE = 2;
-
-    /**
-     * By default, WB uses Sqlite
-     * 
-     * @var int
-     */
-    protected static $_DefaultDbType = self::SQLITE;
-    //protected static $_DefaultDbType = self::MYSQL;
-    
-    /**
-     * Eachs subclasses will have its proper SQL DDL string to create a table
-     * 
-     * @var string[]
-     */
-    protected static $_SQLCreate = array();
-
-    /**
-     *
-     * @var \Iris\DB\_EntityManager
-     */
-    private static $_Em = \NULL;
-
-    /**
-     * The default file name for Sqlite database. The full name will be completed by EMFactory
-     * 
-     * @var string
-     */
-    private static $_SQLiteFileName = 'library/IrisWB/application/config/base/invoice.sqlite';
-
-    /*
-     * The SQL command to create a new mySQL database
-     * 
-     * CREATE USER 'wb_user'@'localhost' IDENTIFIED BY 'wbwp';
-     * GRANT USAGE ON * . * TO 'wb_user'@'localhost' IDENTIFIED BY 'wbwp' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
-     * CREATE DATABASE IF NOT EXISTS `wb_db` ;
-     * GRANT ALL PRIVILEGES ON `wb_db` . * TO 'wb_user'@'localhost';
-     * 
-     */
-    private static $_MySQLParams = [
-        'base' => 'wb_db',
-        'user' => 'wb_user',
-        'password' => 'wbwp'
-    ];
-
-    /**
-     * Gets the current entity manager (if necessary, creates it according to
-     * the mentionned type, by defaut SQLite)
-     * 
-     * @param string $dbType The type of database (by default sqlite)
-     * @return \Iris\DB\_EntityManager
-     */
-    public static function GetEM() {
-        if (is_null(self::$_Em)) {
-            $dbType = self::$_DefaultDbType;
-            switch ($dbType) {
-                case self::SQLITE:
-                    $file = self::$_SQLiteFileName;
-                    self::$_Em = \Iris\DB\_EntityManager::EMFactory("sqlite:$file");
-                    break;
-                case self::MYSQL:
-                    $base = self::$_MySQLParams['base'];
-                    $user = self::$_MySQLParams['user'];
-                    $password = self::$_MySQLParams['password'];
-                    self::$_Em = \Iris\DB\Dialects\Em_PDOmySQL::EMFactory("mysql:host=localhost;dbname=$base", $user, $password);
-                    break;
-            }
-        }
-        return self::$_Em;
-    }
-
-    /**
-     * These model classes do not use a standard default entity manager. They
-     * use the manager corresponding to a static var in this class which can
-     * be changed manually ($DefaultDbType)
-     * 
-     * @return \Iris\DB\_EntityManager
-     */
-    public static function DefaultEntityManager() {
-        return self::GetEM();
-    }
-
-    /**
-     * 
-     * @return int
-     */
-    public static function GetDefaultDbType() {
-        return self::$_DefaultDbType;
-    }
 
     /**
      * Creates all 5 tables with data in them and returns an array
@@ -153,17 +49,7 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
         return $results;
     }
     
-    /**
-     * Deletes the database: not necessaray for all DBMS
-     */
-    public static function DeleteFile() {
-        $dbType = self::$_DefaultDbType;
-        switch ($dbType) {
-            case self::SQLITE:
-                \Iris\DB\Dialects\Em_PDOSQLite::PurgeFile(self::$_SQLiteFileName);
-                break;
-        }
-    }
+    
 
     /**
      * Deletes all the tables and views from the database.
@@ -173,15 +59,15 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
             'events', 'orders', 'products', 'invoices', 'customers',
             'customers2',
         ];
-        $dbType = self::$_DefaultDbType;
+        $dbType = self::GetCurrentDbType();
         switch ($dbType) {
             case self::SQLITE:
-                $em = self::GetEM();
+                $em = static::GetEM();
                 $dropTable = "DROP TABLE %s;";
                 $dropView = "DROP VIEW %s;";
                 break;
             case self::MYSQL:
-                $em = self::GetEM();
+                $em = static::GetEM();
                 $dropView = "DROP VIEW IF EXISTS %s;";
                 $dropTable = "DROP TABLE IF EXISTS %s;";
         }
@@ -197,17 +83,8 @@ abstract class _invoiceManager extends \Iris\DB\_Entity {
         return $em;
     }
 
-    /**
-     * Creates un new table in the database
-     */
-    public static function Create() {
-        $class = get_called_class();
-        $em = self::GetEM();
-        $dbType = self::$_DefaultDbType;
-        $sql = static::$_SQLCreate[$dbType];
-        $em->directSQLExec($sql);
-    }
-
+    
+    
     /**
      * Creates a customer table
      * 

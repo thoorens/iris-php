@@ -1,0 +1,15 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <table class="show">
+        <tr>
+            <th>Command:</th>
+            <th>{command}</th>
+        </tr>
+        
+        <tr>
+            <td>Error message</td>
+            <td>{message}</td>
+        </tr>
+    </table>
+    {dbWarning()}
+</div>

@@ -1,8 +1,8 @@
 {php}
     $icons = $this->crudIcon();
     $icons
-        ->setController('/db/crud')
-        ->setActionName('invoice')
+        ->setController('/db/invoices')
+        ->setActionName('invoices')
         ->setEntity("N'_invoice")
         ->setDescField('')
         ->setIdField('id')
@@ -10,6 +10,7 @@
         // For demo purpose, alternative big icons are used for invoices
         ->otherIcons('/images/icons');
 {/php}
+{wbHeader()}
 <h1>Invoice management</h1>
 
 {(icons->create())} Add an invoice

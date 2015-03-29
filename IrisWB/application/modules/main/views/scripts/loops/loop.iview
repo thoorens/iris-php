@@ -1,3 +1,10 @@
-<div class="oldscreen">
-    {ITEM}
+{php}
+/*
+ * In a loop based on an associative array, 
+ * - {KEY} is the current index (not illustrated here)
+ * - {ITEM} is the corresponding value   
+ */
+{/php}
+<div class="oldscreen old1">
+    {KEY} - {ITEM}
 </div>

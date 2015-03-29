@@ -43,5 +43,7 @@ class explanations extends _dojo {
         $this->__toolTips = $this->callViewHelper('dojo_toolTip');
         $this->callViewHelper('styleLoader','djwidth', '.dijitTooltipContainer {max-width:400px;background-color:#FFD}');
     }
+    
+    
 
 }

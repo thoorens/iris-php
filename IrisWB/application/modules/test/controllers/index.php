@@ -15,11 +15,17 @@ class index extends _test {
     public function indexAction() {
         // this Title var is required by the default layout defined in _test
         $this->__Title = "Test des classes Admin";
-        $scanner = new \Iris\Admin\Scanner();
-        $scanner->scanApplication();
+        //$scanner = new \Iris\Admin\Scanner();
+        //$scanner->scanApplication();
         
     }
     
-    
+     public function index2Action() {
+        // this Title var is required by the default layout defined in _test
+        $this->__Title = "Test des classes Admin 2";
+        //$scanner = new \Iris\Admin\Scanner();
+        //$scanner->scanApplication();
+        
+    }
 
 }

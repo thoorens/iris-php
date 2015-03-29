@@ -13,9 +13,9 @@
 {button('Show orders','/db/show/orders','Show all the orders of the example')}<br />
 {button('Show events','/db/show/events','Show all the events of the example')}<br />
 <hr />
-{button('Manage customers','/db/crud/customers','')}<br />
-{button('Manage invoices','/db/crud/invoices','')}<br />
-{button('Manage products','/db/crud/products','')}<br />
-{button('Manage orders','/db/crud/orders','')}<br />
-{button('Manage events','/db/crud/events','')}<br />
+{button('Manage customers','/db/customers/show','')}<br />
+{button('Manage invoices','/db/invoices/show','')}<br />
+{button('Manage products','/db/products/show','')}<br />
+{button('Manage orders','/db/orders/show','')}<br />
+{button('Manage events','/db/events/show','')}<br />
 

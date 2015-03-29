@@ -1,0 +1,3 @@
+<h1>Edition</h1>
+{button('Return to list','/db/customers/show','Return to list of sections')}
+{form}

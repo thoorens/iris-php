@@ -70,6 +70,14 @@ class layout extends _testLayout{
         $sequence = \Iris\Structure\_Sequence::GetInstance();
         $this->__title = $sequence->getCurrentDesc();
     }
+    
+    public function moduleAction() {
+        $this->_setLayout('module');
+        }
+    
+    public function module2Action() {
+       $this->_setLayout('module2');
+    }
 }
 
 

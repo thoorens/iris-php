@@ -1,0 +1,3 @@
+<h1>Edition of an event</h1>
+{button('Return to list','/db/events/show','Return to list of sections')}
+{form}

@@ -1,0 +1,18 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h2>Parent of {(first->id)}</h2>
+    <ul>
+        <li>{(parent->French)}</li>
+        <li>{(parent->English)}</li>
+        <li>{(parent->Data)}</li>
+    </ul>
+        <h2>Children of {(unone->Data)}</h2>
+        <ul>
+            {foreach(children, child)}
+            <li>
+                <ul>{(child->id)}</ul>
+            </li>
+            {/foreach}
+        </ul>
+    {dbWarning()}
+</div>

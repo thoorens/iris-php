@@ -1,0 +1,19 @@
+{if($specialScreen)}
+    <div class="special_{specialScreen}">
+        <h2>Special screen</h2>
+        <p>
+            This page does not belong to the test serie. So, it has no standard header nor MD5 fingerprint.
+            You must go to a page inside the serie by performing <b>one</b> of suggested actions :
+        </p>
+        <ol class="advice">
+            {foreach(advices, advice)}
+                <li>
+                    {advice}
+                </li>
+            {/foreach}
+        </ol>
+    </div>
+{else}
+    <h2>Column 1</h2>
+    {loremIpsum([0,5,10,15])}
+{/if}    

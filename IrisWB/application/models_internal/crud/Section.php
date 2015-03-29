@@ -34,10 +34,10 @@ namespace models_internal\crud;
 class Section extends \Iris\DB\DataBrowser\_Crud {
 
     public function __construct($param = NULL) {
+        $this->setCrudEntity('sections');
         parent::__construct($param);
-        $entity = \Iris\DB\TableEntity::GetEntity('sections');
-        $this->setEntity($entity);
-        $this->setActions("erreur", "index");
+        $this->setErrorURL('erreur');
+        $this->setEndURL('index');
         $this->setForm($this->_createForm());
     }
 

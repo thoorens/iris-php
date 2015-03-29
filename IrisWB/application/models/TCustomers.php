@@ -41,7 +41,6 @@ class TCustomers extends _invoiceManager {
      */
     
     
-    
     /**
      * SQL command to construct the table
      * 
@@ -91,7 +90,7 @@ class TCustomers extends _invoiceManager {
      */
     public static function Copy() {
         $em = self::GetEM();
-        $dbType = self::$_DefaultDbType;
+        $dbType = self::GetCurrentDbType();
         $result = $em->directSQLExec(static::$_SQLCopy[$dbType][0]);
         if (isset(static::$_SQLCopy[$dbType][1])) {
             $result2 = $em->directSQLExec(static::$_SQLCopy[$dbType][1]);

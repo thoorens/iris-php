@@ -37,7 +37,8 @@ class menu extends \Iris\MVC\_Subcontroller {
      * A menu for the left part of the screen
      */
     public function indexAction() {
-        $this->__sqlite = _invoiceManager::GetDefaultDbType() == _invoiceManager::SQLITE;
+        $instance = \wbClasses\AutoEM::GetInstance();
+        $this->__sqlite = $instance->getDbType() == \wbClasses\AutoEM::SQLITE;
     }
 
 }

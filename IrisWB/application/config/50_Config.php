@@ -16,7 +16,6 @@
 \Iris\SysConfig\Settings::EnableMD5Signature();
 
 
-
 //\Iris\Errors\Settings::GetInstance()->setDefaultController('/errordemo/Error');
 //echo "Error modified";
 //\Iris\Errors\Settings::SetController('/errordemo/Error');

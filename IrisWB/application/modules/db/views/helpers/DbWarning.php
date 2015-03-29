@@ -40,9 +40,9 @@ class DbWarning extends \Iris\views\helpers\_ViewHelper {
      * 
      * @return string
      */
-    public function help() {
-        $state = \Iris\controllers\helpers\_ControllerHelper::HelperCall('dbState',[],$this->_view)->state();
-        list($warningText, $warningClass) = $state;
+    public function help($state = \NULL) {
+        $currentState = \Iris\controllers\helpers\_ControllerHelper::HelperCall('dbState',[],$this->_view)->state($state);
+        list($warningText, $warningClass) = $currentState;
         return <<< WARNING
 <p class="dbWarning $warningClass">
     $warningText   

@@ -1,0 +1,25 @@
+<div>
+    <h1>{title}</h1>
+
+    {form}
+</div>
+<div class="dark">
+    <h2>Informations</h2>
+    <table class="show">
+        <tr>
+            <th colspan="2">Existing user accounts</th>
+        </tr>
+        <tr>
+            <th>User name</th>
+            <th>Password</th>
+        </tr>
+        <tr>
+            <td>jimmy</td>
+            <td>password</td>
+        </tr>
+        <tr>
+            <td>jacky</td>
+            <td>password</td>
+        </tr>
+    </table>
+</div>

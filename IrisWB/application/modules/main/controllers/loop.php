@@ -12,10 +12,16 @@ namespace modules\main\controllers;
  */
 class loop extends _main {
 
-    public function simpleAction() {
+    /**
+     * 
+     */
+    public function indexAction() {
         $this->__numbers = [1, "two", "trois", "cuatro", "fünf"];
     }
 
+    /**
+     * 
+     */
     public function assocAction() {
         $this->__numberTranslations = [
             'un' => 'uno',
@@ -26,6 +32,9 @@ class loop extends _main {
         ];
     }
 
+    /**
+     * 
+     */
     public function recursiveAction() {
         $words['Français'] = [
             'color' => 'BLUE1',
@@ -52,6 +61,18 @@ class loop extends _main {
             ]
         ];
         $this->__words = $words;
+    }
+
+    /**
+     * 
+     */
+    public function objectAction() {
+        // init a special object with 3 properties
+        $demo = new \wbClasses\Demo();
+        $demo->setColor('blue')
+                ->setPrice(1000)
+                ->setLength(120);
+        $this->__demo = $demo;
     }
 
 }

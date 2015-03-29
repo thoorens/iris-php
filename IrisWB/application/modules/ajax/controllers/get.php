@@ -26,6 +26,8 @@ namespace modules\ajax\controllers;
  */
 class get extends \Iris\MVC\_AjaxController {
 
+    
+    protected $_hasACL = \FALSE;
     /**
      * These message actions are meant to be read by Ajax requests 
      */

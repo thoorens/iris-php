@@ -25,30 +25,23 @@ namespace models\crud;
 
 /**
  * 
- * Test of basic crud operations on invoices
+ * Test of basic crud operations
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Invoice extends \Iris\DB\DataBrowser\_Crud {
+class Events extends _localCrud {
+ 
+    public function __construct($param = NULL) {
+        //static::$_EntityManager = \models\_dbManager::GetEM();
+        parent::__construct($param);
+        // where to go after CRUD
+        $this->setEndUrl('show');
+        // where to in case of error
+        $this->setErrorURL('error');
+    }
 
-    protected $_formProperties = array(
-        'customer_id' => array('LABEL', 'Customer:'),
-    );
 
-    /**
-     * The name of the table
-     * 
-     * @var string
-     */
-    protected static $_TableName = 'Invoices';
-
-    /**
-     * The list of fields in primary key
-     * 
-     * @var string[]
-     */
-    protected static $_IdName = ['id'];
-
+    
 }

@@ -2,8 +2,6 @@
 
 namespace modules\db\controllers;
 
-use Iris\DB\Query;
-
 /*
  * This file is part of IRIS-PHP.
  *

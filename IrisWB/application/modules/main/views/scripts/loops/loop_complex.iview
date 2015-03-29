@@ -1,0 +1,13 @@
+<div class="oldscreen old1">
+    {if(is_array($this->ITEM))}
+        <ul>
+            {foreach($this->ALLDATA: item)}
+                <li>
+                    {item}
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        {ITEM}
+    {/if}
+</div>

@@ -1,0 +1,21 @@
+{wbHeader($this)}
+{REM}This code is a away to avoid the inclusion of the page layout in the controller{/REM}
+{php}
+/*
+          $function = function($item = \NULL, $key = \ NULL) {
+ 
+                $context = " 
+          <div class=\"oldscreen old2\">
+             $key - $item
+          </div>";
+                return $context;
+            };
+*/
+{/php}
+{REM}{floop()->setFunction('mytest', $function)}{/REM}
+<div id="content" {wbBG()}>
+    <h4>Fields of the object</h4>
+    <div>
+        {floop('mytest',$demo)}
+    </div>
+</div>

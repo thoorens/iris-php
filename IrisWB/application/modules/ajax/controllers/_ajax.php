@@ -24,8 +24,7 @@ namespace modules\ajax\controllers;
  */
 class _ajax extends \modules\_application {
 
-    
-    protected final function _moduleInit() {
+   protected final function _moduleInit() {
         // You should modify this demo layout
         $this->_setLayout('main');
         $this->__bodyColor = 'ORANGE3';

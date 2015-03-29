@@ -1,6 +1,6 @@
 <?php
 
-namespace models\crud;
+namespace modules\db\controllers;
 
 /*
  * This file is part of IRIS-PHP.
@@ -17,36 +17,35 @@ namespace models\crud;
  *
  * You should have received a copy of the GNU General Public License
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @copyright 2012 Jacques THOORENS
  *
- * 
+ *
  */
 
 /**
- * 
+ *
  * Test of basic crud operations
- * 
+ *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Event extends _localCrud {
- 
-    /**
-     * The name of the table
-     * 
-     * @var string
-     */
-    protected static $_TableName = 'events';
-    
-    /**
-     * The list of fields in primary key
-     * 
-     * @var string[]
-     */
-    protected static $_IdName = ['id'];
-
+class events extends _dbCrud {
 
     
+    
+    public function showAction() {
+        $tEvents = \models\TEvents::GetEntity();
+        $this->__events = $tEvents->fetchall();
+    }
+    /**
+     * In case of a broken database, the action is redirected here
+     *
+     * @param int $num
+     */
+    public function errorAction($num) {
+        $this->setViewScriptName('commons/error');
+    }
+
 }

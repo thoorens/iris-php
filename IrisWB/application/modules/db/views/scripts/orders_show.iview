@@ -1,0 +1,28 @@
+{php}
+    $icons = $this->crudIcon();
+    $icons
+        ->setController('/db/orders')
+        ->setActionName('orders')
+        ->setEntity("N'_order")
+        ->setDescField('')
+        ->setIdField(['invoice_id','product_id'])
+        ->forceLanguage('english');
+{/php}
+{wbHeader()}
+<h1>Order management</h1>
+
+{(icons->create())} Add an order
+<h2>Invoice list</h2>
+
+<ul>
+    {foreach(orders,order)}
+        {(icons->setData($order))}
+        <li>
+            {(icons->update())}
+            {(icons->delete())}
+            <b>Order # {(order->invoice_id)} - {(order->product_id)}</b>
+            {(order->Quantity)}
+        </li>
+    {/foreach}
+</ul>
+{dbWarning()}

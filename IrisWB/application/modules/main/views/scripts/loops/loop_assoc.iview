@@ -6,6 +6,6 @@
  */
 {/php}
 
-<div class="oldscreen">
+<div class="oldscreen old1">
     {KEY} - {ITEM}
 </div>

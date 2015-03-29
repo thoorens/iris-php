@@ -1,0 +1,36 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+
+
+    <table class="show">
+        <tr>
+            <th colspan="2">
+                Invoices ordered by number, by group of 2
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <tt>
+                    {clause}
+                </tt>
+            </td>
+        </tr>
+        {foreach(invoices, invoice)}
+            <tr> 
+                <td>
+                    {(invoice->id)}
+                </td>
+                <td>
+                    <b>{(invoice->InvoiceDate)}</b>
+                </td>
+                <td>
+                    {(invoice->_at_customer_id->Name)}
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+    <hr/>
+    {button('See next','/db/where/next/-1','See the next 2 lines')}
+    {button('Resume','/db/where/limit','Go to the beginning')}
+    {dbWarning()}
+</div>

@@ -159,4 +159,25 @@ class where extends _db {
         $this->__clause = "ORDER BY Address";
     }
 
+    /**
+     * Demo for Limit
+     * @param init $offset
+     */
+    public function limitAction(){
+        $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
+        $eInvoices->order('id')
+                ->limit(2,0);
+        $this->__invoices = $eInvoices->fetchall();
+        $this->__clause = "ORDER BY Address";
+    }
+    
+    public function nextAction($offset = 0){
+        $this->_specialScreen(['Press next to see the rest of the invoices','Press resume to go back to the normal sequence']);
+        $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
+        $eInvoices->order('id')
+                ->limit(2,$offset);
+        $this->__invoices = $eInvoices->fetchall();
+        $this->__clause = "ORDER BY Address";
+        $this->setViewScriptName('limit');
+    }
 }

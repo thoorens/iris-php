@@ -1,0 +1,31 @@
+<div>
+    <p class="warningUnknown">
+        {status}
+    </p>
+    <table class="show">
+        <tr>
+            <td>User id</td>
+            <td>{id}</td>
+        </tr>
+        <tr>
+            <td>User name</td>
+            <td>{name}</td>
+        </tr>
+        <tr>
+            <td>User role</td>
+            <td>{role}</td>
+        </tr>
+        <tr>
+            <td>User email address</td>
+            <td>{email}</td>
+        </tr>
+
+    </table>
+
+</div>
+<div>
+    <hr/>
+    {button('Login','/acl/login/login','Connect a user by its name and pasword')->acl()}
+    {button('Force Login','/acl/login/force','Connect a user by program')->acl()}
+    {button('Logout','/acl/login/logout','Disconnect the current user')->acl()}
+</div>

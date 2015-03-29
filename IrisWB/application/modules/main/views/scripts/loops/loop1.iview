@@ -1,6 +1,6 @@
-<div class="smallcolumn3" {wbColors($this->color)}>
+<div class="smallcolumn3" {wbColors($color)}>
     <h5>{KEY}</h5>
     <ul>
-        {loop('loops/loop2',$categories)}
+        {loop('loops/loop2',$this->ALLDATA['categories'])}
     </ul>
 </div>

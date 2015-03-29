@@ -12,10 +12,14 @@ namespace modules\forms\controllers;
  */
 class post extends \Iris\MVC\_AjaxController {
 
-    
+    protected $_hasACL = \FALSE;
     
     public function formAction() {
-        $this->__post = \Iris\Engine\Superglobal::GetSession('oldPost', \NULL);
+        $post = \Iris\Engine\Superglobal::GetSession('oldPost',[]);
+        $this->__post = $post;
+        $this->__message = count($post) ? '' :'Press one of the 5 submit buttons to see the result';
         $this->_renderScript('post');
     }
+
+
 }
