@@ -12,45 +12,86 @@ namespace modules\helpers\controllers;
  */
 class links extends _helpers {
 
-    protected function _init() {
-        $this->setViewScriptName('all');
-    }
+    const WARNING = 'Clic on one of the various links to go back to main page.';
 
+    /**
+     * Some tests of links, image links and buttons
+     */
     public function link1Action() {
-        $this->__(\NULL, [
-            'link_label' => 'Link to page 2',
-            'link_URL' => '/helpers/links/link2',
-            'link_title' => 'This is a link to page 2',
-            'image' => 'button_p2.png',
-            'icon' => 'icon_page2.png',
-            'internalIcon' => '/!documents/file/images/wbicons/WBIco_2.png',
-            'link_array' => ['Link to page 2', '/helpers/links/link2', 'This is a link to page 2'],
-            'warning' => '',
-                ]
-        );
+        $this->setViewScriptName('all');
+        $this->_toPageX(2);
     }
 
+    /**
+     * 
+     * @param int $pageNumber
+     */
+    private function _toPageX($pageNumber, $baseURL = 'link') {
+
+        $this->__link_label = "Link to page $pageNumber";
+        $this->__link_URL = "/helpers/links/$baseURL$pageNumber";
+        $this->__link_title = "This is a link to page $pageNumber";
+        $this->__image = "button_p$pageNumber.png";
+        $this->__icon = "icon_page$pageNumber.png";
+        $this->__internalIcon = "/!documents/file/images/wbicons/WBIco_$pageNumber.png";
+        $this->__link_array = ["Link to page $pageNumber", "/helpers/links/$baseURL$pageNumber", "This is a link to page $pageNumber"];
+    }
+
+    /**
+     * A second page, target of link action to return to this page.
+     */
     public function link2Action() {
-        $this->__(\NULL, [
-            'link_label' => 'Link to page 1',
-            'link_URL' => '/helpers/links/link1',
-            'link_title' => 'This is a link to page 1',
-            'image' => 'button_p1.png',
-            'icon' => 'icon_page1.png',
-            'internalIcon' => '/!documents/file/images/wbicons/WBIco_1.png',
-            'link_array' => ['Link to page 1', '/helpers/links/link1', 'This is a link to page 1'],
-            'warning' => '<b>This page does not belong to the test serie. So, it has no standard header nor MD5 fingerprint.
-                Use one of the links to page 1 to return to the test sequence.</b>',
-        ]);
+        $this->_specialScreen(self::WARNING);
+        $this->setViewScriptName('all');
+        $this->_toPageX(1);
     }
 
+    public function lisser($args) {
+        $data = [];
+        $flat_array = array();
+
+        foreach (new RecursiveIteratorIterator(new \RecursiveArrayIterator($args))
+
+        as $k => $v) {
+
+            $flat_array[$k] = $v;
+        }
+        return $flat_array;
+
+        foreach ($args as $arg) {
+            if (is_array($arg)) {
+                $data = array_merge($data, $this->lisser($arg));
+            }
+            else {
+                $data[] = $arg;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Images with tooltip and other struffs
+     */
     public function imagesAction() {
         $this->callViewHelper('styleLoader', 'explanations', 'td pre{font-size:0.8em}');
-        $this->setViewScriptName(\NULL);
     }
 
+    public function incomplete1Action() {
+        $this->_toPageX(2, 'incomplete');
+        $this->setViewScriptName('incomplete');
+    }
+
+    public function incomplete2Action() {
+        $this->_specialScreen(self::WARNING);
+        $this->_toPageX(1, 'incomplete');
+        $this->setViewScriptName('incomplete');
+    }
+
+    /**
+     * Links to internal and external resources, through ILO library
+     */
     public function internalAction() {
-        $this->setViewScriptName('');
+        
     }
 
 }

@@ -21,7 +21,7 @@ class crudlinks extends _helpers {
             'id' => 25,
             'Name' => 'Smith',
         ];
-        /* @var $icon \Iris\Subhelpers\CrudIconManager */
+        /* @var $icon \Iris\Subhelpers\_CrudIconManager */
         $icon = $this->callViewHelper('crudIcon')
                 ->setController('demo')
                 ->forceLanguage('english')
@@ -49,7 +49,7 @@ class crudlinks extends _helpers {
             'id' => 25,
             'Name' => 'Dupont',
         ];
-        /* @var $icon \Iris\Subhelpers\CrudIconManager */
+        /* @var $icon \Iris\Subhelpers\_CrudIconManager */
         $icon = $this->callViewHelper('crudIcon')
                 ->setController('demo')
                 ->forceLanguage('french')
@@ -78,7 +78,7 @@ class crudlinks extends _helpers {
             'id2' => 'B',
             'Name' => 'Smith',
         ];
-        /* @var $icon \Iris\Subhelpers\CrudIconManager */
+        /* @var $icon \Iris\Subhelpers\_CrudIconManager */
         $icon = $this->callViewHelper('crudIcon')
                 ->setController('demo')
                 ->forceLanguage('english')

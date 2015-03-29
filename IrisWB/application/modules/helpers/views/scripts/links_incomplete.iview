@@ -1,0 +1,83 @@
+{wbHeader()}
+<div>
+    
+    <div id="page">
+        <table class="show">
+            <tr>
+                <th colspan="2">links</th>
+            </tr>
+            <tr>
+                <td>3 parameters</td>
+                <td>{link($link_label, $link_URL, $link_title)}</td>
+            </tr>
+            <tr>
+                <td>2 parameters (no tooltip)</td>
+                <td>{link($link_label, $link_URL)}</td>
+            </tr>
+            <tr>
+                <td>1 parameter (must be an legal URL)</td>
+                <td>{link($link_URL)}</td>
+            </tr>
+            <tr>
+                <td>3 parameters (first NULL) : no display</td>
+                <td>{link(\NULL, $link_URL, $link_title)}</td>
+            </tr>
+            <tr>
+                <td>3 parameters (first is legal URL, second NULL)</td>
+                <td>{link($link_URL, \NULL, $link_title)}</td>
+            </tr>
+            
+            <tr>
+                <th colspan="2">buttons</th>
+            </tr>
+            <tr>
+                <td>3 parameters</td>
+                <td>{button($link_label, $link_URL, $link_title)}</td>
+            </tr>
+            <tr>
+                <td>2 parameters (no tooltip)</td>
+                <td>{button($link_label, $link_URL)}</td>
+            </tr>
+            <tr>
+                <td>1 parameter (must be an legal URL)</td>
+                <td>{button($link_URL)}</td>
+            </tr>
+            <tr>
+                <td>3 parameters (first NULL) : no display</td>
+                <td>{button(\NULL, $link_URL, $link_title)}</td>
+            </tr>
+            <tr>
+                <td>3 parameters (first is legal URL, second NULL)</td>
+                <td>{button($link_URL, \NULL, $link_title)}</td>
+            </tr>
+            
+            <tr>
+                <th colspan="2">images</th>
+            </tr>
+            <tr>
+                <td>4 parameters</td>
+                <td>{link()->image($image, $link_label, $link_URL, $link_title)}</td>
+            </tr>
+            <tr>
+                <td>3 parameters (takes the label as tooltip)</td>
+                <td>{link()->image($image, $link_label, $link_URL)}</td>
+            </tr>
+            <tr>
+                <td>2 parameter (must be an legal URL)</td>
+                <td>{link()->image($image, $link_URL)}</td>
+            </tr>
+            <tr>
+                <td>4 parameters (first NULL) : no display</td>
+                <td>{link()->image($image, \NULL, $link_URL, $link_title)}</td>
+            </tr>
+            <tr>
+                <td>4 parameters (first is legal URL, second NULL)</td>
+                <td>{link()->image($image, $link_URL, \NULL, $link_title)}</td>
+            </tr>
+        </table>
+
+
+
+    </div>
+
+</div>

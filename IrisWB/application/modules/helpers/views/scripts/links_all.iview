@@ -1,7 +1,5 @@
 {wbHeader()}
-<div>
-    {warning}
-</div>
+
 <div id="content" {wbBG()}>
     <table class="show">
         <tr>
@@ -17,12 +15,16 @@
                         {link($link_label, $link_URL)}
                     <li>A single link using an array</li>
                         {link($link_array)}
+                    <li>A single link using an array</li>
+                        {link($link_array)}
+                    <li>An explicite URL link</li>
+                        {link($link_URL)}
                     <li>A single link with an image</li>
-                        {link()->image($image, $link_array)}
+                        {link($link_array)->image($image)}
                     <li>A NULL link (won't appear)</li>
                         {link('!!!!NONE!!!!')}
                     <li>A NULL link with an image (won't appear)</li>
-                        {link()->image($image, '!!!!NONE!!!!')}
+                        {link('!!!!NONE!!!!')->image($image)}
                 </ul>
             </td>
             <td>
@@ -33,14 +35,16 @@
                         {button($link_label, $link_URL)}
                     <li>A button link using an array</li>
                         {button($link_array)}
+                    <li>An explicite URL button link</li>
+                        {button($link_URL, \NULL, $link_title)}
                     <li>A button link with an image (in internal folders)</li>
-                        {button()->image($internalIcon, $link_array)}
+                        {button($link_array)->image($internalIcon)}
                     <li>A button link with an image (in alternative folder)</li>
-                        {button()->setImageFolder('/include')->image($icon, $link_array)}
+                        {button($link_array)->setImageFolder('/include')->image($icon)}
                     <li>With A NULL link : no button</li>
                         {button('!!!!NONE!!!!')}
                      <li>A NULL link with an image (no button)</li>
-                        {button()->image($image, '!!!!NONE!!!!')}
+                        {button( '!!!!NONE!!!!')->image($image)}
                 </ul>
             </td>
         </tr>
@@ -55,13 +59,13 @@
 
         <tr>
             {php}
-    \Iris\SubHelpers\Link::$NoJavaForce = \TRUE;
+    \Iris\SubHelpers\Button::$NoJavaForce = \TRUE;
             {/php}
             <td>
                 <ul><li>{button($link_array)}</li></ul>
             </td>
             {php}
-    \Iris\SubHelpers\Link::$OldBrowser = \TRUE;
+    \Iris\SubHelpers\Button::$OldBrowser = \TRUE;
             {/php}<td>
                 <ul><li>{button($link_array)}</li></ul>
             </td>
@@ -70,5 +74,5 @@
     </table>
 </div>
 {php}
-    \Iris\SubHelpers\Link::$NoJavaForce = \FALSE;
+    \Iris\SubHelpers\Button::$NoJavaForce = \FALSE;
 {/php}
