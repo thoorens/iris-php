@@ -1,4 +1,4 @@
-/*
+ol/*
 One True Layout
 An idea by Alex Robinson quotted by Eric Meyer
 */
@@ -111,8 +111,6 @@ div.example{
 
 .oldscreen{
     border : double 2px #FFF;
-    color: #5F5;
-    background: black;
     margin:10px;
     padding: 5px;
     text-align:center;
@@ -120,6 +118,25 @@ div.example{
     font-family: courier;
 }
 
+.old1{
+    color: #5F5;
+    background: black;
+}
+
+.old2{
+     color: #800;
+    background: #BBB;
+}
+
+.old3{
+    color: #CC0;
+    background: #888;
+}
+
+.old4{
+    color: #44A;
+    background: #FFF;
+}
 div#wbexplain{
     font-size: 0.9em;
     padding: 2px 10px 2px 10px;
@@ -236,6 +253,13 @@ p.dbWarning, p.warning{
 .warningDeleted, .warningSevere{
     color:#F00;
     border-color:  #F00;
+}
+
+.warningDeletion{
+    color: white;
+    border-color:  white;
+    background-color: red;
+    font-weight: bold;
 }
 
 form#screen{
