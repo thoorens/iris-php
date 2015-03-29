@@ -62,12 +62,12 @@ class Analyser {
      *
      * @var string[]
      */
-    private static $_Metadata = array(
+    private static $_Metadata = [
         'A' => 'Author',
         'L' => 'License',
         'N' => 'Name',
         'C' => 'Comment'
-    );
+    ];
 
     /**
      * An associative array with the different options in CLI. The
@@ -78,7 +78,7 @@ class Analyser {
      */
     public static $Functions = [
         // Help is not considered a normal option
-        'h::' => 'help:',
+        'h::' => 'help::',
         's:' => 'show:',
         '1:' => 'language:',
         't' => 'test',
@@ -416,12 +416,12 @@ class Analyser {
                 break;
             case self::PASSWORD:
                 require_once self::GetIrisLibraryDir() . '/Iris/Users/_Password.php';
-                $password = \Iris\Users\_Password::EncodePassword($this->_processingOption);
+                $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_IRIS);
                 echoLine('Hashed password (internal algorithm): ');
                 echoLine($password);
                 if(defined('PASSWORD_DEFAULT')){
-                    $password = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
-                    echoLine('Hashed password (PHP 5.5 algorithm): ');
+                    $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_PHP54);
+                    echoLine('Hashed password (PHP 5.5 algorithm or emumation): ');
                     echoLine($password);
                 }
                 else{
@@ -579,7 +579,7 @@ class Analyser {
         if (is_bool($defaultVal)) {
             $defaultVal = $defaultVal ? 'TRUE' : 'FALSE';
         }
-        $value = strtolower(self::PromptUser($promptStr, $defaultVal));
+        $value = strtolower(self::PromptUser($promptStr, \TRUE, $defaultVal));
         return strpos("1\\trueyes" . $local, strtolower($value)) === \FALSE ? \FALSE : \TRUE;
     }
 

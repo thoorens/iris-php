@@ -16,9 +16,9 @@ class {ENTITY} extends \Iris\DB\DataBrowser\_Crud {
     
     
     public function __construct($param = NULL) {
+        //$this->setCrudEntity('{ENTITY}');
+        //static::$_EntityManager = '...';
         parent::__construct($param);
-        $entity = \Iris\DB\TableEntity::GetEntity('{ENTITY}'{GETEMCALL});
-        $this->setEntity($entity);
         // where to go after CRUD
         $this->setEndUrl('index');
         // where to in case of error

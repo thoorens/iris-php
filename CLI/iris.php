@@ -30,6 +30,8 @@ define('BADINI', "Your param file does not seem to be a valid one. Please check 
 define('IRIS_USER_PARAMFOLDER', '/.iris/');
 define('IRIS_USER_INI', 'iris.ini');
 define('IRIS_PROJECT_INI', 'projects.ini');
+define('NOTCLI', \FALSE);
+
 
 
 /* ============================================================================
@@ -229,7 +231,7 @@ class FrontEnd {
         // if not parameter file, create it
         if (!file_exists($this->_paramFileName)) {
             if ($GLOBALS['argc'] == 1) {
-                echoLine( "You must supply the path to your Iris-PHP installation to init your parameter file");
+                echoLine("You must supply the path to your Iris-PHP installation to init your parameter file");
                 die("before beeing able to use this program. See documentation if necessary.\n");
             }
             else {
@@ -242,7 +244,7 @@ class FrontEnd {
 PathIris = $this->_irisInstallationDir
 STOP;
                 file_put_contents($this->_paramFileName, $data);
-                echoLine( "Parameter file $this->_paramFileName has been created");
+                echoLine("Parameter file $this->_paramFileName has been created");
                 die("Now you can use this program (iris.php --help for help)\n");
             }
         }
@@ -256,7 +258,7 @@ STOP;
      * @param string[] $classes
      */
     public function preloadClasses($classes = []) {
-        // bu default loads some classes (with dependencies)
+        // by default loads some classes (with dependencies)
         if (count($classes) == 0) {
             $classes = [
                 // Engine
@@ -301,7 +303,7 @@ STOP;
     public function displayException(\Exception $ex, $type) {
         echoLine("IRIS-PHP " . \Iris\System\Functions::IrisVersion() . " CLI error:");
         if ($type == 1) {
-            echoLine( "Exception during parameters reading");
+            echoLine("Exception during parameters reading");
         }
         echoLine($ex->getMessage() . "");
         die($type);

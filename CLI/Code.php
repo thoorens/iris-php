@@ -222,6 +222,7 @@ APACHE;
                 echo "Action $action has been created.\n";
             }
             $projectConfig->ActionName = $action;
+            $configs[$defaultProject] = $projectConfig;
             $this->_updateConfig($configs);
         }
     }

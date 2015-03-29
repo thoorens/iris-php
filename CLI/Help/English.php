@@ -131,8 +131,8 @@ HELP;
     }
 
     protected function _database() {
-
+        $this->_sorryNoEnglish();
+        $this->_french->_database();
     }
 
 }
-

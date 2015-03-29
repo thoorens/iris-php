@@ -7,25 +7,7 @@ define('IRIS_DB_DEMOFILE', 'demo.sqlite');
 define('IRIS_DB_INIFILE', '10_database.ini');
 define('IRIS_DB_PARAMFILE', 'db.ini');
 
-/*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @copyright 2011-2013 Jacques THOORENS
- *
- */
+
 
 /**
  * This class manage the code creation for the database management:<ul>
@@ -86,6 +68,7 @@ or create it before whith 'iris.php -B create $baseId'.");
         $parameters->requireDefaultProject();
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/' . IRIS_DB_INIFILE;
         $base = $this->_getDBConfig();
+        //iris_debug($base->maindb);
         if ($base->maindb == 0) {
             $name = $parameters->getDatabase();
             throw new \Iris\Exceptions\CLIException("The database $name is not managed by an INI file.\n");
@@ -139,7 +122,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/';
         $destination = $projectDir . '/' . $applicationDir;
         $controller = Analyser::PromptUser(
-                        "Choose the controller which will manage the CRUD operations", $parameters->getControllerName());
+                        "Choose the controller which will manage the CRUD operations", \TRUE, $parameters->getEntityName());
         $module = Analyser::PromptUser(
                         "Choose the module into which $controller will be inserted", $parameters->getModuleName());
         if ($module != $parameters->getModuleName()) {
@@ -185,7 +168,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
     protected function _database($function) {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
-        switch ($function) {
+        switch (strtolower($function)) {
             case "show":
                 $this->_subShowDatabase();
                 break;
@@ -249,19 +232,23 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
             throw new \Iris\Exceptions\CLIException("A database with the id $dbid is already referenced. You can use it.");
         }
         $config = new \Iris\SysConfig\Config($dbid);
-        $config->adapter = Analyser::PromptUser('Adapter name ', 'sqlite');
+        $config->adapter = Analyser::PromptUser('Adapter name ', \TRUE, 'sqlite');
         if ($config->adapter == 'sqlite') {
             $applicationDir = $parameters->getApplicationName();
-            $dbdir = Analyser::PromptUser('Directory ', "/$applicationDir" . IRIS_DB_FOLDER);
-            $dbfile = Analyser::PromptUser('Database file ', IRIS_DB_DEMOFILE);
-            $config->dbname = $dbdir . $dbfile;
+            $dbdir = Analyser::PromptUser('Directory ', \TRUE, "/$applicationDir" . IRIS_DB_FOLDER);
+            $dbfile = Analyser::PromptUser('Database file ',\TRUE,  IRIS_DB_DEMOFILE);
+            $sep = '/';
+            if(substr($dbdir, strlen($dbdir)-1)== $sep or $dbfile[0] == $sep){
+                $sep = '';
+            }
+            $config->dbname = $dbdir . $sep . $dbfile;
             if (!file_exists($parameters->getProjectDir() . $config->dbname)) {
                 echo "Warning {$parameters->getProjectDir()}$config->dbname does not exist.\n";
             }
         }
         else {
-            $config->dbname = Analyser::PromptUser("Database name ", '');
-            $config->hostname = Analyser::PromptUser("Host name ", 'localhost');
+            $config->dbname = Analyser::PromptUser("Database name ");
+            $config->hostname = Analyser::PromptUser("Host name ", \TRUE, 'localhost');
             $config->username = Analyser::PromptUser("User name ");
             $config->password = Analyser::PromptUser("Password (will be echoed) ");
         }
@@ -288,8 +275,8 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
             echo "Host name          : $base->hostname\n";
             echo "Database           : $base->dbname\n";
             echo "User name          : $base->username\n";
-            if ($this->password != '') {
-                echo "Password           : == defined in file ==\n";
+            if ($base->password != '') {
+                echo "Password           : == defined in file (not listed for security reasion) ==\n";
             }
             else {
                 echo "Password           : undefined\n";

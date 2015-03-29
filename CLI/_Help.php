@@ -135,6 +135,23 @@ abstract class _Help {
 
     abstract public function error($number);
 
+    //
+    //  Database management
+    //
+    
+    /**
+     * 
+     */
+    protected function _dataBaseMenu() {
+        echo <<<DATABASE
+        iris.php -h=B  iris.php -h=database
+        iris.php -h=b  iris.php -h=selectbase
+        iris.php -h=I  iris.php -h=makedbini
+        iris.php -h=e  iris.php --entitygenerate
+
+DATABASE;
+    }
+
     abstract protected function _database();
 
     abstract protected function _makeDbIni();
@@ -193,4 +210,3 @@ abstract class _Help {
     }
 
 }
-

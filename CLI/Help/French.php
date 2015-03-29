@@ -160,17 +160,23 @@ SCORE;
 
     public function error($number) {
         switch ($number) {
-
+            
         }
     }
-
+    //
+    //  Database management
+    //
+    
+    /**
+     * Help for the main database command
+     */
     protected function _database() {
         echo <<<DATABASE
-Fonction :
+Fonctions :
     iris.php -B LIST|CREATE
     iris.php --database LIST|CREATE
 
-La première fonction 'LISTE' donne la liste des bases de données déjà définies
+La première fonction 'LIST' donne la liste des bases de données déjà définies
 par le développeur (une même base peut être utilisée par plusieurs projets).
 
 La fonction 'CREATE' appelle un programme interactif qui permet de définir
@@ -199,26 +205,16 @@ Exemple de création d'une base MariaDB:
     Password (will be echoed) : 123456
     Database managed by config INI file [TRUE] :
 
+---------------------------------------------------------------------
 Les aides suivantes se rapportent à la gestion des bases de données:
-    iris.php -h=b
-    iris.php -h=b
-    iris.php -h=b
-    iris.php -h=b
+
 DATABASE;
+        $this->_dataBaseMenu();
     }
 
-    protected function _makeDbIni() {
-
-    }
-
-    protected function _entityGenerate() {
-
-    }
-
-    protected function _otherDB() {
-
-    }
-
+    /**
+     * Help for the selection of a database in the current project
+     */
     protected function _selectBase() {
         echo <<<SELECTBASE
 
@@ -257,9 +253,64 @@ Permet d'attribuer une base de données déjà définie au projet en cours.
    Database : ojbm2
    ...
    Locked : 1
+        
+---------------------------------------------------------------------
+Les aides suivantes se rapportent à la gestion des bases de données:
+
 
 SELECTBASE;
+        $this->_dataBaseMenu();
+    }
+    
+    /**
+     * Help for the creation of an ini file
+     */
+    protected function _makeDbIni() {
+        echo <<<DBINI
+Fonctions:        
+    iris.php --makedbini        
+    iris.php -I
+        
+Cette fonction permet de créer un fichier INI définissant les paramètres
+par défaut de la base de données du projet. Elle est régie par les conditions
+suivantes:
+    - le projet doit avoir une base de données associée (voir --selectbase)
+    - cette base doit avoir prévu la définition d'un fichier ini (voir --database CREATE
+    - le fichier application/config/10_database.ini ne doit pas encore exister
+
+jacques@naxos:~$ iris.php --makedbini
+File /srv/nouveau/application/config/10_database.ini now contains all your settings.
+        
+---------------------------------------------------------------------
+Les aides suivantes se rapportent à la gestion des bases de données:
+
+DBINI;
+        $this->_dataBaseMenu();
+        
     }
 
-}
+    /**
+     * Help for the generation of a CRUD management
+     */
+    protected function _entityGenerate() {
+     echo <<<ENTITY
+Cette fonction va générer les fichiers permettant la gestion automatisée
+d'une table de base de données. Elle s'appuie sur le fichier  models/crud/CrudIconManager.php
+copié lors de la définition initiale du projet (voir --createproject).
 
+   
+---------------------------------------------------------------------
+Les aides suivantes se rapportent à la gestion des bases de données:
+
+ENTITY;
+      $this->_dataBaseMenu();
+     
+        
+    }
+
+    protected function _otherDB() {
+        
+    }
+
+
+}
