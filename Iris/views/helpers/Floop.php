@@ -35,11 +35,48 @@ namespace Iris\views\helpers;
  */
 class Floop extends _ViewHelper {
 
-    
-    public function help($viewName, $dataSet) {
-        $floop = new \Iris\MVC\FunctionLoop($viewName,$dataSet);
+    private $_functions = [];
+    protected static $_Singleton = \TRUE;
+
+    public function help($viewName = \NULL, $dataSet = \NULL) {
+        if (is_null($viewName)) {
+            return $this;
+        }
+        else {
+            if (isset($this->_functions[$viewName])) {
+                $function = $this->_functions[$viewName];
+            }
+            else {
+                $function = function($item, $key = \NULL) {
+                    $context = " 
+                    <div class=\"oldscreen old1\">
+                        $key - $item
+                </div>";
+                    return $context;
+                };
+            };
+        }
+        $floop = new \Iris\MVC\FunctionLoop($function, $dataSet);
         return $floop->render();
     }
 
-}
+    /**
+     * 
+     * @param string $index
+     * @param \Iris\views\helpers\callable $function 
+     * @return string
+     */
+    /**
+     * 
+     * @param string $index
+     * @param \callable $function
+     * @return string
+     */
+    public function setFunction($index, $function) {
+        $this->_functions[$index] = $function;
+        return '';
+    }
 
+    
+
+}

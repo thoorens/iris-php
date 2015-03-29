@@ -134,12 +134,14 @@ class Signature extends \Iris\views\helpers\_ViewHelper {
             $link = 'javascript:location.href=\'' . "/manager/md5/save$url/$md5" . "'";
             if ($md5 == self::_OldMd5()) {
                 $class = 'iris_md5_ok';
+                $md5Status = "correct";
             }
             else {
                 $class = 'iris_md5_bad';
+                $md5Status = "not correct";
             }
             $javascripManager = self::$JSManager;
-            $javascriptCode = $javascripManager::md5JS($componentId, $class, $md5, $link);
+            $javascriptCode = $javascripManager::md5JS($componentId, $class, $md5Status, $link);
         }
         return $javascriptCode;
     }

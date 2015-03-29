@@ -176,7 +176,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      * Accessor set for the extended icon folder
      * 
      * @param string $iconDir
-     * @return \Iris\Subhelpers\CrudIconManager for fluent interface
+     * @return \Iris\Subhelpers\_CrudIconManager for fluent interface
      */
     public function setIconDir($iconDir) {
         $this->_iconDir = $iconDir;
@@ -186,7 +186,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
     /**
      *
      * @param type $pilote
-     * @return \Iris\Subhelpers\CrudIconManager
+     * @return \Iris\Subhelpers\_CrudIconManager
      */
 //    public static function GetInstance($pilote = \NULL) {
 //        return parent::GetInstance($pilote);
@@ -257,7 +257,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      * 
      * @param \Iris\DB\Object $data
      * @param string $param A extra parameter corresponding to %P 
-     * @return \Iris\Subhelpers\CrudIconManager
+     * @return \Iris\Subhelpers\_CrudIconManager
      */
     public function setData($data, $param = \NULL) {
         $this->_data = $data;
@@ -284,7 +284,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      * Permits to change the default icon dir (in ILO)
      *
      * @param string $defaultIconDir
-     * @return \Iris\Subhelpers\CrudIconManager for fluent interface
+     * @return \Iris\Subhelpers\_CrudIconManager for fluent interface
      */
     public function setDefaultIconDir($defaultIconDir) {
         $this->_defaultIconDir = $defaultIconDir;
@@ -295,7 +295,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      * May force a language (feature required by IrisWB)
      *
      * @param string $language
-     * @return \Iris\Subhelpers\CrudIconManager for fluent interface
+     * @return \Iris\Subhelpers\_CrudIconManager for fluent interface
      */
     public function forceLanguage($language) {
         $this->_language = $language;

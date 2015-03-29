@@ -24,7 +24,7 @@ namespace Iris\views\helpers;
 /**
  * This helper is part of the CRUD facilites offered by Iris. It serves to
  * display icons for the different actions. The most part of its job is
- * done by \Iris\Subhelpers\CrudIconManager.
+ * done by \Iris\Subhelpers\_CrudIconManager.
  *
  */
 class CrudIcon extends _ViewHelper{

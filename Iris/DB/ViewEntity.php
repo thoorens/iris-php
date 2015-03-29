@@ -51,7 +51,6 @@ class ViewEntity extends _Entity {
             return $entityBuilder->createView();
         }
         else {
-
             return $entityBuilder->createExplicitView();
         }
     }

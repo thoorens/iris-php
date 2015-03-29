@@ -1,6 +1,6 @@
 <?php
 
-namespace Iris\views\helpers;
+namespace Iris\Documents\DataBrowser;
 
 /*
  * This file is part of IRIS-PHP.
@@ -19,27 +19,17 @@ namespace Iris\views\helpers;
  * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * @copyright 2012 Jacques THOORENS
- *
- * 
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ * 
- * 
  */
 
 /**
- * Loop offers a way to display the items of an array/object by means of a
- * partial.
  * 
- */
-class Loop extends _ViewHelper {
+ *  
+ * @author Jacques THOORENS (irisphp@thoorens.net)
+ * @see http://irisphp.org
+ * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id: $ */
+class ProtectedUpload extends _Upload {
 
     
-    public function help($viewName, $dataSet) {
-        $loop = new \Iris\MVC\Loop($viewName,$dataSet);
-        return $loop->render();
-    }
-
 }
 

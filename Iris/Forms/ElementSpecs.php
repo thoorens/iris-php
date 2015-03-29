@@ -2,25 +2,13 @@
 
 namespace Iris\Forms;
 
-use Iris\Forms\Validators as iv;
-
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -35,21 +23,70 @@ class ElementSpecs implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
 
+    /**
+     * First positional parameter: the type of element
+     */
+    const TYPE = 0;
+    /**
+     * Second positional parameter: the label of the element
+     */
+    const LABEL = 1;
+
+    /**
+     * the element name
+     * @var string
+     */
     private $_name;
+    /**
+     * the element label
+     * @var string
+     */
     private $_label = \NULL;
+    /**
+     * The element type
+     * @var string
+     */
     private $_type = 'text';
+    /**
+     * The element width
+     * @var int
+     */
     private $_cols = 50;
+    /**
+     * The element height
+     * @var int
+     */
     private $_rows = 5;
+    /**
+     * The element size
+     * @var int
+     */
     private $_size = 25;
+    /**
+     * The element title (used by the tooltip)
+     * @var string
+     */
     private $_title = \NULL;
+    /**
+     * The element not shown status
+     * @var boolean
+     */
     private $_notShown = \FALSE;
 
 //    Currently no supported in browsers
 //    private $_width = 500;
 
+    /**
+     * An ElementSpecs has a name and maybe optional parameters
+     * 
+     * @param string $name The name of the element
+     * @param array $params Some optional params added to the params listed in the ini file
+     */
     public function __construct($name, $params = []) {
         $this->_name = $name;
-        $this->_inspectParams($params);
+        if (count($params)) {
+            $this->_inspectParams($params);
+        }
     }
 
     /**
@@ -95,23 +132,39 @@ class ElementSpecs implements \Iris\Translation\iTranslatable {
         $element->setLabel($label);
     }
 
-    public function __call($name, $args) {
-        if (strpos($name, 'put') === 0) {
-            $function = "set" . substr($name, 3);
-            $value = "_" . strtolower(substr($name, 3));
-            $args[0]->$function($this->$value);
-        }
-        elseif (strpos($name, 'set') === 0) {
-            $variable = "_" . strtolower(substr($name, 3));
-            if($variable == 'alt') die ('alt');
-            $this->$variable = $args[0];
-        }
-        else {
-            throw new \Iris\Exceptions\FormException("Unsupported method $name in AutoElement");
+    
+
+    /**
+     * Analyses the content of the line to get the different parameter for the
+     * element
+     * 
+     * @param string $line a multi value string with ! as an internal seperator
+     */
+    public function setSpecs($line) {
+        $specs = explode('!', $line . '!!!!!');
+        foreach ($specs as $index => $value) {
+            switch ($index) {
+                case self::TYPE:
+                    //die('YYYYES');
+                    if ($value == '-') {
+                        $this->setNotShown(\TRUE);
+                        $this->setType('hidden');
+                    }
+                    else {
+                        $this->setType($value);
+                    }
+                    break;
+                case self::LABEL:
+                    $this->setLabel($value);
+                    break;
+                default:
+                    if($value>''){
+//                        $this->_inspectParams($params);
+                    }
+            }
         }
     }
 
-    
     public function setLabel($label) {
         $this->_label = $label;
         return $this;
@@ -137,15 +190,18 @@ class ElementSpecs implements \Iris\Translation\iTranslatable {
         return $this;
     }
 
+    public function setTitle($title) {
+        $this->_title = $title;
+        return $this;
+    }
+
+
 //    Currently no supported in browsers
 //    public function setWidth($width) {
 //        $this->_width = $width;
 //        return $this;
 //    }
 
-    public function getName() {
-        return $this->_name;
-    }
 
     public function setName($name) {
         $this->_name = $name;
@@ -161,12 +217,26 @@ class ElementSpecs implements \Iris\Translation\iTranslatable {
         return $this->_notShown;
     }
 
+        public function getName() {
+        return $this->_name;
+    }
+
+    public function getType() {
+        return $this->_type;
+    }
+
+        
+    /**
+     * Treats the parameters inited in the constructor
+     * 
+     * @param type $params
+     */
     private function _inspectParams($params) {
         foreach ($params as $param) {
-            list($setting, $value) = explode('=', $param.'=');
-            switch($setting){
+            list($setting, $value) = explode('=', $param . '=');
+            switch ($setting) {
                 case 'title':
-                case 't':
+                case 'T':
                     $this->setTitle($value);
                     break;
                 case 'type':
@@ -195,11 +265,27 @@ class ElementSpecs implements \Iris\Translation\iTranslatable {
                     break;
                 case '':
                     $this->
-                    break;
+                            break;
                 case '':
                     break;
             }
         }
     }
 
+//    public function __call($name, $args) {
+//        die('OLD _call has benn called');
+//        if (strpos($name, 'put') === 0) {
+//            $function = "set" . substr($name, 3);
+//            $value = "_" . strtolower(substr($name, 3));
+//            $args[0]->$function($this->$value);
+//        }
+//        elseif (strpos($name, 'set') === 0) {
+//            $variable = "_" . strtolower(substr($name, 3));
+//            $this->$variable = $args[0];
+//        }
+//        else {
+//            throw new \Iris\Exceptions\FormException("Unsupported method $name in ElementSpecs");
+//        }
+//    }
+    
 }

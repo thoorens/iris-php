@@ -59,7 +59,7 @@ class Acl implements \Iris\Design\iSingleton {
      * 
      * @var boolean
      */
-    private $_noAcl = FALSE;
+    private $_noAcl = \FALSE;
 
     /**
      * The name of ACL in Memory (can be changed)

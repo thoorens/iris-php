@@ -31,7 +31,7 @@ use Iris\Forms\Validators\Force as vf;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class Login extends \Iris\DB\DataBrowser\_CrudBase {
+class Login extends \Iris\DB\DataBrowser\_Crud {
 
     /**
      * A specific mode for 
@@ -137,13 +137,13 @@ class Login extends \Iris\DB\DataBrowser\_CrudBase {
         }
         $userName = $this->_clean($data[$this->_nameField], $specialChars);
         $password = $data[$this->_passwordField];
-        $entity = $this->_entity;
+        $entity = $this->getCrudEntity();
         $entity->where($this->_nameField . '=', $userName);
         $userObject = $entity->fetchRow();
         //iris_debug($userObject);
         // user unknown
         if ($userObject == null) {
-            $returnCode = $this->_continuationURL;
+            $returnCode = $this->getContinuationURL();
         }
         else {
             $encrypt = $userObject->Password;

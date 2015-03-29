@@ -2,7 +2,7 @@
 <html>
     <head>
         {head()}
-        {styleLoader('wb.css')}
+        {styleLoader("/!documents/file/css/wb.css")}
     </head>
     <body>
         <div id="main">

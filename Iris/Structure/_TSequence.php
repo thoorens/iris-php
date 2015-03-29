@@ -37,6 +37,7 @@ abstract class _TSequence extends \Iris\DB\_Entity {
     const PREVIOUS = 2;
     const NEXT = 3;
     const LAST = 4;
+    const MAX = 1000000;
 
     /**
      * Gets an object from the sequence corresponding to the URL
@@ -104,6 +105,13 @@ abstract class _TSequence extends \Iris\DB\_Entity {
                 }
                 $tSequence->order('id DESC');
                 $tSequence->where('id<', $current->id);
+                if ($current->id > static::MAX) {
+                    $tSequence->where('id>', self::MAX);
+                }
+                else {
+                    $tSequence->where('id<', self::MAX);
+                }
+                $tSequence->_AND_();
                 $label = 'Previous';
                 break;
             case self::NEXT:
@@ -113,6 +121,13 @@ abstract class _TSequence extends \Iris\DB\_Entity {
                 }
                 $tSequence->order('id');
                 $tSequence->where('id>', $current->id);
+                if ($current->id > static::MAX) {
+                    $tSequence->where('id>', self::MAX);
+                }
+                else {
+                    $tSequence->where('id<', self::MAX);
+                }
+                $tSequence->_AND_();
                 $label = 'Next';
                 break;
             case self::LAST:
@@ -135,12 +150,19 @@ abstract class _TSequence extends \Iris\DB\_Entity {
         return $value;
     }
 
-    public static function GetStructuredSequence() {
+    public static function GetStructuredSequence($limit = self::MAX, $exclude = \TRUE) {
         $level1 = array();
         $level2 = array();
         $oldSection = -1;
         //$tSections = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder('sections');
         $tSequence = static::GetEntity();
+        // Does not treat
+        if ($exclude) {
+            $tSequence->where('id<', $limit);
+        }
+        else {
+            $tSequence->where('id>=', $limit);
+        }
         $tSequence->order('id');
         $sequence = $tSequence->fetchAll();
         foreach ($sequence as $item) {
@@ -167,4 +189,3 @@ abstract class _TSequence extends \Iris\DB\_Entity {
     }
 
 }
-

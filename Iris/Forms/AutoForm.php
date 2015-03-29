@@ -5,237 +5,230 @@ namespace Iris\Forms;
 use Iris\DB as db;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
- * A self generated form form rapid development. It can serve as
- * a basis for a customized form.
+ * A self generated form for rapid development. It can serve as
+ * a basis for a customized form or use an ini file.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class AutoForm extends Elements\Form {
+class AutoForm {
 
     /**
-     * Incremental form number id
-     * @var int
+     * the related entity
+     * 
+     * @var \Iris\DB\_Entity 
      */
-    private static $_Number = 1;
-    protected $_labels;
-    protected $_formFactory;
     private $_entity;
-    private static $_PlausibleDescriptions = array(
-        'Description',
-        'Name',
-        'UserName',
-        'Identity',
-    );
 
     /**
-     *
-     * @var ElementSpecs[]
+     * the available metadata
+     * 
+     * @var \Iris\DB\Metadata
      */
-    private $_elementTypes;
+    private $_metadata;
 
-    public function __construct(db\_Entity $entity, $labels = []) {
+    /**
+     * the form factory to be used
+     * 
+     * @var \Iris\Forms\_FormFactory
+     */
+    private $_formFactory;
+
+    /**
+     * the future form
+     * 
+     * @var \Iris\Forms\_Form
+     */
+    private $_form;
+
+    /**
+     * the specs found in ini file
+     * 
+     * @var \Iris\Forms\ElementSpecs[]
+     */
+    private $_fieldSpecs = [];
+
+    /**
+     * Stores the entity and finds its metadata
+     * 
+     * @param \Iris\DB\_Entity $entity
+     */
+    public function __construct(db\_Entity $entity) {
         $this->_entity = $entity;
-        $this->_name = sprintf("iris_autoform_%d", self::$_Number++);
-        $this->_labels = $labels;
+        $this->_metadata = $entity->getMetadata();
+        $this->_formFactory = _FormFactory::GetDefaultFormFactory();
     }
 
     /**
-     * Creates the field controller and makes the form ready to be rended.
+     * Prepare an automatic form, ready to be rendered
+     * or manually modified
      * 
-     * @return \Iris\Forms\AutoForm
+     * @return \Iris\Forms\Elements\Form
      */
     public function prepare() {
-        $this->_method = 'post';
-        $metadata = $this->_entity->getMetadata();
-        $this->_formFactory = _FormFactory::GetDefaultFormFactory();
-        $fields = $metadata->getFields();
-        //iris_debug($metadata->getFields());
-        foreach ($fields as $metaItem) {
-            /* @var $metaItem \Iris\DB\MetaItem */
-            if (is_null($metaItem->getForeignPointer())) {
-                $this->_makeElement($metaItem);
-            }
+        $this->_scanConfigFile(); // may overidde $this->_formFactory
+        $this->_form = $this->_formFactory->createForm("iris_autoform_" . $this->_metadata->getTablename());
+        foreach ($this->_metadata->getFields() as $name => $field) {
+            $this->_createElement($name, $field);
         }
-        foreach ($metadata->getForeigns() as $foreign) {
-            /* @var $foreign \Iris\DB\ForeignKey */
-            $keys = $foreign->getFromKeys();
-            // Multikey are not possible
-            if (count($keys) > 1) {
-                foreach ($keys as $key) {
-                    $this->_makeElement($fields[$key]);
-                }
-            }
-            else {
-                $this->_makeSelect($fields[$keys[0]], $foreign);
-            }
-        }
-        $element = $this->_formFactory->createSubmit('Submit');
-        $element->setValue('Send');
-        $element->addTo($this);
-        return $this;
+        $this->_addSubmit();
+        return $this->_form;
     }
 
     /**
-     *
-     * @param db\MetaItem $metaItem
-     * @param string[] $labels
+     * Returns the HTML string for the form, after preparing it 
+     * if necessary
+     * 
+     * @return string
      */
-    private function _makeElement(db\MetaItem $metaItem) {
-        if (isset($this->_elementTypes[$metaItem->getFieldName()])) {
-            $element = $this->_elementTypes[$metaItem->getFieldName()]->create($this->_formFactory, $metaItem);
-            if (is_null($element)) {
-                return;
+    public function render() {
+        if (is_null($this->_form)) {
+            $this->prepare();
+        }
+        return $this->_form->render();
+    }
+
+    /**
+     * Places all the data specified in the forms ini file, to be used
+     * by the element generator.
+     */
+    private function _scanConfigFile() {
+        $paraForm = \Iris\Engine\Memory::Get('param_forms', []);
+        $entityName = $this->_entity->getEntityName();
+        if (isset($paraForm[$entityName])) {
+            /* @var $fields \Iris\SysConfig\Config */
+            $fields = $paraForm[$entityName];
+            foreach ($fields as $name => $field) {
+                if ($name == '_Mode_') {
+                    $this->_form->setMethod($fields[0]);
+                }
+                else {
+                    $name2 = substr($name, 0, strlen($name) - 1);
+                    $data = explode('!', $field . "!   !   !   !   !   !   !   !   !   !   !   !   !   !   !   !   !   !   !   !   !   !   ");
+                    if (isset($this->_fieldSpecs[$name2])) {
+                        $specs = $this->_fieldSpecs[$name2];
+                        $name = $name2;
+                    }
+                    else {
+                        $specs = new \Iris\Forms\ElementSpecs($name);
+                        $type = array_shift($data);
+                        $specs->setType($type);
+                    }
+                    $this->_addSpecs($specs, $data);
+                    $this->_fieldSpecs[$name] = $specs;
+                }
             }
         }
-        else {
-            switch ($metaItem->getType()) {
-                case 'text':
-                default :
-                    $element = $this->_formFactory->createText($metaItem->getFieldName());
-                    $element->setLabel($this->_getLabelText($metaItem));
+    }
+
+    /**
+     * 
+     * @param \Iris\Forms\ElementSpecs $spec
+     * @param type $data
+     */
+    private function _addSpecs($spec, $data) {
+        foreach ($data as $item) {
+            $command = strtoupper($item[0]);
+            $text = substr($item, 2);
+            switch($command){
+                case 'L ':
+                    $spec->setLabel($text);
+                    break;
+                case 'T ':
+                    $spec->setTitle($text);
+                    break;
+                case '':
+                    break;
+                case '':
+                    break;
+                case '':
+                    break;
+                case '':
+                    break;
+                case '':
+                    break;
+                case '':
+                    break;
+                case '':
                     break;
             }
         }
-        if ($metaItem->isAutoIncrement()) {
-            $element->setDisabled('disabled');
-        }
-        $element->addTo($this);
-    }
-
-    private function _makeSelect(db\MetaItem $metaItem, \Iris\DB\ForeignKey $foreign) {
-        if (isset($this->_elementTypes[$metaItem->getFieldName()]) and $this->_elementTypes[$metaItem->getFieldName()]->mustHide()) {
-            return;
-        }
-        /* @var $element \Iris\Forms\Elements\SelectElement */
-        $element = $this->_formFactory->createSelect($metaItem->getFieldName());
-        $element->setLabel($this->_getLabelText($metaItem));
-        $element->addTo($this);
-        $entityManager = $this->_entity->getEntityManager();
-        $tableName = $foreign->getTargetTable();
-        /* @var $targetEntity \Iris\DB\_Entity */
-        $targetEntity = \Iris\DB\TableEntity::GetEntity($tableName, $entityManager);
-        $idNames = $foreign->getToKeys();
-        $idName = $idNames[0];
-        $descField = $this->getDescriptionField($targetEntity);
-        $targetEntity->select($idName);
-        $targetEntity->select($descField);
-        $targetEntity->doNotRegister();
-        $targetEntity->order(1);
-        $data = $targetEntity->fetchAll();
-
-        foreach ($data as $ligne) {
-            $data2[$ligne->$idName] = $ligne->$descField;
-        }
-        $element->addOptions($data2);
     }
 
     /**
-     * Gets the label corresponding to a field. It can be one of three:<ul>
-     * <li> a label explicitly defined during instanciation
-     * <li> a label added in entity class
-     * <li> the fied name (by default) </ul>
+     * Creates a new element using the metadata, or the ini field specifications
      * 
-     * @param \Iris\DB\MetaItem $metaItem
-     * @return string
+     * @param string $name
+     * @param \Iris\DB\MetaItem $field
      */
-    protected function _getLabelText(\Iris\DB\MetaItem $metaItem) {
-        $name = $metaItem->getFieldName();
-        if (isset($this->_labels[$name])) {
-            return $this->_labels[$name];
+    private function _createElement($name, $field) {
+        $formFactory = $this->_formFactory;
+        if (isset($this->_fieldSpecs[$name])) {
+            $element = $this->_fromConfig($name, $formFactory);
         }
         else {
-            return $metaItem->get('LABEL', $name);
-        }
-    }
-
-    /**
-     * Add 
-     * @param mixed $items (one description field name or an array of names)
-     */
-    public static function AddPlausibleDescriptions($items) {
-        if (is_array($items)) {
-            foreach ($items as $item) {
-                self::AddPlausibleDescriptions($item);
+            if (is_null($field->getForeignPointer())) {
+                $element = $this->_fromMetadata($field, $formFactory);
+            }
+            else {
+                
             }
         }
-        else {
-            self::$_PlausibleDescriptions[] = $items;
-        }
     }
 
     /**
-     * Returns the name of the field serving for the description of a concrete
-     * object
+     * Creates a new element the ini field specifications
      * 
-     * @param \Iris\DB\_Entity $targetTable
-     * @return string
+     * @param string $name
+     * @param \Iris\Forms\_FormFactory $formFactory
      */
-    public function getDescriptionField($targetTable) {
-        /**
-         * Problem: the description fied is only available in an explicite entity
-         */
-        if ($targetTable->getDescriptionField() != '') {
-            return $targetTable->getDescriptionField();
-        }
-        /* @var $field  \Iris\DB\MetaItem */
-        foreach ($targetTable->getMetadata()->getFields() as $field) {
-            $fieldName = $field->getFieldName();
-            if (array_search($fieldName, self::$_PlausibleDescriptions) !== \FALSE) {
-                return $fieldName;
-            }
-        }
-        // by default return the first part of the primary key
-        $ids = $targetTable->getIdNames();
-        return $ids[0];
+    public function _fromConfig($name, $formFactory) {
+        //$meta = $this->_metadata->getFields()[$this->_entity->getEntityName()];
+        iris_debug($this->_entity->getEntityName());
+        return $this->_fromMetadata($meta, $formFactory);
     }
 
     /**
+     * Creates a new element using the metadata
      * 
-     * @param ElementSpecs $elementSpecs
+     * @param \Iris\DB\MetaItem $field
+     * @param \Iris\Forms\_FormFactory $formFactory
      */
-    public function addSpecs($elementSpecs, $params = \NULL) {
-        if (!$elementSpecs instanceof ElementSpecs) {
-            $elementSpecs = new ElementSpecs($elementSpecs, $params);
+    private function _fromMetadata($field, $formFactory) {
+        $name = $field->getFieldName();
+        echo $field->getType();
+        switch ($field->getType()) {
+            case 'BOOL':
+                $element = $formFactory->createCheckbox($name);
+                break;
+            case 'DATETIME':
+                $element = $formFactory->createDate($name);
+                break;
+            default:
+                $element = $formFactory->createText($name);
         }
-        $index = $elementSpecs->getName();
-        $this->_elementTypes[$index] = $elementSpecs;
+        $element->addTo($this->_form);
     }
 
     /**
-     * 
-     * @param type $from
-     * @param type $name
-     * @param type $callable
+     * If necessary, adds a submit button to the form
      */
-    public function cloneSpecs($from, $name, $callable = \NULL) {
-        $original = $this->_elementTypes[$from];
-        $copy = clone $original;
-        $copy->setName($name);
-        if (!is_null($callable)) {
-            $callable($copy);
+    private function _addSubmit() {
+        if (is_null($this->_form->getComponent('submit'))) {
+            $formFactory = $this->_form->getFormFactory();
+            $element = $formFactory->createSubmit('Submit');
+            $element->setValue('Send')->addTo($this->_form);
         }
-        $this->addSpecs($copy);
     }
 
 }

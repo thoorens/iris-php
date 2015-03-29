@@ -75,6 +75,9 @@ class IniParser extends _Parser {
                 if (!isset($configs[$name])) {
                     $configs[$name] = new Config($name);
                 }
+                else{
+                    die('Doublon');
+                }
                 // inherit base namespace
                 if (isset($configs[$parent])) {
                     if ($inheritance == self::COPY_AND_LINK or

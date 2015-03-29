@@ -111,19 +111,21 @@ class EntityBuilder {
                 $this->_proposedEntityName = strtolower(substr($className, 1));
         }
         foreach ($params as $param) {
+            // A parameter may be an _EntityManager
             if ($param instanceof \Iris\DB\_EntityManager) {
                 $this->_entityManager = $param;
             }
-            elseif ($param instanceof \Iris\DB\Metadata or strpos($param, 'TABLE@') === 0) {
-                if (is_string($param)) {
-                    $metadata = new Metadata();
-                    $metadata->unserialize($param);
-                    $this->_metadata = $metadata;
-                }
-                else {
-                    $this->_metadata = $param;
-                }
+            // A parameter may be metadata as on object 
+            elseif ($param instanceof \Iris\DB\Metadata) {
+                $this->_metadata = $param;
             }
+            // A parameter may be a serialized metadata
+            elseif (is_string($param) and strpos($param, 'TABLE@') === 0) {
+                $metadata = new Metadata();
+                $metadata->unserialize($param);
+                $this->_metadata = $metadata;
+            }
+            // every other parameter will put in an array
             else {
                 $this->_strings[] = $param;
             }
@@ -190,10 +192,10 @@ class EntityBuilder {
         $entity = $this->_seekEntity($this->_proposedEntityName);
         if (is_null($entity)) {
             $className = $this->_initialClassName;
-            try{
-            $entity = $this->_createInstance($className, $this->_proposedEntityName);
+            try {
+                $entity = $this->_createInstance($className, $this->_proposedEntityName);
             }
-            catch (\Exception $ex){
+            catch (\Exception $ex) {
                 die('Table inconnue');
             }
         }
@@ -321,6 +323,8 @@ class EntityBuilder {
      */
     public function getEntityManager() {
         if (is_null($this->_entityManager)) {
+            if ($this->_entityManager == 'customers')
+                die($this->_initialClassName);
             $this->_entityManager = call_user_func([$this->_initialClassName, 'DefaultEntityManager']);
         }
         return $this->_entityManager;
@@ -330,9 +334,12 @@ class EntityBuilder {
         return !is_null($this->_metadata);
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getClass() {
         return $this->_initialClassName;
     }
 
 }
-

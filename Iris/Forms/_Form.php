@@ -210,6 +210,18 @@ abstract class _Form implements iFormContainer {
     }
 
     /**
+     * Permits to set the method of the form
+     * 
+     * @param type $method string
+     * @return \Iris\Forms\_Form
+     */
+    public function setMethod($method) {
+        $this->_method = $method;
+        return $this;
+    }
+
+        
+    /**
      * Place a localized action name in the submit button
      * 
      * @param type $submitValue The name of the action in the submit button

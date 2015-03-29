@@ -60,7 +60,7 @@ class Browser extends _ViewHelper {
      * @return string html code
      */
     public function help($edit = 15, $active = TRUE) {
-        $crudHelper = \Iris\Subhelpers\CrudIconManager::GetInstance(NULL);
+        $crudHelper = \Iris\Subhelpers\_CrudIconManager::GetInstance(NULL);
         $html = '<span class="Iris_Browser">';
         $html .= $crudHelper->render('first', $active);
         $html .= $crudHelper->render('previous', $active);

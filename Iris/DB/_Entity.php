@@ -74,6 +74,12 @@ abstract class _Entity {
     protected $_reflectionEntity = \NULL;
 
     /**
+     *
+     * @var _EntityManager
+     */
+    protected static $_AlternateEntityManager = \NULL;
+
+    /**
      * the _Entity manager used to manage the entity (linked to  
      * database dns and  parameters
      * 
@@ -795,7 +801,24 @@ abstract class _Entity {
      * @return _EntityManager 
      */
     public function getEntityManager() {
+//        $em = $this->_entityManager;
+//        if(is_object($em)){
+//            return $em;
+//        }
+//        else{
+//        $this->setEntityManager($entityManager);
         return $this->_entityManager;
+//        }
+    }
+
+    /**
+     * 
+     * @param type $alternateEntityManager
+     * @return \Iris\DB\_Entity
+     */
+    public static function SetAlternateEntityManager($alternateEntityManager) {
+        static::$_AlternateEntityManager = $alternateEntityManager;
+        return $this;
     }
 
     /**
@@ -927,6 +950,10 @@ abstract class _Entity {
      * @return \Iris\DB\_Entity
      */
     public function setEntityManager(\Iris\DB\_EntityManager $entityManager) {
+//        if (is_null($entityManager)) {
+//
+//            $defaultEM = _EntityManager::GetInstance();
+//        }
         $this->_entityManager = $entityManager;
         return $this;
     }

@@ -30,6 +30,9 @@ namespace Iris\Users;
  * @version $Id: $ */
 abstract class _Password {
 
+    const MODE_IRIS = 1;
+    const MODE_PHP54 = 4;
+    const MODE_PHP55 = 5;
     const UPPER = 'U';
     const LOWER = 'L';
     const LETTER = 'C';
@@ -42,27 +45,108 @@ abstract class _Password {
     const LOWER_ALL = 'a';
     const LOWER_DIGIT = 'd';
     const LITTERAL = '"';
-    
+
     private static $_UpperCaseLetters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
     private static $_LowerCaseLetters = 'abcdefghijkmnopqrstuvwxyz';
     private static $_Letters;
     private static $_Digits = '123456789';
     private static $_SpecialSigns = ",.:_$";
     private static $_DigitOrLetter;
+    private static $_Mode = \NULL;
 
     /**
      * ClassInitializer  initializes some variables and
      * load compatibility lib for PHP 5.5 password hash
+     * if necessary
+     * 
+     * This class initializer is not loaded in CLI context
      */
     public static function __ClassInit() {
         self::$_Letters = self::$_LowerCaseLetters . self::$_UpperCaseLetters;
         self::$_DigitOrLetter = self::$_Digits . self::$_Letters;
-        if (!defined('PASSWORD_DEFAULT') and \Iris\SysConfig\Settings::GetPasswordHashType() !== PASSWORD_IRIS) {
+        if (!version_compare(PHP_VERSION, '5.5') < 0 and \Iris\SysConfig\Settings::GetDefaultHashType() != self::MODE_PHP55) {
+            self::ForceCompatibility();
+        }
+        // CLI does not use this initializer
+        define('NOTCLI', \TRUE);
+    }
+
+    /**
+     * A clean way to charge compatibily file
+     */
+    public static function ForceCompatibility() {
+        if(!defined(PWH_COMPATIBILITY)){
             $compatibilityFile = dirname(__FILE__) . '/password.php';
             include_once $compatibilityFile;
         }
-        define('NOTCLI', \TRUE);
     }
+
+    /**
+     * Accessor Get for the mode, will charge the preset value for mode or
+     * the default value set in Settings except in case we use CLI
+     *  
+     * @return int
+     */
+    public static function GetMode() {
+        if (is_null(self::$_Mode)) {
+            if (defined('NOTCLI')) {
+                self::$_Mode = \Iris\SysConfig\Settings::getDefaultHashType();
+            }
+            else {
+                self::$_Mode = self::MODE_IRIS;
+            }
+        }
+        return self::$_Mode;
+    }
+
+    /**
+     * A simple Debug routine to display the current mode
+     */
+    public static function Debug() {
+        switch (self::GetMode()) {
+            case self::MODE_IRIS:
+                echoLine('Mode = internal Iris');
+                break;
+            case self::MODE_PHP54:
+                echoLine('Mode = PHP emulation');
+                break;
+            case self::MODE_IRIS:
+                echoLine('Mode = PHP 5.5');
+                break;
+        }
+    }
+
+    /**
+     * An accessor Set for the mode
+     * 
+     * @param int $mode
+     */
+    public static function SettMode($mode) {
+        switch ($mode) {
+            case self::MODE_IRIS:
+            case self::MODE_PHP54:
+                self::$_Mode = $mode;
+                break;
+            case self::MODE_PHP55:
+                if (defined('NOT_CLI') and version_compare(PHP_VERSION, '5.5') < 0) {
+                    self::$_Mode = self::MODE_PHP54;
+                    self::ForceCompatibility();
+                }
+                else {
+                    self::$_Mode = self::MODE_PHP55;
+                }
+                break;
+        }
+    }
+
+//    public static function UsePHPHash() {
+//        if (!defined('NOT_CLI')) {
+//            return \FALSE;
+//        }
+//        else {
+//            return \Iris\SysConfig\Settings::IsStandardHashType();
+//        }
+//    }
 
     /**
      * Creates an uncrypted password with salt
@@ -70,8 +154,11 @@ abstract class _Password {
      * @param string $password
      * @return string
      */
-    public static function EncodePassword($password) {
-        if (defined('NOTCLI') and \Iris\SysConfig\Settings::GetPasswordHashType() !== PASSWORD_IRIS) {
+    public static function EncodePassword($password, $mode = \NULL) {
+        if(is_null($mode)){
+            $mode = self::GetMode();
+        }
+        if($mode != self::MODE_IRIS){
             $encrypt = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
         }
         else {
@@ -92,8 +179,11 @@ abstract class _Password {
      * @param string $hash
      * @return boolean 
      */
-    public static function VerifyPassword($password, $hash) {
-        if (defined('NOTCLI') and \Iris\SysConfig\Settings::GetPasswordHashType() !== PASSWORD_IRIS) {
+    public static function VerifyPassword($password, $hash, $mode = \NULL) {
+        if(is_null($mode)){
+            $mode = self::GetMode();
+        }
+        if($mode != self::MODE_IRIS){
             $result = password_verify($password, $hash);
         }
         else {

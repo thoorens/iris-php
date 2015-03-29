@@ -5,22 +5,12 @@ namespace Iris\DB\DataBrowser;
 use Iris\DB\_Entity;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2014 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -29,13 +19,19 @@ use Iris\DB\_Entity;
  * self generated. For more precise tuning a series of callback can be
  * defined in a subclass.
  * 
+ *  * This class provides some common methods for <ul>
+ *    <li>DB\DataBrowser\Upload 
+ *    <li>Iris\Documents\ExtendedUpload
+ *    <li>Users\Login
+ * </ul>
+ * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  * 
  */
-abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatable {
+abstract class _Crud implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
 
@@ -46,8 +42,22 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
     const ERR_DUPLICATE = 14;
     const ERR_INVALID = 15;
     const ERR_INCOMPLETE = 16;
-
+    // Return codes
+    const RC_DISPLAY = 0;
+    const RC_END = 1;
+    const RC_GOON = 2;
     // Function mode
+    /**
+     * A neutral mode: no modification will be made
+     */
+    const NOOPERATION_MODE = 1;
+
+    /**
+     * The type of action requested (one of CRUD)
+     * 
+     * @var int 
+     */
+    protected $_mode;
 
     /**
      * Create (or insert) a line
@@ -79,7 +89,9 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * 
      * @var \Iris\DB\Entity  
      */
-    protected $_entity;
+    private $_crudEntity = \NULL;
+    protected static $_EntityManager = \NULL;
+    protected static $_EntityList = [];
 
     /**
      * The object currently edited/displayed
@@ -89,12 +101,34 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
     protected $_currentObject;
 
     /**
-     * URL of the action managing Crud (will be called various times: to
-     * display, validate and save data (normally taken from the router)
+     * The name of the form variable in the view (in auto mode with DispatchAction)
      * 
      * @var string
      */
-//    protected $_currentTreatment;
+    protected $_formName = 'form';
+
+    /**
+     * The return code is exposed here to permit a change in any callback
+     * Use it carefully.
+     * 
+     * @var string
+     */
+    protected $_returnCode;
+
+    /**
+     * The form used to managed the entity
+     * 
+     * @var \Iris\Forms\_Form 
+     */
+    protected $_form = NULL;
+
+    /**
+     * The continuation treatment URL will be used after a first submit
+     * with data no completely satisfying.
+     * 
+     * @var string
+     */
+    private $_continuationURL;
 
     /**
      * URL where to continue in case of irrecoverable error (not a simple
@@ -102,14 +136,21 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * 
      * @var string URL de la page d'erreur 
      */
-//    protected $_errorTreatment = "/error";
+    private $_errorURL = "/error";
 
     /**
      * URL where to continue in case the action has succeeded
      * 
      * @var string
      */
-//    protected $_endTreatment;
+    private $_endURL;
+
+    /**
+     * Callback function are store here
+     * 
+     * @var function[]
+     */
+    protected $_callBack = [];
 
     /**
      * A correspondance between the action and the submit button text
@@ -130,40 +171,181 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * 
      * @param mixed $param 
      */
-//    public function __construct($param = \NULL) {
-//        $response = \Iris\Engine\Response::GetDefaultInstance();
-//        $module = $response->getModuleName();
-//        $controller = $response->getControllerName();
-//        $action = $response->getActionName();
-//        $this->_currentTreatment = "/$module/$controller/$action";
-//        $this->_endTreatment = $this->_currentTreatment;
-//    }
+    public function __construct($param = \NULL) {
+        $this->findCrudEntity();
+        $url = \Iris\Engine\Response::GetDefaultInstance()->getURL();
+        $this->setContinuationURL($url);
+        $this->setEndURL($url);
+    }
+
+    /*
+     * ------------------------------------------------------------------
+     * Accessors
+     * ------------------------------------------------------------------
+     */
 
     /**
-     * Set the three action associated to the treatment: what to do if <ul>
-     * <li>an error occurs
-     * <li>everything is done
-     * <li>forms need to be modified again
-     * </ul>
+     * Set the entity corresponding to the CRUD
      * 
-     * It is clearer to use the corresponding setters for the 3 treatments
-     * 
-     * @param string $errorTreatment URL for error treatment
-     * @param string $endTreatment URL for next task after data treatment
-     * @param string $continuationTreatment URL for the continuation page when validation fails
-     * @return _CrudBase for fluent entity
-     * @deprecated since version 1 
+     * @param mixed $entity 
+     * @return _Crud for fluent entity
      */
-    public function setActions($errorTreatment, $endTreatment = \NULL, $continuationTreatment = \NULL) {
-        $this->_errorURL = $errorTreatment;
-        if ($endTreatment != NULL) {
-            $this->_endURL = $endTreatment;
-        }
-        // usuallay keep the value automatically set by the constructor
-        if ($continuationTreatment == !NULL) {
-            $this->_continuationURL = $continuationTreatment;
-        }
+    public function setCrudEntity($entity) {
+        $this->_crudEntity = $entity;
         return $this;
+    }
+
+    /**
+     * Get the entity corresponding to the CRUD. If the property is not
+     * defined, findCrudEntity is called
+     * 
+     * @return \Iris\DB\_Entity
+     */
+    public function getCrudEntity() {
+        if (is_null($this->_crudEntity)) {
+            $this->findCrudEntity();
+        }
+        return $this->_crudEntity;
+    }
+
+    /**
+     * this method tries to evaluate the entity linked to the crud:<ul>
+     * <li>if an object has been attached, keeps it
+     * <li>if a NULL is found, uses the name of the crud to search an entity in the models
+     * <li>if a string has been placed; uses it as the entity name in the models
+     * </ul>
+     */
+    private function findCrudEntity() {
+        if (!is_object($this->_crudEntity)) {
+            if (is_null(static::$_EntityManager)) {
+                static::$_EntityManager = \Iris\DB\_EntityManager::GetInstance();
+            }
+            if (is_null($this->_crudEntity)) {
+                $class = str_replace('\\', '/', get_called_class());
+                $class = 'models\\T' . basename($class);
+            }
+            else {
+                $class = 'models\\T' . ucfirst($this->_crudEntity);
+            }
+            $this->_crudEntity = $class::getEntity(static::$_EntityManager);
+        }
+    }
+
+    /**
+     * Set the form to be used by CRUD
+     * 
+     * @param \Iris\Forms\_Form $form 
+     * @return _Crud for fluent entity
+     */
+    public function setForm($form = NULL) {
+        $this->_form = $form;
+        return $this;
+    }
+
+    /**
+     * Get the form used by CRUD. If not specified, creates an autoform
+     * 
+     * @return \Iris\Forms\_Form
+     */
+    public function getForm() {
+        if (is_null($this->_form)) {
+            $this->_form = $this->_makeDefaultForm();
+        }
+        return $this->_form;
+    }
+
+    /**
+     * A direct form renderer to ignore form from controller
+     * 
+     * @return string
+     */
+    public function formRender() {
+        return $this->getForm()->render();
+    }
+
+    /**
+     * A default form MAY be provided in certain subclasses
+     * 
+     * @return \Iris\Forms\_Form
+     */
+    protected function _makeDefaultForm() {
+        throw new \Iris\Exceptions\CrudException('No default form has been defined');
+    }
+
+    /**
+     * Accessor set for URL to go in case the form is not conveniently filled
+     * 
+     * @param string $continuationURL
+     * @return \Iris\DB\DataBrowser\_Crud for fluent interface
+     */
+    public function setContinuationURL($continuationURL) {
+        $this->_continuationURL = $continuationURL;
+        return $this;
+    }
+
+    /**
+     * Accessor get for URL to go in case the form is not conveniently filled
+     * 
+     * @return string
+     */
+    public function getContinuationURL() {
+        return $this->_continuationURL;
+    }
+
+    /**
+     * Accessor set for URL to go in case treatment error
+     * 
+     * @param string $errorURL
+     * @return \Iris\DB\DataBrowser\_Crud for fluent interface
+     */
+    public function setErrorURL($errorURL) {
+        $this->_errorURL = $errorURL;
+        return $this;
+    }
+
+    /**
+     * Accessor get for URL to go in case treatment error
+     * 
+     * @return string
+     */
+    public function getErrorURL() {
+        return $this->_errorURL;
+    }
+
+    /**
+     * Accessor set for the normal end of treatment URL
+     * 
+     * @param type $endURL
+     * @return \Iris\DB\DataBrowser\_Crud for fluent interface
+     */
+    public function setEndURL($endURL) {
+        $this->_endURL = $endURL;
+        return $this;
+    }
+
+    /**
+     * Accessor get for the normal end of treatment URL
+     * 
+     * @return string
+     */
+    public function getEndURL() {
+        return $this->_endURL;
+    }
+
+    /**
+     * Tries to identificate callback definition
+     * 
+     * @param type $name
+     * @param type $arguments
+     */
+    public function __call($name, $arguments) {
+        if (strpos($name, 'define') === 0) {
+            $functionName = strtolower(substr($name, 6));
+            $this->_callBack[$functionName] = $arguments[0];
+        }
+        else {
+            throw new \Iris\Exceptions\CrudException("A non existant « $name » function has been called.");
+        }
     }
 
     /**
@@ -198,7 +380,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * @return mixed
      */
     protected function _createAndSave($formData) {
-        $model = $this->_entity->createRow($formData);
+        $model = $this->getCrudEntity()->createRow($formData);
         if (!is_null($this->_preCreate($formData, $model))) {
             try {
                 $done = $model->save();
@@ -304,7 +486,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
     public function read($idValues) {
         $this->forceAutoForm('read');
         $this->_initObjects(self::READ_MODE, $idValues);
-        $object = $this->getCurrentObject();
+        $object = $this->getCurrentObject($idValues);
         if (is_null($object)) {
             return self::ERR_NOT_FOUND;
         }
@@ -313,46 +495,28 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
     }
 
     public function goFirst() {
-        $entity = $this->_entity;
+        $entity = $this->getCrudEntity();
         $id = $entity->getId(_Entity::FIRST);
         $this->read($id);
     }
 
     public function goNext($idValues) {
-        $entity = $this->_entity;
+        $entity = $this->getCrudEntity();
         $id = $entity->getId(_Entity::NEXT, $idValues);
         $this->read($id);
     }
 
     public function goPrevious($idValues) {
-        $entity = $this->_entity;
+        $entity = $this->getCrudEntity();
         $id = $entity->getId(_Entity::PREVIOUS, $idValues);
         $this->read($id);
     }
 
     public function goLast() {
-        $entity = $this->_entity;
+        $entity = $this->getCrudEntity();
         $id = $entity->getId(_Entity::LAST);
         $this->read($id);
     }
-
-    /**
-     * Get the form used by CRUD
-     * 
-     * @return \Iris\Forms\_Form
-     */
-//    public function getForm() {
-//        return $this->_form;
-//    }
-
-    /**
-     * Set the form to be used by CRUD
-     * 
-     * @param \Iris\Forms\_Form $form 
-     */
-//    public function setForm($form = NULL) {
-//        $this->_form = $form;
-//    }
 
     /**
      * Forces an autoform if necessary
@@ -361,21 +525,12 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      */
     public function forceAutoForm($submitValue) {
         if (is_null($this->_form)) {
-            $autoForm = new \Iris\Forms\AutoForm($this->_entity);
+            $autoForm = new \Iris\Forms\AutoForm($this->getCrudEntity());
             $this->_form = $autoForm->prepare();
         }
         $message = self::$_SubmitButtonText[$submitValue];
         $localizedMessage = $this->_($message, TRUE);
         $this->_form->setSubmitMessage($localizedMessage);
-    }
-
-    /**
-     * Get the entity corresponding to the CRUD
-     * 
-     * @return \Iris\DB\_Entity
-     */
-    public function getEntity() {
-        return $this->_entity;
     }
 
     /**
@@ -430,7 +585,12 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
         if ($mode == self::READ_MODE) {
             $this->_form->makeReadOnly();
         }
-        parent::_initObjects($mode, $id);
+        $form = $this->getForm();
+        if (is_array($id)) {
+            $id = implode('/', $id);
+        }
+        $form->setAction($this->getContinuationURL() . "/$id");
+        $this->_formPrepare();
     }
 
     /*
@@ -573,7 +733,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
      * @return object
      */
     protected function _find($idValues) {
-        $data = $this->_entity->find($idValues, \TRUE);
+        $data = $this->getCrudEntity()->find($idValues, \TRUE);
         $this->_currentObject = $data;
         return $data;
     }
@@ -587,7 +747,7 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
     public function getCurrentObject($idValues = \NULL) {
         $object = $this->_currentObject;
         if (is_null($object)) {
-            $object = $this->_entity->find($idValues, \TRUE);
+            $object = $this->getCrudEntity()->find($idValues, \TRUE);
             $this->_currentObject = $object;
             return $object;
         }
@@ -607,14 +767,16 @@ abstract class _Crud extends _CrudBase implements \Iris\Translation\iTranslatabl
         $id = count($parameters) > 0 ? $parameters : \NULL;
         // the action name is for instance update_BookAction => update, BookAction
         list($action, $crudName) = explode('_', $actionName);
+        //iris_debug($crudDirectory);
         //@todo add navigation operator
         if (strpos('create.update.delete.read', $action) === \FALSE) {
             throw new \Iris\Exceptions\ControllerException("Unrecognized action");
         }
         // BookAction => \models\crud\Book
-        $crudName = $crudDirectory . ucFirst(str_replace('Action', '', $crudName));
+        $crudName = $crudDirectory .  ucFirst(str_replace('Action', '', $crudName));
+        //iris_debug($crudName);
         $crud = new $crudName([$controller]);
-        //die($crudName);
+
         $crud->_preProcess($controller, $action);
         $next = $crud->$action($id);
         // if no unique scriptName, each action has its proper script.
