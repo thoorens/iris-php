@@ -24,8 +24,8 @@
                 <div class="column three ">
                     <h2>Islets</h2>
                     {islet('islMain',array('Message from layout'))}
-                    {islet('islTestLayout',array(),'index','testLayout')}
-                    {islet('islDemo',array(),'index','!workbench')}
+                    {islet('islTestLayout',[],'index','testLayout')}
+                    {islet('islDemo',[],'index','!workbench')}
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">

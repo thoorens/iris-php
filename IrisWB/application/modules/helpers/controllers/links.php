@@ -48,7 +48,7 @@ class links extends _helpers {
 
     public function lisser($args) {
         $data = [];
-        $flat_array = array();
+        $flat_array = [];
 
         foreach (new RecursiveIteratorIterator(new \RecursiveArrayIterator($args))
 

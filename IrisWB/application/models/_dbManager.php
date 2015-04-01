@@ -33,7 +33,7 @@ abstract class _dbManager extends \Iris\DB\_Entity {
      * 
      * @var string[]
      */
-    protected static $_SQLCreate = array();
+    protected static $_SQLCreate = [];
 
     /**
      * Gets the current entity manager (if necessary, creates it according to

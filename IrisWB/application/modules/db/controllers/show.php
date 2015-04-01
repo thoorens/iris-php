@@ -63,7 +63,7 @@ class show extends _db {
      * @return type
      */
     private function _readInvoice($invoice) {
-        $inv = array();
+        $inv = [];
         $inv['id'] = $invoice->id;
         $date = new \Iris\Time\Date($invoice->InvoiceDate);
         $inv['Date'] = $invoice->InvoiceDate;
@@ -90,7 +90,7 @@ class show extends _db {
             $invoices = $customer->_children_invoices__customer_id;
             // foreign key not necessary here
             //$invoices = $customer->_children_invoices;
-            $invs = array();
+            $invs = [];
             foreach ($invoices as $invoice) {
                 $date = new \Iris\Time\Date($invoice->InvoiceDate);
                 $invs[] = array('Number' => $invoice->id, 'Date' => $date->toString('d M Y'));
@@ -138,7 +138,7 @@ class show extends _db {
         $tEvents = \models\TEvents::GetEntity($this->_entityManager);
         $events = $tEvents->fetchAll();
         foreach ($events as $event) {
-            $ord = array();
+            $ord = [];
             $ev['Key1'] = $event->invoice_id;
             $ev['Key2'] = $event->product_id;
             $ev['Moment'] = $event->Moment;
@@ -157,7 +157,7 @@ class show extends _db {
         $tOrders = \models\TOrders::GetEntity();
         $orders = $tOrders->fetchAll();
         foreach ($orders as $order) {
-            $evs = array();
+            $evs = [];
             $invoice = $order->_at_invoice_id;
             $ord['InvNum'] = $order->invoice_id . '/' . $order->product_id;
             $date = new \Iris\Time\Date($invoice->InvoiceDate);

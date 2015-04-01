@@ -39,7 +39,7 @@
         var lectureAutomatique = false;
         var tempsAttente = 6000;
 
-        var icones = new Array();
+        var icones = new [];
         icones['play'] = '/img/play_slider.png';
         icones['pause'] = '/img/pause_slider.png';
 
