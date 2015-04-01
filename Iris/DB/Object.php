@@ -66,20 +66,20 @@ class Object {
      * The field names (in keys) and offsets (in values)
      * @var int[]
      */
-    protected $_fields = array();
+    protected $_fields = [];
 
     /**
      * The current content of the fields 
      * @var mixed[] 
      */
-    protected $_currentContent = array();
+    protected $_currentContent = [];
 
     /**
      * The modified content of the field
      * 
      * @var mixed[]
      */
-    protected $_modifiedContent = array();
+    protected $_modifiedContent = [];
 
     /**
      * If \TRUE, indicates that the object has been modified
@@ -101,7 +101,7 @@ class Object {
      * 
      * @var Object[]
      */
-    private $_parents = array();
+    private $_parents = [];
 
     /**
      * An object may have various series of children : each one has the table
@@ -109,7 +109,7 @@ class Object {
      * 
      * @var Object[]
      */
-    protected $_children = array();
+    protected $_children = [];
 
     /**
      * Entity corresponding to the object 
@@ -353,8 +353,8 @@ class Object {
      * @return boolean If \TRUE, insertion has been successfully done
      */
     protected function _insert() {
-        $insert = array();
-        $values = array();
+        $insert = [];
+        $values = [];
         foreach ($this->_fields as $field => $dummy) {
             $offset = $this->_fields[$field];
             if (isset($this->_modifiedContent[$offset])) {
@@ -390,8 +390,8 @@ class Object {
      * @return boolean If \TRUE, update has been successfully done
      */
     protected function _update() {
-        $setFields = array();
-        $values = array();
+        $setFields = [];
+        $values = [];
         // id must be the old value
         $idValues = $this->primaryKeyValue();
         foreach ($this->_fields as $field => $dummy) {
@@ -431,7 +431,7 @@ class Object {
      * @return array 
      */
     public function primaryKeyValue() {
-        $idValues = array();
+        $idValues = [];
         foreach ($this->_entity->getMetadata()->getPrimary()->getFields() as $idN) {
             if (isset($this->_fields[$idN])) {
                 $idValues[$idN] = $this->_currentContent[$this->_fields[$idN]];

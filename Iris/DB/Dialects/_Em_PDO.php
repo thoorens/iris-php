@@ -86,7 +86,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      * @param string[] $fieldsPH
      * @return array
      */
-    public function getResults($sql, $fieldsPH = array()) {
+    public function getResults($sql, $fieldsPH = []) {
         $pdo = $this->_connexion;
         $statement = $pdo->prepare($sql);
         foreach ($fieldsPH as $key => $value) {

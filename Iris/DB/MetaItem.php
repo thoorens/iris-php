@@ -82,7 +82,7 @@ class MetaItem implements \Serializable {
      * @var string
      */
     private $_foreignPointer = NULL;
-    private $_properties = array();
+    private $_properties = [];
 
     public function __construct($fieldName) {
         $this->_fieldName = $fieldName;

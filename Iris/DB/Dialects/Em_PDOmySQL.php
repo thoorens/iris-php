@@ -91,7 +91,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
         $ligne = $results->fetchAll(\PDO::FETCH_ASSOC);
         $def = explode("\n", $ligne[0]['Create Table']);
         $tab = preg_grep('/FOREIGN KEY/i', $def);
-        $foreignKeys = array();
+        $foreignKeys = [];
         foreach ($tab as $line) {
             $line = str_replace('`', '', $line);
             $line = str_replace(' ', '', $line);

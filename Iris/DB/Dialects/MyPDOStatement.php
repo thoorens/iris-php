@@ -50,7 +50,7 @@ use Iris\DB\Object,
 //		private function logQuery() {
 //			echo "<div style=\"background-color:#5298d4; color:#FFFFFF; margin:10px; padding:5px\"><strong>DEBUG:</strong><hr>".$this->preBindingStatement."</div>";
 //		}
-//		public function execute($input_parameters = array()) {
+//		public function execute($input_parameters = []) {
 //			
 //			if(count($input_parameters)>0) {
 //				$this->preBindingStatement = $this->queryString;
@@ -93,7 +93,7 @@ class MyPDOStatement extends \PDOStatement {
 //                <strong>DEBUG:</strong><hr>" . $this->preBindingStatement . "</div>";
 //        }
 
-    public function execute($input_parameters = array()) {
+    public function execute($input_parameters = []) {
         if (count($input_parameters) > 0) {
             $this->_preBindingStatement = $this->queryString;
             foreach ($input_parameters as $stmt_parameter => $stmt_value) {

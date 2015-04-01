@@ -181,7 +181,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
         $pdo = $this->_connexion;
         $results = $pdo->query("PRAGMA foreign_key_list($tableName)");
         $results->setFetchMode(\PDO::FETCH_OBJ);
-        $foreignKeys = array();
+        $foreignKeys = [];
         foreach ($results as $line) {
             $id = $line->id;
             $seq = $line->seq;
@@ -209,7 +209,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
         $noviews = $views ? '' : "type = 'table' and ";
         $results = $connexion->query("SELECT name FROM sqlite_master WHERE $noviews name not like 'sqlite_%'");
         $data = $results->fetchAll(\PDO::FETCH_OBJ);
-        $tables = array();
+        $tables = [];
         foreach ($data as $line) {
             $tables[] = $line->name;
         }
