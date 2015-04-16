@@ -112,7 +112,7 @@ class ErrorDisplay extends \Iris\Subhelpers\_LightSubhelper {
             }
             $this->_title = $exceptionContainer->getTitle();
             $this->_trace = $exceptionContainer->getIrisTrace(EC::MODE_STRING);
-            $stackLevel = \Iris\Errors\Settings::GetStackLevel();
+            $stackLevel = \Iris\Errors\Settings::$StackLevel;
             if ($stackLevel == -1)
                 $this->_details = $exceptionContainer->getIrisTrace(EC::MODE_BOTH);
             elseif (is_numeric($stackLevel))

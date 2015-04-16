@@ -153,12 +153,12 @@ class View implements \Iris\Translation\iTranslatable {
         }
         // In case of Ajax, no render is necessary. There is no view part.
         if ($forcedScriptName == '__AJAX__' or $this->_viewScriptName == '__AJAX__') {
-            \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
+            \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
             return;
         }
         // File generators and loaders have no view part, stop them and no time measurement.
         if ($forcedScriptName == '__NO_RENDER__' or $this->_viewScriptName == '__NO_RENDER__') {
-            \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
+            \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
             die(''); // stop process - file is complete
         }
         // In case of simple quoting, there is no template file to treat

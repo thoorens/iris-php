@@ -204,7 +204,7 @@ abstract class _Upload extends \Iris\DB\DataBrowser\_Crud {
      */
     protected function _getFileDir(\Iris\Forms\Elements\FileElement $fileElement) {
         if (is_null($fileElement->getSpecificDirectory())) {
-            $newPath = \Iris\SysConfig\Settings::GetDataFolder() . $this->_destinationDirectory;
+            $newPath = \Iris\SysConfig\Settings::$DataFolder . $this->_destinationDirectory;
         }
         else {
             $newPath = IRIS_ROOT_PATH . '/' . $fileElement->getSpecificDirectory();

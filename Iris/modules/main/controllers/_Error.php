@@ -49,10 +49,10 @@ abstract class _Error extends \Iris\MVC\_Controller {
     protected final function _moduleInit() {
         $this->_isProduction = \Iris\Errors\Handler::IsProduction();
         $this->_setLayout('error');
-        $this->__title = \Iris\Errors\Settings::GetTitle();
+        $this->__title = \Iris\Errors\Settings::$Title;
         $this->_exception = \Iris\Engine\Memory::Get('untreatedException', new \Iris\Exceptions\InternalException('Unkown exception'));
-        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
-        \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
      */
     public final function standardAction() {
         if ($this->_isProduction) {
-            if (\Iris\Errors\Settings::HasForceDevelopment()) {
+            if (\Iris\Errors\Settings::$ForceDevelopment) {
                 $this->_standardDevelopment();
             }
             else {
@@ -101,7 +101,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * to be defined in a subclass
      */
     public final function privilegeAction() {
-        if ($this->_isProduction or \Iris\Errors\Settings::HasForceDevelopment()) {
+        if ($this->_isProduction or \Iris\Errors\Settings::$ForceDevelopment) {
             $this->_privilegeProduction();
         }
         else {

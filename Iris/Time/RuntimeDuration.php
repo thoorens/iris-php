@@ -66,7 +66,7 @@ class RuntimeDuration extends StopWatch{
     public function jsDisplay($componentId = 'iris_RTD') {
         $javascriptCode = '';
         // Display may be disabled in special controller (loader, subcontroller...)
-        if (\Iris\SysConfig\Settings::HasDisplayRuntimeDuration() and \Iris\Engine\Mode::IsDevelopment()) {
+        if (\Iris\SysConfig\Settings::$DisplayRuntimeDuration and \Iris\Engine\Mode::IsDevelopment()) {
             $duration = $this->ComputeInterval($this->_startTime, microtime());
             if (self::$DisplayMode == self::INNERCODE) {
                 $javascriptCode = $this->_defaultDisplay($duration, $componentId);

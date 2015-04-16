@@ -290,7 +290,7 @@ class Template implements \Iris\Translation\iTranslatable {
      * @return boolean
      */
     private function _getCacheTemplate() {
-        switch (\Iris\SysConfig\Settings::GetCacheTemplate()) {
+        switch (\Iris\SysConfig\Settings::$CacheTemplate) {
             case self::CACHE_ALWAYS:
                 $value = \TRUE;
                 break;

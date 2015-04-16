@@ -16,7 +16,6 @@ namespace Iris\SysConfig;
  */
 define('PASSWORD_IRIS', 'IRIS');
 
-
 /**
  * This class offers a way to manage settings:<ul>
  * <li> some are predefined during Settings occurrence initialization
@@ -31,64 +30,173 @@ define('PASSWORD_IRIS', 'IRIS');
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Settings extends _Settings {
+class Settings  {
 
     protected static $_GroupName = 'main';
-    protected static $_Instance = \NULL;
 
-    protected function _init() {
-        // Admin toolbar may be Ajax or simple javascript
-        BooleanSetting::CreateSetting('adminToolbarAjaxMode', \TRUE);
-        // Pages usually don't have a MD5 signature (usefull in debugging or caching)
-        BooleanSetting::CreateSetting('MD5Signature', \FALSE);
-        // In development, it may be usefull to compute Program Time Excecution,
-        // by default managed by Javascript (not Ajax)
-        BooleanSetting::CreateSetting('displayRuntimeDuration', \TRUE);
-        StandardSetting::CreateSetting('runtimeDisplayMode', \Iris\Time\RuntimeDuration::INNERCODE);
-        // Unformated dates use japanese format as in 2012-12-31
-        StandardSetting::CreateSetting('dateMode', \Iris\Time\TimeDate::JAPAN);// could be 'japan'
-        // The default time zone is Brussels
-        StandardSetting::CreateSetting('defaultTimezone', 'Europe/Brussels');
-        // All Ajax functions need a library to manage them, by default it is Dojo
-        StandardSetting::CreateSetting('defaultAjaxLibrary', '\\Dojo\\Ajax\\');
-        // The slideshow is javascript based (by default trough Dojo)
-        StandardSetting::CreateSetting('slideShowManagerLibrary', '\\Dojo\\');
-        // If ACL are used, the default user is named 'somebody' in 'browse' group
-        StandardSetting::CreateSetting('defaultUserName', 'somebody');
-        StandardSetting::CreateSetting('defaultRoleName', 'browse');
-        StandardSetting::CreateSetting('defaultUserEmail', 'info@irisphp.org');
-        StandardSetting::CreateSetting('systemUserEntity', '');
-        // Type of Password
-        StandardSetting::CreateSetting('defaultHashType', \Iris\Users\_Password::MODE_PHP55);
-        //
-        StandardSetting::CreateSetting('errorDebuggingLevel', 1);
-        // To minimize execution templates can be cached (not by default)
-        StandardSetting::CreateSetting('cacheTemplate', \Iris\MVC\Template::CACHE_NEVER);
-        // Application icons are placed in a /images/icons
-        StandardSetting::CreateSetting('iconDir', '/icons');
-        // By default all texts are in US english
-        StandardSetting::CreateSetting('defaultLanguage', 'en');
-        // By default only english is available (otherwise, use a string like 'fr-en-es')
-        StandardSetting::CreateSetting('availableLanguages', 'en');
-        // Defaults settings for menu
-        StandardSetting::CreateSetting('menuActiveClass', 'active');
-        StandardSetting::CreateSetting('menuMainTag', 'ul');
-        StandardSetting::CreateSetting('buttonMenuMainTag', 'div');
-        // Default settings for database
-        // Sqlite : create the file if not existing
-        BooleanSetting::CreateSetting('sqliteCreateMissingFile', \FALSE);
-        // Default settings for forms
-        StandardSetting::CreateSetting('defaultFormClass', '\\Iris\\Forms\\StandardFormFactory');
-        // Module, controler and action names may contain '-'
-        BooleanSetting::CreateSetting('admitDash', \FALSE);
-        // The default folder for document files managed through the program
-        StandardSetting::CreateSetting('dataFolder', IRIS_ROOT_PATH . '/data');
-        // The default translator is
-        StandardSetting::CreateSetting('defaultTranslator', '\Iris\Translation\NullTranslator');
-        
+    /**
+     * Admin toolbar may be Ajax or simple javascript
+     * @var boolean 
+     */
+    public static $AdminToolbarAjaxMode = \TRUE;
+
+    /**
+     * Pages usually don't have a MD5 signature (usefull in debugging or caching)
+     * @var boolean
+     */
+    public static $MD5Signature = \FALSE;
+
+    /**
+     * In development, it may be usefull to compute Program Time Excecution,
+     * by default managed by Javascript (not Ajax)
+     * @var boolean
+     */
+    public static $DisplayRuntimeDuration = \TRUE;
+
+    /**
+     * @var int
+     */
+    public static $RuntimeDisplayMode = \Iris\Time\RuntimeDuration::INNERCODE;
+
+    /**
+     * Unformated dates use japanese format as in 2012-12-31
+     * @var iint 
+     */
+    public static $DateMode = \Iris\Time\TimeDate::JAPAN;
+
+    /**
+     * The default time zone is Brussels
+     * @var string
+     */
+    public static $DefaultTimezone = 'Europe/Brussels';
+
+    /**
+     * All Ajax functions need a library to manage them, by default it is Dojo
+     * @var string
+     */
+    public static $DefaultAjaxLibrary = '\\Dojo\\Ajax\\';
+
+    /**
+     * The slideshow is javascript based (by default trough Dojo)
+     * @var string
+     */
+    public static $SlideShowManagerLibrary = '\\Dojo\\';
+
+    /**
+     * If ACL are used, the default user is named 'somebody'
+     * @var string
+     */
+    public static $DefaultUserName = 'somebody';
+
+    /**
+     * If ACL are used, the default user group is named 'browse'
+     * @var string
+     */
+    public static $DefaultRoleName = 'browse';
+
+    /**
+     * If ACL are used, the default user email address is 'info@irisphp.org'
+     * @var string
+     */
+    public static $DefaultUserMail = 'info@irisphp.org';
+
+    /**
+     * If ACL are used, no entity is defined in Settings (DIY)
+     * @var string
+     */
+    public static $SystemUserEntity = '';
+    
+    /**
+     * Type of Password conversion
+     * @var int
+     */
+    public static $DefaultHashType = \Iris\Users\_Password::MODE_PHP55;
+
+    
+    /**
+     * Debugging level
+     * @var int
+     */
+    public static $ErrorDebuggingLevel = 1;
+
+    /**
+     * To minimize execution templates can be cached (not by default)
+     * @var int 
+     */
+    public static $CacheTemplate = \Iris\MVC\Template::CACHE_NEVER;
+    
+    /**
+     * Application icons are placed in an /images/icons folder
+     * @var string 
+     */
+    public static $IconDir = '/icons';
+    
+    /**
+     * By default all texts are in US english
+     * @var string
+     */
+    public static $DefaultLanguage = 'en';
+    
+    /**
+     * By default only english is available (otherwise, use a string like 'fr-en-es')
+     * @var string
+     */
+    public static $AvailableLanguages = 'en';
+    
+    /**
+     * Default class used by menu
+     * @var string
+     */
+    public static $MenuActiveClass = 'acitve';
+    
+    /**
+     * Default main tag for the menu
+     * @var string
+     */
+    public static $MenuMainTag = 'ul';
+    
+    /**
+     * Default button tag for the menu
+     * @var string
+     */
+    public static $ButtonMenuMainTag = 'div';
+    
+    /**
+     * Sqlite : create the file if not existing
+     * @var boolean
+     */
+    public static $SqliteCreateMissingFile = \FALSE;
+    
+    /**
+     * Default settings for forms
+     * @var string 
+     */
+    public static $DefaultFormClass = '\\Iris\\Forms\\StandardFormFactory';
+    
+    /**
+     * Module, controler and action names may contain '-' (by default not)
+     * @var boolean
+     */
+    public static $AdmitDash = \FALSE;
+    
+    /**
+     * The default folder for document files managed through the program (defined by _ClassInit)
+     * @var string
+     */
+    public static $DataFolder;
+    
+    /**
+     * The default translator is a mere reproducer
+     * @var string
+     */
+    public static $DefaultTranslator = '\\Iris\\Translation\\NullTranslator';
+    
+    /**
+     * Management of special values
+     */
+    public static function __ClassInit(){
+        // The default folder for document is relative to parameters in project creation
+        self::$DataFolder = IRIS_ROOT_PATH . '/data';
     }
-
 }
 
-// Auto init
-//Settings::__ClassInit();

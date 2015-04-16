@@ -42,8 +42,8 @@ class ButtonMenu extends Menu {
      * Inits the active class and main tag names from settings
      */
     protected function _init() {
-        $this->_activeClass = \Iris\SysConfig\Settings::GetMenuActiveClass();
-        $this->_mainTag = \Iris\SysConfig\Settings::GetButtonMenuMainTag();
+        $this->_activeClass = \Iris\SysConfig\Settings::$MenuActiveClass;
+        $this->_mainTag = \Iris\SysConfig\Settings::$ButtonMenuMainTag;
     }
 
     protected function _renderItem($item,$dummy) {

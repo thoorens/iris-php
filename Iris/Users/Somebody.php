@@ -56,9 +56,9 @@ class Somebody implements iUser {
     public function __construct($serialized = NULL) {
         if (is_null($serialized)) {
             $this->_id = 0;
-            $this->_name = Settings::GetDefaultUserName();
-            $this->_role = Settings::GetDefaultRoleName();
-            $this->_emailAddress = Settings::GetDefaultUserEmail();
+            $this->_name = \Iris\SysConfig\Settings::$DefaultUserName;
+            $this->_role = \Iris\SysConfig\Settings::$DefaultRoleName;
+            $this->_emailAddress = \Iris\SysConfig\Settings::$DefaultUserMail;
         }
         else {
             $data = explode('&', $serialized);
@@ -76,7 +76,7 @@ class Somebody implements iUser {
      * @deprecated since version 1.0 (use Settings)
      */
     public static function SetDefaultName($name) {
-        Settings::SetDefaultUserName($name);
+        \Iris\SysConfig\Settings::$DefaultUserName =$name;
     }
 
     /**
@@ -85,7 +85,7 @@ class Somebody implements iUser {
      * @deprecated since version 1.0 (use Settings)
      */
     public static function GetDefaultName() {
-        return Settings::GetDefaultUserName();
+        return \Iris\SysConfig\Settings::$DefaultUserName;
     }
 
     /**
@@ -94,7 +94,7 @@ class Somebody implements iUser {
      * @deprecated since version 1.0 (use Settings)
      */
     public static function SetDefaultRole($name) {
-        Settings::SetDefaultRoleName($name);
+        \Iris\SysConfig\Settings::$DefaultRoleName =$name;
     }
 
     /**
@@ -103,7 +103,7 @@ class Somebody implements iUser {
      * @deprecated since version 1.0 (use Settings)
      */
     public static function GetDefaultRole() {
-        return Settings::GetDefaultRoleName();
+        return \Iris\SysConfig\Settings::$DefaultRoleName;
     }
 
     public function __get($propName) {

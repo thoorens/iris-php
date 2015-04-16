@@ -45,7 +45,6 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
     const ONLY = 'only';
     const FIRST = 'first';
     const LAST = 'last';
-
     const HTML = 0;
     const JS = 1;
     const JSON = 2;
@@ -53,28 +52,23 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
     const CSS = 4;
 
     private static $_TypeDef = [
-      self::HTML => ['text/html','text' ],
-        self::JS => ['text/javascript','javascript'],
-        self::JSON => ['text/json','json'],
-        self::XML => ['text/xml','xml'],
-        self::CSS => ['text/css','text'],
-    ]; 
-    
+        self::HTML => ['text/html', 'text'],
+        self::JS => ['text/javascript', 'javascript'],
+        self::JSON => ['text/json', 'json'],
+        self::XML => ['text/xml', 'xml'],
+        self::CSS => ['text/css', 'text'],
+    ];
 
-    
     /**
      * The subhelper static reference for simulating singleton behaviour.
      * 
      * @var static
      */
     protected static $_Instance = \NULL;
-
     protected $_debugDisplayObject = \NULL;
-    
     protected $_placeMode = self::LAST;
-
     protected $_messageArgumentNumber = 2;
-    
+
     /**
      * The Ajax default provider (Dojo) may be changed.
      * 
@@ -82,7 +76,7 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
      * @deprecated since version 1.0 (use Settings to modify)
      */
     public static function SetDefaultAjaxLibrary($library) {
-        \Iris\SysConfig\Settings::SetDefaultAjaxLibrary($library);
+        \Iris\SysConfig\Settings::$DefaultAjaxLibrary = $library;
     }
 
     /**
@@ -90,21 +84,19 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
      * @return string
      * @deprecated since version 1.0 (use Settings to know)
      */
-    public static function GetDefaultAjaxLibrary(){
-        return  \Iris\SysConfig\Settings::GetDefaultAjaxLibrary();
+    public static function GetDefaultAjaxLibrary() {
+        return \Iris\SysConfig\Settings::$DefaultAjaxLibrary;
     }
-    
+
     protected function _getRenderer() {
         return \Iris\MVC\_Helper::HelperCall('ajax');
     }
 
-    public function setDebugDisplayObject($output){
+    public function setDebugDisplayObject($output) {
         $this->_debugDisplayObject = $output;
         return $this;
     }
-    
 
-    
     /**
      * Magic method to add some methods to the helper<ul>
      * <li>placeBefore, placeAfter...
@@ -174,7 +166,7 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
      * @param string $type MIME type for the request (text by default)
      */
     abstract public function onMessage($messageName, $url, $target, $type = \NULL);
-    
+
     /**
      * Changes the number of arguments for the sent messages (bu default 2)
      * 
@@ -184,40 +176,36 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
         $this->_messageArgumentNumber = $messageArgumentNumber;
     }
 
-
     /**
      * Generates the required parameters for URL and javascript function 
      * during message management.
      * 
      * @return array(string)
      */
-    protected function _generateParameters(){
-        for($i=1;$i<=$this->_messageArgumentNumber;$i++){
+    protected function _generateParameters() {
+        for ($i = 1; $i <= $this->_messageArgumentNumber; $i++) {
             $args[] = "p$i";
         }
         return [implode("+'/'+", $args), implode(',', $args)];
     }
-    
-    
+
     protected abstract function _debug($param);
-    
+
     protected abstract function _getAction($type, $target, $place);
 
-    protected function _getTypeHandler($type = \NULL){
+    protected function _getTypeHandler($type = \NULL) {
         return $this->_getInternalType($type, 1);
     }
-    
-    protected function _getMimeType($type = \NULL){
+
+    protected function _getMimeType($type = \NULL) {
         return $this->_getInternalType($type, 0);
     }
-     private function _getInternalType($type, $offset){
-         if(is_null($type)){
-             $type = self::HTML;
-         }
-         return self::$_TypeDef[$type][$offset];
-     }
+
+    private function _getInternalType($type, $offset) {
+        if (is_null($type)) {
+            $type = self::HTML;
+        }
+        return self::$_TypeDef[$type][$offset];
+    }
+
 }
-
-
-
-

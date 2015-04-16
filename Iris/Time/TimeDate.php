@@ -82,7 +82,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         }
         else {
             if (is_null($timeZone)) {
-                $timeZone = new \DateTimeZone(\Iris\SysConfig\Settings::GetDefaultTimeZone());
+                $timeZone = new \DateTimeZone(\Iris\SysConfig\Settings::$DefaultTimeZone);
             }
             $this->_internalDate = new \DateTime(\NULL, $timeZone);
             if (!is_null($date) and is_string($date)) {
@@ -158,7 +158,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         if ($countNumbers < 2 or $countNumbers > 3) {
             return;
         }
-        $mode = \Iris\SysConfig\Settings::GetDateMode();
+        $mode = \Iris\SysConfig\Settings::$DateMode;
         // European dates have reverse day month order
         if ($mode == self::EUROPE or $mode == 'europe') {
             $day = $numbers[0];
@@ -228,7 +228,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * @deprecated since version 1.0 (use Settings instead)
      */
     public static function SetMode($mode) {
-        \Iris\SysConfig\Settings::SetDateMode($mode);
+        \Iris\SysConfig\Settings::$DateMode = $mode;
     }
 
     /**

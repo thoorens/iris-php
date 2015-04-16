@@ -116,7 +116,7 @@ class Manager {
         if (!is_null(self::$_Instance)) {
             throw new _IEx_\FileException('One Document File Manager may be active at a time.');
         }
-        $this->_baseDirectory = \Iris\SysConfig\Settings::GetDataFolder();
+        $this->_baseDirectory = \Iris\SysConfig\Settings::$DataFolder;
         self::$_Instance = $this;
     }
 

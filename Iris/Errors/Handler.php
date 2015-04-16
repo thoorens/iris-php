@@ -55,7 +55,7 @@ class Handler implements \Iris\Design\iSingleton {
      * The production status may be simulated through the ProdSim setting
      */
     protected function _init() {
-        if (Settings::hasProdSim()) {
+        if (Settings::$ProdSim) {
             $this->_isProduction = \TRUE;
         }
         else {
@@ -74,7 +74,7 @@ class Handler implements \Iris\Design\iSingleton {
         $subHelper = \Iris\Subhelpers\ErrorDisplay::GetInstance();
         $subHelper->prepareExceptionDisplay($exception);
         $this->_wipeAllText();
-        $errorController = \Iris\Errors\Settings::GetController();
+        $errorController = \Iris\Errors\Settings::$Controller;
         // First level of error
         if (is_null($ErrorURI)) {
             \Iris\Engine\Memory::Set('untreatedException', $exception);
@@ -129,7 +129,7 @@ class Handler implements \Iris\Design\iSingleton {
      * 1 during development
      */
     private function _wipeAllText() {
-        if (($this->_isProduction) or (!\Iris\Errors\Settings::HasKeep())) {
+        if (($this->_isProduction) or (!\Iris\Errors\Settings::$Keep)) {
             while (ob_get_level()) {
                 ob_end_clean();
             }
@@ -205,10 +205,10 @@ class Handler implements \Iris\Design\iSingleton {
      * @return \Iris\Errors\Handler
      */
     public function allException() {
-        if (!\Iris\Errors\Settings::HasHang()) {
+        if (!\Iris\Errors\Settings::$Hang) {
             set_error_handler(array($this, 'error2Exception'));
             // capture all fatal errors
-            if (\Iris\Errors\Settings::HasFatal()) {
+            if (\Iris\Errors\Settings::$Fatal) {
                 register_shutdown_function(array($this, 'captureShutdown'));
             }
         }
@@ -223,7 +223,7 @@ class Handler implements \Iris\Design\iSingleton {
      */
     public function setIniParameters() {
         $application = \Iris\Engine\Program::$ProgramName;
-        $mustLog = \Iris\Errors\Settings::HasLog() ? 'on' : 'off';
+        $mustLog = \Iris\Errors\Settings::$Log ? 'on' : 'off';
         if (\Iris\Engine\Mode::IsProduction()) {
             error_reporting(E_ALL);
             ini_set('track_error', 'off');
@@ -235,7 +235,7 @@ class Handler implements \Iris\Design\iSingleton {
             ini_set('display_errors', 'on');
         }
         ini_set('log_errors', $mustLog);
-        ini_set('error_log', IRIS_ROOT_PATH . '/' . $application . Settings::GetLogFile());
+        ini_set('error_log', IRIS_ROOT_PATH . '/' . $application . Settings::$LogFile);
         ini_set('log_errors_max_len', '1024');
         return $this;
     }

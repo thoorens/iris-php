@@ -63,7 +63,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
     protected function __construct($dsn, $userName = \NULL, $passwd = \NULL, &$options = []) {
         list($adapter, $fileName) = explode(':', $dsn);
         $fullFileName = self::FullPathName($fileName);
-        if (!file_exists($fullFileName) and \Iris\SysConfig\Settings::HasSqliteCreateMissingFile()) {
+        if (!file_exists($fullFileName) and \Iris\SysConfig\Settings::$SqliteCreateMissingFile) {
             self::CreateFile($fullFileName);
         }
         $this->_fileName = $fullFileName;

@@ -39,8 +39,8 @@ trait tLanguageSelector {
 
     public function __callAction($actionName, $parameters) {
         $newLanguage = substr($actionName, 0, 2);
-        if(strpos(\Iris\SysConfig\Settings::GetAvailableLanguages(), $newLanguage)===\FALSE){
-            $newLanguage = \Iris\SysConfig\Settings::GetDefaultLanguage();
+        if(strpos(\Iris\SysConfig\Settings::$AvailableLanguages, $newLanguage)===\FALSE){
+            $newLanguage = \Iris\SysConfig\Settings::$DefaultLanguage;
         }
         $_SESSION['Language'] = $newLanguage;
         \Iris\Translation\_Translator::__ClassInit();

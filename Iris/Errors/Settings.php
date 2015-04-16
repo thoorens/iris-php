@@ -74,33 +74,76 @@ class Settings extends \Iris\SysConfig\_Settings {
     const PRODSIM = 32;
 
     /**
+     * Test if the echoed text must be kept and not erased before 
+     * displaying the error messages
+     * @var boolean 
+     */
+    public static $Keep = \FALSE;
+    
+    /**
+     * Disables by default the use of a log file
+     * @var boolean
+     */
+    public static $Log = \FALSE;
+    
+    /**
+     * Sets a dault name for the logfile
+     * @var string
+     */
+    public static $LogFile =  '/log/iris.log';
+    
+    /**
+     * By default forbits the handler from sending an email to the administrator
+     * @var boolean
+     */
+    public static $Mail = \FALSE;
+    
+    /**
+     * If true disables the error hang mechanism
+     * @var boolean
+     */
+    public static $Hang = \FALSE;
+    
+    /**
+     * In case of fatal error, a message has to be fired in development
+     * @var boolean 
+     */
+    public static $Fatal = \FALSE;
+    
+    /**
+     * Production mode simulation is disabled by default
+     * @var boolean
+     */
+    public static $ProdSim = \FALSE;
+    
+    /**
+     * Execute Development error in production (for desperate debugging purpose)
+     * @var boolean
+     */
+    public static $ForceDevelopment = \FALSE;
+    
+    /**
+     * Default error controller (begins with /)
+     * @var sting
+     */
+    public static $Controller = '/Error';
+    
+    /**
+     * Title for error screen
+     * @var string
+     */
+    public static $Title = 'Iris - Error';
+    
+    /**
+     * The stack level to display
+     * @var int 
+     */
+    public static $StackLevel = \NULL;
+    
+    /**
      * Default values
      */
     protected function _init() {
-
-        //Test if the echoed text must be kept and not erased before 
-        // displaying the error messages
-        \Iris\SysConfig\BooleanSetting::CreateSetting('keep', \FALSE);
-        // Disables the use of a log file
-        \Iris\SysConfig\BooleanSetting::CreateSetting('log', \FALSE);
-        \Iris\SysConfig\StandardSetting::CreateSetting('logFile', '/log/iris.log');
-        // Forbits the handler from sending an email to the administrator
-        \Iris\SysConfig\BooleanSetting::CreateSetting('mail', \FALSE);
-        // Disables the error hang mechanism
-        \Iris\SysConfig\BooleanSetting::CreateSetting('hang', \FALSE);
-        // In case of fatal error, a message has to be fired in development
-        \Iris\SysConfig\BooleanSetting::CreateSetting('fatal', \FALSE);
-        // Production mode simulation is disabled by default
-        \Iris\SysConfig\BooleanSetting::CreateSetting('prodSim', \FALSE);
-        // Execute Development error in production (for desperate debugging purpose)
-        \Iris\SysConfig\BooleanSetting::CreateSetting('forceDevelopment', \FALSE);
-        // Default error controller (begins with /)
-        \Iris\SysConfig\StandardSetting::CreateSetting('controller', '/Error');
-        // Title for error screen
-        \Iris\SysConfig\StandardSetting::CreateSetting('title', 'Iris - Error');
-        // The stack level to display
-        \Iris\SysConfig\StandardSetting::CreateSetting('stackLevel', \NULL);
-
         $this->_forceSettings();
     }
 
@@ -146,19 +189,19 @@ class Settings extends \Iris\SysConfig\_Settings {
      * 
      * @return int
      */
-    public function getErrorflags() {
+    public static function GetErrorflags() {
         $flags = 0;
-        if (self::HasKeep())
+        if (self::$Keep)
             $flags += self::KEEP;
-        if (self::HasLog())
+        if (self::$Log)
             $flags += self::LOG;
-        if (self::HasMail())
+        if (self::$Mail)
             $flags += self::MAIL;
-        if (self::HasHang())
+        if (self::$Hang)
             $flags += self::HANG;
-        if (self::HasFatal())
+        if (self::$Fatal)
             $flags += self::FATAL;
-        if (self::HasProdSim())
+        if (self::$ProdSim)
             $flags += self::PRODSIM;
         return $flags;
     }
@@ -179,7 +222,7 @@ class Settings extends \Iris\SysConfig\_Settings {
         $limit = mktime($hour, $minute, $second, $month, $day, $year);
         
         if($now < $limit){
-            \Iris\Errors\Settings::EnableForceDevelopment();
+            \Iris\Errors\Settings::$ForceDevelopment = \TRUE;
         }
         
     }

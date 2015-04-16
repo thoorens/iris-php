@@ -56,7 +56,7 @@ abstract class _Translator {
     public static function GetInstance() {
         static $mainTranslator = \NULL;
         if (is_null($mainTranslator)) {
-            $mainTranslatorName = \Iris\SysConfig\Settings::GetDefaultTranslator();
+            $mainTranslatorName = \Iris\SysConfig\Settings::$DefaultTranslator;
             $mainTranslator = new $mainTranslatorName();
             self::SetLanguage();
         }
@@ -88,8 +88,8 @@ abstract class _Translator {
             if (!is_null($newLanguage)) {
                 $language = $newLanguage;
             }
-            if (strpos(\Iris\SysConfig\Settings::GetAvailableLanguages(), $language) === \FALSE) {
-                $language = \Iris\SysConfig\Settings::GetDefaultLanguage();
+            if (strpos(\Iris\SysConfig\Settings::$AvailableLanguages, $language) === \FALSE) {
+                $language = \Iris\SysConfig\Settings::$DefaultLanguage;
             }
             self::$CurrentLanguage = $language;
         }

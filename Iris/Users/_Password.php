@@ -3,22 +3,12 @@
 namespace Iris\Users;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -30,8 +20,20 @@ namespace Iris\Users;
  * @version $Id: $ */
 abstract class _Password {
 
+    /**
+     * MODE_IRIS uses an internal routine to crypt the password
+     */
     const MODE_IRIS = 1;
+
+    /**
+     * MODE_PHP54 uses a special routine written by Anthony Ferrara for use with 
+     * a PHP 5.4 server
+     */
     const MODE_PHP54 = 4;
+
+    /**
+     * MODE_PHP55 uses a internal routine implemented in PHP 5.5 and above
+     */
     const MODE_PHP55 = 5;
     const UPPER = 'U';
     const LOWER = 'L';
@@ -46,12 +48,47 @@ abstract class _Password {
     const LOWER_DIGIT = 'd';
     const LITTERAL = '"';
 
+    /**
+     * Contains all the standard uppercase letters
+     * @var string
+     */
     private static $_UpperCaseLetters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+    /**
+     * Contains all the standard lowercase letters
+     * @var string
+     */
     private static $_LowerCaseLetters = 'abcdefghijkmnopqrstuvwxyz';
-    private static $_Letters;
-    private static $_Digits = '123456789';
+
+    /**
+     * Contains all the digits
+     * @var string
+     */
+    private static $_Digits = '0123456789';
+
+    /**
+     * Contains five special characters
+     * @var string
+     */
     private static $_SpecialSigns = ",.:_$";
+
+    /**
+     * Will be inited with both uppercase en lowercase letters
+     * @var string
+     */
+    private static $_Letters;
+
+    /**
+     * Will contains all letters and digits
+     * @var string
+     */
     private static $_DigitOrLetter;
+    
+    /**
+     * The mode may contains a forced mode without paying attention to the 
+     * actual setting
+     * @var int 
+     */
     private static $_Mode = \NULL;
 
     /**
@@ -59,12 +96,12 @@ abstract class _Password {
      * load compatibility lib for PHP 5.5 password hash
      * if necessary
      * 
-     * This class initializer is not loaded in CLI context
+     * This class initializer is not executed in CLI context
      */
     public static function __ClassInit() {
         self::$_Letters = self::$_LowerCaseLetters . self::$_UpperCaseLetters;
         self::$_DigitOrLetter = self::$_Digits . self::$_Letters;
-        if (!version_compare(PHP_VERSION, '5.5') < 0 and \Iris\SysConfig\Settings::GetDefaultHashType() != self::MODE_PHP55) {
+        if (version_compare(PHP_VERSION, '5.5', '<') and \Iris\SysConfig\Settings::$DefaultHashType != self::MODE_PHP55) {
             self::ForceCompatibility();
         }
         // CLI does not use this initializer
@@ -75,7 +112,7 @@ abstract class _Password {
      * A clean way to charge compatibily file
      */
     public static function ForceCompatibility() {
-        if(!defined(PWH_COMPATIBILITY)){
+        if (!defined('PWH_COMPATIBILITY')) {
             $compatibilityFile = dirname(__FILE__) . '/password.php';
             include_once $compatibilityFile;
         }
@@ -90,7 +127,7 @@ abstract class _Password {
     public static function GetMode() {
         if (is_null(self::$_Mode)) {
             if (defined('NOTCLI')) {
-                self::$_Mode = \Iris\SysConfig\Settings::getDefaultHashType();
+                self::$_Mode = \Iris\SysConfig\Settings::$DefaultHashType;
             }
             else {
                 self::$_Mode = self::MODE_IRIS;
@@ -105,13 +142,13 @@ abstract class _Password {
     public static function Debug() {
         switch (self::GetMode()) {
             case self::MODE_IRIS:
-                echoLine('Mode = internal Iris');
+                iris_debug('Mode = internal Iris');
                 break;
             case self::MODE_PHP54:
-                echoLine('Mode = PHP emulation');
+                iris_debug('Mode = PHP emulation');
                 break;
-            case self::MODE_IRIS:
-                echoLine('Mode = PHP 5.5');
+            case self::MODE_PHP55:
+                iris_debug('Mode = PHP 5.5');
                 break;
         }
     }
@@ -126,9 +163,11 @@ abstract class _Password {
             case self::MODE_IRIS:
             case self::MODE_PHP54:
                 self::$_Mode = $mode;
+                self::ForceCompatibility();
                 break;
             case self::MODE_PHP55:
-                if (defined('NOT_CLI') and version_compare(PHP_VERSION, '5.5') < 0) {
+                // PHP 5.5 mode cannot be forced on a PHP 5.4 server
+                if (defined('NOT_CLI') and version_compare(PHP_VERSION, '5.5', '<')) {
                     self::$_Mode = self::MODE_PHP54;
                     self::ForceCompatibility();
                 }
@@ -139,26 +178,20 @@ abstract class _Password {
         }
     }
 
-//    public static function UsePHPHash() {
-//        if (!defined('NOT_CLI')) {
-//            return \FALSE;
-//        }
-//        else {
-//            return \Iris\SysConfig\Settings::IsStandardHashType();
-//        }
-//    }
-
     /**
-     * Creates an uncrypted password with salt
+     * Creates an encrypted password with salt
      * 
      * @param string $password
      * @return string
      */
     public static function EncodePassword($password, $mode = \NULL) {
-        if(is_null($mode)){
+        if (is_null($mode)) {
             $mode = self::GetMode();
         }
-        if($mode != self::MODE_IRIS){
+        if ($mode != self::MODE_IRIS) {
+            if($mode == 4){
+                self::ForceCompatibility();
+            }
             $encrypt = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
         }
         else {
@@ -180,10 +213,10 @@ abstract class _Password {
      * @return boolean 
      */
     public static function VerifyPassword($password, $hash, $mode = \NULL) {
-        if(is_null($mode)){
+        if (is_null($mode)) {
             $mode = self::GetMode();
         }
-        if($mode != self::MODE_IRIS){
+        if ($mode != self::MODE_IRIS) {
             $result = password_verify($password, $hash);
         }
         else {

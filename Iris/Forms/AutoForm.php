@@ -231,4 +231,16 @@ class AutoForm {
         }
     }
 
+    
+     /**
+     * 
+     * @param ElementSpecs $elementSpecs
+     */
+    public function addSpecs($elementSpecs, $params = \NULL) {
+        if (!$elementSpecs instanceof ElementSpecs) {
+            $elementSpecs = new ElementSpecs($elementSpecs, $params);
+        }
+        $index = $elementSpecs->getName();
+        $this->_elementTypes[$index] = $elementSpecs;
+    }
 }

@@ -299,11 +299,11 @@ HTML;
             }
             else {
                 $text = \str_replace(self::LOADERMARK, $loaders, $text);
-                if (\Iris\SysConfig\Settings::HasMD5Signature()) {
+                if (\Iris\SysConfig\Settings::$MD5Signature) {
                     $starter .= \Iris\views\helpers\Signature::ComputeMD5($text);
                     \Iris\views\helpers\Signature::ComputeMD5($loaders);
                 }
-                if (\Iris\SysConfig\Settings::HasDisplayRuntimeDuration() and !is_null($runtimeDuration)) {
+                if (\Iris\SysConfig\Settings::$DisplayRuntimeDuration and !is_null($runtimeDuration)) {
                     $starter .= $runtimeDuration->jsDisplay($componentId);
                 }
                 $text = \str_replace('</body>', $starter . "\n</body>", $text);

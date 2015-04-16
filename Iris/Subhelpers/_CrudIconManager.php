@@ -139,7 +139,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
         // subclasses may add new icons
         $this->_init();
         if (is_null($this->_iconDir)) {
-            $this->_iconDir = \Iris\SysConfig\Settings::GetIconDir();
+            $this->_iconDir = \Iris\SysConfig\Settings::$Icon();
         }
         if (is_null($this->_systemIconDir)) {
             throw new \Iris\Exceptions\HelperException('CrudIconManager must set values to iconDir and systemIconDir');

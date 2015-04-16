@@ -96,9 +96,15 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
      */
     private $_formFactory;
 
-    
+    public function __construct($param = \NULL) {
+        if(is_null($param)){
+            $param = \Iris\SysConfig\Settings::GetSystemUserEntity();
+        }
+        $this->setCrudEntity($param);
+        parent::__construct($param);
+    }
 
-    /**
+            /**
      * A method to test a username and password against the database
      * 
      * @return string an URL to go to (or NULL in case of unknown user)
@@ -147,6 +153,18 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
         }
         else {
             $encrypt = $userObject->Password;
+            if($encrypt[0] == '$'){
+                $version = (int) (PHP_VERSION_ID/100);
+                if ($version-1 > 504) {
+                    \Iris\SysConfig\Settings::$DefaultHashType = _Password::MODE_PHP55;
+                }
+                else {
+                    \Iris\SysConfig\Settings::$DefaultHashType = _Password::MODE_PHP54;
+                }
+            }
+            else{
+                \Iris\SysConfig\Settings::$DefaultHashType = _Password::MODE_IRIS;
+            }
             if (\Iris\Users\_Password::VerifyPassword($password, $encrypt)) {
                 $this->_postLogin($userObject, $userName);
                 $identity = \Iris\Users\Identity::GetInstance();

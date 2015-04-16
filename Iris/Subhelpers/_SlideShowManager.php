@@ -55,7 +55,7 @@ abstract class _SlideShowManager extends _Subhelper {
      * @return \Iris\Subhelpers\className
      */
     protected static function _New($objectName) {
-        $defaultLibrary = \Iris\SysConfig\Settings::GetSlideShowManagerLibrary();
+        $defaultLibrary = \Iris\SysConfig\Settings::$SlideShowManagerLibrary;
         $className = $defaultLibrary. 'Subhelpers\\SlideShowManager';
         return new $className($objectName);
     }

@@ -55,7 +55,7 @@ abstract class _FormFactory {
      */
     public static function GetDefaultFormFactory() {
         if (is_null(self::$_DefaultFormFactory)) {
-            $defaultClassName = \Iris\SysConfig\Settings::GetDefaultFormClass();
+            $defaultClassName = \Iris\SysConfig\Settings::$DefaultFormClass;
             $ff = new $defaultClassName();
             $ff->setDefault();
         }
