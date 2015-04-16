@@ -70,9 +70,9 @@ class Head {
         $manager = \Dojo\Manager::GetInstance();
         $source = $manager->getURL();
         $script = $manager->getScript();
-        $theme = \Dojo\Engine\Settings::GetTheme();
-        $parseOnLoad = \Dojo\Engine\Settings::GetParseOnLoad();
-        $debug = \Dojo\Engine\Settings::GetDebug();
+        $theme = \Dojo\Engine\Settings::$Theme;
+        $parseOnLoad = \Dojo\Engine\Settings::$ParseOnLoad;
+        $debug = \Dojo\Engine\Settings::$Debug;
 
         // Loads css and js scripts
         $text = '';

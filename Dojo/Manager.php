@@ -126,8 +126,8 @@ class Manager implements \Iris\Design\iSingleton {
      * @return string
      */
     public function getURL() {
-        $version = \Dojo\Engine\Settings::GetVersion();
-        switch (\Dojo\Engine\Settings::GetSource()) {
+        $version = \Dojo\Engine\Settings::$Version;
+        switch (\Dojo\Engine\Settings::$Source) {
             case self::GOOGLE:
                 $source = URL_DOJO_GOOGLE . $version;
                 break;

@@ -43,7 +43,7 @@ class Body extends \Iris\views\helpers\_ViewHelper {
     public function help() {
         if(!\Dojo\Manager::IsActive())
             return '';
-        $theme = \Dojo\Engine\Settings::GetTheme();
+        $theme = \Dojo\Engine\Settings::$Theme;
         return " class=\"$theme\"";
     }
 

@@ -37,7 +37,8 @@ class Settings extends \Iris\SysConfig\_Settings {
      * 
      * @var string 
      */
-    const VERSION = '1.9.0';
+    const VERSION = '1.10.4';
+    //const VERSION = '1.9.0';
 
     /**
      * A Dojo theme : claro
@@ -56,29 +57,50 @@ class Settings extends \Iris\SysConfig\_Settings {
      */
     const SORIA = 'soria';
     
-    
+    /**
+     * The version of Dojo is defined here
+     * @var type 
+     */
+    public static $Version = self::VERSION;
         
+    /**
+     * The debug mode of dojo
+     * To be defined by __ClassInit
+     * @var string 
+     */
+    public static $Debug;
 
+    /**
+     * The dojo style used in the program among the 4 standard styles: 
+     * nihilo,soria, tundra, claro
+     * @var string 
+     */
+    public static $Theme = self::NIHILO;
+    
+    /**
+     * The default repository for Dojo libraries : GoogleApis
+     * @var int 
+     */
+    public static $Source = Manager::GOOGLE;
+    
+    /**
+     * By default Dojo is parsed on page load
+     * @var type 
+     */
+    public static $ParseOnLoad = 'true';
+    
+    
     /**
      * Defines some standard settings with a default value
      */
-    protected function _init() {
-        //Manager::SetActive();
-        \Iris\SysConfig\StandardSetting::CreateSetting('version', self::VERSION);
-        // Debug info is set according to site type (in construct)
+    public static function __ClassInit() {
+        // Debug info is set according to site type 
         if (\Iris\Engine\Mode::IsDevelopment()) {
-            \Iris\SysConfig\StandardSetting::CreateSetting('debug', 'true'); // true is js code
+            self::$Debug = 'true'; // true is js code
         }
         else {
-            \Iris\SysConfig\StandardSetting::CreateSetting('debug', 'false'); // false is js code
+            self::$Debug = 'false'; // false is js code
         }
-        // By default Dojo is parsed on page load
-        \Iris\SysConfig\StandardSetting::CreateSetting('parseOnLoad', 'true'); // true is js code
-        // The dojo style used in the program among the 4 standard styles: 
-        // nihilo,soria, tundra, claro
-        \Iris\SysConfig\StandardSetting::CreateSetting('theme', 'nihilo');
-        // The default repository for Dojo libraries : GoogleApis
-        \Iris\SysConfig\StandardSetting::CreateSetting('source', Manager::GOOGLE);
     }
 
 }
