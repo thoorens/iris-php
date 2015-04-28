@@ -82,7 +82,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         }
         else {
             if (is_null($timeZone)) {
-                $timeZone = new \DateTimeZone(\Iris\SysConfig\Settings::$DefaultTimeZone);
+                $timeZone = new \DateTimeZone(\Iris\SysConfig\Settings::$DefaultTimezone);
             }
             $this->_internalDate = new \DateTime(\NULL, $timeZone);
             if (!is_null($date) and is_string($date)) {
