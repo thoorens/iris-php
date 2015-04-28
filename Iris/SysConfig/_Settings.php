@@ -71,7 +71,11 @@ abstract class _Settings implements \Iris\Design\iSingleton {
         _Setting::ResetGroup();
     }
 
-    protected abstract function _init();
+    protected function _init() {
+        
+    }
+
+
 
     /**
      * Analyses a pseudo static method and its arguments. The name has a composed structure
@@ -86,7 +90,7 @@ abstract class _Settings implements \Iris\Design\iSingleton {
      * @return boolean/mixed
      * @throws \Iris\Exceptions\InternalException
      */
-    public static function __callStatic($name, $arguments) { 
+    public static function __callStatic($name, $arguments) {
         try {
             $name = strtolower($name);
             $functionName = substr($name, 0, 3);
@@ -117,12 +121,10 @@ abstract class _Settings implements \Iris\Design\iSingleton {
                 case 'exi':
                     return $setting->exists();
             }
-        
-}
+        }
         catch (Exception $exc) {
             _Setting::ErrorManagement("Settings has no $name method");
         }
-
     }
 
     /**
@@ -200,4 +202,3 @@ abstract class _Settings implements \Iris\Design\iSingleton {
     }
 
 }
-
