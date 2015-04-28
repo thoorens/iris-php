@@ -122,8 +122,8 @@ class Manager {
 
     public function getFile($save, $params) {
         $pubpri = array_shift($params);
-        if ($pubpri == 'public') {
-            $pathName = sprintf("%s/public/%s", $this->_baseDirectory, implode('/', $params));
+        if ($pubpri == 'protected') {
+            $pathName = sprintf("%s/protected/%s", $this->_baseDirectory, implode('/', $params));
         }
         // get Magic Number for control in private area
         else {
