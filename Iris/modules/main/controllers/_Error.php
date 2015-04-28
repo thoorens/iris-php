@@ -169,7 +169,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * Will display or not the stack execution level required or all of them
      */
     protected final function _displayStackLevel() {
-        $stackLevel = \Iris\Errors\Settings::GetStackLevel();
+        $stackLevel = \Iris\Errors\Settings::$StackLevel;
 // no stack (default state)
         if (is_null($stackLevel)) {
             $this->_noStack();
