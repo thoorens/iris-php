@@ -97,9 +97,8 @@ class Program {
      */
     private function _log($program) {
         ini_set('log_error', \Iris\Errors\Settings::$Log);
-        $logFile = \Iris\Errors\Settings::$Logfile;
+        $logFile = \Iris\Errors\Settings::$LogFile;
         ini_set('error_log', IRIS_ROOT_PATH . "/$program/$logFile");
     }
 
 }
-
