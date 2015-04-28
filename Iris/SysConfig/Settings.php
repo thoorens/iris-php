@@ -30,7 +30,7 @@ define('PASSWORD_IRIS', 'IRIS');
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Settings  {
+class Settings extends _Settings {
 
     protected static $_GroupName = 'main';
 
@@ -147,7 +147,7 @@ class Settings  {
      * Default class used by menu
      * @var string
      */
-    public static $MenuActiveClass = 'acitve';
+    public static $MenuActiveClass = 'active';
     
     /**
      * Default main tag for the menu
@@ -198,5 +198,7 @@ class Settings  {
         // The default folder for document is relative to parameters in project creation
         self::$DataFolder = IRIS_ROOT_PATH . '/data';
     }
+    
+    
 }
 
