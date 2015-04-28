@@ -32,7 +32,6 @@ class Template implements \Iris\Translation\iTranslatable {
      * The caching may desactivated, only in production (for test),
      * only in development or always
      */
-
     const CACHE_NEVER = 0;
     const CACHE_PRODUCTION = 1;
     const CACHE_DEVELOPMENT = 2;
@@ -43,7 +42,6 @@ class Template implements \Iris\Translation\iTranslatable {
      */
     const ABSOLUTE = \TRUE;
 
-   
     /**
      * The view associated to the template (none in case of Quote views)
      * 
@@ -95,11 +93,11 @@ class Template implements \Iris\Translation\iTranslatable {
         // assign a new variable shortcut for {php} $var = 'value' {/php}
         ['/{assign\((\w+), ?(.*)\)}/', '<?php $$1 = $2;?>'],
         // a single print
-        ['/{=(.*)}/','<?= $1?>'],
+        ['/{=(.*)}/', '<?= $1?>'],
         // php tags
         ['{php}', '<?php '],
         ['{/php}', '?>'],
-        ['/{\?(.*)\?}/','<?php $1; ?>'],
+        ['/{\?(.*)\?}/', '<?php $1; ?>'],
         // for
         ['/{for\((.+), ?(.+), ?(.+)\)}/i', '<?php for($1; $2; $3):?>'],
         ['{/for}', '<?php endfor;?>'],
@@ -137,7 +135,6 @@ class Template implements \Iris\Translation\iTranslatable {
         ['/({\()(.*?)(\)})/', '<?=\$$2?>'],
         // view helpers
         ['/({)(.*?)(})/', '<?=\$this->$2?>'],
-        
     ];
 
     /**
@@ -250,28 +247,44 @@ class Template implements \Iris\Translation\iTranslatable {
         }
         else {
             $literal = FALSE;
+            $commentRunning = \FALSE;
             foreach ($this->_templateArray as &$line) {
-                $line = preg_replace('$(.*){REM}.*{/REM}(.*)$i', '$1$2', $line);
-                if (strpos($line, '{literal}') !== FALSE) {
-                    $literal = \TRUE;
-                    $line = str_replace('{literal}', '', $line);
+                // delimiters for comments: all lines where the delimiters appear will be wiped
+                if (preg_match('{COMMENT}', $line) or $commentRunning) {
+                    if (preg_match('{/COMMENT}', $line)) {
+                        $commentRunning = \FALSE;
+                    }
+                    else {
+                        $commentRunning = \TRUE;
+                    }
+                    $line = '';
                 }
-                elseif (strpos($line, '{/literal}') !== FALSE) {
-                    $literal = \FALSE;
-                    $line = str_replace('{/literal}', '', $line);
-                }
-                elseif (!$literal) {
-                    foreach (self::$_Token as $tokens) {
-                        if ($tokens[0][0] == '/') {
-                            $modLine = preg_replace($tokens[0], $tokens[1], $line);
-                        }
-                        else {
-                            $modLine = str_replace($tokens[0], $tokens[1], $line);
-                        }
-                        if ($line != $modLine) {
-                            $line = $modLine;
-                            if (isset($tokens[2]))
-                                break;
+                else {
+                    // a monoline comment is wiped out 
+                    $line = preg_replace('$(.*){REM}.*{/REM}(.*)$i', '$1$2', $line);
+                    // in literal context, all braced text are considered as not to be treated
+                    if (strpos($line, '{literal}') !== FALSE) {
+                        $literal = \TRUE;
+                        $line = str_replace('{literal}', '', $line);
+                    }
+                    elseif (strpos($line, '{/literal}') !== FALSE) {
+                        $literal = \FALSE;
+                        $line = str_replace('{/literal}', '', $line);
+                    }
+                    // in non literal context, search for iview tokens
+                    elseif (!$literal) {
+                        foreach (self::$_Token as $tokens) {
+                            if ($tokens[0][0] == '/') {
+                                $modLine = preg_replace($tokens[0], $tokens[1], $line);
+                            }
+                            else {
+                                $modLine = str_replace($tokens[0], $tokens[1], $line);
+                            }
+                            if ($line != $modLine) {
+                                $line = $modLine;
+                                if (isset($tokens[2]))
+                                    break;
+                            }
                         }
                     }
                 }
@@ -317,4 +330,3 @@ class Template implements \Iris\Translation\iTranslatable {
     }
 
 }
-
