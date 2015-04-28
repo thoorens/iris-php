@@ -34,7 +34,7 @@ namespace Iris\Errors;
  * This class groups all the error parameters
  * 
  */
-class Settings extends \Iris\SysConfig\_Settings {
+class Settings  {
 
     const TYPE_STANDARD = 1;
     const TYPE_PRIVILEGE = 2;
@@ -143,9 +143,9 @@ class Settings extends \Iris\SysConfig\_Settings {
     /**
      * Default values
      */
-    protected function _init() {
-        $this->_forceSettings();
-    }
+//    protected function _init() {
+//        $this->_forceSettings();
+//    }
 
     /**
      * Gets from URL optional ERROR parameters and
@@ -213,7 +213,6 @@ class Settings extends \Iris\SysConfig\_Settings {
      * @param string $dateLimit the date in YYYY-MM-DD format
      */
     public static function ShowErrorOnProd($timeLimit, $dateLimit){
-        
         $now = time();
         list($hour, $minute, $second) = explode(':',"$timeLimit:0:0");
         list($year, $month, $day) = explode('-',$dateLimit);
