@@ -3,22 +3,12 @@
 namespace Iris\DB;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -73,29 +63,40 @@ class Query {
      */
     protected $_tokenNumber;
     protected $_extended;
+
+    /**
+     * @var array The values used by the limit clause : ex. [offset, last] or \NULL
+     */
     protected $_limits = \NULL;
 
+    /**
+     * The constructor uses reset to init all parameters
+     */
     public function __construct() {
         $this->reset();
     }
 
     /**
-     * Reset all parameters to use entity a second time
+     * Reset all parameters to use entity from scratch (on construction or after a request)
      */
     public function reset() {
         $this->_selectedFields = '*';
-        $this->_fieldValues = array();
-        $this->_preparedFields = array();
+        $this->_fieldValues = [];
+        $this->_preparedFields = [];
         $this->_order = '';
-        $this->_fieldPlaceHolders = array();
+        $this->_fieldPlaceHolders = [];
         $this->_tokenNumber = 0;
         $this->_extended = FALSE;
         $this->_limits = \NULL;
     }
 
+    /**
+     * 
+     * @param string[] $fields
+     */
     public function select($fields) {
         if ($this->_selectedFields == '*') {
-            $this->_selectedFields = array();
+            $this->_selectedFields = [];
         }
         if (is_array($fields)) {
             foreach ($fields as $field) {
@@ -104,6 +105,17 @@ class Query {
         }
         else {
             $this->_selectedFields[] = $fields;
+        }
+    }
+
+    public function selectDistinct($fields) {
+        if (is_array($fields)) {
+            foreach ($fields as $field) {
+                $this->selectDistinct($field);
+            }
+        }
+        else {
+            $this->select("DISTINCT $fields");
         }
     }
 
@@ -193,8 +205,9 @@ class Query {
     }
 
     protected function _whereBit($sql, $field, $bits) {
+        $bits = 0 + $bits;
         if (!is_int($bits)) {
-            throw new ie\DBException('Bit pattern must be an integer');
+            throw new \Iris\Exceptions\DBException('Bit pattern must be an integer');
         }
         $this->_preparedFields[] = sprintf($sql, $field, $bits);
     }
@@ -234,21 +247,24 @@ class Query {
             $top = array_pop($stack);
             $this->_recWhere($stack);
             if ($top == 'NOT') {
-                if (count($stack) < 1)
+                if (count($stack) < 1) {
                     throw New \Iris\Exceptions\DBException('Unbalanced NOT in Where expression');
+                }
                 $operand = array_pop($stack);
                 array_push($stack, "NOT($operand)");
             }
             elseif ($top == 'AND') {
-                if (count($stack) < 2)
+                if (count($stack) < 2) {
                     throw New \Iris\Exceptions\DBException('Unbalanced AND in Where expression');
+                }
                 $operand1 = array_pop($stack);
                 $operand2 = array_pop($stack);
                 array_push($stack, "($operand2)AND($operand1)");
             }
             elseif ($top == 'OR') {
-                if (count($stack) < 2)
+                if (count($stack) < 2) {
                     throw New \Iris\Exceptions\DBException('Unbalanced OR in Where expression');
+                }
                 $operand1 = array_pop($stack);
                 $operand2 = array_pop($stack);
                 array_push($stack, "($operand2)OR($operand1)");
@@ -270,6 +286,11 @@ class Query {
         return array($insertClause, $this->_tokenList());
     }
 
+    /**
+     * Rendering the order part of the query
+     * 
+     * @return string Soit vide soit texte ORDER BY ....
+     */
     public function renderOrder() {
         if ($this->_order == '') {
             return '';
@@ -279,24 +300,38 @@ class Query {
         }
     }
 
-    public function renderLimits($syntax) {
+    /**
+     * Tries to produce a Limit clause if the operating system can do it
+     * 
+     * @param type $limitClause the limit clause with %d for the two argument
+     * @return type
+     * @throws \Iris\Exceptions\DBException
+     */
+    public function renderLimits($limitClause) {
         $limits = $this->_limits;
         if (is_null($limits)) {
             $sql = '';
         }
         else {
             list($limit, $offset) = $limits;
-            if (is_null($syntax)) {
+            if (is_null($limitClause)) {
                 throw new \Iris\Exceptions\DBException('Your RDBMS does not support the LIMIT clause.');
             }
-            $sql = sprintf($syntax, $offset, $limit);
+            $sql = sprintf($limitClause, $offset, $limit);
         }
         return $sql;
     }
 
+    /**
+     * Produces the SET clause in an update
+     * 
+     * @param array $setFields the fields name in an array
+     * @param array $values the new values corresponding to the different fields
+     * @return string
+     */
     public function renderSet($setFields, $values) {
         $pointer = 0;
-        $sets = array();
+        $sets = [];
         foreach ($values as $value) {
             if ($value == Object::NULL_VALUE) {
                 $sets[] = $setFields[$pointer++] . " = NULL ";
@@ -320,10 +355,12 @@ class Query {
      * @return string 
      */
     public function renderSelectFields() {
-        if ($this->_selectedFields == '*')
+        if ($this->_selectedFields == '*') {
             return "*";
-        else
+        }
+        else {
             return implode(',', $this->_selectedFields);
+        }
     }
 
     public function getPlaceHolders() {
@@ -350,10 +387,16 @@ class Query {
     private function _tokenList($sep = ',') {
         $where = $this->_preparedFields;
 // Reset values for multi use
-        $this->_preparedFields = array();
+        $this->_preparedFields = [];
         return implode($sep, $where);
     }
 
+    /**
+     * Permits to specify the parameters of a LIMIT clause
+     * 
+     * @param int $limit the value of the last clause
+     * @param int $offset
+     */
     public function limit($limit, $offset) {
         $this->_limits = [$limit, $offset];
     }
