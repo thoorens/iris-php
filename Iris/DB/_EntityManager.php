@@ -2,6 +2,15 @@
 
 namespace Iris\DB;
 
+/*
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
+ */
+
 /**
  * IRIS_PARENT, IRIS_CHILDREN and IRIS_FILESEP are used to detect pseudo fields. They
  * can be changed in case of field naming convention problems with an existing
@@ -13,26 +22,6 @@ namespace Iris\DB;
 defined('IRIS_PARENT') or define('IRIS_PARENT', '_at_');
 defined('IRIS_CHILDREN') or define('IRIS_CHILDREN', '_children_');
 defined('IRIS_FIELDSEP') or define('IRIS_FIELDSEP', '__');
-
-
-/*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2014 Jacques THOORENS
- */
 
 /**
  * This class creates objects based on DSN, UserName and 
@@ -71,14 +60,14 @@ abstract class _EntityManager {
      * @var type 
      * @todo : deprecated ???
      */
-    protected static $_Options = array();
+    protected static $_Options = [];
 
     /**
      * An array repository with all entities 
      * 
      * @var _Entity[]
      */
-    private $_entityRepository = array();
+    private $_entityRepository = [];
 
     /**
      * Only first instance is registred. Another instance
@@ -221,7 +210,7 @@ abstract class _EntityManager {
      * @param mixed $options
      * @return _EntityManager 
      */
-    public static function EMFactory($dsn, $username = \NULL, $passwd = \NULL, $options = array()) {
+    public static function EMFactory($dsn, $username = \NULL, $passwd = \NULL, $options = []) {
         if (!is_string($dsn)) {
             throw new \Iris\Exceptions\NotSupportedException('No analyse written of config');
             //@todo extraire le dsn, username et password
@@ -295,28 +284,40 @@ abstract class _EntityManager {
      * @param type $fieldsPH
      * @return array(Object) 
      */
-    public function fetchAll(_Entity $entity, $sql, $fieldsPH = array()) {
+    public function fetchAll(_Entity $entity, $sql, $fieldsPH = []) {
         $results = $this->getResults($sql, $fieldsPH);
-        $objects = array();
+        $objects = [];
         $objectType = $entity->getRowType();
         foreach ($results as $result) {
-            $idValues = array();
-            foreach ($entity->getIdNames() as $id) {
-                $idValues[$id] = $result[$id];
-            }
-            $object = $entity->retrieveObject($idValues);
+            $identifier = $this->_getIdentifier($entity, $result);
+            $object = $entity->retrieveObject($identifier);
             if (is_null($object)) {
-                $object = new $objectType($entity, $idValues, $result);
+                $object = new $objectType($entity, $identifier, $result);
             }
             $objects[] = $object;
         }
         return $objects;
     }
 
+    private function _getIdentifier($entity, $result) {
+        $identifier = [];
+        foreach ($entity->getIdNames() as $id) {
+            if (isset($result[$id])) {
+                $identifier[$id] = $result[$id];
+            }
+        }
+        if(count($identifier)==0){
+            foreach($result as $field=>$value){
+                $identifier[$field] = $value;
+            }
+        }
+        return $identifier;
+    }
+
     /**
      * @return array 
      */
-    abstract public function getResults($sql, $fieldsPH = array());
+    abstract public function getResults($sql, $fieldsPH = []);
 
     abstract public function exec($sql, $value);
 
