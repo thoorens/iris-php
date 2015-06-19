@@ -59,11 +59,11 @@ class IniParser extends _Parser {
      * @param int $inheritance copy inherited values (or ref to parent)
      * @return Config (object or array)
      */
-    public function processFile($filename, $sectionName = FALSE, $inheritance = _Parser::COPY_AND_LINK) {
+    public function processFile($filename, $sectionName = \FALSE, $inheritance = _Parser::COPY_AND_LINK) {
         // in case of single section, it is necessary to copy values
         $inheritance = $sectionName ? self::COPY_INHERITED_VALUES : $inheritance;
         $parsedData = parse_ini_file($filename, TRUE, INI_SCANNER_RAW);
-        $configs = array();
+        $configs = [];
         foreach ($parsedData as $namespace => $properties) {
             // Needs a dummy ancestor 
             list($name, $parent) = explode(':', $namespace . ":");
@@ -71,7 +71,7 @@ class IniParser extends _Parser {
             $name = trim($name);
             $parent = trim($parent); // may be empty
             // create namespace if necessary
-            if ($sectionName === FALSE or $sectionName == $name) {
+            if ($sectionName === \FALSE or $sectionName === $name) {
                 if (!isset($configs[$name])) {
                     $configs[$name] = new Config($name);
                 }
@@ -80,12 +80,12 @@ class IniParser extends _Parser {
                 }
                 // inherit base namespace
                 if (isset($configs[$parent])) {
-                    if ($inheritance == self::COPY_AND_LINK or
+                    if ($inheritance === self::COPY_AND_LINK or
                             $inheritance == self::LINK_TO_PARENT) {
                         $configs[$name]->setParent($configs[$parent], $inheritance);
                     }
                     foreach ($configs[$parent] as $prop => $val) {
-                        if ($inheritance == self::COPY_AND_LINK or
+                        if ($inheritance === self::COPY_AND_LINK or
                                 $inheritance == self::COPY_INHERITED_VALUES) {
                             $configs[$name]->$prop = $val;
                         }
@@ -102,7 +102,7 @@ class IniParser extends _Parser {
             }
         }
         // if no section selected returns an array, otherwise a Config
-        if ($sectionName === FALSE) {
+        if ($sectionName === \FALSE) {
             return $configs;
         }
         else {
