@@ -3,22 +3,12 @@
 namespace Iris\DB;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -39,6 +29,7 @@ abstract class _Entity {
     const NEXT = 2;
     const LAST = 3;
     const CONT = -1;
+    const INDEXED = 2;
 
     /**
      * An array repository with all objects
@@ -161,7 +152,7 @@ abstract class _Entity {
      * The entity is taken from the repository or created if necessary.
      * 
      * @param mixed analysed in code
-     * @return _Entity
+     * @return \Iris\DB\_Entity
      * @throws \Iris\Exceptions\EntityException
      */
     public static function GetEntity() {
@@ -383,7 +374,7 @@ abstract class _Entity {
      * @return array
      */
     public function getIdNames() {
-        //return $this->getIdNames();
+//return $this->getIdNames();
         if (is_null($this->_primaryKey)) {
             return [];
         }
@@ -468,32 +459,70 @@ abstract class _Entity {
      * with fields, where and order clauses if necessary.
      * Aterward, it reset the object for reusing it from scratch
      * 
-     * @param boolean $array if true returns an array of array instead of array of objects
      * @return Object[] 
      */
-    public function fetchAll($array = FALSE) {
+    public function fetchAll() {
         $sql = sprintf('SELECT %s FROM %s', $this->_query->renderSelectFields(), $this->_entityName);
         $sql .= $this->_query->renderWhere();
         $sql .= $this->_query->renderOrder();
         $sql .= $this->_query->renderLimits($this->_entityManager->getLimitClause());
         $sql .= ';';
-//die($sql);
         $data = $this->_entityManager->fetchAll($this, $sql, $this->_query->getPlaceHolders());
         $this->_query->reset();
-        if ($array === \TRUE) {
-            foreach ($data as $object) {
-                $finalData[] = $object->asArray();
-            }
-        }
-        elseif ($array === \FALSE) {
-            $finalData = $data;
-        }
-        else {
-            foreach ($data as $object) {
-                $finalData[$index] = $array($object);
-            }
-        }
         $this->_register = \TRUE;
+        return $data;
+    }
+
+    /**
+     * 
+     * @param type $fieldArray
+     * @return type
+     */
+    public function fetchAllIndexed($fieldArray) {
+        if (count($this->getIdNames()) > 1) {
+            
+        }
+        $primaryKey = $this->_primaryKey->getFields()[0];
+        $this->select($primaryKey);
+        foreach ($fieldArray as $field) {
+            $this->select($field);
+        }
+        $data = $this->fetchAll();
+//        iris_debug($data);
+        foreach ($data as $object) {
+            if (count($fieldArray) == 1) {
+                $finalData[$object->$primaryKey] = $object->$fieldArray[0];
+            }
+            else {
+                $objectArray = [];
+                foreach ($fieldArray as $field) {
+                    $objectArray[] = $object->$field;
+                }
+                $finalData[$object->$primaryKey] = $objectArray;
+            }
+        }
+        return $finalData;
+    }
+
+    /**
+     * 
+     * @param type $array
+     * @return type
+     * @deprecated since version number
+     */
+    public function fetchAll01($array = FALSE) {
+        $data = $this->fetchAll();
+        foreach ($data as $object) {
+            $finalData[$index] = $array($object);
+        }
+        return $finalData;
+    }
+
+    public function fetchAllInArray() {
+        $data = $this->fetchAll();
+        foreach ($data as $object) {
+            $finalData[] = $object->asArray();
+        }
         return $finalData;
     }
 
@@ -505,7 +534,7 @@ abstract class _Entity {
      */
     public function find($idValues) {
         $standartIdValues = $this->_primaryKey->getNamedValues($idValues);
-        // try to find object in repository
+// try to find object in repository
         $object = $this->retrieveObject($standartIdValues);
         if (is_null($object)) {
             $this->wherePairs($standartIdValues);
@@ -774,6 +803,11 @@ abstract class _Entity {
         return $this;
     }
 
+    public function selectDistinct($fields) {
+        $this->_query->selectDistinct($fields);
+        return $this;
+    }
+
     /**
      * Create a new row (object) possibly with data in it
      *  
@@ -980,7 +1014,7 @@ abstract class _Entity {
             foreach ($this->getIdNames() as $field) {
                 $metadata->addPrimary($field);
             }
-            // optionaly reads manually added foreign keys
+// optionaly reads manually added foreign keys
             foreach ($this->_foreignKeyDescriptions as $key => $description) {
                 if (is_string($description)) {
                     $foreignKey = new ForeignKey($description);
@@ -1018,6 +1052,12 @@ abstract class _Entity {
         }
     }
 
+    /**
+     * 
+     * @param type $limit
+     * @param type $offset
+     * @return \Iris\DB\_Entity
+     */
     public function limit($limit, $offset = 0) {
         $indexName = "DB_OFFSET_" . $this->_entityName;
 // Recuperate previous offset from Session
