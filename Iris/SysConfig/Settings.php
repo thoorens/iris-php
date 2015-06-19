@@ -30,9 +30,26 @@ define('PASSWORD_IRIS', 'IRIS');
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Settings extends _Settings {
+class Settings {
 
     protected static $_GroupName = 'main';
+    
+    // The PHP subversion is the same as in User\Password but to avoid cross reference
+    // it is safer to repeat the values
+    
+    const MODE_PHP54 = 4;
+    const MODE_PHP55 = 5;
+    
+    /**
+     * Management of special values
+     */
+    public static function __ClassInit(){
+        // The default folder for document is relative to parameters in project creation
+        self::$DataFolder = IRIS_ROOT_PATH . '/data';
+        // By default use the PHP5.5 mode
+        self::$DefaultHashType = self::MODE_PHP55;
+    }
+    
 
     /**
      * Admin toolbar may be Ajax or simple javascript
@@ -82,6 +99,23 @@ class Settings extends _Settings {
      */
     public static $SlideShowManagerLibrary = '\\Dojo\\';
 
+    
+    /**
+     * The default time out for development (4 hours)
+     */
+    public static $DefaultTimeout = 14400;
+    
+    
+    /**
+     * The default time out for production (10 minutes)
+     */
+    public static $ProductionTimeout = 600;
+           const DEFAULT_TIMEOUT = 14400;
+    /**
+     * The default time out for production (10 minutes)
+     */
+    const DEFAULT_PRODUCTION_TIMEOUT = 600; 
+            
     /**
      * If ACL are used, the default user is named 'somebody'
      * @var string
@@ -110,7 +144,7 @@ class Settings extends _Settings {
      * Type of Password conversion
      * @var int
      */
-    public static $DefaultHashType = \Iris\Users\_Password::MODE_PHP55;
+    public static $DefaultHashType;
 
     
     /**
@@ -192,13 +226,14 @@ class Settings extends _Settings {
     public static $DefaultTranslator = '\\Iris\\Translation\\NullTranslator';
     
     /**
-     * Management of special values
+     * Imports settings from a Config or array of configs
+     * 
+     * @param Config $params
+     * @throws \Iris\Exceptions\NotSupportedException
      */
-    public static function __ClassInit(){
-        // The default folder for document is relative to parameters in project creation
-        self::$DataFolder = IRIS_ROOT_PATH . '/data';
+    public static function FromConfigs($params){
+        throw new \Iris\Exceptions\NotSupportedException('The ini configuration of Settings is still not implemented');
     }
-    
     
 }
 
