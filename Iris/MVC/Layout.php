@@ -22,19 +22,8 @@ namespace Iris\MVC;
  * @version $Id: $ * 
  */
 class Layout extends View implements \Iris\Design\iSingleton {
-
-    /**
-     * The unique instance
-     * @var Layout
-     */
-    private static $_Instance = \NULL;
-
-    /**
-     * A protection for constructor
-     * @var boolean
-     */
-    private static $_Security = \TRUE;
-
+use \Iris\Engine\tSingleton;
+    
     /**
      * Type of view
      * 
@@ -53,19 +42,6 @@ class Layout extends View implements \Iris\Design\iSingleton {
      * @var type 
      */
     private $_subViews = array();
-
-    /**
-     * The constructor throws an exception if an instance already exists
-     * (no direct call)
-     * 
-     * @param type $actionView 
-     */
-    public function __construct() {
-        if (self::$_Security) {
-            throw new \Iris\Exceptions\InternalException("Singleton Layout can't be directly instancied");
-        }
-        self::$_Security = \TRUE;
-    }
 
     /**
      * Set a scriptname to the layout
@@ -155,18 +131,6 @@ class Layout extends View implements \Iris\Design\iSingleton {
             return \NULL;
         }
         return $this->_subViews[$num];
-    }
-
-    /**
-     *
-     * @return Layout
-     */
-    public static function GetInstance() {
-        if (is_null(self::$_Instance)) {
-            self::$_Security = \FALSE;
-            self::$_Instance = new Layout();
-        }
-        return self::$_Instance;
     }
 
 }
