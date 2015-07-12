@@ -35,7 +35,16 @@ class Analyser {
     const BASE = 8;
     const GLOBALPARAM = 9;
 
+    /**
+     * The current OS is windows
+     * @var boolean
+     */
     private $_windows;
+
+    /**
+     * The current OS is Linux
+     * @var boolean
+     */
     private $_linux;
 
     /**
@@ -107,7 +116,6 @@ class Analyser {
         'I' => 'makedbini',
         'O:' => 'otherdb:',
         'e:' => 'entitygenerate:',
-        
     ];
 
     /**
@@ -223,30 +231,28 @@ class Analyser {
 
                 // Set public dir  (default is public)
                 case 'p': case 'publicdir':
-                    $parameters->setPublicDir($value);
+                    $parameters->setProject('public', $value);
                     break;
 
                 // set application dir (default is application)
                 case 'a': case 'applicationdir':
-                    $parameters->setApplicationName($value);
+                    $parameters->setProject('program', $value);
                     break;
 
                 // Set library folder name  (default is library)
                 case 'l': case 'libraryname':
-                    $parameters->setLibraryName($value);
+                    $parameters->setProject('library', $value);
                     break;
 
                 // set url (default is mysite.local)
                 case 'u': case 'url':
-                    $parameters->setUrl($value);
+                    $parameters->setProject('url', $value);
                     break;
 
                 // project metadata management
 //                case 'm': case 'projectmetadata':
 //                    $this->_treatMetadata($value);
 //                    break;
-
-
                 // define module/controller/action
                 case 'M':case 'module':
                     $parameters->setModuleName($value);
@@ -326,7 +332,7 @@ class Analyser {
                 case 'G': case 'genericparameter':
                     $parameters->setGeneric($value);
                     break;
-                
+
                 // password management
                 case 'w': case 'password':
                     $this->_processor = self::PASSWORD;
@@ -353,7 +359,7 @@ class Analyser {
                     $this->_processor = self::GLOBALPARAM;
                     $this->_processingOption = $option;
                     break;
-                
+
                 case 't': case 'test':
                     $this->_processor = self::SHOW;
                     $this->_processingOption = $option;
@@ -372,7 +378,7 @@ class Analyser {
         switch ($this->_processor) {
             // Project management
             case self::PROJECT:
-                require_once self::GetIrisLibraryDir() . '/CLI/Project.php';
+                self::Loader('/CLI/Project.php');
                 $project = new \CLI\Project($this);
                 $project->process();
                 break;
@@ -383,39 +389,39 @@ class Analyser {
 //                if ($config == NULL) {
 //                    throw new \Iris\Exceptions\CLIException('No active default project, please select one...');
 //                }
-                require_once self::GetIrisLibraryDir() . '/CLI/CoreMaker.php';
+                self::Loader('/CLI/CoreMaker.php');
                 $code = new \CLI\CoreMaker($this);
                 $code->process();
                 break;
             // Display status
             case self::SHOW:
-                require_once self::GetIrisLibraryDir() . '/CLI/Project.php';
+                self::Loader('/CLI/Project.php');
                 $project = new \CLI\Project($this);
                 $project->process();
                 break;
             case self::CODE:
-                require_once self::GetIrisLibraryDir() . '/CLI/Code.php';
+                self::Loader('/CLI/Code.php');
                 $code = new \CLI\Code($this);
                 $code->process();
                 break;
             case self::BASE:
-                require_once self::GetIrisLibraryDir() . '/CLI/Database.php';
+                self::Loader('/CLI/Database.php');
                 $base = new \CLI\Database($this);
                 $base->process();
                 break;
             case self::PASSWORD:
-                require_once self::GetIrisLibraryDir() . '/Iris/Users/_Password.php';
+                self::Loader(['/Iris/Users/_Password.php', '/Iris/SysConfig/Settings.php']);
                 $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_IRIS);
                 echoLine('Hashed password (internal algorithm): ');
                 echoLine($password);
-                if(defined('PASSWORD_DEFAULT')){
+                if (defined('PASSWORD_DEFAULT')) {
                     $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_PHP54);
                     echoLine('Hashed password (PHP 5.5 algorithm or emumation): ');
                     echoLine($password);
                 }
-                else{
+                else {
                     echoLine('Your system is unable to generate PHP 5.5 password hash.');
-                    echoLine('Use the internal /!admin/password URL to generate this type of hashes.' );
+                    echoLine('Use the internal /!admin/password URL to generate this type of hashes.');
                 }
                 break;
             // Nothing to do
@@ -454,6 +460,26 @@ class Analyser {
 
     public static function GetIrisLibraryDir() {
         return self::$_LibraryDir;
+    }
+
+    public static function SetIrisLibraryDir($dir) {
+        self::$_LibraryDir = $dir;
+    }
+    
+    /**
+     * Loads all the file listed in the array parameter
+     * 
+     * @param string[] $files
+     */
+    public static function Loader($files) {
+        if (is_array($files)) {
+            foreach ($files as $file) {
+                require_once self::$_LibraryDir . $file;
+            }
+        }
+        else {
+            require_once self::$_LibraryDir . $files;
+        }
     }
 
     /**
