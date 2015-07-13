@@ -39,6 +39,10 @@ namespace Iris\Engine;
  */
 trait tSingleton {
 
+    
+    protected function __construct() {
+    }
+    
     /**
      * Returns the unique instance or creates it if necessary.
      * 
