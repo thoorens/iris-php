@@ -18,7 +18,7 @@
 
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/show/views/scripts/lo_code.iview')}
+                {wbFooter()}
             </div><!--foot-->
         </div><!--main-->
     </body>

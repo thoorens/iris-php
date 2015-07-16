@@ -37,9 +37,9 @@ class WbFooter extends _ViewHelper {
      */
     const BUTTONS = 5;
     
-    public function help($layoutName, $buttons = self::BUTTONS) {
+    public function help($buttons = self::BUTTONS) {
         $sequence = \Iris\Structure\DBSequence::GetInstance();
-        if (\Iris\SysConfig\Settings::HasMD5Signature()) {
+        if (\Iris\SysConfig\Settings::$MD5Signature) {
             $signature = ' - ' . $this->callViewHelper('signature')->display();
             $buttonMD5 = $this->callViewHelper('signature')->saveButton();
             $buttonCode = $this->callViewHelper('button', $this->_codeButton($sequence))->__toString();
@@ -47,7 +47,9 @@ class WbFooter extends _ViewHelper {
         else{
             $signature = $buttonMD5 = $buttonCode= '';
         }
-        $html = "<b>Layout :</b> $layoutName";
+        //@todo : get the layout Name automatically
+        //$html = "<b>Layout :</b> $layoutName";
+        $html = "<b>Layout :</b> ". $this->callViewHelper('ILO_layoutName');
         $html .= $signature;
         $html .= '<br/>';
         $html .= $this->callViewHelper('ILO_goInternal', $buttons);

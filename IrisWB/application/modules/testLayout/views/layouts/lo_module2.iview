@@ -25,7 +25,7 @@
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/testLayout/views/scripts/lo_module2.iview')}
+                {wbFooter()}
             </div><!--foot-->
         </div><!--main-->  
     </body>

@@ -22,7 +22,7 @@
 
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/main/views/scripts/lo_wberror.iview')}
+                {wbFooter()}
             </div><!--foot-->
         </div><!--main-->  
     </body>

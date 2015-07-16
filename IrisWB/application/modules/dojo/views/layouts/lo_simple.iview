@@ -22,7 +22,7 @@
                 
             </div><!-- container -->
             <div id="foot">
-                {wbFooter('modules/dojo/views/scripts/lo_simple.iview')}
+                {wbFooter()}
             </div><!--foot-->
         </div><!--main-->
     </body>
