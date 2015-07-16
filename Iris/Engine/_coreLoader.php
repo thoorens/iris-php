@@ -45,11 +45,9 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     /**
      * type of class to load
      */
-
     const PLAIN_CLASS = 0;
     const VIEW_HELPER = 1;
     const CONTROLLER_HELPER = 2;
-
 // Directory patterns for views/layout
     const INTERNAL = '%s/IrisInternal/%s/views/%s%s';
     const INTERNALMAIN = '%s/IrisInternal/main/views/%s%s';
@@ -235,7 +233,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     public function loadView($scriptName, $controllerDirectory, $response) {
         $module = $response->getModuleName();
         if (!preg_match('/[\/_]/', $scriptName)) {
-//if (strpos($scriptName, '/') === FALSE) {
+            //if (strpos($scriptName, '/') === FALSE) {
             $scriptName = "_" . $scriptName;
         }
         elseif ($scriptName[0] != '/') {
@@ -244,22 +242,22 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $program = \Iris\Engine\Program::$ProgramName;
         $libraryList = $this->_extensionLibraries; // may be 0 element
         $libraryList[] = $this->library;
-// partials or views may be in system libraries
+        // partials or views may be in system libraries
         if (strpos($scriptName, '#')) {
             list($library, $scriptName) = explode('#', $scriptName);
             $library = $this->library . '/' . substr($library, 1);
             $viewFiles[] = sprintf(self::LIBRARY, $library, $controllerDirectory, $scriptName);
         }
-// views beginning with ! are to take from IrisInternal (notably layouts)
+        // views beginning with ! are to take from IrisInternal (notably layouts)
         if ($response->isInternal() or $scriptName[1] == '!') {
             if ($scriptName[1] == '!') {
                 $scriptName = "_" . substr($scriptName, 2);
             }
-// search in internal module
+            // search in internal module
             foreach ($libraryList as $library) {
                 $viewFiles[] = sprintf(self::INTERNAL, $library, $module, $controllerDirectory, $scriptName);
             }
-// search in internal main if necessary
+            // search in internal main if necessary
             if ($module != 'main') {
                 foreach ($libraryList as $library) {
                     $viewFiles[] = sprintf(self::INTERNALMAIN, $library, $controllerDirectory, $scriptName);
@@ -267,18 +265,20 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             }
         }
         else {
-// search in module
+            // search in module
             $viewFiles[] = sprintf(self::MODULE, $program, $module, $controllerDirectory, $scriptName);
-            $this->_transapplicationName == '' or
-                    $viewFiles[] = sprintf(self::MODULE, $this->_transapplicationName, $module, $controllerDirectory, $scriptName);
-// next in main module if necessary
+            if ($this->_transapplicationName !== '') {
+                $viewFiles[] = sprintf(self::MODULE, $this->_transapplicationName, $module, $controllerDirectory, $scriptName);
+            }
+            // next in main module if necessary
             if ($module != 'main') {
                 $viewFiles[] = sprintf(self::MAIN, $program, $controllerDirectory, $scriptName);
-                $this->_transapplicationName == '' or
-                        $viewFiles[] = sprintf(self::MAIN, $this->_transapplicationName, $controllerDirectory, $scriptName);
+                if ($this->_transapplicationName !== '') {
+                    $viewFiles[] = sprintf(self::MAIN, $this->_transapplicationName, $controllerDirectory, $scriptName);
+                }
             }
         }
-// next in library
+        // next in library
         foreach ($libraryList as $library) {
             $viewFiles[] = sprintf(self::LIBRARY, $library . '/modules/main', $controllerDirectory, $scriptName);
         }
@@ -295,6 +295,9 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
                 $this->_loadDebug("Found ", $pathToViewFile, \Iris\Engine\Debug::VIEW);
                 $foundClassFile = $file;
                 $found = TRUE;
+                if (basename($controllerDirectory) === 'lo') {
+                    \Iris\Engine\Memory::Set('LAYOUT', '/' . $file . $extension);
+                }
                 break;
             }
             $index++;
@@ -514,4 +517,3 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     }
 
 }
-
