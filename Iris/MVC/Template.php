@@ -145,7 +145,7 @@ class Template implements \Iris\Translation\iTranslatable {
     function __construct($iViewScriptName, $view = \NULL, $absolute = \FALSE) {
         $this->_initialScriptName = $iViewScriptName;
         $this->_view = $view;
-        if (!is_null($view)) {
+        if ($view !== \NULL) {
             if ($absolute) {
                 $this->_loadAbsoluteTemplate();
             }
@@ -191,7 +191,7 @@ class Template implements \Iris\Translation\iTranslatable {
         $view = $this->_view;
         try {
             // the case where a scriptName has been explicitely required (renderNow)
-            if (!is_null($iviewScriptName)) {
+            if ($iviewScriptName !== \NULL) {
                 $viewFile = $loader->loadView($iviewScriptName, "scripts", $view->getResponse());
             }
             else {
