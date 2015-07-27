@@ -137,7 +137,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $module = Analyser::PromptUser(
                         "Choose the module into which $controller will be inserted", $parameters->getModuleName());
         if ($module != $parameters->getModuleName()) {
-            \FrontEnd::GetInstance()->preloadClasses(['CLI/Code']);
+            Analyser::Loader('/CLI/Code');
             $code = new Code($this->_analyser);
             $code->makeNewCode($module, \NULL, \NULL);
         }
@@ -391,22 +391,21 @@ END;
             ];
             while (!$ok) {
                 //@todo suppress dependency from translation implementation
-                $classes = [
-                    '/Iris/Translation/tSystemTranslatable',
-                    '/Iris/Translation/iTranslatable',
-                    '/Iris/views/helpers/tViewHelperCaller',
-                    '/Iris/Design/iSingleton',
-                    '/Iris/Subhelpers/_Subhelper',
-                    '/Iris/Subhelpers/_LightSubhelper',
-                    '/Iris/Subhelpers/Icon',
-                    '/Iris/Subhelpers/_CrudIconManager',
-                    '/CLI/Fake/CrudIconManager',
-                    '/Iris/Translation/_Translator',
-                    '/Iris/Translation/SystemTranslator',
-                    '/CLI/Fake/CrudIconManager',
+                $files = [
+                    '/Iris/Translation/tSystemTranslatable.php',
+                    '/Iris/Translation/iTranslatable.php',
+                    '/Iris/views/helpers/tViewHelperCaller.php',
+                    '/Iris/Design/iSingleton.php',
+                    '/Iris/Subhelpers/_Subhelper.php',
+                    '/Iris/Subhelpers/_LightSubhelper.php',
+                    '/Iris/Subhelpers/Icon.php',
+                    '/Iris/Subhelpers/_CrudIconManager.php',
+                    '/CLI/Fake/CrudIconManager.php',
+                    '/Iris/Translation/_Translator.php',
+                    '/Iris/Translation/SystemTranslator.php',
+                    '/CLI/Fake/CrudIconManager.php',
                 ];
-                $front = \FrontEnd::GetInstance();
-                $front->preloadClasses($classes);
+                Analyser::Loader($files);
 
                 $settings[self::ID] = Analyser::PromptUser('Primary key name ', $settings[self::ID]);
                 $settings[self::DESCRIPTION] = Analyser::PromptUser('Field containing a good description', $settings[self::DESCRIPTION]);

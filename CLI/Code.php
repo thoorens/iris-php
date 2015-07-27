@@ -109,9 +109,9 @@ APACHE;
      * some files and directories
      * 
      * @param string $projectDir the project base directory name
+     * @param Parameters $parameters the optional parameters
      */
-    public function makePublic($projectDir) {
-        $parameters = Parameters::GetInstance();
+    public function makePublic($projectDir, $parameters) {
         $publicDir = $parameters->getPublicDir();
         echo "Making public directories and files ($publicDir/...).\n";
         $permissions = $this->_os->GetPrivateMod();
@@ -141,7 +141,7 @@ APACHE;
             '!config/admin',
             '!config/base',
             '!data/private',
-            '!data/public',
+            '!data/protected',
             '!log',
             'modules'
         ];
@@ -152,7 +152,9 @@ APACHE;
             'CrudIconManager.php' => 'models/crud/CrudIconManager.php',
         ];
         $parameters = Parameters::GetInstance();
+        iris_debug($parameters->getNewProject()['program'].' - '.$parameters->getApplicationName());
         $programName = $parameters->getApplicationName();
+        iris_debug($programName);
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         $destination = "$projectDir/$programName";
         echo "Making application directories and files ($programName/...).\n";
@@ -340,12 +342,13 @@ END;
      * the copyright notice. Each file had to contain a line containing
      * "* Project IRIS-PHP".
      * 
-     * It is still functional
+     * It is still functional, but useless
      * 
      * Example : 
      * find -name '*.php' -exec iris.php -o {} \;
      * 
      * @throws \Iris\Exceptions\CLIException
+     * @deprecated since version 2015
      */
     protected function _copyright() {
         $parameters = Parameters::GetInstance();

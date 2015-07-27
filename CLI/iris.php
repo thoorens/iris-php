@@ -1,6 +1,5 @@
 #! /usr/bin/env php
 <?php
-
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
  * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
@@ -246,43 +245,40 @@ STOP;
      * Loads the required classes (by default all the classes shared by all
      * treatments
      * 
-     * @param string[] $classes
+     * @param string[] $files
      */
-    public function preloadClasses($classes = []) {
-        // by default loads some classes (with dependencies)
-        if (count($classes) == 0) {
-            $classes = [
-                // Engine
-                'Iris/Engine/Debug',
-                // CLI
-                'CLI/Parameters',
-                'CLI/Analyser',
-                'CLI/_Process',
-                'CLI/_Help', 'CLI/Help/French', 'CLI/Help/English',
-                // Various
-                'Iris/Engine/tSingleton',
-                'Iris/Engine/Memory',
-                'Iris/Log',
-                'Iris/Exceptions/_Exception',
-                'Iris/Exceptions/CLIException',
-                'Iris/Exceptions/NotSupportedException',
-                // Parsers
-                'Iris/SysConfig/_Parser',
-                'Iris/SysConfig/ConfigIterator',
-                'Iris/SysConfig/Config',
-                'Iris/SysConfig/IniParser',
-                // OS
-                'Iris/OS/_OS',
-                'Iris/OS/Unix',
-                'Iris/OS/Windows',
-                'Iris/OS/XP',
-                // System
-                'Iris/System/Functions',
-            ];
-        }
-        foreach ($classes as $classe) {
-            include_once "$this->_irisInstallationDir/$classe.php";
-        }
+    public function preloadClasses() {
+        require_once $this->_irisInstallationDir . '/CLI/Analyser.php';
+        $files = [
+            // Engine
+            '/Iris/Engine/Debug.php',
+            // CLI
+            '/CLI/Parameters.php',
+            //'/CLI/Analyser.php', done
+            '/CLI/_Process.php',
+            '/CLI/_Help.php', '/CLI/Help/French.php', '/CLI/Help/English.php',
+            // Various
+            '/Iris/Engine/tSingleton.php',
+            '/Iris/Engine/Memory.php',
+            '/Iris/Log.php',
+            '/Iris/Exceptions/_Exception.php',
+            '/Iris/Exceptions/CLIException.php',
+            '/Iris/Exceptions/NotSupportedException.php',
+            // Parsers
+            '/Iris/SysConfig/_Parser.php',
+            '/Iris/SysConfig/ConfigIterator.php',
+            '/Iris/SysConfig/Config.php',
+            '/Iris/SysConfig/IniParser.php',
+            // OS
+            '/Iris/OS/_OS.php',
+            '/Iris/OS/Unix.php',
+            '/Iris/OS/Windows.php',
+            '/Iris/OS/XP.php',
+            // System
+            '/Iris/System/Functions.php',
+        ];
+        CLI\Analyser::SetIrisLibraryDir($this->getIrisInstallationDir());
+        CLI\Analyser::Loader($files);
     }
 
     /**

@@ -109,7 +109,7 @@ abstract class _Process {
      */
     protected function _checkExistingFile($fileName, $backupNumber = 10) {
         if (file_exists(($fileName))) {
-            require_once $this->_analyser->GetIrisLibraryDir() . '/Iris/FileSystem/File.php';
+            Analyser::Loader('/Iris/FileSystem/File.php');
             $file = new \Iris\FileSystem\File(basename($fileName), dirname($fileName));
             $file->backup($backupNumber);
             echo "The file $fileName already exists. A backup has been made.\n";

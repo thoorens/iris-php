@@ -31,7 +31,7 @@ namespace CLI {
                 case 'virtual':
                     $parameters->requireDefaultProject();
                     //$projectConfig = $analyser->loadDefaultProject();
-                    require_once Analyser::GetIrisLibraryDir() . '/CLI/Code.php';
+                    Analyser::Loader('/CLI/Code.php');
                     $coder = new Code($parameters);
                     $coder->makeVirtualParameter(TRUE);
                     break;
@@ -155,10 +155,14 @@ namespace CLI {
 // Create the project file
             $this->_os->touch("$projectDir/.$projectName.irisproject");
 // Creates the three parts of the project + a file for Apache
-            require_once Analyser::GetIrisLibraryDir() . '/CLI/Code.php';
+            Analyser::Loader('/CLI/Code.php');
             $coder = new Code($parameters);
             $coder->_os = $this->_os;
-            $coder->makePublic($projectDir);
+            $specialPara = $parameters->getNewProject();
+            $parameters->setPublicDir( isset($specialPara['public']) ? $specialPara['public'] : 'public');
+
+            $coder->makePublic($projectDir, $parameters);
+            die('STOP');
             $coder->makeApplication($projectDir);
             $this->_makeLibrary($projectDir, $parameters->getLibraryName());
             $coder->makeVirtualParameter();
@@ -277,7 +281,7 @@ Use'iris.php --selectdefaultproject' to define a new one.");
             $moduleName = $parameters->getModuleName();
             $controllerName = $parameters->getControllerName();
             $actionName = $parameters->getActionName();
-            require_once Analyser::GetIrisLibraryDir() . '/CLI/Code.php';
+            Analyser::Loader('/CLI/Code.php');
             $coder = new Code($parameters);
             $coder->makeNewCode($moduleName, $controllerName, $actionName);
         }

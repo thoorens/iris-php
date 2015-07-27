@@ -58,6 +58,8 @@ class Parameters {
      */
     private $_currentProject = \NULL;
 
+    private $_newProject = [];
+    
     /**
      *
      * @staticvar type $instance
@@ -101,6 +103,15 @@ class Parameters {
         return $this->_getParameter($name, \FALSE);
     }
 
+    public function setProject($field, $value){
+        $this->_newProject[$field] = $value;
+    }
+    
+    public function getNewProject() {
+        return $this->_newProject;
+    }
+
+        
     /**
      * A quick way to define a internal parameter
      *
@@ -240,6 +251,14 @@ or create one with 'iris.php --createproject'.");
     }
 
     /**
+     * Acessor set for the public directory name
+     * @param string $param
+     */
+    public function setPublicDir($param) {
+        
+    }
+    
+    /**
      * Accessor get for the public directory name
      * @return string
      */
@@ -247,6 +266,7 @@ or create one with 'iris.php --createproject'.");
         return $this->_getParameter('LibraryName', 'library');
     }
 
+    
     /**
      * Accessor get for the current module name
      * @return string
@@ -458,5 +478,7 @@ or create one with 'iris.php --createproject'.");
         $paramDir = $os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
         $this->writeParams("$paramDir" . IRIS_PROJECT_INI, $this->_projects);
     }
+
+    
 
 }
