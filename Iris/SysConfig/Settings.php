@@ -48,6 +48,12 @@ class Settings {
         self::$DataFolder = IRIS_ROOT_PATH . '/data';
         // By default use the PHP5.5 mode
         self::$DefaultHashType = self::MODE_PHP55;
+        // By default the development RunTimeDuration is display by internal code, not Ajax
+        self::$RuntimeDisplayMode = \Iris\Time\RuntimeDuration::INNERCODE;
+        // The default date format is JAPAN (e.g. 2015-12-31
+        self::$DateMode = \Iris\Time\TimeDate::JAPAN;
+        // By default the view script templates are not cached
+        self::$CacheTemplate = \Iris\MVC\Template::CACHE_NEVER;
     }
     
 
@@ -73,13 +79,13 @@ class Settings {
     /**
      * @var int
      */
-    public static $RuntimeDisplayMode = \Iris\Time\RuntimeDuration::INNERCODE;
+    public static $RuntimeDisplayMode; //\Iris\Time\RuntimeDuration::INNERCODE;
 
     /**
      * Unformated dates use japanese format as in 2012-12-31
      * @var iint 
      */
-    public static $DateMode = \Iris\Time\TimeDate::JAPAN;
+    public static $DateMode; // \Iris\Time\TimeDate::JAPAN;
 
     /**
      * The default time zone is Brussels
@@ -157,7 +163,7 @@ class Settings {
      * To minimize execution templates can be cached (not by default)
      * @var int 
      */
-    public static $CacheTemplate = \Iris\MVC\Template::CACHE_NEVER;
+    public static $CacheTemplate; // \Iris\MVC\Template::CACHE_NEVER;
     
     /**
      * Application icons are placed in an /images/icons folder
