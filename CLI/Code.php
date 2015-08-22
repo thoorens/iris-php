@@ -19,7 +19,6 @@ namespace CLI;
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ * 
  */
-
 class Code extends _Process {
 
     const MODULE = 1;
@@ -136,14 +135,17 @@ APACHE;
      */
     public function makeApplication($projectDir) {
         // directories beginning by '!' have full permissions
-        $directories = [
+        $programdir = [
             'models/crud',
             '!config/admin',
             '!config/base',
-            '!data/private',
-            '!data/protected',
+            '!config/forms',
             '!log',
             'modules'
+        ];
+        $datadir = [
+            '!data/private',
+            '!data/protected',
         ];
         $files = [
             '_application.php' => "modules/_application.php",
@@ -152,15 +154,15 @@ APACHE;
             'CrudIconManager.php' => 'models/crud/CrudIconManager.php',
         ];
         $parameters = Parameters::GetInstance();
-        iris_debug($parameters->getNewProject()['program'].' - '.$parameters->getApplicationName());
+        //iris_debug($parameters->getNewProject()['program'].' - '.$parameters->getApplicationName());
         $programName = $parameters->getApplicationName();
-        iris_debug($programName);
+        //iris_debug($programName);
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
-        $destination = "$projectDir/$programName";
         echo "Making application directories and files ($programName/...).\n";
-        $this->_createDir($directories, $destination);
+        $this->_createDir($datadir, "$projectDir/data");
+        $this->_createDir($programdir, "$projectDir/$programName");
         foreach ($files as $template => $file) {
-            $this->_createFile("$source/$template", "$destination/$file",['{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",]);
+            $this->_createFile("$source/$template", "$destination/$file", ['{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",]);
         }
         $this->_newModule($destination, "main");
     }
