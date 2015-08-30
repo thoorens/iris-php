@@ -62,7 +62,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     const STANDARD_LIBRARIES = "Iris_Dojo";
 
 // By defaut no class is traced
-    protected static $_ClassesToTrace = array();
+    protected static $_ClassesToTrace = [];
 
     /**
      * The folder name for the framework components. 
@@ -81,14 +81,14 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * 
      * @var string[]
      */
-    public static $UserClasses = array();
+    public static $UserClasses = [];
 
     /**
      * Implemenation of 3 stacks to search classes into
      * 
      * @var PathArray[] 
      */
-    protected $_classPath = array();
+    protected $_classPath = [];
 
     /**
      * The stack type used during a search
@@ -109,37 +109,37 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * 
      * @var type 
      */
-    protected $_loadedClasses = array(
-        self::VIEW_HELPER => array(),
-        self::CONTROLLER_HELPER => array(),
-    );
+    protected $_loadedClasses = [
+        self::VIEW_HELPER => [],
+        self::CONTROLLER_HELPER => [],
+    ];
 
     /**
      *
      * @var int[] emulates an enum of the 3 stack types 
      */
-    protected $_stackList = array(
+    protected $_stackList = [
         self::PLAIN_CLASS,
         self::VIEW_HELPER,
         self::CONTROLLER_HELPER,
-    );
+    ];
 
     /**
      * Special libraries added to the search path
      * 
      * @var string[]
      */
-    protected $_extensionLibraries = array();
+    protected $_extensionLibraries = [];
 
     /**
      * Private constructor for singleton.
      */
     protected function __construct() {
-        $this->_classPath = array();
+        $this->_classPath = [];
         $this->library = IRIS_LIBRARY;
 // First look in Iris, then in another specified library
 // application path will be prepend by a Program method 
-        $initial = array("$this->library/Iris/", "$this->library/");
+        $initial = ["$this->library/Iris/", "$this->library/"];
         foreach ($this->_stackList as $stackType) {
             $this->_classPath[$stackType] = new PathArray($initial);
         }
@@ -232,11 +232,11 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      */
     public function loadView($scriptName, $controllerDirectory, $response) {
         $module = $response->getModuleName();
+        // if scriptName does not begin with / or _, prepend an _
         if (!preg_match('/[\/_]/', $scriptName)) {
-            //if (strpos($scriptName, '/') === FALSE) {
             $scriptName = "_" . $scriptName;
         }
-        elseif ($scriptName[0] != '/') {
+        elseif ($scriptName[0] !== '/') {
             $scriptName = '/' . $scriptName;
         }
         $program = \Iris\Engine\Program::$ProgramName;
@@ -244,12 +244,10 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $libraryList[] = $this->library;
         // partials or views may be in system libraries
         if (strpos($scriptName, '#')) {
-            list($library, $scriptName) = explode('#', $scriptName);
-            $library = $this->library . '/' . substr($library, 1);
-            $viewFiles[] = sprintf(self::LIBRARY, $library, $controllerDirectory, $scriptName);
+            $viewFiles[] = $this->_fromSystem($scriptName, $controllerDirectory);
         }
         // views beginning with ! are to take from IrisInternal (notably layouts)
-        if ($response->isInternal() or $scriptName[1] == '!') {
+        if ($response->isInternal() or $scriptName[1] === '!') {
             if ($scriptName[1] == '!') {
                 $scriptName = "_" . substr($scriptName, 2);
             }
@@ -312,6 +310,19 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
     }
 
     /**
+     * Tries to add a script from a system library
+     * 
+     * @param type $scriptName
+     * @param type $controllerDirectory
+     * @return type
+     */
+    protected function _fromSystem($scriptName, $controllerDirectory) {
+        list($library, $scriptName) = explode('#', $scriptName);
+        $library = $this->library . '/' . substr($library, 1);
+        return sprintf(self::LIBRARY, $library, $controllerDirectory, $scriptName);
+    }
+
+    /**
      * A special treatment for user overridden classes
      * 
      * @param string $className
@@ -321,7 +332,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $path = str_replace('\\', '/', $className);
         $pathComponents = explode('/', $path);
         // Overriden classes may only occur in standard libraries
-        if ($pathComponents[0] == '' or strpos(self::STANDARD_LIBRARIES, $pathComponents[0]) === \FALSE) {
+        if ($pathComponents[0] === '' or strpos(self::STANDARD_LIBRARIES, $pathComponents[0]) === \FALSE) {
             return \FALSE;
         }
         else {
@@ -392,7 +403,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      */
     public function pathToHelpers($modules) {
         if (!is_array($modules)) {
-            $modules = array($modules);
+            $modules = [$modules];
         }
 // reverse the array because its elements will be prepended
         $modules = array_reverse($modules);
@@ -404,7 +415,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             $transapplicationName = $this->_transapplicationName;
         }
         foreach ($modules as $module)
-            foreach (array(self::CONTROLLER_HELPER, self::VIEW_HELPER) as $helperType) {
+            foreach ([self::CONTROLLER_HELPER, self::VIEW_HELPER] as $helperType) {
                 $transapplicationName === '' OR
                         $this->getStack($helperType)->prepend($transapplicationName . $module . "/");
                 $this->getStack($helperType)->prepend($programName . $module . "/");
