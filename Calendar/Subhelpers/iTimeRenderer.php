@@ -11,9 +11,12 @@ namespace Calendar\Subhelpers;
  */
 
 /**
- * Description of iTimeRenderer
- * 
- * Project IRIS-PHP
+ * A special type of renderer adding four other methods<ul>
+ * <li> a way to render a unique cell
+ * <li> a way to treat a collision
+ * <li> a way to display an event
+ * <li> a way to render a date
+ * </ul>
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net

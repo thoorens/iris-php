@@ -10,22 +10,16 @@ namespace Calendar\views\helpers;
  *  
  * @copyright 2011-2015 Jacques THOORENS
  */
- /* 
+
+/* 
+ * This new class will be able to render a month
+ * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * @todo : verify the utility of this and suppress it in all layouts
  */
-
-/**
- * A way to manage script and style references after all the page
- * has been generated. help() place an html comment and UpdateHeader()
- * replaces it by the necessary style and script loading
- * 
- * @todo change this stupid description
-
- */
-class Month extends \Iris\views\helpers\_ViewHelper{// implements \Iris\Time\iTimeRenderer {
+class Month extends \Iris\views\helpers\_ViewHelper implements \Calendar\Subhelpers\iTimeRenderer {
 
     //use \Iris\Subhelpers\tSubhelperLink;
 
@@ -38,7 +32,7 @@ class Month extends \Iris\views\helpers\_ViewHelper{// implements \Iris\Time\iTi
      * 
      * @var string
      */
-    private $_subhelperName = '\Iris\Time\MonthlySchedule';
+    private $_subhelperName = '\Calendar\Subhelpers\MonthlySchedule';
 
     /*
      * iRenderer interface methods :

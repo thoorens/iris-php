@@ -12,13 +12,10 @@ namespace Calendar\views\helpers;
  */
 
 /**
- * A way to manage script and style references after all the page
- * has been generated. help() place an html comment and UpdateHeader()
- * replaces it by the necessary style and script loading
- * @todo change this stupid description
+ * A new class to display a week with its events
  * 
  */
-class Week extends \Iris\views\helpers\_ViewHelper implements \Iris\Time\iTimeRenderer {
+class Week extends \Iris\views\helpers\_ViewHelper implements \Calendar\Subhelpers\iTimeRenderer {
 
     use \Iris\Subhelpers\tSubhelperLink;
 
@@ -27,7 +24,7 @@ class Week extends \Iris\views\helpers\_ViewHelper implements \Iris\Time\iTimeRe
      * 
      * @var string
      */
-    private $_subhelperName = '\Iris\Time\WeeklySchedule';
+    private $_subhelperName = '\Calendar\Subhelpers\WeeklySchedule';
 
     /*
      * iRenderer interface methods :
