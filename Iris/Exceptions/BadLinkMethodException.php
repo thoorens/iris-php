@@ -9,7 +9,6 @@ namespace Iris\Exceptions;
  *  
  * @copyright 2011-2015 Jacques THOORENS
  */
-
 /**
  * An exception thrown an expected parameter has not the expected type
  * 
@@ -18,11 +17,11 @@ namespace Iris\Exceptions;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class BadParameterException extends _Exception{
+class BadLinkMethodException extends _Exception{
      
     
     public function getExceptionName() {
-        return "Bad parameter exception";
+        return "Bad link method exception";
     }
 
 }
