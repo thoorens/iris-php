@@ -5,7 +5,7 @@
         {head()}
         {wbCSS()}
     </head>
-    <body {dojo_body()}{wbColors('ORANGE3')}>
+    <body {wbColors('ORANGE3')}>
         <div id="main">
             {ILO_adminToolBar()}
             <div id="container">

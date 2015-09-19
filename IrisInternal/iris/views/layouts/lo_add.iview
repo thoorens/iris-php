@@ -9,7 +9,7 @@
         {styleLoader("/!documents/file/css/iris31.css")}
         {styleLoader("/!documents/file/css/irisColor.css")}
     </head>
-    <body {dojo_Body()}>
+    <body>
         <div class="page_margins">
             <div class="page">
                 <div id="header">

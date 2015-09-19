@@ -8,7 +8,7 @@
         {styleLoader("/!documents/file/css/iris_vnav.css")}
         <!--link href="/iris_aspect/css/iris_admin.css" rel="stylesheet" type="text/css" /-->
     </head>
-    <body {dojo_body()}>
+    <body>
         <div class="page_margins">
             <div class="page">
                 <div id="header">
