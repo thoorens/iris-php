@@ -44,10 +44,10 @@ class Head {
      * The render collects all javascript and style defined in Dojo\Mananager,
      * \Dojo\Engine\NameSpaceItem and \Dojo\Engine\Bubble
      *
-     * @param type $ajaxMode
+     * @param boolean $ajaxMode
      * @return string
      */
-    public function render($ajaxMode = \FALSE) {
+    public function render($ajaxMode) {
         if (!\Dojo\Manager::IsActive()) {
             return '';
         }
@@ -81,5 +81,16 @@ BASE;
         return $text;
     }
 
+    /**
+     * 
+     * @param type $ajaxMode
+     * @param type $text
+     */
+    public function update($ajaxMode, &$text){
+        echo "dojo mode <br/>";
+        $theme = \Dojo\Engine\Settings::$Theme;
+        $style = "class=\"$theme\" ";
+        $text = \str_replace('<body ', "<body " . $style, $text);
+    }
 }
 
