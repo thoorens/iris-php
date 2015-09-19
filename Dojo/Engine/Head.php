@@ -87,7 +87,6 @@ BASE;
      * @param type $text
      */
     public function update($ajaxMode, &$text){
-        echo "dojo mode <br/>";
         $theme = \Dojo\Engine\Settings::$Theme;
         $style = "class=\"$theme\" ";
         $text = \str_replace('<body ', "<body " . $style, $text);
