@@ -89,7 +89,7 @@ BASE;
     public function update($ajaxMode, &$text){
         $theme = \Dojo\Engine\Settings::$Theme;
         $style = "class=\"$theme\" ";
-        $text = \str_replace('<body ', "<body " . $style, $text);
+        $text = \str_replace('<body', "<body " . $style, $text);
     }
 }
 
