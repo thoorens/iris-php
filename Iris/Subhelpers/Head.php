@@ -1,26 +1,15 @@
 <?php
-
 namespace Iris\Subhelpers;
 
 defined('TAB2') or define('TAB2', "\t\t");
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -35,16 +24,13 @@ defined('TAB2') or define('TAB2', "\t\t");
 class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
-
-use \Iris\Engine\tSingleton;
-
-
+    use \Iris\Engine\tSingleton;
 
     /**
      * A place holder for all the loader
      */
-
     const LOADERMARK = "\t<!-- LOADERS -->\n";
+
     /**
      * A place holder for Javascript in Ajax mode
      */
@@ -54,6 +40,7 @@ use \Iris\Engine\tSingleton;
      * A convenient way to say Ajaxmode is true
      */
     const AJAXMODE = \TRUE;
+
     /**
      * The contrary of Ajax mode is header mode
      */
@@ -63,7 +50,7 @@ use \Iris\Engine\tSingleton;
      * The components of the &lt;head> part of the file
      * @var string[]
      */
-    private $_components = array();
+    private $_components = [];
 
     /**
      *
@@ -72,11 +59,11 @@ use \Iris\Engine\tSingleton;
     private $_html = array();
 
     /**
-     * The list of associated loader, created during page generation 
+     * The list of associated managers, added during page generation 
      * 
      * @var string[] 
      */
-    private $_additionalHeadLoader = array();
+    private $_additionalHeadManager = [];
 
     /**
      * A list of keyword for the page. Each element of the array has this 
@@ -92,26 +79,26 @@ use \Iris\Engine\tSingleton;
      * @return string
      * @todo add the other meta
      */
-    private function _render() {
-        $this->_prepareIE();
-        $this->_contentType();
-        $this->_prepareSiteIcon();
-        $this->_prepareTitle();
-        $this->_prepareKeyWords();
-        $this->_prepareAllMeta();
+    private function _renderHead() {
+        $this->_renderIE();
+        $this->_renderContentType();
+        $this->_renderSiteIcon();
+        $this->_renderTitle();
+        $this->_renderKeyWords();
+        $this->_renderAllMeta();
 
         $html = implode(CRLF . TAB2, $this->_html) . CRLF;
-        $this->_html = array(); // all treated lines are erased
+        $this->_html = []; // all treated lines are erased
         return TAB2 . $html;
     }
 
     /**
-     * Registers a new loader in the head process (e.g. css or javascript loaders)
+     * Registers a new manager in the head process (e.g. css or javascript loaders)
      * 
      * @param string $className
      */
-    public function registerLoader($className) {
-        $this->_additionalHeadLoader[] = $className;
+    public function registerManager($className) {
+        $this->_additionalHeadManager[] = $className;
     }
 
     /**
@@ -140,7 +127,8 @@ use \Iris\Engine\tSingleton;
      */
     public function __call($name, $arguments) {
         if (strpos($name, 'set') === 0) {
-            $this->_components[strtolower(substr($name, 3))] = $arguments[0];
+            $parameterName = strtolower(substr($name, 3));
+            $this->_components[$parameterName] = $arguments[0];
         }
         return $this;
     }
@@ -151,15 +139,17 @@ use \Iris\Engine\tSingleton;
      * 
      * @return string
      */
-    public function writeMark() {
+    public function writeLoaderMark() {
         return self::LOADERMARK;
     }
 
+    
+    
     /**
      * Creates the "content type" meta tag
      */
-    private function _contentType() {
-        $charset = $this->_takeOnce('charset', 'UTF-8');
+    private function _renderContentType() {
+        $charset = $this->_readOnce('charset', 'UTF-8');
         $this->_html[] = sprintf('<meta http-equiv="Content-Type" content="text/html; charset=%s" />', $charset);
     }
 
@@ -168,25 +158,25 @@ use \Iris\Engine\tSingleton;
      * 
      * @param type $metaName
      */
-    private function _prepareMeta($metaName) {
-        $value = $this->_takeOnce($metaName, \NULL);
+    private function _renderMeta($metaName) {
+        $value = $this->_readOnce($metaName, \NULL);
         $metaName = str_replace('_', '-', $metaName);
         if (!is_null($value)) {
             $this->_html[] = sprintf('<meta name="' . $metaName . '" content="%s" />', $value);
         }
     }
 
-    private function _prepareAllMeta() {
+    private function _renderAllMeta() {
         foreach ($this->_components as $name => $d) {
-            $this->_prepareMeta($name);
+            $this->_renderMeta($name);
         }
     }
 
     /**
      * Creates a shortcut icon
      */
-    private function _prepareSiteIcon() {
-        $iconFile = $this->_takeOnce('iconfile', "/images/favicon.ico");
+    private function _renderSiteIcon() {
+        $iconFile = $this->_readOnce('iconfile', "/images/favicon.ico");
         if (!is_null($iconFile)) {
             $this->_html[] = sprintf('<link href="%s" rel="shortcut icon" />', $iconFile);
         }
@@ -195,30 +185,26 @@ use \Iris\Engine\tSingleton;
     /**
      * Prepare the title and subtitle
      */
-    private function _prepareTitle() {
-        $title = $this->_takeOnce('title', $this->_('Site created with Iris-PHP'));
-        $subtitle = $this->_takeOnce('subtitle', '');
-        if ($subtitle != '') {
-            $this->_html[] = "<title>$title - $subtitle</title>" . CRLF;
-        }
-        else {
-            $this->_html[] = "<title>$title</title>" . CRLF;
-        }
+    private function _renderTitle() {
+        $title[] = $this->_readOnce('title', $this->_('Site created with Iris-PHP'));
+        $title[] = $this->_readOnce('subtitle', '');
+        $titles = implode(' - ',$title);
+        $this->_html[] = "<title>$titles</title>";
     }
 
     /**
      * Prepare the keywords
      */
-    private function _prepareKeyWords() {
+    private function _renderKeyWords() {
         $keys = array_flip($this->_keywords);
         $this->setKeywords(implode(', ', $keys));
-        $this->_prepareMeta('keywords');
+        $this->_renderMeta('keywords');
     }
 
     /**
      * Compatibility for IE in HTML5
      */
-    private function _prepareIE() {
+    private function _renderIE() {
         $minVersion = 9;
         $this->_html[] = <<< HTML
     <!--[if lt IE $minVersion]>
@@ -235,7 +221,7 @@ HTML;
      * @param mixed $defaultValue
      * @return mixed
      */
-    private function _takeOnce($paramName, $defaultValue) {
+    private function _readOnce($paramName, $defaultValue) {
         if (!isset($this->_components[$paramName])) {
             $value = $defaultValue;
         }
@@ -260,8 +246,8 @@ HTML;
      * @param \Iris\Time\RuntimeDuration $runtimeDuration The time mesurement since the index.php start
      * @param string $componentId The id of the component to write into 
      */
-    public static function HeaderBodyTuning(&$text, $runtimeDuration = \NULL, $componentId = 'iris_RTD') {
-        self::_MakeTuning(self::HEADERMODE, $text, $runtimeDuration, $componentId);
+    public function headerBodyTuning(&$text, $runtimeDuration = \NULL, $componentId = 'iris_RTD') {
+        static::_MakeTuning(self::HEADERMODE, $text, $runtimeDuration, $componentId);
     }
 
     /**
@@ -288,10 +274,11 @@ HTML;
             if ($ajaxMode) {
                 return;
             }
-            $loaders = $auto->_render();
-            foreach ($auto->_additionalHeadLoader as $loaderName) {
+            $loaders = $auto->_renderHead();
+            foreach ($auto->_additionalHeadManager as $loaderName) {
                 $loader = $loaderName::getInstance();
                 $loaders .= $loader->render($ajaxMode);
+                $loader->update($ajaxMode, $text);
             }
             $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
             if ($ajaxMode) {
@@ -299,6 +286,7 @@ HTML;
             }
             else {
                 $text = \str_replace(self::LOADERMARK, $loaders, $text);
+                //static::_AdditionalTuning($text);
                 if (\Iris\SysConfig\Settings::$MD5Signature) {
                     $starter .= \Iris\views\helpers\Signature::ComputeMD5($text);
                     \Iris\views\helpers\Signature::ComputeMD5($loaders);
@@ -314,5 +302,13 @@ HTML;
         }
     }
 
+    /**
+     * The additional Tuning may be redefined in a subclass
+     * 
+     * @param string $text
+     */
+    protected static function _AdditionalTuning(&$text){
+        //echo "Additional";
 }
 
+}
