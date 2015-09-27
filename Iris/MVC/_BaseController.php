@@ -1,5 +1,4 @@
 <?php
-
 namespace Iris\MVC;
 use \Iris\Errors;
 
@@ -140,7 +139,6 @@ class _BaseController {
      */
     public function excecuteAction() {
         // if problem no return
-        //$this->_verifyAcl();
         $action = $this->_response->getActionName();
         $this->_view->setResponse($this->_response);
         $actionName = $action . 'Action';

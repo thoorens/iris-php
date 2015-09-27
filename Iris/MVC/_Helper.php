@@ -1,6 +1,6 @@
 <?php
-
 namespace Iris\MVC;
+
 use \Iris\Engine as IEN;
 
 /*
@@ -21,16 +21,14 @@ use \Iris\Engine as IEN;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-abstract class _Helper implements \Iris\Translation\iTranslatable{
+abstract class _Helper implements \Iris\Translation\iTranslatable {
+
     use \Iris\Translation\tSystemTranslatable;
-
-
 
     /**
      *
      * @var AbstractActionHelper; 
      */
-
     protected static $_Instances = array();
 
     /**
@@ -92,17 +90,17 @@ abstract class _Helper implements \Iris\Translation\iTranslatable{
         $loader = IEN\Loader::GetInstance();
         switch ($helperType) {
             case IEN\Loader::VIEW_HELPER:
-                $object = "$library\\views\\helpers\\" . $className;
+                $completeClassName = "$library\\views\\helpers\\" . $className;
                 break;
             case IEN\Loader::CONTROLLER_HELPER:
-                $object = "$library\\controllers\\helpers\\" . $className;
+                $completeClassName = "$library\\controllers\\helpers\\" . $className;
                 break;
 
             default:
                 break;
         }
-        $loader->loadHelper($object, $helperType);
-        $object = $object::GetInstance();
+        $loader->loadHelper($completeClassName, $helperType);
+        $object = $completeClassName::GetInstance();
         return $object;
     }
 
@@ -127,5 +125,4 @@ abstract class _Helper implements \Iris\Translation\iTranslatable{
         return $instance;
     }
 
-    
 }
