@@ -1,5 +1,4 @@
 <?php
-
 namespace Iris\views\helpers;
 
 /*
@@ -38,6 +37,13 @@ use tViewHelperCaller;
         $this->_init();
     }
 
+    /**
+     * Each view helper must have a help method but the parameter number
+     * may change. There is no overloading possibility in PHP so we cannot
+     * define an abstract method here
+     */
+    //public abstract function help($param);
+    
     /**
      * Permits to modify the constructor behavior in an abstract subclass
      */
@@ -89,9 +95,11 @@ use tViewHelperCaller;
      * Setter for the linked view
      * 
      * @param \Iris\View\_ViewHelper $view 
+     * @return \Iris\views\helpers\_ViewHelper for fluent interface
      */
     public function setView($view) {
         $this->_view = $view;
+        return $this;
     }
 
     /**
