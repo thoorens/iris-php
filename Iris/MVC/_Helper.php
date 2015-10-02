@@ -1,8 +1,6 @@
 <?php
 namespace Iris\MVC;
 
-use \Iris\Engine as IEN;
-
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
  * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
@@ -22,20 +20,19 @@ use \Iris\Engine as IEN;
  * @version $Id: $ * 
  */
 abstract class _Helper implements \Iris\Translation\iTranslatable {
-
     use \Iris\Translation\tSystemTranslatable;
 
     /**
      *
      * @var AbstractActionHelper; 
      */
-    protected static $_Instances = array();
+    protected static $_Instances = [];
 
     /**
      *
      * @var boolean
      */
-    protected static $_Singleton = FALSE;
+    protected static $_Singleton = \FALSE;
 
     /**
      * This abstract function is required, but its signature may vary from
@@ -58,7 +55,8 @@ abstract class _Helper implements \Iris\Translation\iTranslatable {
 
     /**
      * The private construct may be completed in subclasses through
-     * additions made in init()
+     * additions made in init(). In the helpers, the constructor is not
+     * explicitely called in a new
      */
     protected function __construct() {
         $this->_init();
@@ -87,12 +85,12 @@ abstract class _Helper implements \Iris\Translation\iTranslatable {
             $library = 'Iris';
             $className = ucfirst($functionName);
         }
-        $loader = IEN\Loader::GetInstance();
+        $loader = \Iris\Engine\Loader::GetInstance();
         switch ($helperType) {
-            case IEN\Loader::VIEW_HELPER:
+            case \Iris\Engine\Loader::VIEW_HELPER:
                 $completeClassName = "$library\\views\\helpers\\" . $className;
                 break;
-            case IEN\Loader::CONTROLLER_HELPER:
+            case \Iris\Engine\Loader::CONTROLLER_HELPER:
                 $completeClassName = "$library\\controllers\\helpers\\" . $className;
                 break;
 
