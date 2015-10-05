@@ -1,0 +1,85 @@
+{wbHeader()}
+{assign(TitleBegin,'A single link/button')}
+
+<div id="content" {wbBG()}>
+    <table class="show">
+        <tr>
+            <th>HTML &lt;a> links</th>
+            <th>Javascript buttons</th>
+        </tr>
+
+        <tr>
+            <th colspan="2"> {TitleBegin} using explicit parameters:</th>
+        </tr>
+        <tr>
+            <td class="center">{link($link_label, $link_URL, $link_title)}</td>
+            <td class="center">{button($link_label, $link_URL, $link_title)}</td>
+        </tr>
+
+        <tr>
+            <th colspan="2"> {TitleBegin} without tooltip:</th>
+        </tr>
+        <tr>
+            <td class="center">{link($link_label, $link_URL)}</td>
+            <td class="center">{button($link_label, $link_URL)}</td>
+        </tr>
+
+        <tr>
+            <th colspan="2"> {TitleBegin} using an array</th>
+        </tr>
+        <tr>
+            <td class="center">{link($link_array)}</td>
+            <td class="center">{button($link_array)}</td>
+        </tr>
+
+        <tr>
+            <th colspan="2"> {TitleBegin} using an explicite URL link</th>
+        </tr>
+        <tr>
+            <td class="center">{link($link_URL)}</td>
+            <td class="center">{button($link_URL)}</td>
+        </tr>
+
+        <tr>
+            <th colspan="2"> {TitleBegin} with an image (in internal folders)</th>
+        </tr>
+        <tr>
+            <td class="center">{link($link_array)->image($internalIcon)}</td>
+            <td class="center">{button($link_array)->image($internalIcon)}</td>
+        </tr>
+
+        <tr>
+            <th colspan="2"> {TitleBegin}  with an image (in alternative folder)</th>
+        </tr>
+        <tr>
+            <td class="center">{link($link_array)->image($icon)->setImageFolder('/include')}</td>
+            <td class="center">{button($link_array)->setImageFolder('/include')->image($icon)}</td>
+        </tr>
+
+        <tr>
+            <th colspan="2"> A NULL link (won't appear)</th>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+                {link('!!!!NONE!!!!')} 
+                {link(\Iris\Subhelpers\_SuperLink::GetNoLinkLabel())}
+            </td>
+            <td>&nbsp;
+                {button('!!!!NONE!!!!')} 
+                {button(\Iris\Subhelpers\_SuperLink::GetNoLinkLabel())}
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2"> A NULL link with an image (won't appear)</th>
+        </tr>
+        <tr>
+            <td>{link('!!!!NONE!!!!')->image($image)}&nbsp; </td>
+            <td>{button('!!!!NONE!!!!')->image($image)}&nbsp; </td>
+        </tr>
+    </table>
+</div>
+{php}
+    \Iris\SubHelpers\Button::$NoJavaForce = \FALSE;
+{/php}

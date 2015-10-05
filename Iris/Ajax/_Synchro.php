@@ -9,7 +9,7 @@ namespace Iris\Ajax;
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
  * @copyright 2011-2015 Jacques THOORENS
- */            
+ */
 
 /**
  * An Ajax provider written in Dojo
@@ -26,11 +26,24 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
     const SEQUENCE = 1;
     const REPLACE = 2;
     const MINUTE = 6000;
+    
+    const PREVIOUS = 0;
+    const CURRENT = 1;
+    const NEXT = 2;
 
+    const BPREVIOUS = 1;
+    const BCURRENT = 2;
+    const BNEXT = 4;
+    const BSTART = 8;
+    const BRESTART = 16;
+    const BGOTO = 32;
+    const BSTOP = 64;
+    
     /**
      * a special URL no to go to (to disable a button)
      */
     const NO_URL = '**NoURL**';
+
     protected static $_Instance = \NULL;
 
     /**
@@ -38,16 +51,20 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
      * @var int
      */
     protected $_max;
+
     /**
      * The number of milliseconds between two refreshing of the synchro display
+     * 
      * @var int
      */
     protected $_refreshingInterval = 1000;
+
     /**
      * The number of milliseconds between each pulse 
      * @var int
      */
     protected $_granularity = 100;
+
     /**
      * If true (by default), the synchro start by itself
      * @var boolean
@@ -56,10 +73,104 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
 
     /**
      * An array of 3 URL for previous, current and next frames
+     * By default 3 NO_URL constant
+     * 
      * @var string[]
      */
     protected $_context = [self::NO_URL, self::NO_URL, self::NO_URL];
+
+    /**
+     * 
+     * @param int $milliseconds
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */
+    public function setMax($milliseconds){
+        $this->_max = $milliseconds;
+        return $this;
+    }
     
+    /**
+     * Redefines the refreshing interval beween two display refreshing
+     * 
+     * @param int $refreshingInterval
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */ 
+    public function setRefreshingInterval($refreshingInterval) {
+        $this->_refreshingInterval = $refreshingInterval;
+        return $this;
+    }
+    
+    /**
+     * Redefines the granulariy (milliseconds between each pulse)
+     * 
+     * @param int $granularity
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */
+    public function setGranularity($granularity) {
+        $this->_granularity = $granularity;
+        return $this;
+    }
+
+    /**
+     * Redefines the autostart status
+     * 
+     * @param boolean $autostart
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */
+    public function setAutostart($autostart) {
+        $this->_autostart = $autostart;
+        return $this;
+    }
+
+    /**
+     * Sets the 3 pages linked to the synchro
+     * 
+     * @param string[] $array 3 URL in previous - current - next order
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */
+    public function setContext($array) {
+        if (is_array($array)) {
+            $this->_context = $array;
+        }
+        else {
+            $this->_context = [$array, $array, $array];
+        }
+        return $this;
+    }
+
+    /**
+     * Change the URL of the previous page
+     * 
+     * @param string $url
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */
+    public function setPrevious($url) {
+        $this->_context[self::PREVIOUS] = $url;
+        return $this;
+    }
+
+    /**
+     * Change the URL of the current page
+     * 
+     * @param string $url
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */
+    public function setCurrent($url) {
+        $this->_context[self::CURRENT] = $url;
+        return $this;
+    }
+
+    /**
+     * Change the URL of the next page
+     * 
+     * @param string $url
+     * @return \Iris\Ajax\_Synchro for fluent interface
+     */
+    public function setNext($url) {
+        $this->_context[self::NEXT] = $url;
+        return $this;
+    }
+
     /**
      * Creates a scheduler, optionally controlled by another message transmitter
      * 
@@ -106,15 +217,13 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
 
     protected abstract function _genericReceiver($id, $messageName, $treatment, $requisites);
 
-    private function _button($name) {
-        list($signal, $mess) = explode('_', $name);
-        $functionCode = "topic.publish('$mess','$signal')";
+    protected function _button($signal, $mess, $tooltip) {
+        $name = $signal . "_" . $mess;
+        $functionCode = "topic.publish('$signal','$mess')";
         $this->callViewHelper('eventManager')->addModules(['topic' => 'dojo/topic'])->onclick($name, $functionCode);
-        return $this->callViewHelper('button');
+        return new \Iris\Subhelpers\Button([\NULL, '!', $tooltip, '', $name]); //['label', 'url', 'tooltip', 'class', 'id']
     }
 
-    
-    
     /**
      * Creates a start button sending a signal
      * 
@@ -123,10 +232,11 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
      * @return string The code for the button
      */
     public function start($signal, $tooltip = \NULL) {
-        if (is_null($tooltip))
+        if (is_null($tooltip)) {
             $tooltip = $this->_('Start again');
-        $name = "start_$signal";
-        return $this->_button($name)->setId($name)->image(self::MediaIcon('start', $tooltip));
+        }
+        $source = self::MediaIcon('start');
+        return $this->_button($signal, 'start', $tooltip)->image($source);
     }
 
     /**
@@ -137,10 +247,11 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
      * @return string The code for the button
      */
     public function restart($signal, $tooltip = \NULL) {
-        if (is_null($tooltip))
+        if (is_null($tooltip)) {
             $tooltip = $this->_('Restart at beginning');
-        $name = "restart_$signal";
-        return $this->_button($name)->setId($name)->image(self::MediaIcon('restart', $tooltip));
+        }
+        $source = self::MediaIcon('restart');
+        return $this->_button($signal, 'restart', $tooltip)->image($source);
     }
 
     /**
@@ -151,24 +262,26 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
      * @return string The code for the button
      */
     public function stop($signal, $tooltip = \NULL) {
-        if (is_null($tooltip))
+        if (is_null($tooltip)) {
             $tooltip = $this->_('Stop');
-        $name = "stop_$signal";
-        return $this->_button($name)->setId($name)->image(self::MediaIcon('pause', $tooltip));
+        }
+        $source = self::MediaIcon('stop');
+        return $this->_button($signal, 'stop', $tooltip)->image($source);
     }
 
     /**
-     * Creates a prevous button  sending a signal
+     * Creates a previous button  sending a signal
      * 
      * @param string $signal The name of the signal which the button is going to send
      * @param string $tooltip The tooltip text
      * @return string The code for the button
      */
     public function previous($signal, $tooltip = \NULL) {
-        if (is_null($tooltip))
+        if (is_null($tooltip)) {
             $tooltip = $this->_('Go to previous');
-        $name = "previous_$signal";
-        return $this->_button($name)->setId($name)->image(self::MediaIcon('previous', $tooltip));
+        }
+        $source = self::MediaIcon('previous');
+        return $this->_button($signal, 'previous', $tooltip)->image($source);
     }
 
     /**
@@ -179,37 +292,21 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
      * @return string The code for the button
      */
     public function next($signal, $tooltip = \NULL) {
-        if (is_null($tooltip))
+        if (is_null($tooltip)) {
             $tooltip = $this->_('Go to next');
+        }
         $name = "next_$signal";
-        return $this->_button($name)->setId($name)->image(self::MediaIcon('next', $tooltip));
-    }
-
-    
-    public function setRefreshingInterval($refreshingInterval) {
-        $this->_refreshingInterval = $refreshingInterval;
-        return $this;
-    }
-
-    public function setGranularity($granularity) {
-        $this->_granularity = $granularity;
-        return $this;
-    }
-
-    public function setAutostart($autostart) {
-        $this->_autostart = $autostart;
-        return $this;
+        $source = self::MediaIcon('next');
+        return $this->_button($signal, 'next', $tooltip)->image($source);
     }
 
     /**
      * 
      * @param string $type
-     * @param string $tooltip
-     * @param string $URL The optiion 
      * @return string
      */
-    public static function MediaIcon($type, $tooltip, $URL = \NULL) {
-        switch($type){
+    public static function MediaIcon($type) {
+        switch ($type) {
             case 'eject':
                 $image = "media-eject.png";
                 break;
@@ -245,12 +342,7 @@ abstract class _Synchro extends \Iris\Subhelpers\_Subhelper {
                 break;
         }
         $fullImagePath = "/!documents/file/images/mediaicons/$image";
-        return [$fullImagePath, $type, \NULL, $tooltip];
+        return $fullImagePath;
     }
 
-    public function setContext($context) {
-        $this->_context = $context;
-    }
-    
 }
-

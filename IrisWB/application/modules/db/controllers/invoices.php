@@ -35,7 +35,7 @@ class invoices extends _dbCrud {
 
     
     public function showAction() {
-        //\Iris\SysConfig\Settings::SetSystemIconDir('/images/icons');
+        //\Iris\SysConfig\Settings::$IconDir = '/images/icons';
         $tInvoices = \models\TInvoices::GetEntity();
         $this->__invoices = $tInvoices->fetchAll();
     }

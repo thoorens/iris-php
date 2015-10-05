@@ -23,7 +23,7 @@
                 {image('jtleft.jpg')}
             </td>
             <td>
-                {image('jtright.jpg','Portrait','Portrait_of_Jacques_Thoorens','/include')}
+                {image('jtright.jpg','Portrait','Portrait of Jacques Thoorens','/include')}
             </td>
             <td>
                 {image('/!documents/file/images/construction.png','Icon','In construction')}
@@ -43,7 +43,7 @@
         <tr>
             <td>
                 {rem} An example of use of terminator ->__  {/rem}
-                {image()->setFolder('/!documents/file/images/wbicons')}
+                {image()->setDefaultImageFolder('/!documents/file/images/wbicons')}
                 {image('WBIco_0.png')}
             </td>
             <td>

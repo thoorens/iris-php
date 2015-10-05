@@ -3,22 +3,12 @@
 namespace Iris\Forms;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @copyright 2011-2014 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -55,7 +45,7 @@ abstract class _Form implements iFormContainer {
      *
      * @var _Element[]
      */
-    protected $_components = array();
+    protected $_components = [];
 
     /**
      * These are elements whose value must be calculated from their components
@@ -63,20 +53,20 @@ abstract class _Form implements iFormContainer {
      *
      * @var _Element[]
      */
-    protected $_aidedComponents = array();
+    protected $_aidedComponents = [];
 
     /**
      * the elements contained (directly or in container) by the form
      * @var _Element[]
      */
-    protected $_registry = array();
+    protected $_registry = [];
 
     /**
      * the layout used to render the form and its elements
      *
      * @var _FormLayout
      */
-    protected $_layout = NULL;
+    protected $_layout = \NULL;
 
     /**
      * the factory used to create the form (its methods can create appropriate
@@ -84,14 +74,14 @@ abstract class _Form implements iFormContainer {
      *
      * @var _FormFactory
      */
-    protected $_formFactory = NULL;
+    protected $_formFactory = \NULL;
 
     /**
      * An associative array of facultative attributes
      *
      * @var string[]
      */
-    protected $_attributes = array();
+    protected $_attributes = [];
 
     /**
      * A constructor for a file (never called directly by new, use
@@ -101,9 +91,9 @@ abstract class _Form implements iFormContainer {
      * @param string $action
      * @param string $method
      */
-    public function __construct($name, $action = NULL, $method = 'post') {
+    public function __construct($name, $action = \NULL, $method = 'post') {
         $this->_name = $name;
-        if ($action == NULL) {
+        if ($action === \NULL) {
             $this->_action = \Iris\Engine\Superglobal::GetServer('REQUEST_URI');
         }
         $this->_method = $method;
@@ -158,7 +148,7 @@ abstract class _Form implements iFormContainer {
      *
      * @return string
      */
-    public function show($doRender = TRUE) {
+    public function show($doRender = \TRUE) {
         if ($doRender) {
             $html = $this->render();
         }
@@ -229,7 +219,7 @@ abstract class _Form implements iFormContainer {
      */
     public function setSubmitMessage($submitValue, $submitName = 'Submit') {
         $submit = $this->getComponent($submitName);
-        if (is_null($submit)) {
+        if ($submit === \NULL) {
             throw new \Iris\Exceptions\FormException("The form does not have a $submitName button");
         }
         $submit->setValue($submitValue);
@@ -243,11 +233,11 @@ abstract class _Form implements iFormContainer {
      */
     public function isValid($formData) {
         $this->fill($formData);
-        $valid = TRUE;
+        $valid = \TRUE;
         foreach ($this->_registry as $element) {
             if (!$element->validate()) {
                 // do not exit, because one must prepare error validation messages
-                $valid = FALSE;
+                $valid = \FALSE;
             }
         }
         return $valid;
@@ -259,8 +249,8 @@ abstract class _Form implements iFormContainer {
      *
      * @param mixed[] $formData
      */
-    public function fill($formData = NULL) {
-        if ($formData == NULL) {
+    public function fill($formData = \NULL) {
+        if ($formData === \NULL) {
             $formData = \Iris\Engine\Superglobal::GetPost();
         }
         foreach ($formData as $key => $value) {
@@ -302,7 +292,7 @@ abstract class _Form implements iFormContainer {
     /**
      * Get a component of the registry by its name
      * (it can be embedded in a container). If it is doesn't exist no
-     * error, return NULL
+     * error, return \NULL
      *
      * @param string $name
      * @return _Element
@@ -312,7 +302,7 @@ abstract class _Form implements iFormContainer {
             return $this->_registry[$name];
         }
         else {
-            return NULL;
+            return \NULL;
         }
     }
 
@@ -341,7 +331,7 @@ abstract class _Form implements iFormContainer {
      * @return _FormLayout
      */
     public function getLayout() {
-        if (is_null($this->_layout))
+        if ($this->_layout === \NULL)
             $this->_layout = new DefLayout();
         return $this->_layout;
     }
@@ -386,16 +376,16 @@ abstract class _Form implements iFormContainer {
         $this->_attributes[$key] = $value;
     }
 
-    public function getDataFromPost($field = NULL, $defaultValue = NULL) {
-        static $data = NULL;
-        if ($data == NULL) {
+    public function getDataFromPost($field = \NULL, $defaultValue = \NULL) {
+        static $data = \NULL;
+        if ($data === \NULL) {
             $formData = \Iris\Engine\Superglobal::GetPost();
             $data = $formData;
             foreach ($this->_aidedComponents as $element) {
                 $data[$element->getName()] = $element->compileValue($formData);
             }
         }
-        if ($field == NULL) {
+        if ($field === \NULL) {
             return $data;
         }
         else {

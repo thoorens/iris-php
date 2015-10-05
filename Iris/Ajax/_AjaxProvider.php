@@ -1,5 +1,4 @@
 <?php
-
 namespace Iris\Ajax;
 
  /*
@@ -54,24 +53,6 @@ abstract class _AjaxProvider extends \Iris\Subhelpers\_LightSubhelper {
     protected $_placeMode = self::LAST;
     protected $_messageArgumentNumber = 2;
 
-    /**
-     * The Ajax default provider (Dojo) may be changed.
-     * 
-     * @param string $library
-     * @deprecated since version 1.0 (use Settings to modify)
-     */
-    public static function SetDefaultAjaxLibrary($library) {
-        \Iris\SysConfig\Settings::$DefaultAjaxLibrary = $library;
-    }
-
-    /**
-     * Gets the default library for Ajax
-     * @return string
-     * @deprecated since version 1.0 (use Settings to know)
-     */
-    public static function GetDefaultAjaxLibrary() {
-        return \Iris\SysConfig\Settings::$DefaultAjaxLibrary;
-    }
 
     protected function _getRenderer() {
         return \Iris\MVC\_Helper::HelperCall('ajax');

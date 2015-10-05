@@ -198,10 +198,11 @@ JS;
     
     
     protected function _debug($param) {
+        
         if (is_null($this->_debugDisplayObject)) {
             return '';
         }
-        else {
+        else {die('DEBUG');
             $output = $this->_debugDisplayObject;
             $param->addModule('dojo/request/notify', 'notify');
             return <<< JS1

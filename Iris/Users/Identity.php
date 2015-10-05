@@ -2,8 +2,6 @@
 
 namespace Iris\Users;
 
-use Iris\Engine as ie;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -38,24 +36,6 @@ class Identity implements iUser, \Serializable {
     use tUser;
 
     protected $_entity = \NULL;
-
-    /**
-     * The default time out for development (4 hours)
-     */
-
-    const DEFAULT_TIMEOUT = 14400;
-    /**
-     * The default time out for production (10 minutes)
-     */
-    const DEFAULT_PRODUCTION_TIMEOUT = 600;
-
-    private static $_Timeout = self::DEFAULT_TIMEOUT;
-
-    /**
-     *
-     * @var type 
-     */
-    private static $_ProductionTimeout = self::DEFAULT_PRODUCTION_TIMEOUT;
 
     /**
      *
@@ -105,11 +85,11 @@ class Identity implements iUser, \Serializable {
         if (is_string($user)) {
             $this->unserialize($user);
             // verify timeout
-            if (ie\Mode::IsDevelopment()) {
-                $timeout = ie\Memory::Get('defaultTimeout', self::DEFAULT_TIMEOUT);
+            if (\Iris\Engine\Mode::IsDevelopment()) {
+                $timeout = \Iris\Engine\Memory::Get('defaultTimeout', \Iris\SysConfig\Settings::$DefaultTimeout);
             }
             else {
-                $timeout = ie\Memory::Get('defaultProductionTimeout', self::DEFAULT_PRODUCTION_TIMEOUT);
+                $timeout = \Iris\Engine\Memory::Get('defaultProductionTimeout', \Iris\SysConfig\Settings::$ProductionTimeout);
             }
             if ($this->_timer + $timeout < time()) {
                 $this->userClone(new Somebody());
@@ -145,14 +125,14 @@ class Identity implements iUser, \Serializable {
      * @param type $duration
      * @param type $prodDuration
      */
-    public static function SetTImeOut($duration, $prodDuration = NULL) {
-        if (!is_null($duration)) {
-            self::$_Timeout = $duration;
-        }
-        if (!is_null($prodDuration)) {
-            self::$_ProductionTimeout = $prodDuration;
-        }
-    }
+//    public static function SetTImeOut($duration, $prodDuration = NULL) {
+//        if (!is_null($duration)) {
+//            self::$_Timeout = $duration;
+//        }
+//        if (!is_null($prodDuration)) {
+//            self::$_ProductionTimeout = $prodDuration;
+//        }
+//    }
 
     /**
      * Copies all data (except itmeout) from a user to the current identity object.
@@ -283,4 +263,3 @@ class Identity implements iUser, \Serializable {
     }
 
 }
-

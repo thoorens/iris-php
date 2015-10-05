@@ -20,14 +20,14 @@ class autoform extends _forms {
 
     protected function _init() {
         $this->setViewScriptName('common/all');
+        \Iris\SysConfig\Settings::$DefaultFormClass = '\\Dojo\\Forms\\FormFactory';
     }
 
     public function indexAction() {
         \models_internal\TAutoform::Create();
-        //die('YES');
         $tAutoform = \models_internal\TAutoform::GetEntity();
-        //die('OK');
         $form = new \Iris\Forms\AutoForm($tAutoform);
+        $form->setSubmitLabel('Validate');
         $this->__form = $form->render();
     }
 

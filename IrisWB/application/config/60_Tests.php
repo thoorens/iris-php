@@ -1,5 +1,8 @@
 <?php
 
+// NOTHING IS GOOD HERE
+
+
 switch (0) {
     // Entity tests
     case 1:
@@ -53,25 +56,25 @@ switch (0) {
         else {
             echo "No bit <br>";
         }
-        \Iris\Errors\Settings::EnableMail();
-        \Iris\Errors\Settings::EnableHang();
-        if (\Iris\Errors\Settings::HasMail())
+        \Iris\Errors\Settings::$Mail = \TRUE;
+        \Iris\Errors\Settings::$Hang = \TRUE;
+        if (\Iris\Errors\Settings::$Mail)
             echo 'MAIL OK <br>';
-        \Iris\Errors\Settings::DisableMail();
-        if (\Iris\Errors\Settings::HasHang())
+        \Iris\Errors\Settings::$Mail = \FALSE;
+        if (\Iris\Errors\Settings::$Hang)
             echo "HANG ok<br>";
-        if (\Iris\Errors\Settings::HasMail())
+        if (\Iris\Errors\Settings::$Mail)
             echo 'MAIL OK <br>';
-        if (!\Iris\Errors\Settings::hasMail())
+        if (!\Iris\Errors\Settings::$Mail)
             echo "No mail defined";
-        \Iris\Errors\Settings::DisableHang();
-        if (\Iris\Errors\Settings::HasHang())
+        \Iris\Errors\Settings::$Hang = \FALSE;
+        if (\Iris\Errors\Settings::$Hang)
             echo "No more hang";
 
         die('Test ok');
         break;
     case 4:
-        echo \Iris\SysConfig\Settings::GetInstance()->debug(\FALSE);
+        echo \Iris\SysConfig\Settings::$Debug(\FALSE);
         \Dojo\Engine\Settings::GetInstance()->debug();
         break;
 }

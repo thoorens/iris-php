@@ -20,8 +20,7 @@ namespace Dojo\Subhelpers;
  * @version $Id: $ */
 class Button extends \Iris\Subhelpers\Button {
 
-    protected static $_Instance = NULL;
-
+    
     protected function _javascriptButton() {
         $this->addAttribute('data-dojo-type', 'dijit/form/Button');
         $html = parent::_javascriptButton();
@@ -29,22 +28,32 @@ class Button extends \Iris\Subhelpers\Button {
         return $html;
     }
 
+    
+    /**
+     * @see https://jsfiddle.net/zrdj0gp0/#&togetherjs=LqddASq2QB
+     */
+    public function setId($id) {
+        $this->_attributes['data-dojo-id'] = $id;
+        return parent::setId($id);
+    }
+
+    
     protected function _render() {
         if ($this->_empty($this->getLabel())) {
-            $text = '';
+            $html = '';
         }
         elseif (!\Iris\Users\Session::JavascriptEnabled() or self::$NoJavaForce) {
             if (\Iris\System\Client::OldBrowser(self::$OldBrowser)) {
-                $text = $this->_simulatedButton();
+                $html = $this->_simulatedButton();
             }
             else {
-                $text = $this->_linkButton();
+                $html = $this->_linkButton();
             }
         }
         else {
-            $text = $this->_javascriptButton();
+            $html = $this->_javascriptButton();
         }
-        return $text;
+        return $html;
     }
 
 }

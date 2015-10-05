@@ -1,0 +1,49 @@
+{wbHeader()}
+{assign(TitleBegin,'A single link/button')}
+
+<div id="content" {wbBG()}>
+    <table class="show">
+        <tr>
+            <th colspan="2">Simple links</th>
+        </tr>
+        <tr>
+            <td>Using link helper</td>
+            <td>{link($link_array)}</td>
+        </tr>    
+        <tr>
+            <td>Using button helper with link() method</td>
+            <td>{button($link_array)->link()}</td>
+        </tr>    
+        <tr>
+            <th colspan="2">Simple links with image</th>
+        </tr>
+        <tr>
+            <td>Using link helper with image() method</td>
+            <td>{link($link_array)->image($image)}</td>
+        </tr>    
+        <tr>
+            <td>Using button helper with image() method</td>
+            <td>{button($link_array)->link()->image($image)}</td>
+        </tr> 
+        <tr>
+            <td>Using image helper with link() method</td>
+            <td>{image($image,'my image',$link_title)->link($link_URL)}</td>
+        </tr> 
+        <tr>
+            <td rowspan="2">
+                Using imageLink helper
+                <ul>
+                    <li>without</li>
+                    <li>with link() method</li>
+                </ul>
+            </td>
+            <td>{imageLink($image, $link_URL, 'message')}</td>
+        </tr> 
+        <tr>
+            <td>{imageLink($image, $link_URL, 'message')->link()}</td>
+        </tr> 
+    </table>
+</div>
+{php}
+    \Iris\SubHelpers\Button::$NoJavaForce = \FALSE;
+{/php}

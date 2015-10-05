@@ -120,9 +120,15 @@ class Manager {
         self::$_Instance = $this;
     }
 
+    /**
+     * 
+     * @param type $save
+     * @param type $params
+     * @return type
+     */
     public function getFile($save, $params) {
-        $pubpri = array_shift($params);
-        if ($pubpri == 'protected') {
+        $protpriv = array_shift($params);
+        if ($protpriv == 'protected') {
             $pathName = sprintf("%s/protected/%s", $this->_baseDirectory, implode('/', $params));
         }
         // get Magic Number for control in private area

@@ -14,24 +14,52 @@ use \Iris\Time\Date;
  */
 class index extends _subhelpers {
 
-    public function indexAction() {
-        // these parameters are only for demonstration purpose
-        $this->__(NULL, array(
-            'Title' => '<h1>subhelpers - index - index</h1> ',
-            'buttons' => 1 + 4,
-            'logoName' => 'mainLogo'));
+    
+    public function simpleAction(){
+        /* @var $link \Iris\Subhelpers\Link */
+        $link = $this->callViewHelper('link');
+        $link->setLabel('Lien')
+                ->setUrl('http://thoorens.net')
+                ->setTooltip('My address')
+                ->setClass('demo')
+                ->setId('mylink');
+                //->image('ImageName');
+        
+        $this->__link1 = $link;
+        
+        $link2 = $this->callViewHelper('link');
+        $link2->setLabel('Lien2')
+                ->setUrl('http://thoorens.net')
+                ->setTooltip('My second address')
+                ->setClass('demo')
+                ->setId('mylink');
+                //->image('ImageName');
+        //iris_debug($link->button());
+        $this->__link2 = $link2;
+        //\Iris\Subhelpers\Link::$NoLink = ['==NOTHING=='];
+        /* @var $link3 \Iris\Subhelpers\Link */
+        $link3 = $this->callViewHelper('link');
+        //$link3->autorender(\Iris\Subhelpers\Link::GetNoLinkLabel());
+        //$link3->setLabel(\Iris\Subhelpers\Link::$NoLink);
+        $this->__link3 = ''; //''$link3;
+        
     }
-
+    
+    public function lightAction(){
+        
+    }
+    
     public function monthDemoAction($type = \NULL, $offset = 0) {
-        $date = \Iris\Time\_Schedule::ParameterAnalysis($type = \NULL, $offset = 0);
+        $date = \Iris\Time\_Schedule::ParameterAnalysis($type, $offset);
+        /* @var $monthManager \Iris\views\helpers\MonthDemo */
         $monthManager = $this->callViewHelper('monthDemo');
-        $monthManager->init($date, 1);
+        //$monthManager->init($date, 1);
         $i = 0;
-
         foreach ($this->_generateEvents('m') as $event) {
             $monthManager->put($event->getDate(), $event);
         }
         $monthManager->setLinkToDay('/subhelpers/index/monthDemo/day/');
+        iris_debug($monthManager->render());
         $this->__month = $monthManager;
     }
 
@@ -79,4 +107,5 @@ class index extends _subhelpers {
         return $events;
     }
 
+    
 }

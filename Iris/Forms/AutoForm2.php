@@ -21,7 +21,7 @@ use Iris\DB as db;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class AutoFormOld {
+class AutoForm2 {
 
     /**
      * Incremental form number id

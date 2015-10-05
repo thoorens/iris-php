@@ -64,6 +64,5 @@ on(dom.byId("$sender"), "$eventName", function(){
 
 JS
 );
-//iris_debug($bubble);
     }
 }

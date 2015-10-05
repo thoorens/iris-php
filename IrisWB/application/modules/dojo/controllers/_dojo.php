@@ -20,7 +20,6 @@ class _dojo extends \modules\_application {
         $this->_setLayout('main');
         $this->__bodyColor = 'ORANGE3';
         $ff = new \Dojo\Forms\FormFactory();
-        $ff->setDefault();
         $this->callViewHelper('subtitle', 'Dojo');
     }
 

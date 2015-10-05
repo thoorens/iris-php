@@ -28,13 +28,6 @@ abstract class _FormFactory {
      */
     protected static $_Library = null;
 
-    /**
-     * The default form factory
-     *
-     * @var _FormFactory
-     */
-    protected static $_DefaultFormFactory = NULL;
-
     public static function __classInit() {
         $formClassName = get_called_class();
         $nameChunks = explode('\\', $formClassName);
@@ -43,23 +36,14 @@ abstract class _FormFactory {
     }
 
     /**
-     * The current form class becomes the default one
-     */
-    public function setDefault() {
-        self::$_DefaultFormFactory = $this;
-    }
-
-    /**
      *
      * @return _FormFactory
      */
     public static function GetDefaultFormFactory() {
-        if (is_null(self::$_DefaultFormFactory)) {
-            $defaultClassName = \Iris\SysConfig\Settings::$DefaultFormClass;
-            $ff = new $defaultClassName();
-            $ff->setDefault();
-        }
-        return self::$_DefaultFormFactory;
+        $defaultClassName = \Iris\SysConfig\Settings::$DefaultFormClass;
+        /* @var $ff _FormFactory */
+        $ff = new $defaultClassName();
+        return new $defaultClassName();
     }
 
     /**
@@ -87,7 +71,6 @@ abstract class _FormFactory {
             $type = substr($function, 9);
             return $this->_validator($type, $params);
         }
-        iris_debug($function);
         throw new \Iris\Exceptions\NotSupportedException('Element type unknown');
     }
 
@@ -115,10 +98,10 @@ abstract class _FormFactory {
      * @param type $options
      * @return \Iris\Forms\Elements\InputElement
      */
-    public function createSubmit($name, $options = []){
+    public function createSubmit($name, $options = []) {
         return $this->_createInput($name, 'submit', $options);
     }
-    
+
     /**
      * 
      * @param type $name
@@ -162,7 +145,7 @@ abstract class _FormFactory {
         $class = $this->getClass('\\Elements\\ButtonLinkGroup');
         return new $class($name, 'Submit', $this, $options);
     }
-    
+
     /**
      * 
      * @param type $name
@@ -170,11 +153,11 @@ abstract class _FormFactory {
      * @param type $options
      * @return \Iris\Forms\Elements\Link
      */
-    public function createLink($name, $key, $options = []){
+    public function createLink($name, $key, $options = []) {
         $class = $this->getClass('\\Elements\\Link');
-        return new $class($name,  $key, $this, $options);
+        return new $class($name, $key, $this, $options);
     }
-    
+
     /**
      * 
      * @param type $name
@@ -260,10 +243,10 @@ abstract class _FormFactory {
      * @param type $options
      * @return \Iris\Forms\Elements\InputElement
      */
-    public function createText($name, $options = []){
+    public function createText($name, $options = []) {
         return $this->_createInput($name, 'text', $options);
     }
-    
+
     /**
      * Creates an element of type Hidden
      * 
@@ -271,10 +254,10 @@ abstract class _FormFactory {
      * @param type $options
      * @return \Iris\Forms\Elements\InputElement
      */
-    public function createHidden($name, $options = []){
+    public function createHidden($name, $options = []) {
         return $this->_createInput($name, 'hidden', $options);
     }
-    
+
     /**
      * Creates an element of type Date
      * 
@@ -282,10 +265,10 @@ abstract class _FormFactory {
      * @param type $options
      * @return _Element
      */
-    public function createDate($name, $options = []){
+    public function createDate($name, $options = []) {
         return $this->_createInput($name, 'date', $options);
     }
-    
+
     /**
      * Creates an element of type Time
      * 
@@ -293,12 +276,10 @@ abstract class _FormFactory {
      * @param type $options
      * @return _Element
      */
-    public function createTime($name, $options = []){
+    public function createTime($name, $options = []) {
         return $this->_createInput($name, 'time', $options);
-        
     }
-    
-    
+
     /**
      * Creates an element of type Radio group
      * 
@@ -331,4 +312,3 @@ abstract class _FormFactory {
     }
 
 }
-

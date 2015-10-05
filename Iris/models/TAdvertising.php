@@ -37,6 +37,10 @@ class TAdvertising extends \Iris\DB\_Entity{
      */
     const DEFLANGUAGE = 'FR_';
     
+    /**
+     *
+     * @var \Iris\DB\_Entity
+     */
     private static $_Model = \NULL;
     private static $_Language = \NULL;
 

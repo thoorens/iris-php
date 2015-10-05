@@ -1,305 +1,256 @@
-ol/*
-One True Layout
-An idea by Alex Robinson quotted by Eric Meyer
-*/
+ol
+html {
+  font-family: sans-serif; }
 
-html{
-    font-family:sans-serif
-}
+h1, h2, h3, h4, h5, h6, th {
+  text-shadow: #AAA 0.1em 0.1em 0.2em; }
 
-h1, h2, h3, h4, h5, h6, th{
-    text-shadow: #AAA 0.1em 0.1em 0.2em;
-}
-
-
-#Title{
-    text-align:center
-}
+#Title {
+  text-align: center; }
 
 div {
-    /*outline: 1px dashed red;*/
-}
+  /*outline: 1px dashed red;*/ }
 
-a.crudlink{
- text-decoration:none;
-}
+a.crudlink {
+  text-decoration: none; }
 
+div#main {
+  width: 1020px;
+  margin: 0 auto;
+  background-color: white; }
 
-div#main{
-    width :1020px;
-    margin: 0 auto;
-    background-color: white;
+.column {
+  min-height: 520px;
+  float: left;
+  padding: 0 20px;
+  margin: 0; }
 
-}
-.column{
-    min-height:520px;
-    float:left;
-    padding: 0 20px;
-    margin:0;
-}
-.one{
-    width : 200px;
-    background-color:#f0fff0;
-    font-style:italic;
-    font-family:serif;
-    font-size:0.9em
-}
-.two{
-    width:500px;
-    background-color:#f0f8ff
-}
+.one {
+  width: 200px;
+  background-color: #f0fff0;
+  font-style: italic;
+  font-family: serif;
+  font-size: 0.9em; }
 
-.onetwo{
-    width:700px;
-    background-color:#f0f8ff
-}
+.two {
+  width: 500px;
+  background-color: #f0f8ff; }
 
-.two2{
-    width:740px;
-    background-color:#f0f8ff
-}
+.onetwo {
+  width: 700px;
+  background-color: #f0f8ff; }
 
-.three{
-    width:200px;
-    background-color:#fff0f0;
-    font-style:italic;
-    font-family:serif;
-    font-size:0.9em
-}
+.two2 {
+  width: 740px;
+  background-color: #f0f8ff; }
 
-#foot{
-    clear:both;
-    text-align: center;
-    background-color:#444;
-    color: #ffe;
-    box-shadow: 5px 5px 5px #888;
-    border-radius: 5px;
-}
+.three {
+  width: 200px;
+  background-color: #fff0f0;
+  font-style: italic;
+  font-family: serif;
+  font-size: 0.9em; }
 
-#iris_admintoolbar{
-    background-color:#148;
-    text-align: center;
-    box-shadow: 5px 5px 5px #888;
-    border-radius: 5px;
-}
+#foot {
+  clear: both;
+  text-align: center;
+  background-color: #444;
+  color: #ffe;
+  box-shadow: 5px 5px 5px #888;
+  border-radius: 5px; }
 
-.partial{
-    border: outset black 2px;
-    background-color: #484;
-    color: #fff0f0;
-}
-p.errorTest{
-    background-color: #FDD;
-}
+#iris_admintoolbar {
+  background-color: #148;
+  text-align: center;
+  box-shadow: 5px 5px 5px #888;
+  border-radius: 5px; }
 
-p.errorTrue{
-    background-color: red; 
-    color:white;
-}
+.partial {
+  border: outset black 2px;
+  background-color: #484;
+  color: #fff0f0; }
 
-div.example{
-    color:#080;
-    background-color: #FFD;
-}
+p.errorTest {
+  background-color: #FDD; }
 
-.smallcolumn3{
-    padding-left:10px;
-    width:140px;
-    float: left;
-    font-size:0.8em;
-}
+p.errorTrue {
+  background-color: red;
+  color: white; }
 
-.oldscreen{
-    border : double 2px #FFF;
-    margin:10px;
-    padding: 5px;
-    text-align:center;
-    font-weight: bold;
-    font-family: courier;
-}
+div.example {
+  color: #080;
+  background-color: #FFD; }
 
-.old1{
-    color: #5F5;
-    background: black;
-}
+.smallcolumn3 {
+  padding-left: 10px;
+  width: 140px;
+  float: left;
+  font-size: 0.8em; }
 
-.old2{
-     color: #800;
-    background: #BBB;
-}
+.oldscreen {
+  border: double 2px #FFF;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  font-family: courier; }
 
-.old3{
-    color: #CC0;
-    background: #888;
-}
+.old1 {
+  color: #5F5;
+  background: black; }
 
-.old4{
-    color: #44A;
-    background: #FFF;
-}
-div#wbexplain{
-    font-size: 0.9em;
-    padding: 2px 10px 2px 10px;
-    margin: 1px 0px 10px 0px;
-    border-radius: 10px;
-    background-color: #cff;
-}
+.old2 {
+  color: #800;
+  background: #BBB; }
 
-#content{
-    font-size: 0.9em;
-    padding: 2px 10px 2px 10px;
-    margin: 1px 0px 10px 0px;
-    border-radius: 10px;
-}
+.old3 {
+  color: #CC0;
+  background: #888; }
 
-li.loop{
-    border: black solid 2px;
-    margin-left:-30px;
-    width:110px;
-    padding-left : 15px;
-    margin-bottom:5px;
-    background-color:#ccccff;
-    list-style-type: none;
-}
+.old4 {
+  color: #44A;
+  background: #FFF; }
+
+div#wbexplain {
+  font-size: 0.9em;
+  padding: 2px 10px 2px 10px;
+  margin: 1px 0px 10px 0px;
+  border-radius: 10px;
+  background-color: #cff; }
+
+#content {
+  font-size: 0.9em;
+  padding: 2px 10px 2px 10px;
+  margin: 1px 0px 10px 0px;
+  border-radius: 10px; }
+
+li.loop {
+  border: black solid 2px;
+  margin-left: -30px;
+  width: 110px;
+  padding-left: 15px;
+  margin-bottom: 5px;
+  background-color: #ccccff;
+  list-style-type: none; }
 
 table.show {
-    border-width: 3px;
-    border-spacing: 1px;
-    border-style: solid;
-    border-color: #008;
-    border-collapse: separate;
-    background-color: white;
-    width:100%;
-}
-table.show th {
+  border-width: 3px;
+  border-spacing: 1px;
+  border-style: solid;
+  border-color: #008;
+  border-collapse: separate;
+  background-color: white;
+  width: 100%; }
+  table.show tr th {
     border-width: 1px;
     padding: 1px;
     border-style: inset;
     border-color: gray;
-    background-color: white;
-}
-table.show td {
+    background-color: white; }
+  table.show tr td {
     border-width: 1px;
     padding: 1px;
     border-style: inset;
     border-color: gray;
-    background-color: white;
-}
+    background-color: white; }
+    table.show tr td .title {
+      background-color: #FAA;
+      color: white;
+      font-weight: bold;
+      text-align: center; }
+    table.show tr td .center {
+      text-align: center;
+      /*YES*/ }
 
-table.show tr td.title{
-    background-color: #FAA;
-    color:white;
-    font-weight: bold;
-    text-align: center;
-}
+table.center tr td {
+  text-align: center; }
 
-table.center tr td{
-    text-align: center;
-}
+.iris_md5_unused {
+  color: #ffcc00; }
+
 .iris_md5_ok {
-    color:#43e680;
-}
-.iris_md5_bad {
-    color:#e88;
-}
+  color: #43e680; }
 
-img.shadow{
-    padding:10px;
-    box-shadow: 5px 5px 5px #888;
-}
+.iris_md5_bad {
+  color: #e88; }
+
+img.shadow {
+  padding: 10px;
+  box-shadow: 5px 5px 5px #888; }
 
 ul.crud li a {
+  text-decoration: none; }
 
-    text-decoration: none;
-}
+.quoted {
+  color: #A00; }
 
-.quoted{
-    color: #A00;
-}
+.quoted2 {
+  color: #00A; }
 
-.quoted2{
-    color: #00A;
-}
+p.dbWarning, p.warning {
+  font-size: 0.8em;
+  border-style: double;
+  padding: 5px; }
 
-p.dbWarning, p.warning{
-    font-size:0.8em;
-    border-style: double;
-    padding:5px;
-}
+.warningUnknown {
+  color: #800;
+  border-color: #800;
+  background-color: white; }
 
-.warningUnknown{
-    color: #800;
-    border-color:  #800;
-    background-color: white;
-}
+.warningCreated {
+  color: #080;
+  border-color: #080; }
 
-.warningCreated{
-    color:#080;
-    border-color:  #080;
-}
+.warningModified {
+  color: #FF0;
+  border-color: #FF0;
+  background-color: #AAA; }
 
-.warningModified{
-    color:#FF0;
-    border-color:  #FF0;
-    background-color: #AAA;
-}
+.warningModified2 {
+  color: #D80;
+  border-color: #D80;
+  background-color: white; }
 
-.warningModified2{
-    color:#D80;
-    border-color:  #D80;
-    background-color: white;
-}
+.warningDeleted, .warningSevere {
+  color: #F00;
+  border-color: #F00; }
 
-.warningDeleted, .warningSevere{
-    color:#F00;
-    border-color:  #F00;
-}
+.warningDeletion {
+  color: white;
+  border-color: white;
+  background-color: red;
+  font-weight: bold; }
 
-.warningDeletion{
-    color: white;
-    border-color:  white;
-    background-color: red;
-    font-weight: bold;
-}
+form#screen {
+  font-size: 0.9em; }
 
-form#screen{
-    font-size:0.9em;
-}
+.dblogo {
+  margin: 20px;
+  text-align: center; }
 
-.dblogo{
-    margin:20px;
-    text-align: center;
-}
-table.center tr td{
-    text-align: center;
-}
+table.center tr td {
+  text-align: center; }
 
-pre.presmall{
-    font-size:0.8em;
-}
-
+pre.presmall {
+  font-size: 0.8em; }
 
 /* ------------------------------- 
    Column 1 for special screens 
    ------------------------------- */
+div.special_1 {
+  font-style: normal;
+  margin: 0 -20px -20px -20px;
+  padding: 10px;
+  background-color: #A00;
+  color: white; }
 
-div.special_1{
-    font-style: normal;
-    margin: 0 -20px -20px -20px;
-    padding: 10px;
-    background-color: #A00;
-    color : white;
-}
+div.special_1 p {
+  padding: 10px; }
 
-div.special_1 p{
-    padding:10px;
-}
-div.special_1 ol.advice{
-    background-color: #FFC;
-    color : #00A;
-    padding: 10px;
-    padding-left : 30px;
-}
+div.special_1 ol.advice {
+  background-color: #FFC;
+  color: #00A;
+  padding: 10px;
+  padding-left: 30px; }
 
-div.special_1 ul.advice ol{
-}
+/*# sourceMappingURL=wb.css.map */

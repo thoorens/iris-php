@@ -1,5 +1,4 @@
 <?php
-
 namespace Iris\SysConfig;
 
 /*
@@ -33,17 +32,17 @@ define('PASSWORD_IRIS', 'IRIS');
 class Settings {
 
     protected static $_GroupName = 'main';
-    
+
     // The PHP subversion is the same as in User\Password but to avoid cross reference
     // it is safer to repeat the values
-    
+
     const MODE_PHP54 = 4;
     const MODE_PHP55 = 5;
-    
+
     /**
      * Management of special values
      */
-    public static function __ClassInit(){
+    public static function __ClassInit() {
         // The default folder for document is relative to parameters in project creation
         self::$DataFolder = IRIS_ROOT_PATH . '/data';
         // By default use the PHP5.5 mode
@@ -55,7 +54,81 @@ class Settings {
         // By default the view script templates are not cached
         self::$CacheTemplate = \Iris\MVC\Template::CACHE_NEVER;
     }
+
+    /**
+     * Imports settings from a Config or array of configs
+     * 
+     * @param Config $params
+     * @throws \Iris\Exceptions\NotSupportedException
+     */
+    public static function FromConfigs($params) {
+        throw new \Iris\Exceptions\NotSupportedException('The ini configuration of Settings is still not implemented');
+    }
+
+    /* =========================================================================
+     * L I S T   O F    P A R A M E T E R S 
+     * ======================================================================== */
+
+    /* -------------------------------------------------------------------------
+     * Parameters related to menus 
+     * ------------------------------------------------------------------------- */
+
+    /**
+     * Default class used by menu
+     * @var string
+     */
+    public static $MenuActiveClass = 'active';
+
+    /**
+     * Default main tag for the menu
+     * @var string
+     */
+    public static $MenuMainTag = 'ul';
+
+    /**
+     * Default button tag for the menu
+     * @var string
+     */
+    public static $ButtonMenuMainTag = 'div';
+
+
+    /* -------------------------------------------------------------------------
+     * Parameters related to users
+     * ------------------------------------------------------------------------- */
+
+    /**
+     * If ACL are used, the default user is named 'somebody'
+     * @var string
+     */
+    public static $DefaultUserName = 'somebody';
+
+    /**
+     * If ACL are used, the default user group is named 'browse'
+     * @var string
+     */
+    public static $DefaultRoleName = 'browse';
+
+    /**
+     * If ACL are used, the default user email address is 'info@irisphp.org'
+     * @var string
+     */
+    public static $DefaultUserMail = 'info@irisphp.org';
+
+    /**
+     * If ACL are used, no entity is defined in Settings (DIY)
+     * @var string
+     */
+    public static $SystemUserEntity = '';
+
+    /**
+     * Type of Password conversion (PHP 5.5 internal conversion)
+     * @var int
+     */
+    public static $DefaultHashType; //= self::MODE_PHP55;
     
+    /* -------------------------------------------------------------------------
+     * Parameters related to development
+     * ------------------------------------------------------------------------- */
 
     /**
      * Admin toolbar may be Ajax or simple javascript
@@ -82,6 +155,33 @@ class Settings {
     public static $RuntimeDisplayMode; //\Iris\Time\RuntimeDuration::INNERCODE;
 
     /**
+     * Debugging level
+     * @var int
+     */
+    public static $ErrorDebuggingLevel = 1;
+
+    /* -------------------------------------------------------------------------
+     * Parameters related to databases and forms
+     * ------------------------------------------------------------------------- */
+
+    /**
+     * Sqlite : create the file if not existing
+     * @var boolean
+     */
+    public static $SqliteCreateMissingFile = \FALSE;
+
+    /**
+     * Default settings for forms
+     * @var string 
+     */
+    public static $DefaultFormClass = '\\Iris\\Forms\\StandardFormFactory';
+
+    
+    /* -------------------------------------------------------------------------
+     * Parameters related to date and time
+     * ------------------------------------------------------------------------- */
+
+    /**
      * Unformated dates use japanese format as in 2012-12-31
      * @var iint 
      */
@@ -92,6 +192,10 @@ class Settings {
      * @var string
      */
     public static $DefaultTimezone = 'Europe/Brussels';
+
+    /* -------------------------------------------------------------------------
+     * Parameters related to Ajax
+     * ------------------------------------------------------------------------- */
 
     /**
      * All Ajax functions need a library to manage them, by default it is Dojo
@@ -105,65 +209,51 @@ class Settings {
      */
     public static $SlideShowManagerLibrary = '\\Dojo\\';
 
-    
+    /* -------------------------------------------------------------------------
+     * Parameters related to languages and translation
+     * ------------------------------------------------------------------------- */
+
+    /**
+     * By default all texts are in US english
+     * @var string
+     */
+    public static $DefaultLanguage = 'en';
+
+    /**
+     * By default only english is available (otherwise, use a string like 'fr-en-es')
+     * @var string
+     */
+    public static $AvailableLanguages = 'en';
+
+    /**
+     * The default translator is a mere reproducer
+     * @var string
+     */
+    public static $DefaultTranslator = '\\Iris\\Translation\\NullTranslator';
+
+    /* -------------------------------------------------------------------------
+     * Parameters related to timeout
+     * ------------------------------------------------------------------------- */
+
     /**
      * The default time out for development (4 hours)
      */
     public static $DefaultTimeout = 14400;
-    
-    
+
     /**
      * The default time out for production (10 minutes)
      */
     public static $ProductionTimeout = 600;
-           const DEFAULT_TIMEOUT = 14400;
-    /**
-     * The default time out for production (10 minutes)
-     */
-    const DEFAULT_PRODUCTION_TIMEOUT = 600; 
-            
-    /**
-     * If ACL are used, the default user is named 'somebody'
-     * @var string
-     */
-    public static $DefaultUserName = 'somebody';
-
-    /**
-     * If ACL are used, the default user group is named 'browse'
-     * @var string
-     */
-    public static $DefaultRoleName = 'browse';
-
-    /**
-     * If ACL are used, the default user email address is 'info@irisphp.org'
-     * @var string
-     */
-    public static $DefaultUserMail = 'info@irisphp.org';
-
-    /**
-     * If ACL are used, no entity is defined in Settings (DIY)
-     * @var string
-     */
-    public static $SystemUserEntity = '';
+    
+    /* -------------------------------------------------------------------------
+     * Paraùeters relative to links, buttons, images and icons
+     * ------------------------------------------------------------------------- */
     
     /**
-     * Type of Password conversion
-     * @var int
+     * The default folder for images files (relative to PUBLIC)
+     * @var string
      */
-    public static $DefaultHashType;
-
-    
-    /**
-     * Debugging level
-     * @var int
-     */
-    public static $ErrorDebuggingLevel = 1;
-
-    /**
-     * To minimize execution templates can be cached (not by default)
-     * @var int 
-     */
-    public static $CacheTemplate; // \Iris\MVC\Template::CACHE_NEVER;
+    public static $ImageFolder = '/images';
     
     /**
      * Application icons are placed in an /images/icons folder
@@ -172,74 +262,34 @@ class Settings {
     public static $IconDir = '/icons';
     
     /**
-     * By default all texts are in US english
-     * @var string
+     * The content of the label of a link, button, image or icon which cannot be
+     * visible
+     * 
+     * @var type 
      */
-    public static $DefaultLanguage = 'en';
+    public static $NoLinkLabel = '!!!!NONE!!!!';
     
-    /**
-     * By default only english is available (otherwise, use a string like 'fr-en-es')
-     * @var string
-     */
-    public static $AvailableLanguages = 'en';
-    
-    /**
-     * Default class used by menu
-     * @var string
-     */
-    public static $MenuActiveClass = 'active';
-    
-    /**
-     * Default main tag for the menu
-     * @var string
-     */
-    public static $MenuMainTag = 'ul';
-    
-    /**
-     * Default button tag for the menu
-     * @var string
-     */
-    public static $ButtonMenuMainTag = 'div';
-    
-    /**
-     * Sqlite : create the file if not existing
-     * @var boolean
-     */
-    public static $SqliteCreateMissingFile = \FALSE;
-    
-    /**
-     * Default settings for forms
-     * @var string 
-     */
-    public static $DefaultFormClass = '\\Iris\\Forms\\StandardFormFactory';
-    
+    /* -------------------------------------------------------------------------
+     * Various parameters 
+     * ------------------------------------------------------------------------- */
+
     /**
      * Module, controler and action names may contain '-' (by default not)
      * @var boolean
      */
     public static $AdmitDash = \FALSE;
-    
+
+    /**
+     * To minimize execution templates can be cached (not by default)
+     * @var int 
+     */
+    public static $CacheTemplate; // \Iris\MVC\Template::CACHE_NEVER;
+
     /**
      * The default folder for document files managed through the program (defined by _ClassInit)
      * @var string
      */
     public static $DataFolder;
-    
-    /**
-     * The default translator is a mere reproducer
-     * @var string
-     */
-    public static $DefaultTranslator = '\\Iris\\Translation\\NullTranslator';
-    
-    /**
-     * Imports settings from a Config or array of configs
-     * 
-     * @param Config $params
-     * @throws \Iris\Exceptions\NotSupportedException
-     */
-    public static function FromConfigs($params){
-        throw new \Iris\Exceptions\NotSupportedException('The ini configuration of Settings is still not implemented');
-    }
+
     
 }
-

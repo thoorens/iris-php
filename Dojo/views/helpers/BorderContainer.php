@@ -1,25 +1,13 @@
 <?php
-
 namespace Dojo\views\helpers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
- *
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -50,6 +38,12 @@ class BorderContainer extends _Container {
     const LEADING = 40;
     const TRAILING = 20;
 
+    protected static $_Type = 'BorderContainer';
+    
+    /**
+     *
+     * @var type 
+     */
     private $_regions = [
         self::TOP => 'top',
         self::RIGHT => 'right',
@@ -59,22 +53,40 @@ class BorderContainer extends _Container {
         self::LEADING => 'leading',
         self::TRAILING => 'trailing',
     ];
+    
     private $_layoutMode;
-    protected static $_Type = 'BorderContainer';
-
+    
+    /**
+     * 
+     */
     protected function _init() {
         $this->_layoutMode = self::HEADLINE;
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function getLayoutMode() {
         return $this->_layoutMode;
     }
 
+    /**
+     * 
+     * @param type $layoutMode
+     * @return \Dojo\views\helpers\BorderContainer
+     */
     public function setLayoutMode($layoutMode) {
         $this->_layoutMode = $layoutMode;
         return $this;
     }
 
+    /**
+     * 
+     * @param type $name
+     * @param type $label
+     * @return \Dojo\views\helpers\BorderContainer
+     */
     public function addItem($name, $label) {
         $region = $this->_convertRegion($name);
         parent::addItem($region , $label);
@@ -84,10 +96,20 @@ class BorderContainer extends _Container {
         return $this;
     }
 
+    /**
+     * 
+     * @param type $name
+     * @return type
+     */
     public function getItem($name) {
         return parent::getItem($this->_convertRegion($name));
     }
 
+    /**
+     * 
+     * @param type $name
+     * @return type
+     */
     private function _convertRegion($name) {
         if (is_numeric($name)) {
             $region = $this->_regions[$name];

@@ -1,0 +1,6 @@
+<div>
+    <div id="page">
+        {wbExplain($this)}
+    </div>
+    {partial('ILO#/subFolder/partial')}
+</div>

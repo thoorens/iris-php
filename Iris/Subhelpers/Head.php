@@ -280,6 +280,7 @@ HTML;
                 $loaders .= $loader->render($ajaxMode);
                 $loader->update($ajaxMode, $text);
             }
+            $starter = \Iris\views\helpers\_ViewHelper::HelperCall('javascriptStarter')->render();
             $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
             if ($ajaxMode) {
                 $text = str_replace(self::AJAXMARK, $loaders, $text);

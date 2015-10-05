@@ -24,7 +24,7 @@ class Item {
     protected $_name;
     protected $_value;
 
-    protected $itemProps = array();
+    protected $itemProps = [];
     
     /**
      *
@@ -47,6 +47,12 @@ class Item {
     
     protected $_link = NULL;
     
+    
+    function __construct($name, $value) {
+        $this->_name = $name;
+        $this->_value = $value;
+    }
+    
     public function getLink() {
         return $this->_link;
     }
@@ -56,10 +62,7 @@ class Item {
         return $this;
     }
 
-    function __construct($name, $value) {
-        $this->_name = $name;
-        $this->_value = $value;
-    }
+    
 
     public function getClosable() {
         return $this->_closable;
@@ -101,7 +104,13 @@ class Item {
         $this->_default = $default;
     }
 
-    public function render($JS) {
+    /**
+     * 
+     * @param type $JS
+     * @param \Dojo\views\helpers\_Container $container
+     * @return type
+     */
+    public function itemRender($JS, $container) {
         $label = $this->getValue();
         $name = $this->getName();
         if (!$JS) {
@@ -128,7 +137,9 @@ class Item {
                 $selected = '';
             }
             //@todo splitter ain't allways true
-            $this->itemProps[] = "splitter:'true'";
+            if($container->getSplitter()){
+                $this->itemProps[] = "splitter:'true'";
+            }
             $props = implode(',',$this->itemProps);
             $html =  sprintf(' id="%s" title="%s" data-dojo-type="dijit.layout.ContentPane" %s data-dojo-props="%s"',
                     $name, $label, $selected, $props); // $specialAttributes 

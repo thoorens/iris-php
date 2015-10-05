@@ -38,6 +38,6 @@ class engine extends _system {
     public function structuresAction(){
         $this->__value = 5;
         // Enable to find errors
-        //\Iris\SysConfig\Settings::SetCacheTemplate(\Iris\MVC\Template::CACHE_ALWAYS);
+        //\Iris\SysConfig\Settings::$CacheTemplate = \Iris\MVC\Template::CACHE_ALWAYS;
     }
 }

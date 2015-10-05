@@ -79,38 +79,37 @@ pre {
 table {  font-size:100%; }
 ==================================================================================================
 */
-.dojoTabular { 
-    border-collapse: collapse; 
-    border-spacing: 0; 
-    border: 1px solid #ccc; 
-    margin: 0 1.5em;
-}
-.dojoTabular th { 
-    text-align: center; 
-    font-weight: bold;
-}
+.dojoTabular {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #ccc;
+  margin: 0 1.5em; }
+
+.dojoTabular th {
+  text-align: center;
+  font-weight: bold; }
+
 .dojoTabular thead,
-.dojoTabular tfoot { 
-    background-color: #efefef; 
-    border: 1px solid #ccc; 
-    border-width: 1px 0; 
-}
+.dojoTabular tfoot {
+  background-color: #efefef;
+  border: 1px solid #ccc;
+  border-width: 1px 0; }
+
 .dojoTabular th,
-.dojoTabular td { 
-    padding: 0.25em 0.5em;
-}
+.dojoTabular td {
+  padding: 0.25em 0.5em; }
 
 /* Additions for Iris */
-
 .dojoIrisTitle {
-    font-weight: bold;
-    cursor:pointer;
-}
+  font-weight: bold;
+  cursor: pointer; }
+
 .dojoIrisMask {
-    display:none;
-}
+  display: none; }
+
 .dojoIrisMask2 {
-    color: #008;
-    font-size: 1.1em;
-    padding : 5px;
-}
+  color: #008;
+  font-size: 1.1em;
+  padding: 5px; }
+
+/*# sourceMappingURL=dojo.css.map */

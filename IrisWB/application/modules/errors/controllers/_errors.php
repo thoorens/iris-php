@@ -20,9 +20,9 @@ class _errors extends \modules\_application {
 
         $this->_setLayout('wberror');
         $this->__bodyColor = 'ORANGE3';
-        \Iris\SysConfig\Settings::DisableMD5Signature();
-        \Iris\Errors\Settings::SetController('/errordemo/Error');
-        \Iris\Errors\Settings::EnableKeep();
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
+        \Iris\Errors\Settings::$Controller = '/errordemo/Error';
+        \Iris\Errors\Settings::$Keep = \TRUE;
         $this->callViewHelper('subtitle', 'Error demo');
     }
 

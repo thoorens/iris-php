@@ -34,21 +34,22 @@ abstract class _TranslatedEntity extends \Iris\DB\_Entity {
     protected $_translatedFields = [];
     protected static $_Language;
 
-    public static function __classInit(){
+    public static function __classInit() {
         self::$_Language = strtoupper(_Translator::GetCurrentLanguage());
     }
-    
+
     public function fetchAll($array = FALSE) {
         $lines = parent::fetchAll($array);
-        if($array){
-            foreach($lines as $object){
-                $this->_translateArray($object);
-            }
+        foreach ($lines as $object) {
+            $this->_translateObject($object);
         }
-        else{
-            foreach($lines as $object){
-                $this->_translateObject($object);
-            }
+        return $lines;
+    }
+
+    public function fetchAllInArray() {
+        $lines = parent::fetchAllInArray();
+        foreach ($lines as $object) {
+            $this->_translateArray($object);
         }
         return $lines;
     }
@@ -83,5 +84,5 @@ abstract class _TranslatedEntity extends \Iris\DB\_Entity {
             }
         }
     }
-    
+
 }

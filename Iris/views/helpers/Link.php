@@ -1,56 +1,41 @@
 <?php
 
 namespace Iris\views\helpers;
-use Iris\Subhelpers\Link as SubLink;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @copyright 2012 Jacques THOORENS
- *
- *
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ *
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
  *
  *
- * Creates a button which links to a page or site
+ * Creates a link which refers to a page or site
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Link extends \Iris\views\helpers\_ViewHelper {
+class Link extends _ViewHelper {
 
+    
+    const BLANKSTRING = \Iris\Subhelpers\_SuperLink::BLANKSTRING;
     /**
      * @param string $label link label
      * @param string $url target URL
      * @param string $tooltip tooltip when mousevoer
      * @param string $class class of the link
      * @param string $id id of the linklabel
-     * @return string
+     * @return Iris\Subhelpers\Link
      */
-    public function help($label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL, $id = \NULL) {
-        $subhelper = SubLink::GetInstance();
+    public function help($label = self::BLANKSTRING, $url = self::BLANKSTRING, $tooltip = self::BLANKSTRING, $class = self::BLANKSTRING, $id = self::BLANKSTRING) {
         $args = func_get_args();
-        return $subhelper->autoRender($args);
+        $subhelper = new \Iris\Subhelpers\Link($args);
+        return $subhelper;
     }
 
 }

@@ -27,6 +27,11 @@ class Synchro extends \Iris\Ajax\_Synchro {
 
     protected static $_Instance = \NULL;
 
+    protected $_functions = 0;
+    protected $_url = 0;
+    
+    protected $_switch = 72; // self::BSTART + self::BSTOP;
+    
     /**
      * Creates a scheduler, optionally controlled by another message transmitter
      * 
@@ -38,41 +43,24 @@ class Synchro extends \Iris\Ajax\_Synchro {
     public function send($messageName, $max = self::MINUTE, $externalSignal = \NULL, $context = \NULL) {
         $this->_max = $max;
         $running = $this->_autostart ? 1 : 0;
-        $granularity = $this->_granularity; 
+        $granularity = $this->_granularity;
         $senderName = "snd_$messageName";
         $bubble = $this->_getBubble($senderName);
-        $bubble->addModule('dojo/request','request');
-        $bubble->addModule('dojo/request/script','script');
-        $bubble->addModule('dojo/dom-construct','domConst');
-        $context = $this->_createContext();
+        $bubble->addModule('dojo/request', 'request');
+        $bubble->addModule('dojo/request/script', 'script');
+        $bubble->addModule('dojo/dom-construct', 'domConst');
         $noURL = self::NO_URL;
         $controllerCode = $this->_getSignalControlCode($externalSignal);
+        $internal = $this->_internal();
         $bubble->defFunction(<<<JS
-   
    ms = 0;
    running = $running;
    old = '';
    max = $max;
-   
-   $context 
-       
-   function gotoUrl(url){
-        if(url!='$noURL') 
-            window.location.href=url;  
-   }
-                
-   function restart(){
-       gotoUrl(currentData.URL);
-   }
-                
-   function previous(){
-       gotoUrl(previousData.URL); 
-   }
-                
-   function next(){
-       gotoUrl(nextData.URL);
-   }
-   
+
+{$internal['url']['current']} {$internal['url']['next']} {$internal['url']['previous']}    
+    
+{$internal['function']['gotourl']} {$internal['function']['restart']} {$internal['function']['next']} {$internal['function']['previous']}
                 
    function innerloop(){ 
 $controllerCode   
@@ -113,22 +101,6 @@ JS
         );
     }
 
-    protected function _createContext(){
-        list($previous, $current, $next) = $this->_context;
-        return <<<CONTEXT
-currentData ={
-    URL : '$current',
-}
-previousData ={
-    URL : '$previous',
-}
-nextData={
-    URL : '$next',
-}    
-CONTEXT;
-    }
-    
-    
     /**
      * Creates or retrieves a bubble by its name and add it
      * the standard modules (dom, domReady and topic)
@@ -152,6 +124,7 @@ CONTEXT;
      * @return string
      */
     private function _getSignalControlCode($signal) {
+        $switch = $this->_internal()['switch'];
         if (is_null($signal)) {
             return '';
         }
@@ -161,23 +134,7 @@ CONTEXT;
             if(msg!=old){
                 old = 'none';    
                 switch(msg){
-                  case 'stop':
-                     running = 0;
-                     old = msg;
-                     break;
-                  case 'start':
-                     running = 1; 
-                     old = msg;
-                     break;
-                  case 'restart':
-                     restart();
-                     break;
-                  case 'next':
-                     next();
-                     break;
-                  case 'previous':
-                     previous();
-                     break;
+{$switch['stop']} {$switch['start']} {$switch['restart']} {$switch['next']} {$switch['previous']}
                 }
             }
         });
@@ -185,5 +142,126 @@ CONT;
         }
     }
 
-}
+    /**
+     * Returns and creates if necessary, the pieces of JS code
+     * 
+     * @staticvar string[] $values
+     * @return string[]
+     */
+    protected function _internal() {
+        static $values = \NULL;
+        if ($values === \NULL) {
+            $code = Code::GetInstance();
+            $values['switch'] = $code->getSynchroSwitch($this->_switch);
+            //$values['switch'] = $this->_internalSwitch();
+            $values['function'] = $this->_internalFunctions();
+            $values['url'] = $this->_internalUrl();
+        }
+        return $values;
+    }
 
+    /**
+     * Creates the instructions to be inserted in the innerLoop function
+     * 
+     * @return string[]
+     */
+    protected function _internalSwitch() {
+        $values['stop'] = $this->_switch & self::BSTOP ? <<<END_OF_CASE
+                  case 'stop':
+                     running = 0;
+                     old = msg;
+                     break;
+END_OF_CASE
+                :'';
+        $values['start'] = $this->_switch & self::BSTART ? <<<END_OF_CASE
+                  case 'start':
+                     running = 1; 
+                     old = msg;
+                     break;
+END_OF_CASE
+                :'';
+        $values['restart'] = $this->_switch & self::BRESTART ? <<<END_OF_CASE
+                  case 'restart':
+                     restart();
+                     break;
+END_OF_CASE
+                :'';
+        $values['next'] = $this->_switch & self::BNEXT ? <<<END_OF_CASE
+                  case 'next':
+                     next();
+                     break;
+END_OF_CASE
+                : '';
+        $values['previous'] = $this->_switch & self::BPREVIOUS ? <<<END_OF_CASE
+                  case 'previous':
+                     previous();
+                     break;
+END_OF_CASE
+                : '';
+        return $values;
+    }
+
+    /**
+     * Creates the internal functions corresponding to various tasks
+     * 
+     * @return string[]
+     */
+    protected function _internalFunctions(){
+        $nourl = self::NO_URL;
+        $values['gotourl'] = $this->_switch & self::BGOTO ? <<<END_OF_FUNCTION
+   function gotoUrl(url){
+        if(url!='$nourl') 
+            window.location.href=url;  
+   }
+END_OF_FUNCTION
+                : '';
+        $values['restart'] =  $this->_switch & self::BRESTART ? <<<END_OF_FUNCTION
+    function restart(){
+       gotoUrl(currentData.URL);
+   }
+END_OF_FUNCTION
+                : '';
+        $values['next'] = $this->_switch & self::BNEXT ? <<<END_OF_FUNCTION
+   function next(){
+       gotoUrl(nextData.URL);
+   }
+END_OF_FUNCTION
+                : '';
+        $values['previous'] = $this->_switch & self::BPREVIOUS ? <<<END_OF_FUNCTION
+   function previous(){
+       gotoUrl(previousData.URL); 
+   }
+END_OF_FUNCTION
+                : '';
+        return $values;
+    }
+    
+    
+    /**
+     * Creates the url corresponding to the three main continuation of the code
+     * 
+     * @return string[]
+     */
+    protected function _internalUrl(){
+        list($previous, $current, $next) = $this->_context;
+        $values['next'] = $this->_url & self::BNEXT ? <<<END_OF_URL
+nextData={
+    URL : '$next',
+}
+END_OF_URL
+                : '';
+        $values['previous'] =  $this->_url & self::BPREVIOUS ?<<<END_OF_URL
+previousData ={
+    URL : '$previous',
+}
+END_OF_URL
+                : '';
+        $values['current'] =  $this->_url & self::BCURRENT ? <<<END_OF_URL
+currentData ={
+    URL : '$current',
+}
+END_OF_URL
+                : '';
+        return $values;
+    }
+}

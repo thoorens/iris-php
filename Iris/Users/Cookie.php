@@ -3,26 +3,16 @@
 namespace Iris\Users;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
- * Implements a cookie. It will be send if possible, otherwise, it will be 
+ * Implements a cookie. It will be sent if possible, otherwise, it will be 
  * added to the session for later use.
  * 
  * @author Jacques THOORENS (jacques@thoorens.net)
@@ -37,13 +27,46 @@ class Cookie {
      * @var string
      */
     private $_name;
+
+    /**
+     * The value associated to the cookie
+     * @var string
+     */
     private $_value = '';
+
+    /**
+     *
+     * @var type 
+     */
     private $_expire = 0;
+    
+    /**
+     *
+     * @var type 
+     */
     private $_path = '/';
+    
+    /**
+     *
+     * @var type 
+     */
     private $_domain = \NULL;
+    
+    /**
+     *
+     * @var type 
+     */
     private $_secure = \FALSE;
+    
+    /**
+     *
+     * @var type 
+     */
     private $_httponly = \TRUE;
 
+    /**
+     * The index for the session array containing unsent cookies
+     */
     const SESSION_VARNAME = 'UNSENT_COOKIES';
 
     /**
@@ -96,9 +119,10 @@ class Cookie {
     }
 
     /**
+     * A set accessor for the cookie value
      * 
      * @param type $value
-     * @return \Iris\Users\Cookie
+     * @return \Iris\Users\Cookie for fluent interface
      */
     public function setValue($value) {
         $this->_value = $value;
@@ -107,6 +131,7 @@ class Cookie {
     }
 
     /**
+     * A set accezsor for the cookie expiration status
      * 
      * @param int $expire
      * @return \Iris\Users\Cookie for fluent interface
@@ -117,51 +142,80 @@ class Cookie {
         return $this;
     }
 
+    /**
+     * 
+     * @param type $delay
+     * @param type $unity
+     * @return \Iris\Users\Cookie for fluent interface
+     */
     public function setDuration($delay, $unity = 'month') {
-        $end = new \Iris\Time\TimeDate();
+        $endTime = new \Iris\Time\TimeDate();
         switch ($unity) {
             case 'hour':
-                $end->addHour($delay);
+                $endTime->addHour($delay);
                 break;
             case 'day':
-                $end->addDay($delay);
+                $endTime->addDay($delay);
                 break;
             case 'year':
-                $end->addYear($delay);
+                $endTime->addYear($delay);
                 break;
             case 'month':
             default:
-                $end->addMonth($delay);
+                $endTime->addMonth($delay);
                 break;
         }
-        $this->_expire = $end->getUnixTime();
+        $this->_expire = $endTime->getUnixTime();
         $this->_markDirty();
         return $this;
     }
 
+    /**
+     * 
+     * @param type $path
+     * @return \Iris\Users\Cookie for fluent interface
+     */
     public function setPath($path) {
         $this->_path = $path;
         $this->_markDirty();
         return $this;
     }
 
+    /**
+     * 
+     * @param type $domain
+     * @return \Iris\Users\Cookie for fluent interface
+     */
     public function setDomain($domain) {
         $this->_domain = $domain;
         $this->_markDirty();
         return $this;
     }
 
+    /**
+     * 
+     * @param type $secure
+     * @return \Iris\Users\Cookie for fluent interface
+     */
     public function setSecure($secure) {
         $this->_secure = $secure;
         return $this;
     }
 
+    /**
+     * 
+     * @param type $httponly
+     * @return \Iris\Users\Cookie for fluent interface
+     */
     public function setHttponly($httponly) {
         $this->httponly = $httponly;
         $this->_markDirty();
         return $this;
     }
 
+    /**
+     * 
+     */
     public function send() {
         $sent = setcookie($this->_name, $this->_value, $this->_expire, $this->_path, $this->_domain, $this->_secure, $this->_httponly);
         if ($sent) {
@@ -173,6 +227,9 @@ class Cookie {
         }
     }
 
+    /**
+     * 
+     */
     public function sessionStore() {
         $this->_status->setBit(self::STATE_DELAYED);
         $this->_status->unsetBit(self::STATE_SENT);
@@ -180,10 +237,16 @@ class Cookie {
         $_SESSION[self::SESSION_VARNAME][$this->_name] = $string;
     }
 
+    /**
+     * 
+     */
     private function _markDirty() {
         $this->_status->setBit(self::STATE_DIRTY);
     }
 
+    /**
+     * Tries to send the cookie
+     */
     public function save() {
         if ($this->_status->hasBit(self::STATE_DIRTY)) {
             if ($this->_status->hasBit(self::STATE_DELAYED)) {
@@ -196,6 +259,9 @@ class Cookie {
         }
     }
 
+    /**
+     * 
+     */
     public static function LoadUnsentCookies() {
         $unsentCookies = \Iris\Engine\Superglobal::GetSession(self::SESSION_VARNAME, []);
         $_SESSION[self::SESSION_VARNAME] = [];

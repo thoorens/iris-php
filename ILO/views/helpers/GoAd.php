@@ -1,40 +1,19 @@
 <?php
-
 namespace ILO\views\helpers;
 
-use \Iris\views\helpers\_ViewHelper;
-
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2013 Jacques THOORENS
- *
- * 
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $/**
- * This helper returns an icon 
- * 
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
  * Generates an icon link to a small presentation of IRIS or to the official website
  */
-class GoAd extends _ViewHelper {
+class GoAd extends \Iris\views\helpers\_ViewHelper {
 
     /**
      * This helper is a singleton
@@ -47,14 +26,14 @@ class GoAd extends _ViewHelper {
      * 
      * @param boolean $local If TRUE go the internal description, otherwise to the official site
      * @param boolean $grey If True, the logo is in grey tones
-     * 
-     * @return type
+     * @param boolean $button If true the link will be a button
+     * @return \Iris\Subhelpers\ImageLink
      */
-    public function help($local = \TRUE, $grey = \FALSE, $test = \FALSE) {
+    public function help($local = \TRUE, $grey = \FALSE, $button = \FALSE) {
         $logoName = $grey ? 'IrisSmallG' : 'IrisSmall';
         $client = new \Iris\System\Client();
         $lang = $client->getLanguage();
-        
+
         $title = $this->_('Site powered by Iris-PHP', \TRUE);
         if (is_string($local)) {
             $url = $local;
@@ -65,7 +44,13 @@ class GoAd extends _ViewHelper {
         else {
             $url = 'http://irisphp.org';
         }
-        return $this->callViewHelper('link')->image("/!documents/file/logos/$logoName.png", $url, $title)->__toString();
+        $imageLink = new \Iris\Subhelpers\ImageLink(["/!documents/file/logos/$logoName.png", $url, $title]);
+        if ($button) {
+            return $imageLink->button();
+        }
+        else {
+            return $imageLink;
+        }
     }
 
 }

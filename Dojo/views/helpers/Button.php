@@ -36,6 +36,7 @@ class Button extends _DojoHelper {
     public function help($message = \NULL, $url = '/', $tooltip = \NULL, $class = \NULL, $id = \NULL) {
         $args = func_get_args();
         $subhelper = new \Dojo\Subhelpers\Button($args);
+        \Dojo\Manager::SetActive();
         return $subhelper;
     }
     
@@ -48,5 +49,6 @@ class Button extends _DojoHelper {
         \Dojo\Manager::SetActive();
     }
 
+    
 }
 

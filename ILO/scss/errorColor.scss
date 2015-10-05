@@ -1,0 +1,66 @@
+/*
+    ILO/css/error_color
+    specific background color for default error page
+*/
+body {
+    background: white url("/!documents/file/bg/error.jpg") repeat-y top left fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #c44;
+}
+
+div.iris_explanation {
+    background-color: #AFA;
+    color: #060;
+}
+
+div.iris_detail{
+    background-color: #DEF;
+    color: #060;
+    padding : 5px;
+    margin : 10px 0px;
+    border-radius: 7px;
+}
+
+div.iris_detail h3{
+    color : #44C;   
+}
+
+
+div.iris_explanation h1 {
+    color: #060;
+}
+
+p.iris_error, div.iris_error {
+    padding: 5px 15px 5px 10px;
+    border-radius: 7px;
+}
+
+p.iris_message {
+    background-color: #CCC;
+    color: #333;
+}
+
+p.iris_context {
+    background-color: #EEE;
+    color: #448;
+}
+
+p.iris_context em {
+    color: #c44;
+    letter-spacing: 2px;
+    font-variant: small-caps;
+    font-style: normal;
+}
+
+div.iris_tracecont, div.iris_tracecont h3 {
+    color: #440;
+    background-color: #ffa;
+    font-style: normal;
+}
+
+table.error tr th{
+    color:#c44;  
+    text-align : right;
+}

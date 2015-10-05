@@ -14,8 +14,8 @@ class index extends _main {
     public function indexAction() {
         $this->_setLayout('color');
         $this->__bodyColor = 'BLUE3';
-        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
-        \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
     }
 
     public function errorAction($number) {
@@ -28,11 +28,11 @@ class index extends _main {
     public function endAction() {
         $this->_setLayout('color');
         $this->__bodyColor = 'BLUE3';
-        \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
     }
 
     public function dojoAction() {
-        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
+        \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
     }
 
     public function tocAction() {
@@ -40,7 +40,7 @@ class index extends _main {
         $this->callViewHelper('dojo_Mask');
         $this->__sequence = $this->getScreenList();
         $this->__bodyColor = 'BLUE3';
-        \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
     }
 
     public function controllerAction() {

@@ -76,7 +76,7 @@ class Program {
             }
         }
         $text = ob_get_clean();
-        \Iris\Subhelpers\Head::HeaderBodyTuning($text, $this->_runtimeDuration);
+        \Iris\Subhelpers\Head::GetInstance()->headerBodyTuning($text, $this->_runtimeDuration);
         echo $text;
     }
 

@@ -2,8 +2,6 @@
 
 namespace IrisInternal\admin\controllers;
 
-use \Iris\Users as u;
-
 /*
  * This file is part of IRIS-PHP.
  *
@@ -37,12 +35,8 @@ class password extends _admin {
         if(isset($_POST['password'])){
             $clear = $_POST['password'];
             $this->__clear = $clear;
-            $initialPasswordMode = \Iris\SysConfig\Settings::GetPasswordHashType();
-            \Iris\SysConfig\Settings::SetPasswordHashType(PASSWORD_IRIS);
-            $this->__hashIris = u\_Password::EncodePassword($clear);
-            \Iris\SysConfig\Settings::SetPasswordHashType(PASSWORD_BCRYPT);
-            $this->__hashBcrypt =  u\_Password::EncodePassword($clear);
-            \Iris\SysConfig\Settings::SetPasswordHashType($initialPasswordMode);
+            $this->__hashIris = \Iris\Users\_Password::EncodePassword($clear,  \Iris\Users\_Password::MODE_IRIS);
+            $this->__hashBcrypt = \Iris\Users\_Password::EncodePassword($clear, \Iris\Users\_Password::MODE_PHP54);
         }
     }
 }

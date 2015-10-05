@@ -31,92 +31,29 @@ namespace Iris\views\helpers;
  */
 class Image extends _ViewHelper {
 
-    protected $_folder = \NULL;
+    protected $_folder = self::BLANKSTRING;
     protected $_defaultClass = '';
-    protected static $_Singleton = \TRUE;
+    
+
+    const BLANKSTRING = \Iris\Subhelpers\_SuperLink::BLANKSTRING;
 
     /**
      * Creates an image tag with alt and title
      * 
-     * @param string $file Image file
+     * @param string $source Image file name
      * @param string $alt Alt attribute (to display if image is missing)
-     * @param string $title Title attribute (tooltip)
+     * @param string $tooltip Title attribute (tooltip)
      * @param string $folder image directory (by default images)
      * @param string $class class name for CSS
-     * @param string $attributes optional attributes or javascript
+     * @param string $id optional id for the object
      * @return string 
      */
-    public function help($file = \NULL, $alt = 'Image', $title = NULL, $folder = \NULL, $class = '', $attributes = '') {
-        if (is_null($file)) {
-            return $this;
-        }
-        else {
-            return $this->_renderImage($file, $alt, $title, $folder, $class, $attributes);
-        }
+    public function help($source = self::BLANKSTRING, $alt = 'Image', $tooltip = self::BLANKSTRING, $folder = self::BLANKSTRING, $class = '', $id = self::BLANKSTRING) {
+        /* @var $image \Iris\Subhelpers\ImageLink */
+        $args = func_get_args();
+        return new \Iris\Subhelpers\Image($args);
     }
 
-    /**
-     * 
-     * @param string $folderName
-     * @return \Iris\views\helpers\Image for fluent interface
-     */
-    public function setFolder($folderName) {
-        if($folderName == ''){
-            $folderName = \NULL;
-        }
-        $this->_folder = $folderName;
-        return $this;
-    }
-
-    /**
-     * 
-     * @param string $folderName
-     * @param string $fileName
-     * @return string
-     */
-    protected function _getFullFileName($folderName, $fileName) {
-        if ((is_null($folderName) or $folderName == '')
-                and($fileName[1] != '!')) {
-            if(!is_null($this->_folder)){
-                $folderName = $this->_folder;
-            }
-            else{
-                $folderName =  "/images";
-            }
-        }
-        if (substr($folderName, -1) == '/' or is_null($folderName))
-            $fullName =$folderName . $fileName;
-        else
-            $fullName = "$folderName/$fileName";
-        return $fullName;
-    }
-
-    /**
-     * 
-     * @param type $defaultClass
-     * @return \Iris\views\helpers\Image for fluent interface
-     */
-    public function setDefaultClass($defaultClass) {
-        $this->_defaultClass = $defaultClass;
-        return $this;
-    }
-
-    protected function _renderImage($fileName, $alt, $title, $folderName, $class, $attributes) {
-        // providing a default alt attribute
-        if (is_null($alt)) {
-            $alt = "Image $fileName";
-        }
-        // providing a default title attribute
-        if (is_null($title)) {
-            $title = $alt;
-        }
-        $fullName = $this->_getFullFileName($folderName, $fileName);
-        // mention class if it has one
-        if ($class != '') {
-            $class = 'class="' . $class . '"';
-        }
-        return sprintf('<img src="%s" title="%s" alt="%s" %s %s/>' , $fullName, $title, $alt, $class, $attributes);
-    }
-
+    
 }
 

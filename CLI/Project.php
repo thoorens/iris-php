@@ -1,5 +1,4 @@
 <?php
-
 namespace CLI {
 
     /*
@@ -162,7 +161,6 @@ namespace CLI {
             $parameters->setPublicDir( isset($specialPara['public']) ? $specialPara['public'] : 'public');
 
             $coder->makePublic($projectDir, $parameters);
-            die('STOP');
             $coder->makeApplication($projectDir);
             $this->_makeLibrary($projectDir, $parameters->getLibraryName());
             $coder->makeVirtualParameter();

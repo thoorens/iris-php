@@ -1,7 +1,15 @@
 <?php
 
 namespace Iris\views\helpers;
-use Iris\Subhelpers\Button as SubButton;
+
+/*
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
+ */
 
 /**
  *
@@ -14,19 +22,20 @@ use Iris\Subhelpers\Button as SubButton;
  * @version $Id: $ */
 class Button extends _ViewHelper {
 
+    const BLANKSTRING = \Iris\Subhelpers\_SuperLink::BLANKSTRING;
+
     /**
-     *
-     * @param string $label Button label
+     * @param string $label link label
      * @param string $url target URL
      * @param string $tooltip tooltip when mousevoer
      * @param string $class class of the link
-     * @param string $id id of the link
-     * @return string
+     * @param string $id id of the linklabel
+     * @return \Iris\Subhelpers\Button
      */
-    public function help($label = \NULL, $url = \NULL, $tooltip = \NULL, $class = \NULL, $id = \NULL) {
-        $subhelper = SubButton::GetInstance();
-        return $subhelper->autoRender($label, $url, $tooltip, $class, $id);
+    public function help($label = self::BLANKSTRING, $url = self::BLANKSTRING, $tooltip = self::BLANKSTRING, $class = self::BLANKSTRING, $id = self::BLANKSTRING) {
+        $args = func_get_args();
+        $subhelper = new \Iris\Subhelpers\Button($args);
+        return $subhelper;
     }
 
 }
-

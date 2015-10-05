@@ -37,7 +37,7 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
      * make sure Stopwatch won't spoil the end of the files
      */
     public function security() {
-        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
+        \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
     }
 
     public function saveAction() {
@@ -52,9 +52,24 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
      * Download a public file
      */
     public function publicAction() {
+        die('PUBLIC');
         $this->_manageFile(\TRUE, \TRUE);
     }
+    
+    /**
+     * Download a protected file
+     */
+    public function protectedAction() {
+        $this->_resource('protected');
+    }
 
+    /**
+     * Download a private file
+     */
+    public function privateAction() {
+        $this->_resource('private');
+    }
+    
     public function bgAction() {
         $this->_resource('bg');
     }
@@ -83,13 +98,19 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         $manager = Manager::GetInstance();
         $params = $this->_response->getParameters();
         array_unshift($params, $base);
-        $manager->getResource($params);
+        if (strpos('privateprotected', $base) == \FALSE) {
+            $manager->getResource($params);
+        }
+        else {
+            $manager->getFile(\FALSE, $params);
+        }
         exit;
     }
 
     private function _manageFile($save) {
         $manager = Manager::GetInstance();
         $params = $this->_response->getParameters();
+        iris_debug($params);
         switch ($manager->getFile($save, $params)) {
             case Manager::GOTIT:
                 exit;

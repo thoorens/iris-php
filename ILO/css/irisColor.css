@@ -3,41 +3,31 @@
     color scheme for internal modules
 */
 body {
-    background: white url('/!documents/file/bg/bodygrad_y.png') repeat-x;
-}
+  background: white url("/!documents/file/bg/bodygrad_y.png") repeat-x; }
 
 .page_margins {
-    background-color: #ffe;
-}
-#main{
-    color : #444;
+  background-color: #ffe; }
 
-}
+#main {
+  color: #444; }
 
 #footer {
-    color:#888;
-    background-color: #ddd;
-}
-
-
+  color: #888;
+  background-color: #ddd; }
 
 #header {
-    background-color:#C7C68A;
-}
+  background-color: #C7C68A; }
 
+div#header {
+  background-color: #C7C68A; }
 
+h1, h2, h3, h4, h5, h6 {
+  color: #008800; }
 
-div#header{
-    background-color:#C7C68A
-}
+.testlayout {
+  color: red; }
 
-h1, h2, h3, h4, h5, h6{
-    color:#008800;
-}
+.testview {
+  color: #44C; }
 
-.testlayout{
-    color : red;
-}
-.testview{
-    color : #44C;
-}
+/*# sourceMappingURL=irisColor.css.map */

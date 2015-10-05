@@ -1,0 +1,141 @@
+/* =====================================================
+ * Styles for the admin toolbar
+ * ===================================================== */
+
+/* Real time duration */
+span#iris_RTD{
+    color: white;
+}
+
+/* Standard colors and aspect */
+#iris_admintoolbar{
+    font-size :12px;
+    font-family: sans-serif;
+    background-color:#148;
+    text-align: left;
+    color:#eb7;
+    font-size: 15px;
+    
+}
+
+/* =====================================================
+   Menus
+*/
+
+div#menu_admin{
+    display:line;
+    float:left;
+    margin-top:-12px;
+}
+
+div#menu_admin2{
+    float:left;
+}
+
+div.reset{
+    clear:both;    
+}
+
+#iris_atb *{
+    z-index: 100;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+    font-size: 13px;
+    margin:0;
+}
+
+#iris_atb .menu li{
+    border:none;
+}
+
+#iris_atb a#iatb_main{
+    color:black;
+    padding:.15em;
+    text-align: center;
+    background-color: #eee;
+    border-radius: 3px;
+}
+
+/* Thank you, Eric Meyer, for having written books (e.g. http://meyerweb.com/eric/books/smashing/)
+to explain what follows */
+
+/* Decoration */
+#iris_atb ul {
+    width: 11em; 
+    margin: -2px 0 0 1em; 
+    padding: 0; 
+    list-style: none;
+    line-height: 1em;
+
+}
+
+#iris_atb ul li a {
+    display: block; 
+    padding: 0.25em;
+    text-decoration: none; 
+    color: #090215;
+    font-family: sans-serif;
+}
+
+
+/* First level : horizontal */
+#iris_atb ul.menu > li{
+    display:inline;
+    position:relative;
+}
+/* Mask all submenu */
+#iris_atb ul.menu ul{
+    display:none;
+}
+/* Show submenu when on master */
+#iris_atb li.sub:hover > ul{
+    display:block;
+    position: absolute;
+    white-space: nowrap;
+
+}
+/* Show submenu when on master */
+#iris_atb ul.menu li:hover > ul{
+    display:block;
+    position: absolute;
+    white-space: nowrap;
+    margin-left:0px;
+}
+
+
+#iris_atb ul.menu ul li.sub:hover > ul{
+    top : 0;
+    left:100%;
+}
+
+
+#iris_atb li.sub{
+    position:relative;
+}
+
+/* Colors */
+
+
+#iris_atb ul.level1 a,
+#iris_atb ul.level2 a,
+#iris_atb ul.level3 a
+{
+    background-color:#F8F8F8;
+    color:#148;
+    font-weight:bold;
+}
+
+#iris_atb ul.level1 a:hover,
+#iris_atb ul.level2 a:hover,
+#iris_atb ul.level3 a:hover{
+    background-color:#58F;
+    color:white;
+}
+
+/* shadow */
+#iris_atb ul.level1,
+#iris_atb ul.level2,
+#iris_atb ul.level3 {
+    box-shadow:0 5px 10px rgba(0,0,0, .8);
+}

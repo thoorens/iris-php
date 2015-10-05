@@ -22,7 +22,7 @@ class _manager extends \modules\_application {
         // You should modify this demo layout
         $this->_setLayout('manager');
         $this->__bodyColor = 'ORANGE3';
-        \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
         $this->_changeCrudDirectory('\\models_internal\\crud\\');
         $this->callViewHelper('subtitle', 'Internal manager');
     }

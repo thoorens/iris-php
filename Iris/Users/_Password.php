@@ -32,9 +32,10 @@ abstract class _Password {
     const MODE_PHP54 = 4;
 
     /**
-     * MODE_PHP55 uses a internal routine implemented in PHP 5.5 and above
+     * MODE_PHP55 uses an internal routine implemented in PHP 5.5 and above
      */
     const MODE_PHP55 = 5;
+    
     const UPPER = 'U';
     const LOWER = 'L';
     const LETTER = 'C';
@@ -101,7 +102,11 @@ abstract class _Password {
     public static function __ClassInit() {
         self::$_Letters = self::$_LowerCaseLetters . self::$_UpperCaseLetters;
         self::$_DigitOrLetter = self::$_Digits . self::$_Letters;
-        if (version_compare(PHP_VERSION, '5.5', '<') and \Iris\SysConfig\Settings::$DefaultHashType != self::MODE_PHP55) {
+        //iris_debug(PHP_VERSION_ID);
+        //iris_debug(version_compare(PHP_VERSION, '50500', '<'));
+        //iris_debug(\Iris\SysConfig\Settings::$DefaultHashType);
+        if (!version_compare(PHP_VERSION, '50500')) {
+            iris_debug(PHP_VERSION);
             self::ForceCompatibility();
         }
         // CLI does not use this initializer
@@ -112,7 +117,7 @@ abstract class _Password {
      * A clean way to charge compatibily file
      */
     public static function ForceCompatibility() {
-        if (!defined('PWH_COMPATIBILITY')) {
+        if (\Iris\SysConfig\Settings::$DefaultHashType == self::MODE_PHP55 and !defined('PWH_COMPATIBILITY')) {
             $compatibilityFile = dirname(__FILE__) . '/password.php';
             include_once $compatibilityFile;
         }
@@ -216,6 +221,9 @@ abstract class _Password {
         if (is_null($mode)) {
             $mode = self::GetMode();
         }
+        if ($hash[0] != '$') {
+            $mode = self::MODE_IRIS;
+        }
         if ($mode != self::MODE_IRIS) {
             $result = password_verify($password, $hash);
         }
@@ -318,4 +326,50 @@ abstract class _Password {
         return $source [$pos];
     }
 
+    
+    public static function VerifySystem($password = \NULL, $irisHash = \NULL, $phpHash = \NULL ){
+        if(is_null($password)){
+            $password = 'azertyuiop';
+            $irisHash = '9f961dcdfcfe19cdae4774ed2342ab5760';
+            $phpHash = '$2y$10$IBm95bLVKz9c56.zoyNcj.PfuloDFMU4uJ7TwlblPLYj74J4kKU4K';
+        }
+        $testIris = self::VerifyPassword($password, $irisHash) ? 'GOOD' : 'BAD';
+        $testPhp = self::VerifyPassword($password, $phpHash) ? 'GOOD' : 'BAD';
+        echo <<<TABLE
+<table>
+    <tr>
+        <th>
+            The password (in clear)
+        </th>
+        <td>
+            $password
+        </td>
+        <td></td>        
+    </tr>    
+    <tr>
+        <th>
+            The Iris crypted password    
+        </th>
+        <td>
+            $irisHash
+        </td>
+        <td>
+            $testIris
+        </td>        
+    </tr>    
+    <tr>
+        <th>
+           The PHP crypted password
+        </th>
+        <td>
+           $phpHash     
+        </td>
+        <td>
+           $testPhp
+        </td>        
+    </tr>    
+</table>        
+TABLE;
+        die('Password checked completed');
+    }
 }

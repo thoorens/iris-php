@@ -21,13 +21,12 @@ namespace Dojo\views\helpers;
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ * 
  */
 abstract class _Container extends _DojoHelper {
+
     /**
      * Determine where to put navigation buttons
      */
-
     const NONE = 0;
     const BOTTOM = 1;
     const TOP = 2;
@@ -35,14 +34,15 @@ abstract class _Container extends _DojoHelper {
     use \Dojo\Translation\tTranslatable;
 
     // confirmation
-    protected static $_Singleton = FALSE;
+    protected static $_Singleton = \FALSE;
 
+    
     /**
-     * The type of the container (Accordion, Border, Split or Tab)
-     * @var string 
+     * Each subclass has its proper type specification
+     * 
+     * @var string
      */
-    protected $_type = '';
-    protected static $_Type = '';
+    protected static $_Type = \NULL;
 
     /**
      * True if the client has javascript capabilities (autodeterminated)
@@ -54,14 +54,14 @@ abstract class _Container extends _DojoHelper {
      * 
      * @var \Dojo\Engine\Item[]
      */
-    protected $_items = array();
+    protected $_items = [];
 
     /**
      * Determines if all tabs are displayed when javascript is not present
      * 
      * @var boolean
      */
-    protected $_altNodisplay = TRUE;
+    protected $_altNodisplay = \TRUE;
 
     /**
      * The URL to the present page to redisplay it with another tab in
@@ -83,6 +83,13 @@ abstract class _Container extends _DojoHelper {
     protected $_name;
 
     /**
+     * The position of the stack controller
+     * 
+     * @var int 
+     */
+    protected $_position = self::NONE;
+    
+    /**
      * The container height
      * 
      * @var int
@@ -95,7 +102,19 @@ abstract class _Container extends _DojoHelper {
      * @var int
      */
     protected $_width = 650;
-    protected $_specials = array();
+    
+    /**
+     * Indicates that the container has splitter
+     * 
+     * @var boolean
+     */
+    protected $_splitter = \FALSE;
+
+    /**
+     *
+     * @var array
+     */
+    protected $_specials = [];
 
     /**
      * This methods initializes the container, gives it a name seen by the view. If no
@@ -106,16 +125,20 @@ abstract class _Container extends _DojoHelper {
      * @param string $type the type of the container (by default Tab)
      * @return static 
      */
-    public function help($varName = NULL) {
-        $this->_type = static::$_Type;
+    public function help($varName = \NULL) {
         if (is_null($varName)) {
             // no necessity to have a bubble for declarative uses
-            \Dojo\Engine\Bubble::DropObject($this->_type);
+            \Dojo\Engine\Bubble::DropObject(static::$_Type);
         }
         else {
             $this->_JS = \Iris\Users\Session::JavascriptEnabled();
             if ($this->_JS) {
-                $this->_createBubble();
+                //$this->_createBubble();
+                \Dojo\Engine\Bubble::getBubble(static::$_Type)
+                        ->addModule("dijit/layout/".static::$_Type)
+                        ->addModule("dojo/parser")
+                        ->addModule("dijit/layout/ContentPane")
+                        ->addModule("dijit/layout/LinkPane");
             }
             $this->_view->$varName = $this;
             $this->_name = $varName;
@@ -133,13 +156,13 @@ abstract class _Container extends _DojoHelper {
      * @param int $width Width of the container
      * @return string 
      */
-    public function divMaster($height = NULL, $width = NULL) {
+    public function divMaster($height = \NULL, $width = \NULL) {
         $this->setDim($height, $width);
-        $html = $this->_buttons(self::TOP);
+        $html = $this->_renderController(self::TOP);
         // for javascript, returns a div with Dojo attributes
         if ($this->_JS) {
             $html .= '<div id="' . $this->_name . '" style="height:' . $this->_height;
-            $html .= 'px;width:' . $this->_width . 'px" data-dojo-type="dijit.layout.' . $this->_type . '"';
+            $html .= 'px;width:' . $this->_width . 'px" data-dojo-type="dijit.layout.' . static::$_Type . '"';
             $html .= $this->_specialAttributes();
             $html .= ' data-dojo-id="' . $this->_name . '" >';
         }
@@ -151,7 +174,7 @@ abstract class _Container extends _DojoHelper {
                     if ($key == $this->_default) {
                         $item = "<i>$item</i>";
                     }
-                    $html .= $this->callViewHelper('button',$item, $this->_url . $key, $item, 'tabs');
+                    $html .= $this->callViewHelper('button', $item, $this->_url . $key, $item, 'tabs');
                 }
             }
         }
@@ -159,7 +182,7 @@ abstract class _Container extends _DojoHelper {
     }
 
     public function jsRender($objectId, $data) {
-        $type = $this->_type;
+        $type = static::$_Type;
         $objectId = "tc1-prog";
         $script = <<< SCRIPT
         <script>require(["dojo/ready", "dijit/layout/$type", "dijit/layout/ContentPane"], function(ready, $type, ContentPane){
@@ -169,7 +192,7 @@ abstract class _Container extends _DojoHelper {
 }, "$objectId");
 SCRIPT;
         $num = 0;
-        foreach($data as $title=>$content){
+        foreach ($data as $title => $content) {
             $content = str_replace("\n", '"+"', $content);
             $script .= <<< SCRIPT2
 var cp$num = new ContentPane({
@@ -196,10 +219,39 @@ SCRIPTEND;
      */
     public function endMaster() {
         $html = "\n</div><!-- end " . $this->_name . "-->\n";
-        $html .= $this->_buttons(self::BOTTOM);
+        $html .= $this->_renderController(self::BOTTOM);
         return $html;
     }
 
+    /**
+     * Returns the stack controller at the position of the call the helper method.
+     * This will display a controller with all types of containers
+     *  
+     * @return string
+     */
+    public function controller(){
+        $containerName = $this->_name;
+        $html = "\n<div data-dojo-type=\"dijit/layout/StackController\" data-dojo-props=\"containerId:'$containerName'\"></div>\n";
+        return $html;
+    }
+    
+      
+/**
+     * Some containers need navigations buttons. This call back can manage 
+     * them
+     * 
+     * @param int $position
+     * @return string
+     */
+    protected function _renderController($position) {
+        return '';
+    }
+    
+    public function setPosition($position){
+        $className = get_called_class();
+        throw new \BadFunctionCallException("No setPosition() defined in class $className");
+    }
+    
     /**
      * Initialise the items index and labels
      * 
@@ -207,24 +259,39 @@ SCRIPTEND;
      * @return Container (fluent interface)
      */
     public function setItems($items) {
-        foreach ($items as $key => $item) {
-            $this->addItem($key, $item);
+        foreach ($items as $name => $label) {
+            $this->addItem($name, $label);
         }
         return $this;
     }
 
-    public function getItems(){
+    public function getItems() {
         return $this->_items;
     }
+
+    public function setSplitter($splitter) {
+        $this->_splitter = $splitter;
+        return $this;
+    }
+
         
+    /**
+     * Returns true if the object has splitter
+     * 
+     * @return boolean 
+     */
+    public function getSplitter() {
+        return $this->_splitter;
+    }
+    
     /**
      * Gets an 
      * @param type $name
      * @return \Dojo\Engine\Item
      */
     public function getItem($name) {
-        if(!isset($this->_items[$name])){
-            $this->addItem($name,$name);
+        if (!isset($this->_items[$name])) {
+            $this->addItem($name, $name);
         }
         return $this->_items[$name];
     }
@@ -254,14 +321,19 @@ SCRIPTEND;
      */
     public function item($itemIndex) {
         $item = $this->getItem($itemIndex);
-        return $item->render($this->_JS);
+        return $item->itemRender($this->_JS, $this);
     }
 
-    
+    /**
+     * 
+     * @param type $itemIndex
+     * @param type $url
+     * @return type
+     */
     public function linkedItem($itemIndex, $url) {
         $item = $this->getItem($itemIndex);
         $item->setLink($url);
-        return $item->render($this->_JS);
+        return $item->itemRender($this->_JS, $this);
     }
 
     /**
@@ -288,18 +360,23 @@ SCRIPTEND;
         return $this;
     }
 
-    /**
-     * Set the two dimensions of the container (instead 650x650 default)
+    public function setName($name) {
+        $this->_name = $name;
+        return $this;
+    }
+
+        /**
+     * Set the two dimensions of the container (instead of 650x650 default)
      * 
      * @param int $height Container heigth in pixels
      * @param int $width Container width in pixels
      * @return Container (fluent interface) 
      */
-    public function setDim($height = NULL, $width = NULL) {
-        if ($height != NULL) {
+    public function setDim($height = \NULL, $width = \NULL) {
+        if ($height != \NULL) {
             $this->_height = $height;
         }
-        if ($width != NULL) {
+        if ($width != \NULL) {
             $this->_width = $width;
         }
         return $this;
@@ -338,24 +415,5 @@ SCRIPTEND;
             return '';
         }
     }
-
-    /**
-     * Some containers need navigations buttons. This call back can manage 
-     * them
-     * 
-     * @param int $position
-     * @return string
-     */
-    protected function _buttons($position) {
-        return '';
-    }
-
-    public function _createBubble() {
-        \Dojo\Engine\Bubble::getBubble($this->_type)
-                ->addModule("dijit/layout/$this->_type")
-                ->addModule("dojo/parser")
-                ->addModule("dijit/layout/ContentPane")
-                ->addModule("dijit/layout/LinkPane");
-    }
-
+    
 }

@@ -3,22 +3,12 @@
 namespace Iris\Subhelpers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @copyright 2011-2014 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -30,24 +20,38 @@ namespace Iris\Subhelpers;
  * @version $Id: $ */
 class Link extends \Iris\Subhelpers\_SuperLink {
 
-    public function __toString() {
-        if ($this->_nodisplay) {
-            $this->_image = \FALSE;
-            return '';
-        }
-        $this->_renderImage();
+    protected static $_Type = self::LINK;
+    
+    public function _render() {
         $attributes = $this->_renderAttributes();
-        $this->_image = \FALSE;
-        return sprintf('<a href="%s" %s >%s</a>', $this->getUrl(), $attributes, $this->getLabel());
+        $label = $this->getLabel();
+        $url = $this->_renderUrl(\TRUE);
+        return sprintf('<a %s %s >%s</a>', $url, $attributes, $label);
+    }
+    
+    /**
+     * This method throws an exception if called with a link object
+     *
+     * @param type $url
+     * @throws \Iris\Exceptions\BadLinkMethodException
+     */
+    public function link($url = self::BLANKSTRING) {
+        throw new \Iris\Exceptions\BadLinkMethodException('A link cannot be transformed into a link');
     }
 
     /**
-     * Permits to change a link into a button at last stage
+     * Transforms a link or an image to a button
      * 
-     * @return string
+     * @param type $url
+     * @return \Iris\Subhelpers\Button
      */
-    public function button(){
-        $button = Button::GetInstance();
-        return $button->autorender($this->getLabel(),$this->getUrl(),$this->getTooltip());
+    public function button($url = self::BLANKSTRING){
+        $button = new Button([]);
+        $this->_copyData($button);
+        if($this->_used($url)){
+            $button->setUrl($url);
+        }
+        return $button;
     }
+
 }

@@ -81,12 +81,18 @@ class Settings {
     public static $Source = Manager::GOOGLE;
     
     /**
-     * By default Dojo is parsed on page load
-     * @var type 
+     * By default Dojo is parsed on page load (the value is JS syntax)
+     * 
+     * @var string 
      */
     public static $ParseOnLoad = 'true';
     
-    
+    /**
+     * Indicates that portions of javascript will bear a signature
+     * 
+     * @var boolean
+     */
+    public static $JSDebug = \TRUE;
     /**
      * Defines some standard settings with a default value
      */

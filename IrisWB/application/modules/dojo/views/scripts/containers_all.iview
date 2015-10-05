@@ -9,4 +9,3 @@
     </div>
     {container->endMaster()}
 </div>
-{finishedOrNot}

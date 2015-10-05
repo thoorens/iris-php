@@ -2,157 +2,144 @@
     IRIS-PHP
     one column css for internal modules
 */
-body{
-    width: 1024px;
-    overflow-y: scroll;
-    margin: 0 auto;
-}
+body {
+  width: 1024px;
+  overflow-y: scroll;
+  margin: 0 auto; }
 
-.page{
-    padding : 1px 1px 1px 1px;
-    border-radius : 7px;
-}
-.page_margins { 
-    width: auto;  min-width: 1000px; max-width: 1000px; 
-    background-color: rgba(255,255,255,0.6);  
-    box-shadow: 8px 8px 20px rgba(128,128,128,0.7);
-    border-radius : 7px;
-}
-#header{
-    border-radius : 7px;
-    margin : 5px;
-    box-shadow: 8px 8px 20px rgba(128,128,128,0.7);
-}
+.page {
+  padding: 1px 1px 1px 1px;
+  border-radius: 7px; }
 
-#main{
-    margin : 15px;
-    font-size : .9em;
-}
+.page_margins {
+  width: auto;
+  min-width: 1000px;
+  max-width: 1000px;
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 8px 8px 20px rgba(128, 128, 128, 0.7);
+  border-radius: 7px; }
 
-#footer{
-    text-align: center;
-    margin : 5px;
-    padding: 2px 20px; 
-    color:#666; 
-    background: #f9f9f9; 
-    border-top: 2px #efefef solid;
-    font-size: 0.7em;
-    border-radius : 7px;
-    box-shadow: 10px 4px 8px rgba(128,128,128,.7);
-}
+#header {
+  border-radius: 7px;
+  margin: 5px;
+  box-shadow: 8px 8px 20px rgba(128, 128, 128, 0.7); }
 
-pre{
-    font-size : 11px;
-    font-family: Verdana,courier;
-    color : #800;
-}
+#main {
+  margin: 15px;
+  font-size: .9em; }
 
+#footer {
+  text-align: center;
+  margin: 5px;
+  padding: 2px 20px;
+  color: #666;
+  background: #f9f9f9;
+  border-top: 2px #efefef solid;
+  font-size: 0.7em;
+  border-radius: 7px;
+  box-shadow: 10px 4px 8px rgba(128, 128, 128, 0.7); }
 
-#footer div.links{
-    width:950px;
-    margin: 0 auto;
-    text-align:center;
-}
+pre {
+  font-size: 11px;
+  font-family: Verdana,courier;
+  color: #800; }
 
+#footer div.links {
+  width: 950px;
+  margin: 0 auto;
+  text-align: center; }
 
-.testlayout{
-    text-align: center;
-    font-size: .6em;
-}
-.testview{
-    text-align: center;
-    font-size: .6em;
-}
+.testlayout {
+  text-align: center;
+  font-size: .6em; }
 
-.logoIris{
-    padding-left:200px
-}
+.testview {
+  text-align: center;
+  font-size: .6em; }
 
-.log{
-    background-color: #86A;
-    margin:0px 10px 0px 10px;
-    padding:5px 10px 5px 10px;
-    border-radius:5px;
-}
-.loginfo, .logdebug, .logpanic{
-    color:#426; 
-    margin:2px 15px 2px 15px; 
-    padding:1px;
-    font-size: .8em;
-    border-radius:2px;
-}
-.loginfo{background-color:#5298d4 }
-.logdebug{background-color:#DFD}
-.logpanic{background-color:red}
+.logoIris {
+  padding-left: 200px; }
+
+.log {
+  background-color: #86A;
+  margin: 0px 10px 0px 10px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px; }
+
+.loginfo, .logdebug, .logpanic {
+  color: #426;
+  margin: 2px 15px 2px 15px;
+  padding: 1px;
+  font-size: .8em;
+  border-radius: 2px; }
+
+.loginfo {
+  background-color: #5298d4; }
+
+.logdebug {
+  background-color: #DFD; }
+
+.logpanic {
+  background-color: red; }
 
 /* Internal table*/
-
 table.internal {
-    border-width: 3px;
-    border-spacing: 1px;
-    border-style: solid;
-    border-color: #008;
-    border-collapse: separate;
-    background-color: white;
-    width:100%;
-}
+  border-width: 3px;
+  border-spacing: 1px;
+  border-style: solid;
+  border-color: #008;
+  border-collapse: separate;
+  background-color: white;
+  width: 100%; }
+
 table.internal th {
-    border-width: 1px;
-    padding: 1px;
-    border-style: inset;
-    border-color: gray;
-    background-color: white;
-}
+  border-width: 1px;
+  padding: 1px;
+  border-style: inset;
+  border-color: gray;
+  background-color: white; }
 
 table.internal td {
-    border-width: 1px;
-    padding: 1px;
-    border-style: inset;
-    border-color: gray;
-}
+  border-width: 1px;
+  padding: 1px;
+  border-style: inset;
+  border-color: gray; }
 
-table.internal tr td.title{
-    background-color: #FAA;
-    color:white;
-    font-weight: bold;
-    text-align: center;
-}
+table.internal tr td.title {
+  background-color: #FAA;
+  color: white;
+  font-weight: bold;
+  text-align: center; }
 
 /* fatal */
-table.internal tr.internal1{
-    background-color: #ff6666;
-}
+table.internal tr.internal1 {
+  background-color: #ff6666; }
 
 /* bug */
-table.internal tr.internal2{
-    background-color: #ffcc00 ;
-}
+table.internal tr.internal2 {
+  background-color: #ffcc00; }
 
 /* functional */
-table.internal tr.internal3{
-    background-color: #ffff99 ;
-}
+table.internal tr.internal3 {
+  background-color: #ffff99; }
 
 /* optional */
-table.internal tr.internal4{
-    background-color: #ccffcc;
-}
+table.internal tr.internal4 {
+  background-color: #ccffcc; }
 
 /* Aspect style*/
-table.internal tr.internal5{
-    background-color: #ccffff ;
-}
+table.internal tr.internal5 {
+  background-color: #ccffff; }
 
-table.internal tr.internal6{
-    background-color: #999900 ;
-    color: white;
-}
+table.internal tr.internal6 {
+  background-color: #999900;
+  color: white; }
 
-table.internal tr.internal7{
-    background-color: #008 ;
-    color: white;
-}
+table.internal tr.internal7 {
+  background-color: #008;
+  color: white; }
 
-table.internal tr td.center{
-    text-align: center;
-}
+table.internal tr td.center {
+  text-align: center; }
+
+/*# sourceMappingURL=iris.css.map */

@@ -36,4 +36,7 @@ class system extends _main {
     }
 
     
+    public function iloAction() {
+        $this->setViewScriptName('/ILO#/ilo');
+    }
 }

@@ -1,20 +1,24 @@
 <?php
-
 namespace modules\dojo\controllers;
 
+/*
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
+ */
+
 /**
+ * Examples of a Dojo slide show
  * 
- * Created for IRIS-PHP 0.9 - beta
- * Description of animation
- * 
- * @author jacques
- * @license not defined
  */
 class slideshow extends _dojo {
 
     protected function _init() {
         // to be shure we use dojo library
-        \Iris\SysConfig\Settings::SetSlideShowManagerLibrary('\\Dojo\\');
+        \Iris\SysConfig\Settings::$SlideShowManagerLibrary = '\\Dojo\\';
         $this->_setLayout('application');       
         $this->setViewScriptName('all');
     }
@@ -47,7 +51,7 @@ class slideshow extends _dojo {
     }
 
     public function dataAction() {
-        $images = $this->exampleImages();
+        $images = $this->_exampleImages();
         /* @var $slideShow \Dojo\Subhelpers\SlideShowManager */
         $slideShow = $this->callViewHelper('slideShow');
         $slideShow->setWidth(603)
@@ -59,9 +63,26 @@ class slideshow extends _dojo {
         $this->__slideShow = $slideShow;
     }
 
+    /**
+     * Creates an array containing data for getting 5 images
+     * 
+     * @param boolean $jsonFormat If true, converts the array to JSON
+     * @return string[] a JSON string or an array
+     */
+    private function _exampleImages($jsonFormat = \TRUE) {
+        $titles = ['Etretat (France)', 'Pastry (Alsace France)', 'Lama', 'Tramway (Lisboa)', 'Cabourg (France)'];
+        for ($i = 1; $i < 6; $i++) {
+            $images[] = [
+                "large" => sprintf("/images/slideshow/image%02d.jpg", $i),
+                "title" => $titles[$i - 1],
+            ];
+        }
+        return $images;
+    }
+    
     public function testfAction() {
-        \Iris\SysConfig\Settings::DisableMD5Signature();
-        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
+        \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
         $this->_setLayout(\NULL);
     }
 

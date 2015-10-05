@@ -1,0 +1,6 @@
+<ul>
+    <li>{(link1)}</li>
+    <li>{(link2->button())}</li>
+    <li>{(link3)}</li>
+        
+</ul>

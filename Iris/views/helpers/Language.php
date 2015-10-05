@@ -100,7 +100,7 @@ class Language extends _ViewHelper {
     protected function _switchTo($flag){
         $ref = $this->_baseLanguageController."/$flag";
         $ref .= \Iris\Engine\Response::GetDefaultInstance()->getURL(\NULL, \TRUE);
-        return $this->callViewHelper('link', "/!documents/file/images/locale/$flag.png", $ref , $this->_('Choose language ').$this->_languageName($flag))->image()->__toString();
+        return $this->callViewHelper('link', '', $ref , $this->_('Choose language ').$this->_languageName($flag))->image("/!documents/file/images/locale/$flag.png")->__toString();
     }
 
 }

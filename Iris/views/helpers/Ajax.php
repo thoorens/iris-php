@@ -1,5 +1,4 @@
 <?php
-
 namespace Iris\views\helpers;
 
 /*
@@ -24,7 +23,7 @@ class Ajax extends _ViewHelper implements \Iris\Subhelpers\iRenderer {
 use \Iris\Subhelpers\tSubhelperLink;
 
     protected function _init() {
-        $this->_subhelperName = \Iris\Ajax\_AjaxProvider::GetDefaultAjaxLibrary().'Provider';
+        $this->_subhelperName = \Iris\SysConfig\Settings::$DefaultAjaxLibrary.'Provider';
     }
 
     public function render(array $arg1, $arg2) {

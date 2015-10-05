@@ -1,24 +1,13 @@
 <?php
-
 namespace modules\ajax\controllers;
 
 /*
- * This file is part of IRIS-PHP.
- * 
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2013 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -26,10 +15,10 @@ namespace modules\ajax\controllers;
  */
 class get extends \Iris\MVC\_AjaxController {
 
-    
     protected $_hasACL = \FALSE;
+
     /**
-     * These message actions are meant to be read by Ajax requests 
+     * This message action are meant to be read by Ajax requests 
      */
     public function message1Action() {
         $this->setAjaxType('text/html'); // default value
@@ -38,28 +27,43 @@ class get extends \Iris\MVC\_AjaxController {
         $this->_renderScript('message');
     }
 
+    /**
+     * This message action are meant to be read by Ajax requests 
+     */
     public function message2Action() {
         $this->__message = 'This text has been read after five seconds from the server';
         $this->_renderScript('message');
     }
 
+    /**
+     * This message action are meant to be read by Ajax requests 
+     */
     public function message3Action() {
         $this->__message = 'This text has been sent by the server after the button 
             has been clicked (this action may be repeated)';
         $this->_renderScript('message');
     }
 
+    /**
+     * This message action are meant to be read by Ajax requests 
+     */
     public function message4Action() {
         $this->__message = 'This text has been sent by the server after the mouse cursor 
             has been moved over the button (this action may be repeated)';
         $this->_renderScript('message');
     }
 
+    /**
+     * This message action are meant to be read by Ajax requests 
+     */
     public function message5Action() {
         $this->__message = 'This text has been sent by the server after a message has been sent by a counter';
         $this->_renderScript('message');
     }
 
+    /**
+     * This message action are meant to be read by Ajax requests  : it needs one parameter
+     */
     public function message6Action($arg) {
         $this->__arg = $arg;
         $this->__message = "This text has been sent by the server after a message with argument '$arg'
@@ -67,6 +71,9 @@ class get extends \Iris\MVC\_AjaxController {
         $this->_renderScript('message6');
     }
 
+    /**
+     * This message action are meant to be read by Ajax requests : it needs two parameters
+     */
     public function message7Action($arg1, $arg2) {
         $this->__arg1 = $arg1;
         $this->__arg2 = $arg2;
@@ -75,6 +82,9 @@ class get extends \Iris\MVC\_AjaxController {
         $this->_renderScript('get_message7');
     }
 
+    /**
+     * This message action are meant to be read by Ajax requests 
+     */
     public function tabAction() {
         // using a partial, you can produce whatever output you want.
         $text1 = $this->callViewHelper('partial', 'random');

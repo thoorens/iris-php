@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /**
  * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
  *
@@ -14,115 +13,138 @@
  * @revision        $Revision:392 $
  * @lastmodified    $Date:2009-07-05 12:18:40 +0200 (So, 05. Jul 2009) $
 */
+@media all {
+  div#col1 {
+    background-color: #94b4e6; }
 
-@media all
-{
+  /* title */
+  h6.vlist {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 100%;
+    width: 90%;
+    padding: 3px 0px 3px 10%;
+    /* LTR */
+    margin: 0;
+    color: #444;
+    background-color: #fff;
+    border-top: 2px #ddd solid;
+    border-bottom: 4px #888 solid; }
 
-    div#col1{
-        background-color: #94b4e6;
-    }  
-    /* title */
-    h6.vlist {
-        font-family:Arial, Helvetica, sans-serif;
-        font-weight:bold;
-        font-size:100%;
-        width:90%;
-        padding:3px 0px 3px 10%; /* LTR */
-        margin:0;
-        color:#444;
-        background-color:#fff;
-        border-top:2px #ddd solid;
-        border-bottom:4px #888 solid;
-    }
+  .vlist {
+    width: 100%;
+    overflow: hidden;
+    margin: 0 0 1.5em 0;
+    list-style-type: none;
+    border-bottom: 2px #ddd solid; }
 
-    .vlist {
-        width:100%;
-        overflow:hidden;
-        margin:0 0 1.5em 0;
-        list-style-type:none;
-        border-bottom:2px #ddd solid;
-    }
+  .vlist ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0; }
 
-    .vlist ul {
-        list-style-type:none;
-        margin:0;
-        padding:0;
-    }
+  .vlist li {
+    float: left;
+    /* LTR */
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffee; }
 
-    .vlist li {
-        float:left; /* LTR */
-        width:100%;
-        margin:0;
-        padding:0;
-        background-color: #ffffee;
-    }
+  .vlist a,
+  .vlist strong,
+  .vlist span {
+    display: block;
+    padding: 3px 0px 3px 10%;
+    text-decoration: none;
+    border-bottom: 1px #ddd solid; }
 
-    .vlist a,
-    .vlist strong,
-    .vlist span {
-        display:block;
-        padding:3px 0px 3px 10%;
-        text-decoration:none;
-        border-bottom:1px #ddd solid;
-    }
+  .vlist a,
+  .vlist a:visited {
+    color: #444; }
 
-    .vlist a,
-    .vlist a:visited {
-        color:#444;
-    }
+  .vlist li span {
+    display: block;
+    font-weight: bold;
+    border-bottom: 1px #ddd solid; }
 
-    .vlist li span {
-        display:block;
-        font-weight:bold;
-        border-bottom:1px #ddd solid;
-    }
+  /* active list element */
+  .vlist li.active {
+    color: #444;
+    background-color: #eee;
+    font-weight: bold; }
 
-    /* active list element */
-    .vlist li.active {
-        color:#444;
-        background-color:#eee;
-        font-weight:bold;
-    }
+  /* Level 1 */
+  .vlist li a,
+  .vlist li strong,
+  .vlist li span {
+    width: 95%;
+    padding-left: 5%; }
 
-    /* Level 1 */
-    .vlist li a,
-    .vlist li strong,
-    .vlist li span { width:95%; padding-left:5%; } /* LTR */
+  /* LTR */
+  .vlist li a:focus,
+  .vlist li a:hover,
+  .vlist li a:active {
+    background-color: #a88;
+    color: #fff;
+    outline: 0 none; }
 
-    .vlist li a:focus,
-    .vlist li a:hover,
-    .vlist li a:active { background-color:#a88; color:#fff; outline: 0 none; }
+  /* Level 2 */
+  .vlist li ul li a,
+  .vlist li ul li strong,
+  .vlist li ul li span {
+    width: 80%;
+    padding-left: 20%;
+    font-weight: normal; }
 
-    /* Level 2 */
-    .vlist li ul li a,
-    .vlist li ul li strong,
-    .vlist li ul li span { width:80%; padding-left:20%;font-weight:normal; } /* LTR */
+  /* LTR */
+  .vlist li ul li a,
+  .vlist li ul li a:visited {
+    background-color: #f8f8f8;
+    color: #333; }
 
-    .vlist li ul li a, 
-    .vlist li ul li a:visited { background-color:#f8f8f8; color:#333; }
-    .vlist li ul li a:focus,
-    .vlist li ul li a:hover,
-    .vlist li ul li a:active { background-color:#a88; color:#fff; }
+  .vlist li ul li a:focus,
+  .vlist li ul li a:hover,
+  .vlist li ul li a:active {
+    background-color: #a88;
+    color: #fff; }
 
-    /* Level 3 */
-    .vlist li ul li ul li a,
-    .vlist li ul li ul li strong,
-    .vlist li ul li ul li span { width:70%; padding-left:30%; } /* LTR */
+  /* Level 3 */
+  .vlist li ul li ul li a,
+  .vlist li ul li ul li strong,
+  .vlist li ul li ul li span {
+    width: 70%;
+    padding-left: 30%; }
 
-    .vlist li ul li ul li a,
-    .vlist li ul li ul li a:visited{ background-color:#f0f0f0; color:#222; }
-    .vlist li ul li ul li a:focus,
-    .vlist li ul li ul li a:hover,
-    .vlist li ul li ul li a:active { background-color:#a88; color:#fff; }
+  /* LTR */
+  .vlist li ul li ul li a,
+  .vlist li ul li ul li a:visited {
+    background-color: #f0f0f0;
+    color: #222; }
 
-    /* Level 4 */
-    .vlist li ul li ul li ul li a,
-    .vlist li ul li ul li ul li strong,
-    .vlist li ul li ul li ul li span { width:60%; padding-left:40%; } /* LTR */
+  .vlist li ul li ul li a:focus,
+  .vlist li ul li ul li a:hover,
+  .vlist li ul li ul li a:active {
+    background-color: #a88;
+    color: #fff; }
 
-    .vlist li ul li ul li ul li a,
-    .vlist li ul li ul li ul li a:visited { background-color:#e8e8e8; color:#111; }
-    .vlist li ul li ul li ul li a:focus,
-    .vlist li ul li ul li ul li a:hover,
-    .vlist li ul li ul li ul li a:active { background-color:#a88; color:#fff; }
-}
+  /* Level 4 */
+  .vlist li ul li ul li ul li a,
+  .vlist li ul li ul li ul li strong,
+  .vlist li ul li ul li ul li span {
+    width: 60%;
+    padding-left: 40%; }
+
+  /* LTR */
+  .vlist li ul li ul li ul li a,
+  .vlist li ul li ul li ul li a:visited {
+    background-color: #e8e8e8;
+    color: #111; }
+
+  .vlist li ul li ul li ul li a:focus,
+  .vlist li ul li ul li ul li a:hover,
+  .vlist li ul li ul li ul li a:active {
+    background-color: #a88;
+    color: #fff; } }
+
+/*# sourceMappingURL=iris_vnav.css.map */

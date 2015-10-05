@@ -3,26 +3,16 @@
 namespace Iris\Subhelpers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @copyright 2011-2014 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
- * This class is a subhelper for the helper Link family.
+ * This class defines the proper treatment of the button links.
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -42,24 +32,27 @@ class Button extends \Iris\Subhelpers\_SuperLink {
      */
     public static $OldBrowser = \FALSE;
 
-    public function __toString() {
-        if ($this->_nodisplay) {
-            $this->_image = \FALSE;
+    protected static $_Type = self::BUTTON;
+
+
+    /**
+     * 
+     * @return type
+     */
+    protected function _render() {
+        if ($this->_empty($this->getLabel())) {
             $text = '';
         }
-        else {
-            $this->_renderImage();
-            if (!\Iris\Users\Session::JavascriptEnabled() or self::$NoJavaForce) {
-                if (\Iris\System\Client::OldBrowser(self::$OldBrowser)) {
-                    $text = $this->_simulatedButton();
-                }
-                else {
-                    $text = $this->_linkButton();
-                }
+        elseif (!\Iris\Users\Session::JavascriptEnabled() or self::$NoJavaForce) {
+            if (\Iris\System\Client::OldBrowser(self::$OldBrowser)) {
+                $text = $this->_simulatedButton();
             }
             else {
-                $text = $this->_javascriptButton();
+                $text = $this->_linkButton();
             }
+        }
+        else {
+            $text = $this->_javascriptButton();
         }
         return $text;
     }
@@ -69,11 +62,16 @@ class Button extends \Iris\Subhelpers\_SuperLink {
      *
      * @return string
      */
-    private function _javascriptButton() {
+    protected function _javascriptButton() {
         $attributes = $this->_renderAttributes();
-        $url = $this->getUrl();
+        $url = $this->getUrl(\TRUE);
         $label = $this->getLabel();
-        $onclick = is_null($url) ? '' : "onclick=\"javascript:location.href='$url'\"";
+        if ($this->_used($url) and $url !=='!') {
+            $onclick = "onclick=\"javascript:location.href='$url'\"";
+        }
+        else {
+            $onclick = '';
+        }
         return "<button $attributes $onclick>$label</button>\n";
     }
 
@@ -82,18 +80,23 @@ class Button extends \Iris\Subhelpers\_SuperLink {
      *
      * @return string
      */
-    private function _linkButton() {
-        $attributes = $this->_renderAttributes();
-        $url = $this->getUrl();
+    protected final function _linkButton() {
+        $url = $this->getUrl(\TRUE);
         $label = $this->getLabel();
+        $attributes = $this->_renderAttributes();
 // Button in a link
         return "<a href=\"$url\">" .
                 "<button $attributes>$label</button></a>\n";
     }
 
-    private function _simulatedButton() {
+    /**
+     * Displays a button using a simple link plus internal style to simulate
+     * a button aspect
+     * 
+     * @return string
+     */
+    protected final function _simulatedButton() {
         $this->setClass(' old_nav');
-        $attributes = $this->_renderAttributes();
         \Iris\views\helpers\StyleLoader::HelperCall('StyleLoader', ['oldbrowserbuttonn', <<<STYLE
 a.old_nav{
     background-color:#EEE;
@@ -109,9 +112,32 @@ a.old_nav:hover{
 
 STYLE
         ]);
+        $attributes = $this->_renderAttributes();
         $url = $this->getUrl();
         $label = $this->getLabel();
         return sprintf('<a href="%s" %s>&nbsp;%s&nbsp;</a>', $url, $attributes, $label);
     }
 
+    /**
+     * This method throws an exception if called with a button object
+     * @throws \Iris\Exceptions\BadLinkMethodException
+     */
+    public function button($url = self::BLANKSTRING){
+        throw new \Iris\Exceptions\BadLinkMethodException('A button cannot be transformed into a button');
+    }
+    
+    /**
+     * Transforms a button or an image to a link
+     * 
+     * @param type $url
+     * @return \Iris\Subhelpers\Link
+     */
+    public function link($url = self::BLANKSTRING){
+        $link = new Link([]);
+        $this->_copyData($link);
+        if($this->_used($url)){
+            $link->setUrl($url);
+        }
+        return $link;
+    }
 }

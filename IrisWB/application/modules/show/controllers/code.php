@@ -27,7 +27,7 @@ namespace modules\show\controllers;
 class code extends _show {
 
     public function __callAction($actionName, $parameters) {
-        \Iris\SysConfig\Settings::DisableMD5Signature();
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
         $module = substr($actionName, 0, strlen($actionName) - 6);
         $this->__module = $module;
         $this->__controller = $parameters[0];
@@ -65,6 +65,16 @@ class code extends _show {
         $entity = \models_internal\TViews::GetEntity();
         $this->_getPart($name, \wbClasses\Part::MODEL, $container, $containerTitle, $url, $entity);
     }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $type
+     * @param type $container
+     * @param type $containerTitle
+     * @param type $url
+     * @param \Iris\DB\_Entity $entity
+     */
     private function _getPart($name, $type, $container, $containerTitle, $url, $entity){
         $part = \wbClasses\Part::GetPart($name);
         $part->setType($type);

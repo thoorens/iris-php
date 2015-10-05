@@ -36,7 +36,7 @@ class WbFooter extends _ViewHelper {
      * Corresponds to \ILO\views\helpers\GoInternal::ADMIN + \ILO\views\helpers\GoInternal::RESET
      */
     const BUTTONS = 5;
-    
+
     public function help($buttons = self::BUTTONS) {
         $sequence = \Iris\Structure\DBSequence::GetInstance();
         if (\Iris\SysConfig\Settings::$MD5Signature) {
@@ -44,12 +44,12 @@ class WbFooter extends _ViewHelper {
             $buttonMD5 = $this->callViewHelper('signature')->saveButton();
             $buttonCode = $this->callViewHelper('button', $this->_codeButton($sequence))->__toString();
         }
-        else{
-            $signature = $buttonMD5 = $buttonCode= '';
+        else {
+            $signature = $buttonMD5 = $buttonCode = '';
         }
         //@todo : get the layout Name automatically
         //$html = "<b>Layout :</b> $layoutName";
-        $html = "<b>Layout :</b> ". $this->callViewHelper('ILO_layoutName');
+        $html = "<b>Layout :</b> " . $this->callViewHelper('ILO_layoutName');
         $html .= $signature;
         $html .= '<br/>';
         $html .= $this->callViewHelper('ILO_goInternal', $buttons);
@@ -70,15 +70,15 @@ class WbFooter extends _ViewHelper {
      * @param \Iris\Structure\_Sequence $sequence
      * @return array
      */
-    private function _codeButton($sequence){
+    private function _codeButton($sequence) {
         $current = $sequence->getCurrent();
-        if(is_null($current)){
-            return \Iris\Subhelpers\Link::$NoLink;
+        if (is_null($current)) {
+            return \Iris\Subhelpers\Link::GetNoLinkLabel();
         }
         $current[0] = 'Show code';
-        $current[1] = '/show/code'.$current[1];
-        $current[2] = 'See the code for '. $current[2];
+        $current[1] = '/show/code' . $current[1];
+        $current[2] = 'See the code for ' . $current[2];
         return $current;
     }
-}
 
+}

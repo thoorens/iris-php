@@ -1,5 +1,4 @@
 <?php
-
 namespace modules;
 
 /*
@@ -29,7 +28,7 @@ class _application extends \Iris\MVC\_Controller {
      * IN AN ACTUAL APPLICATION
      * 
      * @see \modules\acl\controllers\_acl abstract controller
-     * 
+     * @see \modules\helpers\links controller
      * @var boolean
      */
     protected $_aclIgnore = \TRUE;
@@ -52,7 +51,7 @@ class _application extends \Iris\MVC\_Controller {
         // set the model for MD5
         \Iris\views\helpers\Signature::SetModel('models_internal\TSequences', 'URL', 'Md5');
         \ILO\views\helpers\AdminToolBar::GetInstance()->setMenu(\TRUE);
-        \Iris\Errors\Settings::SetController('/Error');
+        \Iris\Errors\Settings::$Controller = '/Error';
         $this->callViewHelper('title', 'Iris Work Bench');
         $this->__specialScreen = \FALSE;
     }
@@ -67,8 +66,8 @@ class _application extends \Iris\MVC\_Controller {
      * </ul> 
      */
     protected function _nolayout() {
-        \Iris\SysConfig\Settings::DisableMD5Signature();
-        \Iris\SysConfig\Settings::DisableDisplayRuntimeDuration();
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
+        \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
         $this->_setLayout(\NULL);
     }
 

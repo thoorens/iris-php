@@ -5,22 +5,12 @@ namespace Iris\Forms;
 use Iris\Forms\Validators as iv;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -70,7 +60,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      *
      * @var string
      */
-    protected $_attributes = array();
+    protected $_attributes = [];
 
     /**
      *
@@ -119,7 +109,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * 
      * @var boolean 
      */
-    protected $_checkable = FALSE;
+    protected $_checkable = \FALSE;
 
     /**
      * Value can be rendered as an attribute (by default NOT)
@@ -226,7 +216,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     public function setDisabled($value) {
-        if ($value == \TRUE) {
+        if ($value === \TRUE) {
             $value = 'disabled';
         }
         $this->$value = $value;
@@ -243,7 +233,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     private function _getGlobalClass() {
-        if (is_null($this->_globalClass)) {
+        if ($this->_globalClass === \NULL) {
             return '';
         }
         else {
@@ -267,7 +257,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     function render($layout = \NULL) {
         // normal element have their layout set
         // companion elements need to receive one
-        if (is_null($layout)) {
+        if ($layout === \NULL) {
             $layout = $this->getLayout();
         }
         // maybe layout will be pleased to know what kind of element it is 
@@ -350,7 +340,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * @return string (html)
      */
     protected function _renderError() {
-        if ($this->_errorMessage == '') {
+        if ($this->_errorMessage === '') {
             return '';
         }
         return "<p class=\"error_validate\">$this->_errorMessage</p>";
@@ -363,7 +353,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      */
     protected function _renderName() {
         $name = $this->getName();
-        if (is_null($name)) {
+        if ($name === \NULL) {
             return '';
         }
         else {
@@ -380,11 +370,12 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     protected function _renderValue() {
         $value = $this->getValue();
         $checkMark = '';
-        if (!is_null($this->_validator)) {
+        if ($this->_validator !== \NULL) {
             $value = $this->_validator->prepareValue($value);
         }
         if ($this->_checkable) {
-            if ($value == 1) {
+            // $value may be boolean or numeric, so do not compare with === 1
+            if ($value) {
                 $checkMark = ' checked = "checked" ';
             }
         }
@@ -429,7 +420,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     protected function _prepareLabel($position) {
         $name = $this->getName();
         $label = $this->getLabel();
-        if ($label == '') {
+        if ($label === '') {
             $label = "<i>$name</i>:";
         }
         $text = '';
@@ -477,7 +468,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      */
     public function addValidator($validator) {
         if (!$validator instanceof iv\_Validator) {
-            if (is_null($this->_container)) {
+            if ($this->_container === \NULL) {
                 throw new \Iris\Exceptions\FormException(
                 $this->_('named validators only operate on objects registred with addTo().', \TRUE));
             }
@@ -495,7 +486,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      */
     protected function _addValidator(iv\_Validator $validator) {
         $validator->setElement($this);
-        if (is_null($this->_validator)) {
+        if ($this->_validator === \NULL) {
             $this->_validator = $validator;
         }
         else {
@@ -505,7 +496,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     public function validate() {
-        if (is_null($this->_validator)) {
+        if ($this->_validator === \NULL) {
             return \TRUE;
         }
         $val = $this->getValue();
@@ -552,6 +543,8 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
     }
 
     public function setValue($value) {
+        if($value instanceof \Iris\DB\Object)
+            iris_debug($value);
         $value = str_replace('"', '&quot;', $value);
         $this->_value = $value;
         return $this;

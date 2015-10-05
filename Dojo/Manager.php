@@ -180,4 +180,13 @@ class Manager implements \Iris\Design\iSingleton {
         return $this->_styleFiles;
     }
 
+    
+    public static function Debug($message){
+        if(\TRUE or (\Iris\Engine\Mode::IsDevelopment() and Engine\Settings::$JSDebug)){
+            return "//$message";
+        }
+        else{
+            return '';
+        }
+    }
 }

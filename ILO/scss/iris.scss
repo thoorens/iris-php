@@ -1,0 +1,158 @@
+/*
+    IRIS-PHP
+    one column css for internal modules
+*/
+body{
+    width: 1024px;
+    overflow-y: scroll;
+    margin: 0 auto;
+}
+
+.page{
+    padding : 1px 1px 1px 1px;
+    border-radius : 7px;
+}
+.page_margins { 
+    width: auto;  min-width: 1000px; max-width: 1000px; 
+    background-color: rgba(255,255,255,0.6);  
+    box-shadow: 8px 8px 20px rgba(128,128,128,0.7);
+    border-radius : 7px;
+}
+#header{
+    border-radius : 7px;
+    margin : 5px;
+    box-shadow: 8px 8px 20px rgba(128,128,128,0.7);
+}
+
+#main{
+    margin : 15px;
+    font-size : .9em;
+}
+
+#footer{
+    text-align: center;
+    margin : 5px;
+    padding: 2px 20px; 
+    color:#666; 
+    background: #f9f9f9; 
+    border-top: 2px #efefef solid;
+    font-size: 0.7em;
+    border-radius : 7px;
+    box-shadow: 10px 4px 8px rgba(128,128,128,.7);
+}
+
+pre{
+    font-size : 11px;
+    font-family: Verdana,courier;
+    color : #800;
+}
+
+
+#footer div.links{
+    width:950px;
+    margin: 0 auto;
+    text-align:center;
+}
+
+
+.testlayout{
+    text-align: center;
+    font-size: .6em;
+}
+.testview{
+    text-align: center;
+    font-size: .6em;
+}
+
+.logoIris{
+    padding-left:200px
+}
+
+.log{
+    background-color: #86A;
+    margin:0px 10px 0px 10px;
+    padding:5px 10px 5px 10px;
+    border-radius:5px;
+}
+.loginfo, .logdebug, .logpanic{
+    color:#426; 
+    margin:2px 15px 2px 15px; 
+    padding:1px;
+    font-size: .8em;
+    border-radius:2px;
+}
+.loginfo{background-color:#5298d4 }
+.logdebug{background-color:#DFD}
+.logpanic{background-color:red}
+
+/* Internal table*/
+
+table.internal {
+    border-width: 3px;
+    border-spacing: 1px;
+    border-style: solid;
+    border-color: #008;
+    border-collapse: separate;
+    background-color: white;
+    width:100%;
+    tr th {
+        border-width: 1px;
+        padding: 1px;
+        border-style: inset;
+        border-color: gray;
+        background-color: white;
+    }
+
+    tr td {
+        border-width: 1px;
+        padding: 1px;
+        border-style: inset;
+        border-color: gray;
+    }
+
+    tr td.title{
+        background-color: #FAA;
+        color:white;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    /* fatal */
+    tr.internal1{
+        background-color: #ff6666;
+    }
+
+    /* bug */
+    tr.internal2{
+        background-color: #ffcc00 ;
+    }
+
+    /* functional */
+    tr.internal3{
+        background-color: #ffff99 ;
+    }
+
+    /* optional */
+    tr.internal4{
+        background-color: #ccffcc;
+    }
+
+    /* Aspect style*/
+    tr.internal5{
+        background-color: #ccffff ;
+    }
+
+    tr.internal6{
+        background-color: #999900 ;
+        color: white;
+    }
+
+    tr.internal7{
+        background-color: #008 ;
+        color: white;
+    }
+
+    tr td.center{
+        text-align: center;
+    }
+}
