@@ -20,7 +20,7 @@ class views extends _helpers {
         // demo 
         //$this->__object1 ="XSTHWA5RYXRBU"; 
         // voiture jaune
-        $this->__object2 = "SGZJCG8U3KKB8";
+        $this->__object1 = "SGZJCG8U3KKB8";
     }
 
 }
