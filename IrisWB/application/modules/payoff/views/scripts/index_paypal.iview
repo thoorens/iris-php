@@ -1,0 +1,4 @@
+<div>
+    {payoff_paypal()->setObjectId($object1)->buyButton()}
+
+</div>
