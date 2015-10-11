@@ -1,4 +1,7 @@
-ol
+/*
+One True Layout
+An idea by Alex Robinson quotted by Eric Meyer
+*/
 html {
   font-family: sans-serif; }
 
@@ -161,6 +164,10 @@ table.show {
     table.show tr td .center {
       text-align: center;
       /*YES*/ }
+  table.show td.show_emph {
+    color: red;
+    font-weight: bold;
+    text-align: center; }
 
 table.center tr td {
   text-align: center; }

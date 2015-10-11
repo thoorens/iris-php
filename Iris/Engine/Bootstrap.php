@@ -10,13 +10,15 @@ namespace Iris\Engine;
  * @copyright 2011-2015 Jacques THOORENS
  */
 
+defined('CRLF') or define('CRLF', "\n");
+defined('BLANKSTRING') or define('BLANKSTRING','');
+
 /**
  * First class to be called, it loads the Autoloader,
  * reads all the configuration files
  * and permits to create an instance of Program.
  *
  */
-defined('CRLF') or define('CRLF', "\n");
 
 abstract class core_Bootstrap {
 

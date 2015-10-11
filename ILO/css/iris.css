@@ -90,56 +90,45 @@ table.internal {
   border-color: #008;
   border-collapse: separate;
   background-color: white;
-  width: 100%; }
-
-table.internal th {
-  border-width: 1px;
-  padding: 1px;
-  border-style: inset;
-  border-color: gray;
-  background-color: white; }
-
-table.internal td {
-  border-width: 1px;
-  padding: 1px;
-  border-style: inset;
-  border-color: gray; }
-
-table.internal tr td.title {
-  background-color: #FAA;
-  color: white;
-  font-weight: bold;
-  text-align: center; }
-
-/* fatal */
-table.internal tr.internal1 {
-  background-color: #ff6666; }
-
-/* bug */
-table.internal tr.internal2 {
-  background-color: #ffcc00; }
-
-/* functional */
-table.internal tr.internal3 {
-  background-color: #ffff99; }
-
-/* optional */
-table.internal tr.internal4 {
-  background-color: #ccffcc; }
-
-/* Aspect style*/
-table.internal tr.internal5 {
-  background-color: #ccffff; }
-
-table.internal tr.internal6 {
-  background-color: #999900;
-  color: white; }
-
-table.internal tr.internal7 {
-  background-color: #008;
-  color: white; }
-
-table.internal tr td.center {
-  text-align: center; }
+  width: 100%;
+  /* fatal */
+  /* bug */
+  /* functional */
+  /* optional */
+  /* Aspect style*/ }
+  table.internal tr th {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray;
+    background-color: white; }
+  table.internal tr td {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray; }
+  table.internal tr td.title {
+    background-color: #FAA;
+    color: white;
+    font-weight: bold;
+    text-align: center; }
+  table.internal tr.internal1 {
+    background-color: #ff6666; }
+  table.internal tr.internal2 {
+    background-color: #ffcc00; }
+  table.internal tr.internal3 {
+    background-color: #ffff99; }
+  table.internal tr.internal4 {
+    background-color: #ccffcc; }
+  table.internal tr.internal5 {
+    background-color: #ccffff; }
+  table.internal tr.internal6 {
+    background-color: #999900;
+    color: white; }
+  table.internal tr.internal7 {
+    background-color: #008;
+    color: white; }
+  table.internal tr td.center {
+    text-align: center; }
 
 /*# sourceMappingURL=iris.css.map */

@@ -231,7 +231,7 @@ class ImageLink extends _SuperLink {
      * @param string $url the ref part of the link
      * @return \Iris\Subhelpers\ImageLink
      */
-    public function button($url = self::BLANKSTRING) {
+    public function button($url = BLANKSTRING) {
         $this->setUrl($url);
         $this->_superlinkType = self::IMAGE + self::BUTTON;
         return $this;
@@ -244,7 +244,7 @@ class ImageLink extends _SuperLink {
      * @param string $url 
      * @return \Iris\Subhelpers\ImageLink
      */
-    public function link($url = self::BLANKSTRING) {
+    public function link($url = BLANKSTRING) {
         $this->setUrl($url);
         $this->_superlinkType = self::IMAGE + self::LINK;
         return $this;

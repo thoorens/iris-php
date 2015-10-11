@@ -1,5 +1,4 @@
 <?php
-
 namespace Iris\views\helpers;
 
 /*
@@ -14,28 +13,29 @@ namespace Iris\views\helpers;
 /**
  *
  *
- * Creates a button which links to a page or site
+ * Creates a table and permits to complete it
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class ImageLink extends _ViewHelper {
+class Table extends _ViewHelper {
 
-
+    
+      
     /**
      * @param string $label link label
      * @param string $url target URL
      * @param string $tooltip tooltip when mousevoer
      * @param string $class class of the link
      * @param string $id id of the linklabel
-     * @return string
+     * @return Iris\Subhelpers\Link
      */
-    public function help($label = BLANKSTRING, $url = BLANKSTRING, $tooltip = BLANKSTRING, $class = BLANKSTRING, $id = BLANKSTRING) {
+    public function help($name, $columns = 2, $line = 1, $class = BLANKSTRING, $id = BLANKSTRING) {
         $args = func_get_args();
-        $imageLink = new \Iris\Subhelpers\ImageLink($args);
-        $imageLink->setNoLink(\TRUE);
-        return $imageLink;
+        $subhelper = new \Iris\Subhelpers\Table($args);
+        return $subhelper;
     }
 
 }
+

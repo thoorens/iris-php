@@ -1,4 +1,4 @@
-ol/*
+/*
 One True Layout
 An idea by Alex Robinson quotted by Eric Meyer
 */
@@ -192,6 +192,11 @@ table.show {
         .center{
             text-align: center; /*YES*/
         }
+    }
+    td.show_emph{
+        color:red;
+        font-weight: bold;
+        text-align: center;
     }
 }
 

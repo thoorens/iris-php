@@ -31,11 +31,10 @@ namespace Iris\views\helpers;
  */
 class Image extends _ViewHelper {
 
-    protected $_folder = self::BLANKSTRING;
+    protected $_folder = BLANKSTRING;
     protected $_defaultClass = '';
     
 
-    const BLANKSTRING = \Iris\Subhelpers\_SuperLink::BLANKSTRING;
 
     /**
      * Creates an image tag with alt and title
@@ -48,7 +47,7 @@ class Image extends _ViewHelper {
      * @param string $id optional id for the object
      * @return string 
      */
-    public function help($source = self::BLANKSTRING, $alt = 'Image', $tooltip = self::BLANKSTRING, $folder = self::BLANKSTRING, $class = '', $id = self::BLANKSTRING) {
+    public function help($source = BLANKSTRING, $alt = 'Image', $tooltip = BLANKSTRING, $folder = BLANKSTRING, $class = '', $id = BLANKSTRING) {
         /* @var $image \Iris\Subhelpers\ImageLink */
         $args = func_get_args();
         return new \Iris\Subhelpers\Image($args);

@@ -35,7 +35,7 @@ class Link extends \Iris\Subhelpers\_SuperLink {
      * @param type $url
      * @throws \Iris\Exceptions\BadLinkMethodException
      */
-    public function link($url = self::BLANKSTRING) {
+    public function link($url = BLANKSTRING) {
         throw new \Iris\Exceptions\BadLinkMethodException('A link cannot be transformed into a link');
     }
 
@@ -45,7 +45,7 @@ class Link extends \Iris\Subhelpers\_SuperLink {
      * @param type $url
      * @return \Iris\Subhelpers\Button
      */
-    public function button($url = self::BLANKSTRING){
+    public function button($url = BLANKSTRING){
         $button = new Button([]);
         $this->_copyData($button);
         if($this->_used($url)){

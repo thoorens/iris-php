@@ -21,7 +21,7 @@ namespace Iris\Subhelpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-abstract class _SuperLink implements \Iris\Translation\iTranslatable {
+abstract class _SuperLink extends _FlexibleSubhelper implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
 
@@ -32,10 +32,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
      */
     protected static $_ParameterList = ['label', 'url', 'tooltip', 'class', 'id'];
 
-    /**
-     * a synonym for a blank string
-     */
-    const BLANKSTRING = '';
+    
     const IMAGE = 1;
     const LINK = 2;
     const IMAGELINK = 3;
@@ -58,20 +55,14 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
     public final static function GetNoLinkLabel($isArray = \TRUE) {
         $noLink = \Iris\SysConfig\Settings::$NoLinkLabel;
         if ($isArray) {
-            return [$noLink, self::BLANKSTRING, self::BLANKSTRING];
+            return [$noLink, BLANKSTRING, BLANKSTRING];
         }
         else {
             return $noLink;
         }
     }
 
-    /**
-     * All the constructor parameters and the magic data members are placed in
-     * an array
-     * 
-     * @var array
-     */
-    protected $_parameters = [];
+    
 
     /**
      * There may exists additionnal attributes
@@ -94,7 +85,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
      * @param array $args
      */
     public function __construct($args) {
-        $this->_initParams($args);
+        parent::__construct($args);
         $this->_superlinkType = static::$_Type;
         $this->setNoLink(\FALSE);
     }
@@ -107,61 +98,20 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
     public final function __toString() {
         // if nodisplay has been set or if there is a NOLINK label, returns a blank string
         if ($this->_nodisplay or $this->getLabel() === self::GetNoLinkLabel(\FALSE)) {
-            return self::BLANKSTRING;
+            return BLANKSTRING;
         }
         else {
             return $this->_render();
         }
     }
 
-    /**
-     * A magic reading accessor
-     * It gives a blank string if the parameter does not exist
-     * 
-     * @param string $name
-     * @return string
-     */
-    public function __get($name) {
-        if (isset($this->_parameters[$name])) {
-            return $this->_parameters[$name];
-        }
-        else {
-            return self::BLANKSTRING;
-        }
-    }
-
-    /**
-     * A magic writing accessor
-     * 
-     * @param string $name
-     * @param mixed $value
-     * @return \Iris\Subhelpers\_SuperLink for fluent interface
-     */
-    public function __set($name, $value) {
-        $this->_parameters[$name] = $value;
-        return $this;
-    }
-
+    
     /**
      * Render will be implemented in each subclass to make a correct render
      */
     abstract protected function _render();
 
-    /**
-     * Takes the parameters given to the constructor and puts them
-     * in the _parameters protected data member, using the key given
-     * in the current class in $__ParameterList
-     * 
-     * @param array $args
-     */
-    protected function _initParams($args) {
-        $num = count(static::$_ParameterList);
-        $parameters = self::FlattenArray($args, $num, self::BLANKSTRING);
-        $aparameters = array_combine(static::$_ParameterList, $parameters);
-        foreach ($aparameters as $key => $value) {
-            $this->_parameters[$key] = $value;
-        }
-    }
+    
 
     /**
      * Transforms a link or an image to a button
@@ -169,7 +119,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
      * @param type $url
      * @return \Iris\Subhelpers\Button
      */
-    public abstract function button($url = self::BLANKSTRING);
+    public abstract function button($url = BLANKSTRING);
 
     /**
      * Transforms a button or an image to a link
@@ -177,7 +127,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
      * @param type $url
      * @return \Iris\Subhelpers\Link
      */
-    public abstract function link($url = self::BLANKSTRING);
+    public abstract function link($url = BLANKSTRING);
 
     /**
      * Transforms the link in an image link
@@ -250,7 +200,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
      * @return string
      */
     protected function _renderHtmlAttribute($name, $value) {
-        if ($value === self::BLANKSTRING) {
+        if ($value === BLANKSTRING) {
             $text = '';
         }
         else {
@@ -420,7 +370,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
      * @return boolean
      */
     protected function _used($data) {
-        return $data !== self::BLANKSTRING;
+        return $data !== BLANKSTRING;
     }
 
     /**
@@ -430,7 +380,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
      * @return boolean
      */
     protected function _empty($data) {
-        return ($data === self::BLANKSTRING or $data === \NULL);
+        return ($data === BLANKSTRING or $data === \NULL);
     }
 
     /**
@@ -505,35 +455,7 @@ abstract class _SuperLink implements \Iris\Translation\iTranslatable {
         return $this;
     }
 
-    /**
-     * Normalizes the arguments : flatten the array and add necessary missing
-     * elements (with null value)
-     * Based on an idea from: http://stackoverflow.com/questions/1319903/how-to-flatten-a-multidimensional-array
-     * I added the minimumSize argument and the loop to add the missing elements
-     * 
-     * use this to make a test
-     * $args = array('foo', array('nobody', 'expects', array('another', 'level'), 'the', 'Spanish', 'Inquisition'), 'bar');
-     * $data = Iris\Subhelpers\_SuperLink::FlattenArray($args);
-     * iris_debug($data);
-     *  
-     * @param array $array
-     * @param int $minimumSize
-     * @param mixed $missingContent
-     * @return array
-     */
-    public static function FlattenArray(array $array, /* added arguments */ $minimumSize = 0, $missingContent = \NULL) {
-        $return = [];
-        array_walk_recursive($array, function($a) use (&$return) {
-            $return[] = $a;
-        });
-        // my addition
-        while (count($return) < $minimumSize) {
-            $return[] = $missingContent;
-        }
-        // end of addition
-        return $return;
-    }
-
+    
     /**
      * Copy all previous data from old object to the new
      * @param _SuperLink $newObject

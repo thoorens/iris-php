@@ -22,7 +22,6 @@ namespace Iris\views\helpers;
  * @version $Id: $ */
 class Button extends _ViewHelper {
 
-    const BLANKSTRING = \Iris\Subhelpers\_SuperLink::BLANKSTRING;
 
     /**
      * @param string $label link label
@@ -32,7 +31,7 @@ class Button extends _ViewHelper {
      * @param string $id id of the linklabel
      * @return \Iris\Subhelpers\Button
      */
-    public function help($label = self::BLANKSTRING, $url = self::BLANKSTRING, $tooltip = self::BLANKSTRING, $class = self::BLANKSTRING, $id = self::BLANKSTRING) {
+    public function help($label = BLANKSTRING, $url = BLANKSTRING, $tooltip = BLANKSTRING, $class = BLANKSTRING, $id = BLANKSTRING) {
         $args = func_get_args();
         $subhelper = new \Iris\Subhelpers\Button($args);
         return $subhelper;

@@ -122,7 +122,7 @@ STYLE
      * This method throws an exception if called with a button object
      * @throws \Iris\Exceptions\BadLinkMethodException
      */
-    public function button($url = self::BLANKSTRING){
+    public function button($url = BLANKSTRING){
         throw new \Iris\Exceptions\BadLinkMethodException('A button cannot be transformed into a button');
     }
     
@@ -132,7 +132,7 @@ STYLE
      * @param type $url
      * @return \Iris\Subhelpers\Link
      */
-    public function link($url = self::BLANKSTRING){
+    public function link($url = BLANKSTRING){
         $link = new Link([]);
         $this->_copyData($link);
         if($this->_used($url)){
