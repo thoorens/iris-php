@@ -1,6 +1,5 @@
 <?php
 namespace ILO\views\helpers;
-use \Iris\views\helpers\_ViewHelper;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -23,7 +22,7 @@ use \Iris\views\helpers\_ViewHelper;
  * This helper displays an IRIS logo.
  *
  */
-class LayoutName extends _ViewHelper {
+class LayoutName extends \Iris\views\helpers\_ViewHelper {
 
     /**
      * This helper is a singleton

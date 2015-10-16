@@ -5,37 +5,26 @@ namespace ILO\views\helpers;
 use \Iris\views\helpers\_ViewHelper;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your li) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  * 
- * @copyright 201-2013 Jacques THOORENS
- *
+ * @copyright 2011-2015 Jacques THOORENS
+ */
+
+/*
+ *  This helper displays, if possible, a hierarchical menu containing
+ * all the actions known in the application
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $
  */
-/**
- * This helper displays, if possible, a hierarchical menu containing
- * all the actions known in the application
- *
- */
 \defined('CRLF') or \define('CRLF', "\n");
 
-class Menu extends _ViewHelper {
+class Menu extends \Iris\views\helpers\_ViewHelper {
 
     protected static $_Singleton = \TRUE;
 

@@ -1,8 +1,5 @@
 <?php
 namespace ILO\views\helpers;
-use Iris\views\helpers\_ViewHelper;
-use Iris\Time\RuntimeDuration as RuntimeDuration;
-use Iris\SysConfig\Settings;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -21,7 +18,7 @@ use Iris\SysConfig\Settings;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $/**
  */
-class AdminToolBar extends _ViewHelper {
+class AdminToolBar extends \Iris\views\helpers\_ViewHelper {
 
     /**
      * If TRUE, the toolbar is only prepared at runtime and refreshed later
@@ -70,7 +67,7 @@ class AdminToolBar extends _ViewHelper {
     public function render($display = \TRUE, $color = '#148') {
         $this->callViewHelper('styleLoader','/!documents/file/css/admintoolbar.css');
         if (!\Iris\Engine\Mode::IsProduction() and $display) {
-            if (Settings::$AdminToolbarAjaxMode) {
+            if (\Iris\SysConfig\Settings::$AdminToolbarAjaxMode) {
                $html = $this->_ajaxRender();
             }
             else {
@@ -97,7 +94,7 @@ class AdminToolBar extends _ViewHelper {
      * @return string
      */
     private function _ajaxRender() {
-        RuntimeDuration::$DisplayMode = RuntimeDuration::AJAX;
+        \Iris\Time\RuntimeDuration::$DisplayMode = \Iris\Time\RuntimeDuration::AJAX;
         $this->callViewHelper('ajax')->placeReplace()->get('/!admin/ajax/toolbar/1', 'iris_admintoolbar');
         return <<< HTML
 <div id="iris_admintoolbar" class="atb_white">
