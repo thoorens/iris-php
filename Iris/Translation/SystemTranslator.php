@@ -1,24 +1,13 @@
 <?php
-
 namespace Iris\Translation;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
  */
 
 /**
@@ -116,7 +105,7 @@ class SystemTranslator extends \Iris\Translation\_Translator implements \Iris\De
         'Go to administration tools...' => 'Accéder aux outils d\'administration',
         'Quit admin module and return to the site welcome page' => "Quitter le module d'adminstraction et retourner à la page d'accueil",
         'Role tester|/!admin/roles/switch|Switch to a dummy user having a specific role' =>
-        'Test des rôles|!admin/roles/switch|Utiliser un autre utilisateur',
+        'Test des rôles|/!admin/roles/switch|Utiliser un autre utilisateur',
         'ACL management|!admin/roles/acl|Display and edit all Access Control Lists' =>
         "Gestion des droits|!admin/roles/acl|Afficher ou modifier les droits d'accès",
         'Structure management|/!admin/structure/index|Manage modules, controllers and action' =>
