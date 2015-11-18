@@ -85,6 +85,15 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         }
     }
 
+    /**
+     * Returns the japanese name of today (e.g. 2015-11-14)
+     * @return string
+     */
+    public static function Today(){
+        $today = new static();
+        return $today->toString();
+    }
+    
     public function __clone() {
         $this->_internalDate = clone $this->_internalDate;
     }
@@ -100,6 +109,12 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         $this->_analyseTimeString($string2, $ampm);
     }
 
+    /**
+     * Returns true if the provided year is a leap year
+     * 
+     * @param int $year
+     * @return boolean
+     */
     public static function LeapYear($year) {
         if ($year % 400 == 0) {
             return TRUE;
@@ -275,6 +290,10 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         return $string;
     }
 
+    /**
+     * 
+     * @return type
+     */
     protected function _defaultFormat() {
         $this->isValid(\FALSE);
         return $this->_internalDate->format('Y-m-d H:i:s');

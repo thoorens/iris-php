@@ -19,7 +19,7 @@ namespace Dojo\Engine;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Item {
+class Item{
 
     protected $_name;
     protected $_value;
@@ -33,13 +33,14 @@ class Item {
     protected $_closable = \FALSE;
 
     /**
-     *
+     * 
      * @var boolean 
      */
     protected $_disabled = \FALSE;
 
     /**
-     *
+     * If TRUE the item will be presented in front of the other
+     * 
      * @var boolean 
      */
     protected $_default = \FALSE;
@@ -47,7 +48,18 @@ class Item {
     
     protected $_link = NULL;
     
-    
+    /**
+     * The display time in milliseconds
+     * 
+     * @var int
+     */
+    protected $_time = 0;
+
+    /**
+     * 
+     * @param string $name The item will be identified by its name
+     * @param mixed $value
+     */
     function __construct($name, $value) {
         $this->_name = $name;
         $this->_value = $value;
@@ -80,8 +92,12 @@ class Item {
         $this->_disabled = $disabled;
     }
 
-    public function getName() {
-        return $this->_name;
+    public function getName($marker = \FALSE) {
+        $name = $this->_name;
+        if($marker){
+            $name = sprintf("'%s'", $name);
+        }
+        return $name;
     }
 
     public function getValue() {
@@ -97,6 +113,7 @@ class Item {
     }
 
     /**
+     * Marks the item as the default one
      * 
      * @param boolean $default
      */
@@ -105,17 +122,22 @@ class Item {
     }
 
     /**
+     * Gives the final render of an item according to the
+     * Javascript status in the first parameter
      * 
-     * @param type $JS
-     * @param \Dojo\views\helpers\_Container $container
-     * @return type
+     * @param boolean $JS
+     * @param \Dojo\views\helpers\_Container $container The container in which the item is placed
+     * @return string
      */
     public function itemRender($JS, $container) {
-        $label = $this->getValue();
         $name = $this->getName();
+        $label = $this->getValue();
+        if(!is_string($label)){
+            $label = $name;
+        }
         if (!$JS) {
             // none of the items are displayed except the selected one
-            if ($this->_altNodisplay) {
+            if ($container->getAltNodisplay()) {
                 if (!$this->_default){
                     $html = 'style = "display:none"';
                 }
@@ -131,7 +153,7 @@ class Item {
         // javascript mode: dojo attributes are inserted in the div
         else {
             if ($this->_default) {
-                $selected = ' selected = "true"';
+                $selected = ' data-dojo-selected = "true"';
             }
             else {
                 $selected = '';
@@ -150,9 +172,35 @@ class Item {
         return $html;
     }
 
+    /**
+     * Adds a special prop to the item
+     * 
+     * @param string $itemProp
+     */
     public function addSpecialProp($itemProp) {
         $this->itemProps[] = $itemProp;
     }
+
+    /**
+     * Getter for the display time of the item
+     * 
+     * @return int
+     */
+    public function getTime() {
+        return $this->_time;
+    }
+
+    /**
+     * Setter for display time of the item
+     * 
+     * @param int $time The time in milliseconds
+     * @return \Dojo\Engine\Item for fluent interface
+     */
+    public function setTime($time) {
+        $this->_time = $time;
+        return $this;
+    }
+
 
 }
 

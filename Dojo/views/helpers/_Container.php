@@ -1,5 +1,4 @@
 <?php
-
 namespace Dojo\views\helpers;
 
 /*
@@ -23,20 +22,20 @@ namespace Dojo\views\helpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  */
 abstract class _Container extends _DojoHelper {
+use \Dojo\Translation\tTranslatable;
 
     /**
      * Determine where to put navigation buttons
      */
     const NONE = 0;
-    const BOTTOM = 1;
-    const TOP = 2;
-
-    use \Dojo\Translation\tTranslatable;
-
+    const LEFT = 1;
+    const RIGHT = 2;
+    const BOTTOM = 3;
+    const TOP = 4;
+    
     // confirmation
     protected static $_Singleton = \FALSE;
 
-    
     /**
      * Each subclass has its proper type specification
      * 
@@ -88,7 +87,7 @@ abstract class _Container extends _DojoHelper {
      * @var int 
      */
     protected $_position = self::NONE;
-    
+
     /**
      * The container height
      * 
@@ -102,7 +101,7 @@ abstract class _Container extends _DojoHelper {
      * @var int
      */
     protected $_width = 650;
-    
+
     /**
      * Indicates that the container has splitter
      * 
@@ -135,7 +134,7 @@ abstract class _Container extends _DojoHelper {
             if ($this->_JS) {
                 //$this->_createBubble();
                 \Dojo\Engine\Bubble::getBubble(static::$_Type)
-                        ->addModule("dijit/layout/".static::$_Type)
+                        ->addModule("dijit/layout/" . static::$_Type)
                         ->addModule("dojo/parser")
                         ->addModule("dijit/layout/ContentPane")
                         ->addModule("dijit/layout/LinkPane");
@@ -181,6 +180,12 @@ abstract class _Container extends _DojoHelper {
         return $html . "\n";
     }
 
+    /**
+     * 
+     * @param string $objectId
+     * @param type $data
+     * @return type
+     */
     public function jsRender($objectId, $data) {
         $type = static::$_Type;
         $objectId = "tc1-prog";
@@ -229,14 +234,13 @@ SCRIPTEND;
      *  
      * @return string
      */
-    public function controller(){
+    public function controller() {
         $containerName = $this->_name;
         $html = "\n<div data-dojo-type=\"dijit/layout/StackController\" data-dojo-props=\"containerId:'$containerName'\"></div>\n";
         return $html;
     }
-    
-      
-/**
+
+    /**
      * Some containers need navigations buttons. This call back can manage 
      * them
      * 
@@ -246,12 +250,19 @@ SCRIPTEND;
     protected function _renderController($position) {
         return '';
     }
-    
-    public function setPosition($position){
+
+    /**
+     * Setter for the position  of the container controller buttons (not used
+     * by all subclasses)
+     * 
+     * @param int $position
+     * @throws \BadFunctionCallException
+     */
+    public function setPosition($position) {
         $className = get_called_class();
         throw new \BadFunctionCallException("No setPosition() defined in class $className");
     }
-    
+
     /**
      * Initialise the items index and labels
      * 
@@ -265,16 +276,26 @@ SCRIPTEND;
         return $this;
     }
 
+    /**
+     * Returns the items index and labels
+     * 
+     * @return array
+     */
     public function getItems() {
         return $this->_items;
     }
 
+    /**
+     * Setter for the spliter option of the container
+     * 
+     * @param boolean $splitter
+     * @return \Dojo\views\helpers\_Container
+     */
     public function setSplitter($splitter) {
         $this->_splitter = $splitter;
         return $this;
     }
 
-        
     /**
      * Returns true if the object has splitter
      * 
@@ -283,15 +304,16 @@ SCRIPTEND;
     public function getSplitter() {
         return $this->_splitter;
     }
-    
+
     /**
      * Gets an 
      * @param type $name
      * @return \Dojo\Engine\Item
      */
     public function getItem($name) {
+        //iris_debug($name);
         if (!isset($this->_items[$name])) {
-            $this->addItem($name, $name);
+            iris_debug($name);
         }
         return $this->_items[$name];
     }
@@ -337,17 +359,28 @@ SCRIPTEND;
     }
 
     /**
-     * If set to true (default), the display of the different items is managed by the server.
+     * If set to true (default), the display of the different items is managed by the server
+     * (in non javascript environment)
      * The Url has to be set to create the links
      * 
      * @param boolean $altNodisplay If FALSE, all tabs are displayed
-     * @return Container (fluent interface) 
+     * @return _Container (fluent interface) 
      */
     public function setAltNodisplay($altNodisplay) {
         $this->_altNodisplay = $altNodisplay;
         return $this;
     }
 
+    /**
+     * Getter for the _altNoDisplay property
+     * 
+     * @return boolean
+     */
+    public function getAltNodisplay() {
+        return $this->_altNodisplay;
+    }
+
+        
     /**
      * If _altNodisplay is true, the url has to be set to create specialized links.
      * The URL must be [/module]/controller/action/[parameters/]. Then ending / is required.
@@ -365,7 +398,7 @@ SCRIPTEND;
         return $this;
     }
 
-        /**
+    /**
      * Set the two dimensions of the container (instead of 650x650 default)
      * 
      * @param int $height Container heigth in pixels
@@ -415,5 +448,5 @@ SCRIPTEND;
             return '';
         }
     }
-    
+
 }

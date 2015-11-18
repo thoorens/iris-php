@@ -1,11 +1,25 @@
 <?php
-
 namespace modules\dojo\controllers;
 
+/*
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2015 Jacques THOORENS
+ */
+
 /**
- * 
- * Created for IRIS-PHP 0.9 - beta
- * Description of animation
+ * This controller tests the display of various sorts of container: <ul>
+ * <li> accordionContainer
+ * <li> borderContainer
+ * <li> tabContainer
+ * <li> linkedTabContainer
+ * <li> splitContainer
+ * <li> stackContainer
+ * <li> timerStackContainer
+ * </ul>
  * 
  * @author jacques
  * @license not defined
@@ -72,7 +86,6 @@ class containers extends _dojo {
         $this->callViewHelper('dojo_accordionContainer', "container")
                 ->setDefault($default)
                 ->setDim(250, 450)
-                ->setPosition(\Dojo\views\helpers\AccordionContainer::TOP)
                 ->setItems([
                     "first" => 'First tab',
                     "second" => 'Second tab',

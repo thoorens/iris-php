@@ -23,7 +23,6 @@ class Table extends _FlexibleSubhelper {
     const COLUMN = 'C';
     const RAW = 'R';
 
-    
     /**
      * Specifies the order of the parameters in the array parameter of
      * the constructor
@@ -31,7 +30,8 @@ class Table extends _FlexibleSubhelper {
      * @var string[] 
      */
     protected static $_ParameterList = ['name', 'colums', 'lines', 'class', 'id'];
-    
+    protected static $_SpecialLine = "__SPECIAL__";
+
     /**
      * The values of the body part of the table (2 dimension array)
      * The cells covered by column and raw span are ignored
@@ -60,6 +60,10 @@ class Table extends _FlexibleSubhelper {
      * @var type 
      */
     protected $_headSpans = [];
+
+    public static function SetSpecial($name) {
+        static::$_SpecialLine = $name;
+    }
 
     /**
      * Fills the content from a two dimension array
@@ -161,22 +165,22 @@ class Table extends _FlexibleSubhelper {
      * @param boolean $value 
      * @return \Iris\Subhelpers\Table  for fluent interface
      */
-    public function setFormated($value = \TRUE){
+    public function setFormated($value = \TRUE) {
         $this->formated = $value;
         return $this;
     }
-    
+
     /**
      * Permits to define the caption of the table
      * 
      * @param string $text The text to be displayed in the caption
      * @return \Iris\Subhelpers\Table  for fluent interface
      */
-    public function setCaption($text){
+    public function setCaption($text) {
         $this->caption = $text;
         return $this;
     }
-    
+
     /**
      * Sets the head data member, to indicate if it is necessary 
      * to display the thead and tbody tags
@@ -184,10 +188,11 @@ class Table extends _FlexibleSubhelper {
      * @param boolean $value TRUE indicates that thead and tbody will be present
      * @return \Iris\Subhelpers\Table  for fluent interface
      */
-    public function setHead($value = \TRUE){
+    public function setHead($value = \TRUE) {
         $this->head = $value;
         return $this;
     }
+
     /**
      * Renders the complete table
      * 
@@ -197,7 +202,7 @@ class Table extends _FlexibleSubhelper {
         $class = $this->class === BLANKSTRING ? '' : " class =\"$this->class\" ";
         $id = $this->id === BLANKSTRING ? '' : " id =\"$this->_id\" ";
         $html[] = sprintf("\n<table%s%s>", $class, $id);
-        if($this->caption !== BLANKSTRING){
+        if ($this->caption !== BLANKSTRING) {
             $html[] = "<caption>$this->caption</caption>";
         }
         $this->_renderHead($html);
@@ -253,6 +258,7 @@ class Table extends _FlexibleSubhelper {
      * @param type $cellTag The tag used for a cell (th or td)
      */
     protected function _renderLine(&$htmlLines, $lineNumber, $data, $cellTag, $exceptions) {
+        $nextpos = count($htmlLines);
         $htmlLines[] = "\t\t<tr>";
         //$cellIndex = 0;
         foreach ($data as $cellIndex => $cell) {
@@ -264,10 +270,16 @@ class Table extends _FlexibleSubhelper {
                 $rowspan = ' rowspan="' . $exceptions[$lineNumber][$cellIndex][self::RAW] . '"';
             }
             $attributes = $rowspan . $colspan;
-            if ($this->formated) {
+            if (substr($cell, 0, 2) === '__') {
+                if ($cell == static::$_SpecialLine) {
+                    $htmlLines[$nextpos] = "\t\t<tr class=\"special-line\">";
+                    //$htmlLines[] = "<td>NEXT</td>";
+                }
+            }
+            elseif ($this->formated) {
                 $htmlLines[] = $this->_renderFormatedCell($cell, $rowspan . $colspan, $cellTag);
             }
-            else {
+            else if (!is_numeric($cell)) {
                 $htmlLines[] = "\t\t\t<$cellTag$attributes>" . $cell . "</$cellTag>";
             }
             //"\t\t\t<$cellTag$rowspan$colspan>". $cell . "</$cellTag>";

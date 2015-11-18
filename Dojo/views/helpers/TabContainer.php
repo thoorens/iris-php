@@ -24,10 +24,7 @@ namespace Dojo\views\helpers;
  */
 class TabContainer extends _Container{
 
-    const LEFT = 1;
-    const RIGHT = 2;
-    const BOTTOM = 3;
-    const TOP = 4;
+    
     
     protected $_position = 'top';
     
@@ -53,6 +50,13 @@ class TabContainer extends _Container{
         return parent::_specialAttributes();
     }
 
+    /**
+     * Setter for the position  of the container controller (not to be
+     * used in tabcontainer, where it repeats the tabs)
+     * 
+     * @param type $position
+     * @return \Dojo\views\helpers\TabContainer
+     */
     public function setPosition($position) {
         $this->_position = $position;
         return $this;

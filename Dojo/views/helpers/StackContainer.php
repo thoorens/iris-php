@@ -38,6 +38,8 @@ class StackContainer extends _Container {
     }
     
     /**
+     * Setter for the position  of the container controller (usefull in 
+     * stackcontainer to display easily the masked part of the stack)
      * 
      * @param type $position
      * @return string
