@@ -277,7 +277,7 @@ class EntityBuilder {
      * @throws \Iris\Exceptions\EntityException
      */
     private function _createInstance($className, $entityName) {
-        $classFile = \Iris\System\Functions::Class2File($className);
+        $classFile = \Iris\System\Functions::ClassToFile($className);
         $simpleFile = IRIS_PROGRAM_PATH . "/$classFile";
         $specialFile = IRIS_ROOT_PATH . '/' . IRIS_LIBRARY . "/$classFile";
         // creates a new entity

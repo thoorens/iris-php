@@ -273,7 +273,7 @@ abstract class _Entity {
             }
         }
         if ((is_null($entityName)) or ($entityName == $alternativeClassName)) {
-            $entityName = strtolower(substr(basename(\Iris\System\Functions::Class2File($alternativeClassName), '.php'), 1));
+            $entityName = strtolower(substr(basename(\Iris\System\Functions::ClassToFile($alternativeClassName), '.php'), 1));
         }
     }
 

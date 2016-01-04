@@ -81,7 +81,7 @@ class Functions {
             return self::$_IrisVersion;
     }
 
-    public static function Class2File($className, $model = \FALSE){
+    public static function ClassToFile($className, $model = \FALSE){
         $fileName = str_replace("\\",'/', $className);
         if($model){
             $fileName = 'T'.ucfirst($fileName);
