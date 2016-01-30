@@ -44,7 +44,7 @@ abstract class _Sequence {
     public static function GetInstance() {
         static $instance = \NULL;
         if (is_null($instance)) {
-            $class = self::$DefaultSequenceType;
+            $class = static::$DefaultSequenceType;
             $instance = new $class();
         }
         return $instance;
