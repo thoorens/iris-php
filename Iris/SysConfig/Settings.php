@@ -161,15 +161,17 @@ class Settings {
     public static $ErrorDebuggingLevel = 1;
 
     /* -------------------------------------------------------------------------
-     * Parameters related to databases and forms
+     * Parameters related to databases
      * ------------------------------------------------------------------------- */
-
-    /**
-     * Sqlite : create the file if not existing
-     * @var boolean
-     */
-    public static $SqliteCreateMissingFile = \FALSE;
-
+    
+    
+    public static $DefaultEntityMananagerClass = '\\Iris\\DB\\Dialects\\Em_PDOmySQL';
+   
+    
+    /* -------------------------------------------------------------------------
+     * Parameters related to forms
+     * ------------------------------------------------------------------------- */
+    
     /**
      * Default settings for forms
      * @var string 
