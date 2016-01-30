@@ -31,7 +31,7 @@ class _application extends \Iris\MVC\_Controller {
      * @see \modules\helpers\links controller
      * @var boolean
      */
-    protected $_aclIgnore = \TRUE;
+    public $aclIgnore = \TRUE;
 
     /**
      *
@@ -44,7 +44,7 @@ class _application extends \Iris\MVC\_Controller {
      */
     protected final function _applicationInit() {
         $this->_setLayout('application');
-        $sequence = \Iris\Structure\_Sequence::GetInstance();
+        $sequence = \wbClasses\DBSequence::GetInstance();
         \Iris\Engine\Memory::Set('sequence', $sequence);
         $this->_sequence = $sequence;
         $this->__Title = $this->_sequence->getCurrentDesc();
@@ -78,7 +78,7 @@ class _application extends \Iris\MVC\_Controller {
      * @return \NULL
      */
     protected function _verifyAcl() {
-        if ($this->_aclIgnore) {
+        if ($this->aclIgnore) {
             return;
         }
         else {
