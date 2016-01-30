@@ -109,10 +109,18 @@ class _BaseController {
      * Prohibits any internal controller by default
      * To permits access it must have an overridden version of security
      * Public access is required for the dispatcher to access it
+     * 
+     * Some special cases with no code: <ul>
+     * <li> various internal controllers  (!admin/ajax, !documents/file,
+     * !iris/index, $iris/reset)
+     * <li> iris/MVC/TestController
+     * <li> main/_Error
+     * <li> 
+     * </ul>
      */
     public function security() {
         if ($this->_response->isInternal()) {
-            $this->displayError(Errors\Settings::TYPE_PRIVILEGE);
+            $this->displayError(\Iris\Errors\Settings::TYPE_PRIVILEGE);
         }
     }
 
@@ -160,7 +168,16 @@ class _BaseController {
     }
 
     /**
-     * Do the verification of ACL.
+     * Do the verification of ACL according to permissions defined 
+     * in application/config/XXacl.ini
+     * 
+     * Some exceptions exists <ul>
+     * <li> in !documents/file : everybody is allowed to have access
+     * <li> in AjaxController subclasses the verification depends on $hasAcl value (true in mother class)
+     * <li> in TestController subclasses the verification is done only in production mode
+     * <li> in _Error subclasses no verification are done
+     * <li> in WB controllers the verification depends on $aclIgnore value (true in mother class)
+     * </ul>
      */
     protected function _verifyAcl() {
         // always happy
@@ -409,7 +426,7 @@ class _BaseController {
      * if the third parameter is used to a subcontroller view.
      * 
      * @param string $name the variable name
-     * @param mixed $value the variable value
+     * @param mixed $values the variable value
      * @param int $number the view number (0 is mainview, other refers to a subcontroller view) 
      * @return mixed (for fluent interface)
      */
