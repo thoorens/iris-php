@@ -65,6 +65,7 @@ abstract class Superglobal {
      * @return mixed
      */
     public static function GetSession($key = NULL, $default = NULL) {
+        \Iris\Users\Session::GetInstance();
         return self::_GetData('SESSION', $key, $default);
     }
 
@@ -100,7 +101,7 @@ abstract class Superglobal {
      * @param mixed $default
      * @return mixed 
      */
-    private static function _GetData($name, $key = NULL, $default = NULL) {
+    private static function _GetData($name, $key, $default) {
         switch ($name) {
             case 'SERVER':
                 $var = $_SERVER;
