@@ -145,7 +145,7 @@ class Router {
             else {
                 // first slice may be a possible module name
                 $candidateModule = "$rootdir/modules/$slices[0]";
-                \Iris\Log::Debug('Candidat module :' . $candidateModule . '<br/>', \Iris\Engine\Debug::LOADER);
+                \Iris\Engine\Log::Debug('Candidat module :' . $candidateModule . '<br/>', \Iris\Engine\Debug::LOADER);
                 if (file_exists($candidateModule)) {
                     $this->_moduleName = array_shift($slices);
                 }

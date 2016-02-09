@@ -45,7 +45,7 @@ class Dispatcher {
      * @return Dispatcher  (for fluent interface)
      */
     public function analyseRoute($forcedURL) {
-        \Iris\Log::Debug("Analyse", \Iris\Engine\Debug::ROUTE);
+        \Iris\Engine\Log::Debug("Analyse", \Iris\Engine\Debug::ROUTE);
         $this->_router = $router = Router::GetInstance($forcedURL);
         return $this;
     }
@@ -55,7 +55,7 @@ class Dispatcher {
      * @return Dispatcher (for fluent interface)
      */
     public function prepareResponse() {
-        \Iris\Log::Debug("Response", \Iris\Engine\Debug::ROUTE);
+        \Iris\Engine\Log::Debug("Response", \Iris\Engine\Debug::ROUTE);
         $response = $this->_router->makeResponse();
         $this->_controller = $response->makeController();
         return $this;
@@ -66,7 +66,7 @@ class Dispatcher {
      * @return Dispatcher (for fluent interface) 
      */
     public function preDispatch() {
-        \Iris\Log::Debug("PreDispatch", \Iris\Engine\Debug::ROUTE);
+        \Iris\Engine\Log::Debug("PreDispatch", \Iris\Engine\Debug::ROUTE);
         $this->_controller->security();
         $this->_controller->preDispatch();
         return $this;
@@ -77,7 +77,7 @@ class Dispatcher {
      * @return string the 
      */
     public function dispatch() {
-        \Iris\Log::Debug("Dispatch", \Iris\Engine\Debug::ROUTE);
+        \Iris\Engine\Log::Debug("Dispatch", \Iris\Engine\Debug::ROUTE);
         $this->_controller->excecuteAction();
         return $this->_controller->dispatch(\FALSE);
     }
@@ -87,7 +87,7 @@ class Dispatcher {
      * @return Dispatcher (for fluent interface) 
      */
     public function postDispatch() {
-        \Iris\Log::Debug("PostDispatch", \Iris\Engine\Debug::ROUTE);
+        \Iris\Engine\Log::Debug("PostDispatch", \Iris\Engine\Debug::ROUTE);
         $this->_controller->postDispatch();
         return $this;
     }

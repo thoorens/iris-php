@@ -130,9 +130,9 @@ abstract class core_Bootstrap {
      * @param string[] $filess
      */
     private function _readConfig($programName) {
-        sort($this->_configToRead);
+        sort($this->_configToRead); 
         foreach ($this->_configToRead as $filePath) {
-            \Iris\Log::Debug("<b>Reading setting file: $filePath</b>", \Iris\Engine\Debug::SETTINGS);
+            \Iris\Engine\Log::Debug("<b>Reading setting file: $filePath</b>", \Iris\Engine\Debug::SETTINGS);
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             switch ($ext) {
                 case 'php':
@@ -154,7 +154,7 @@ abstract class core_Bootstrap {
                     // has been read before
                     break;
             }
-        }        
+        }   
         $this->_configureMenus();
     }
 
