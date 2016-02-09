@@ -23,7 +23,7 @@ namespace Dojo\Ajax;
  */
 class Provider extends \Iris\Ajax\_AjaxProvider {
 
-    public static function __ClassInit(){
+    public static function __ClassInit() {
         \Dojo\Manager::GetInstance();
     }
     /**
@@ -232,5 +232,3 @@ JS1;
     }
 
 }
-
-Provider::__ClassInit();
