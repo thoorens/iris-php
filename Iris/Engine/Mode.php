@@ -86,10 +86,10 @@ final class Mode {
 
     /**
      * Initialiase the mode of the server, using EXEC_MODE et APPLICATION_ENV
-     * This method can only be executed one time.
+     * This pseudo magic method will be executed one time after the reading of the file.
      * 
      */
-    public static function AutosetSiteMode() {
+    public static function __ClassInit() {
         static $once = \FALSE;
         if (!$once) {
             // EXEC_MODE may be defined as an environment variable or 
@@ -161,11 +161,9 @@ final class Mode {
     /**
      * This pseudo magic method will be run at file reading
      */
-    public static function __classInit() {
-        self::AutosetSiteMode();
-    }
+    
 
 }
 
 // This class is loaded by include, so we must call __classInit by hand.
-Mode::__classInit();
+Mode::__ClassInit();
