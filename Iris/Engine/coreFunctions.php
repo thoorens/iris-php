@@ -19,7 +19,7 @@
  * This file defines assert options and contains 6 functions 
  * <ul>
  *    <li> __autoload
- *    <li> iris_assert
+ *    <li> iris_assert_callback
  *    <li> iris_debug
  *    <li> iris_debug_member
  *    <li> iris_member
@@ -48,12 +48,12 @@ function __autoload($className) {
  * @param int $line
  * @param string $message
  */
-function iris_assert($script, $line, $message) {
+function iris_assert_callback($script, $line, $message) {
     $msg = "Error in <b>$script</b> at line <b>$line</b><br/>";
     list($expression, $comment) = explode('//', $message . '//');
     $msg .= "Tested expression: <b>$expression</b><br/>";
     $msg .= "Message : $comment";
-    die($msg);
+    \Debug::Kill($msg);
 }
 
 /**
@@ -128,5 +128,5 @@ function iris_contextItem($level, $die = \TRUE){
 }
 
 assert_options(ASSERT_BAIL, 1);
-assert_options(ASSERT_CALLBACK, 'iris_assert');
+assert_options(ASSERT_CALLBACK, 'iris_assert_callback');
 
