@@ -13,7 +13,7 @@ Discover it:
 * [Author's site](http://thoorens.net) The author's site
 
     ![irisorg] (http://irisphp.org/!documents/file/github/Thoorens.jpg)
-* [A true site realized with Iris-PHP] (http://eci-liege.info) A high school in Liège (Belgium)
+* A true site realized with Iris-PHP  A high school in Liège (Belgium)
 
     ![irisorg] (http://irisphp.org/!documents/file/github/Eci.jpg)
 * [The site for my son's band, realized with Iris-PHP] (http://ojbm.be) A belgian hip-hop group    
