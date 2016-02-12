@@ -159,7 +159,7 @@ class View implements \Iris\Translation\iTranslatable {
         // File generators and loaders have no view part, stop them and no time measurement.
         if ($forcedScriptName == '__NO_RENDER__' or $this->_viewScriptName == '__NO_RENDER__') {
             \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
-            die(''); // stop process - file is complete
+            \Iris\Engine\Program::Stop(''); // stop process - file is complete
         }
         // In case of simple quoting, there is no template file to treat
         elseif (($forcedScriptName == '__QUOTE__' or $this->_viewScriptName == '__QUOTE__')) {

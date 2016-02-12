@@ -90,4 +90,10 @@ class Program {
         ini_set('error_log', IRIS_ROOT_PATH . "/$program/$logFile");
     }
 
+    /**
+     * The stop is a substitute for die()
+     */
+    protected static function Stop(){
+        die('');
+    }
 }
