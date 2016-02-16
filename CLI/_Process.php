@@ -90,7 +90,7 @@ abstract class _Process {
      * @param string $destination the path to the new file
      * @param mixed[] $replacement an associative array with the fields and values
      */
-    protected function _createFile($source, $destination, $replacement = array(), $backupNumber = 10) {
+    protected function _createFile($source, $destination, $replacement = [], $backupNumber = 10) {
         $this->_checkExistingFile($destination, $backupNumber);
         $parameters = $this->getParameters();
         $config = $parameters->getCurrentProject();

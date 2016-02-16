@@ -29,7 +29,7 @@ foreach ($file as $line) {
             $state = END;
             $newFile .= "\n";
             $newFile .= implode("", $classDescription);
-            $classDescription = array();
+            $classDescription = [];
             $newFile .= $line;
         }
     }

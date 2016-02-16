@@ -94,7 +94,7 @@ abstract class _Help {
             default:
                 $this->_default($command);
         }
-        die('');
+        \Debug::Kill('');
     }
 
     public function showFunctions() {
@@ -153,7 +153,7 @@ DATABASE;
     abstract protected function _otherDB();
 
     public function GetInstance() {
-        return new self(array());
+        return new self([]);
     }
 
     /**

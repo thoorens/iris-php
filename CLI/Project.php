@@ -293,7 +293,7 @@ Use'iris.php --selectdefaultproject' to define a new one.");
             $menuName = $parameters->getMenuName();
             $items = $parameters->getItems();
             $dir = $parameters->getProjectDir();
-            $application = $parameters->getApplicationName();
+            $application = $parameters->getApplicationDir();
             $file = "$dir/$application/config/30_menu.ini";
             $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
             $menus = $parser->processFile($file);
@@ -307,7 +307,7 @@ Use'iris.php --selectdefaultproject' to define a new one.");
 //        $menu->set('uri','')//foreach ($menu as $menuitem)
 //        $menu->set('label','')//foreach ($menu as $menuitem)
             var_dump($menu);
-            die("Menu $menuName with $items items");
+            \Debug::Kill("Menu $menuName with $items items");
         }
 
         /**

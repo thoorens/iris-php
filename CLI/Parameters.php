@@ -30,19 +30,19 @@ class Parameters {
      *
      * @var string[]
      */
-    private static $_Metadata = array(
+    private static $_Metadata = [
         'A' => 'Author',
         'L' => 'License',
         'N' => 'Name',
         'C' => 'Comment'
-    );
+    ];
 
     /**
      * The parameters read n command line.
      *
      * @var string[]
      */
-    private $_parameters = array();
+    private $_parameters = [];
 
     /**
      * The content of the projects.ini file
@@ -201,7 +201,7 @@ or create one with 'iris.php --createproject'.");
         $config->ProjectName = $this->getProjectName();
         $config->ProjectDir = $this->getProjectDir();
         $config->PublicDir = $this->getPublicDir();
-        $config->ApplicationName = $this->getApplicationName();
+        $config->ApplicationName = $this->getApplicationDir();
         $config->Url = $this->getUrl();
         $config->Database = $this->getDatabase();
         $config->ModuleName = $this->getModuleName();
@@ -303,8 +303,8 @@ or create one with 'iris.php --createproject'.");
      * Accessor get for the application name
      * @return string
      */
-    public function getApplicationName() {
-        return $this->_getParameter('ApplicationName', 'application');
+    public function getApplicationDir() {
+        return $this->_getParameter('ApplicationDir', 'application');
     }
 
     public function getDatabase($old = \FALSE) {

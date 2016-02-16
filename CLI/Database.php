@@ -84,7 +84,7 @@ or create it before whith 'iris.php -B create $baseId'.");
             $name = $parameters->getDatabase();
             throw new \Iris\Exceptions\CLIException("The database $name is not managed by an INI file.\n");
         }
-        $destination = $parameters->getProjectDir() . '/' . $parameters->getApplicationName();
+        $destination = $parameters->getProjectDir() . '/' . $parameters->getApplicationDir();
         $destination .= '/config/' . IRIS_DB_INIFILE;
         if (file_exists($destination)) {
             throw new \Iris\Exceptions\CLIException("A file $destination already exists.
@@ -92,7 +92,7 @@ Would you please edit it by hand according to your database settings?
 You can also delete it and rerun 'iris.php --makedbini'.\n");
         }
         if ($base->adapter == 'sqlite') {
-            $finalFileName = str_replace('%application%', $parameters->getApplicationName(), $base->dbname);
+            $finalFileName = str_replace('%application%', $parameters->getApplicationDir(), $base->dbname);
             $pairs = [
                 '{HOSTNAME}' => 'some_data_base_name',
                 '{USER}' => 'some_user_name',
@@ -129,7 +129,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $projectDir = $parameters->getProjectDir();
-        $applicationDir = $parameters->getApplicationName();
+        $applicationDir = $parameters->getApplicationDir();
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/';
         $destination = $projectDir . '/' . $applicationDir;
         $controller = Analyser::PromptUser(
@@ -245,7 +245,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $config = new \Iris\SysConfig\Config($dbid);
         $config->adapter = Analyser::PromptUser('Adapter name ', \TRUE, 'sqlite');
         if ($config->adapter == 'sqlite') {
-            $applicationDir = $parameters->getApplicationName();
+            $applicationDir = $parameters->getApplicationDir();
             $dbdir = Analyser::PromptUser('Directory ', \TRUE, "/$applicationDir" . IRIS_DB_FOLDER);
             $dbfile = Analyser::PromptUser('Database file ',\TRUE,  IRIS_DB_DEMOFILE);
             $sep = '/';
@@ -455,7 +455,7 @@ END;
             $configs = $parameters->readParams($paramFile);
         }
         elseif ($create) {
-            $configs = array();
+            $configs = [];
         }
         else {
             throw new \Iris\Exceptions\CLIException("No database has been defined by the current user.");
