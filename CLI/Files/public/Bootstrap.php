@@ -32,8 +32,8 @@ class Bootstrap extends core_Bootstrap {
     /* specify here (in good order) the files in config
        to be read, otherwise all files will be read */
 
-    protected $_configToRead = array(
-    );
+    protected $_configToRead = [
+    ];
 
     // You can modify here the class Loader path starting from IRIS_LIBRARY
     //protected $_standardLoaderPath = 'Iris/Engine/Loader.php';
