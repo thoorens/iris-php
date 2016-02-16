@@ -105,7 +105,7 @@ END;
         file_put_contents($extendPath, $file);
 
         // add the class to overridden.classes file
-        $extendPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . self::CLASS_FILE_NAME;
+        $extendPath = $project->ProjectDir . '/' . $parameters->getApplicationDir() . self::CLASS_FILE_NAME;
         $text = "\t\\Iris\\Engine\\Loader::";
         $text .= '$UserClasses' . "['$className']=\\TRUE;\n";
         if (!file_exists($extendPath)) {
@@ -139,7 +139,7 @@ END;
         $parameters->requireDefaultProject();
         $project = $parameters->getCurrentProject();
         $iris_library = $this->_getLibraryName($project);
-        $classes = array();
+        $classes = [];
         $this->_readCoreFile($project->ProjectDir . '/' . $iris_library . '/Core', '', $classes);
         $text = "<?php\n";
         foreach ($classes as $class) {
@@ -148,7 +148,7 @@ END;
             $text .= sprintf("\t\\Iris\\Engine\\Loader::\$UserClasses['%s']=\\TRUE;\n", $class);
         }
         if (count($classes)) {
-            $toPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . self::CLASS_FILE_NAME;
+            $toPath = $project->ProjectDir . '/' . $parameters->getApplicationDir() . self::CLASS_FILE_NAME;
             $this->_checkExistingFile($toPath);
             file_put_contents($toPath, $text);
             echo "File $toPath has been created.\n";
