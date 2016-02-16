@@ -15,12 +15,12 @@ return;
 
 /*
  * Choose a log display position between
- * \Iris\Log::POS_FILE : in log file
- * \Iris\Log::POS_PAGE : at the end of the page
- * \Iris\Log::POS_AUTO : where it occurs (may spoil the layout)
- * \Iris\Log::POS_NONE : no message
+ * \Iris\Engine\Log::POS_FILE : in log file
+ * \Iris\Engine\Log::POS_PAGE : at the end of the page
+ * \Iris\Engine\Log::POS_AUTO : where it occurs (may spoil the layout)
+ * \Iris\Engine\Log::POS_NONE : no message
 */
-\Iris\Log::GetInstance()->setPosition(\Iris\Log::POS_NONE);
+\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_NONE);
 
 /*
  * Choose the type of message you want to see
@@ -28,21 +28,21 @@ return;
  */
 
 /* loader messages (general classes) */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::LOADER);
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::LOADER);
 /*                 (view classes) */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
 /*                 (helper classes) */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
 /* You can precise here what classes to trace when \Debug::LOADER is set */
 //\Iris\Engine\Loader::AddTrace(['test']);
 
 /* router messages */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
 //
 /* database (SQL queries) messages */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
 
 /* All messages (they are many) */
-//\Iris\Log::AddDebugFlag(\Iris\Engine\Debug::ALL)
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ALL)
 
 
