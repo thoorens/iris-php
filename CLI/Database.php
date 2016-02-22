@@ -189,6 +189,9 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
             case "create":
                 $this->_subCreateDatabase();
                 break;
+            case 'ini':
+                $this->_subShowIniFile();
+                break;
             default:
                 throw new \Iris\Exceptions\CLIException("Function --database $function not implemented.");
         }
@@ -297,6 +300,17 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         echo "Managed by INI file : $management\n";
     }
 
+    
+    /**
+     * Gives all the known setting of the database associated to the project
+     * Correspond to --database ini
+     */
+    private function _subShowIniFile() {
+        $fileName =$this->_getParamFileName();
+        echo(file_get_contents($fileName));
+        echo ("\n");
+        }
+    
     /*
      * End of subfunctions
      * ------------------------------------------------------------------------- */

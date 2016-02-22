@@ -1,4 +1,5 @@
 <?php
+
 namespace CLI {
 
     /*
@@ -63,17 +64,23 @@ namespace CLI {
                         }
                         printf("%2d. %s %s", $num++, $locked, $projectName);
                         if ($projectName == $defaultProjectName) {
-                            \echoLine( " (default)");
+                            \echoLine(" (default)");
                         }
                         \echoLine("");
                     }
+                    break;
+// Display the content of projects.ini
+                case 'ini':
+                    $projectFileName = Parameters::GetProjectFileName(\TRUE);
+                    echo(file_get_contents($projectFileName));
+                    break;
             }
         }
 
-        protected function _test(){
+        protected function _test() {
             iris_debug($this->_analyser);
         }
-        
+
         /**
          * Locks a project, to prevent its deletion.
          */
@@ -143,14 +150,14 @@ namespace CLI {
             if (file_exists($projectDir) and file_exists("$projectDir/.$projectName.irisproject")) {
                 throw new \Iris\Exceptions\CLIException("The folder '$projectDir' seems to contain a possibly broken project. Choose another name.\n");
             }
-            if (file_exists($projectDir) and !$parameters->Force) {
+            if (file_exists($projectDir) and ! $parameters->Force) {
                 throw new \Iris\Exceptions\CLIException("A folder '$projectDir' already exists.Choose another name\n");
             }
-            \echoLine( "Creating new project $projectName in folder $projectDir");
+            \echoLine("Creating new project $projectName in folder $projectDir");
             if (!file_exists($projectDir)) {
                 $this->_os->mkDir($projectDir);
             }
-            \echoLine( "Testing $projectDir/.$projectName.irisproject");
+            \echoLine("Testing $projectDir/.$projectName.irisproject");
 // Create the project file
             $this->_os->touch("$projectDir/.$projectName.irisproject");
 // Creates the three parts of the project + a file for Apache
@@ -158,7 +165,7 @@ namespace CLI {
             $coder = new Code($parameters);
             $coder->_os = $this->_os;
             $specialPara = $parameters->getNewProject();
-            $parameters->setPublicDir( isset($specialPara['public']) ? $specialPara['public'] : 'public');
+            $parameters->setPublicDir(isset($specialPara['public']) ? $specialPara['public'] : 'public');
 
             $coder->makePublic($projectDir, $parameters);
             $coder->makeApplication($projectDir);
@@ -337,10 +344,10 @@ Use'iris.php --selectdefaultproject' to define a new one.");
             else {
                 if ($simulating) {
                     for ($l = 0; $l < $level; $l++) {
-                        \echoLine( "  ");
+                        \echoLine("  ");
                     }
                     $level++;
-                    \echoLine( "Entering $dir");
+                    \echoLine("Entering $dir");
                 }
                 $handle = opendir($dir);
                 while ($elem = readdir($handle)) {

@@ -20,6 +20,16 @@ namespace CLI;
  * @version $Id: $ */
 class Parameters {
 
+    const PROJECTNAME = 'ProjectName';
+    const PROJECTDIR = 'ProjectDir';
+    const LIBRARYDIR = 'LibraryDir';
+    const APPLICATIONDIR = "ApplicationDir";
+    const PUBLICDIR = 'PublicDir';
+    const URL = 'Url';
+    const MODULENAME = 'ModuleName';
+    const CONTROLLERNAME = 'ControllerName';
+    const ACTIONNAME = 'ActionName';
+
     //@todo leave them
     private $_windows;
     private $_linux;
@@ -57,11 +67,11 @@ class Parameters {
      * @var \Iris\SysConfig\Config
      */
     private $_currentProject = \NULL;
-
     private $_newProject = [];
-    
+
     /**
-     *
+     * Gets the unique instance of Parameters class
+     * 
      * @staticvar type $instance
      * @return Parameters
      */
@@ -103,15 +113,14 @@ class Parameters {
         return $this->_getParameter($name, \FALSE);
     }
 
-    public function setProject($field, $value){
+    public function setProject($field, $value) {
         $this->_newProject[$field] = $value;
     }
-    
+
     public function getNewProject() {
         return $this->_newProject;
     }
 
-        
     /**
      * A quick way to define a internal parameter
      *
@@ -119,6 +128,7 @@ class Parameters {
      * @param mixed $value
      */
     public function __set($name, $value) {
+        echo "setting $name \n";
         $this->_parameters[$name] = $value;
     }
 
@@ -161,23 +171,33 @@ class Parameters {
      */
     public function requireProjects($error = \TRUE) {
         if (is_null($this->_projects)) {
-            $userDir = \Iris\OS\_OS::GetInstance()->getUserHomeDirectory();
-            $iniFile = "$userDir" . IRIS_USER_PARAMFOLDER . IRIS_PROJECT_INI;
-            if (!file_exists($iniFile) and $error) {
-                throw new \Iris\Exceptions\CLIException("
-You seem to have no project in your environment.
-Create one with 'iris.php --createproject");
-            }
-            else {
-                $configs = $this->readParams($iniFile);
-                $this->_projects = $configs;
-                $mainConfig = $configs['Iris'];
-                $defaultProject = $mainConfig->DefaultProject;
-                if (!is_null($defaultProject) and $defaultProject != '') {
-                    $this->_currentProject = $configs[$defaultProject];
-                }
+            $iniFile = self::GetProjectFileName($error);
+            $configs = $this->readParams($iniFile);
+            $this->_projects = $configs;
+            $mainConfig = $configs['Iris'];
+            $defaultProject = $mainConfig->DefaultProject;
+            if (!is_null($defaultProject) and $defaultProject != '') {
+                $this->_currentProject = $configs[$defaultProject];
             }
         }
+    }
+    
+    /**
+     * Tests the existence of the project ini file and returns its name
+     * 
+     * @param boolean $error
+     * @return string
+     * @throws \Iris\Exceptions\CLIException
+     */
+    public static function GetProjectFileName($error) {
+        $userDir = \Iris\OS\_OS::GetInstance()->getUserHomeDirectory();
+        $iniFile = "$userDir" . IRIS_USER_PARAMFOLDER . IRIS_PROJECT_INI;
+        if (!file_exists($iniFile) and $error) {
+            throw new \Iris\Exceptions\CLIException("
+You seem to have no project in your environment.
+Create one with 'iris.php --createproject");
+        }
+        return $iniFile;
     }
 
     /**
@@ -201,7 +221,7 @@ or create one with 'iris.php --createproject'.");
         $config->ProjectName = $this->getProjectName();
         $config->ProjectDir = $this->getProjectDir();
         $config->PublicDir = $this->getPublicDir();
-        $config->ApplicationName = $this->getApplicationDir();
+        $config->ApplicationDir = $this->getApplicationDir();
         $config->Url = $this->getUrl();
         $config->Database = $this->getDatabase();
         $config->ModuleName = $this->getModuleName();
@@ -247,17 +267,9 @@ or create one with 'iris.php --createproject'.");
      * @return string
      */
     public function getPublicDir() {
-        return $this->_getParameter('PublicDir', 'public');
+        return $this->_getParameter(Parameters::PUBLICDIR, 'public');
     }
 
-    /**
-     * Acessor set for the public directory name
-     * @param string $param
-     */
-    public function setPublicDir($param) {
-        
-    }
-    
     /**
      * Accessor get for the public directory name
      * @return string
@@ -266,7 +278,6 @@ or create one with 'iris.php --createproject'.");
         return $this->_getParameter('LibraryName', 'library');
     }
 
-    
     /**
      * Accessor get for the current module name
      * @return string
@@ -280,7 +291,7 @@ or create one with 'iris.php --createproject'.");
      * @return string the current controller name
      */
     public function getControllerName() {
-        return $this->_getParameter('ControllerName', 'index');
+        $this->_getParameter(self::CONTROLLERNAME, 'index');
     }
 
     /**
@@ -288,7 +299,7 @@ or create one with 'iris.php --createproject'.");
      * @return string
      */
     public function getActionName() {
-        return $this->_getParameter('ActionName', 'index');
+        return $this->_getParameter(self::ACTIONNAME, 'index');
     }
 
     public function getMenuName() {
@@ -304,7 +315,7 @@ or create one with 'iris.php --createproject'.");
      * @return string
      */
     public function getApplicationDir() {
-        return $this->_getParameter('ApplicationDir', 'application');
+        return $this->_getParameter(self::APPLICATIONDIR, 'application');
     }
 
     public function getDatabase($old = \FALSE) {
@@ -334,21 +345,18 @@ or create one with 'iris.php --createproject'.");
     /**
      * Reads a value for a parameter, if possible in command line options
      * otherwise in the current project (if it exists)
-     * The third parameter permits to access the project value, even if a parameter
-     * has been set.
      *
      * @param string $name The name of the parameter
      * @param mixed $default An optional default value
-     * @param boolean $projectValue If true, ignore the set parameter
      * @return mixed The value as knowm by the system
      * @throws \Iris\Exceptions\CLIException
      */
-    private function _getParameter($name, $default = \NULL, $projectValue = \FALSE) {
+    private function _getParameter($name, $default = \NULL) {
         $value = $default;
-        if (!$projectValue and isset($this->_parameters[$name])) {
+        if (isset($this->_parameters[$name])) {
             $value = $this->_parameters[$name];
         }
-        elseif (!$projectValue and !is_null($this->_currentProject)) {
+        elseif (!is_null($this->_currentProject)) {
             $project = $this->_currentProject;
             if (isset($project->$name)) {
                 $value = $project->$name;
@@ -357,13 +365,22 @@ or create one with 'iris.php --createproject'.");
         return $value;
     }
 
+    
+    public function setParameters($parameters) {
+        iris_debug($parameters);
+        foreach($parameters as $name->$value){
+            echoLine("$name : $value");
+        }
+        die('');
+    }
+
     /**
      * Returns the local URL (by default the name of the base dir + .local
      *
      * @return string
      */
     public function getUrl() {
-        return $this->_getParameter('Url', basename($this->getProjectDir()) . '.local', \TRUE);
+        return $this->_getParameter('Url', basename($this->getProjectDir()) . '.local');
     }
 
     /**
@@ -478,7 +495,5 @@ or create one with 'iris.php --createproject'.");
         $paramDir = $os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
         $this->writeParams("$paramDir" . IRIS_PROJECT_INI, $this->_projects);
     }
-
-    
 
 }

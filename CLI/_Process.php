@@ -67,7 +67,8 @@ abstract class _Process {
      */
     protected function _updateConfig($configs) {
         $paramDir = $this->_os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
-        $this->getParameters()->writeParams($paramDir . IRIS_PROJECT_INI, $configs);
+        $parameters = Parameters::GetInstance();
+        $parameters->writeParams($paramDir . IRIS_PROJECT_INI, $configs);
     }
 
     protected function _createDir($directories, $base) {
@@ -92,7 +93,7 @@ abstract class _Process {
      */
     protected function _createFile($source, $destination, $replacement = [], $backupNumber = 10) {
         $this->_checkExistingFile($destination, $backupNumber);
-        $parameters = $this->getParameters();
+        $parameters = Parameters::GetInstance();
         $config = $parameters->getCurrentProject();
         $replacement['{PROJECTNAME}'] = "Project : $config->ProjectName";
         $replacement['{LICENSE}'] = $config->License;
@@ -120,13 +121,7 @@ abstract class _Process {
         echo $text;
     }
 
-    /**
-     * 
-     * @return Parameters
-     */
-    public function getParameters() {
-        return Parameters::GetInstance();
-    }
+    
 
 }
 

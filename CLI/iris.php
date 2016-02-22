@@ -6,7 +6,33 @@
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
+ */
+
+
+/*
+  Creating new project srv_www_testiris.local in folder /srv/www/testiris.local
+  Testing /srv/www/testiris.local/.srv_www_testiris.local.irisproject
+  Making public directories and files (public/...).
+  You may have to edit public/.htaccess to suit your provider requirement.
+  Making application directories and files (application/...).
+  PHP Notice:  Undefined variable: destination in /home/jacques/mylibs/iris_git/library/CLI/Code.php on line 165
+  PHP Warning:  file_put_contents(/modules/_application.php): failed to open stream: No such file or directory in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 268
+  PHP Notice:  Undefined variable: destination in /home/jacques/mylibs/iris_git/library/CLI/Code.php on line 165
+  PHP Warning:  file_put_contents(/config/01_debug.php): failed to open stream: No such file or directory in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 268
+  PHP Notice:  Undefined variable: destination in /home/jacques/mylibs/iris_git/library/CLI/Code.php on line 165
+  PHP Warning:  file_put_contents(/config/20_settings.php): failed to open stream: No such file or directory in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 268
+  PHP Notice:  Undefined variable: destination in /home/jacques/mylibs/iris_git/library/CLI/Code.php on line 165
+  PHP Warning:  file_put_contents(/models/crud/CrudIconManager.php): failed to open stream: No such file or directory in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 268
+  PHP Notice:  Undefined variable: destination in /home/jacques/mylibs/iris_git/library/CLI/Code.php on line 167
+  PHP Warning:  mkdir(): Permission denied in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 177
+  PHP Warning:  mkdir(): Permission denied in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 177
+  PHP Warning:  mkdir(): Permission denied in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 177
+  PHP Warning:  mkdir(): Permission denied in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 177
+  PHP Warning:  file_put_contents(/modules/main/controllers/_main.php): failed to open stream: No such file or directory in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 268
+  PHP Warning:  file_put_contents(/modules/main/controllers/index.php): failed to open stream: No such file or directory in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 268
+  PHP Warning:  file_put_contents(/modules/main/views/scripts/index_index.iview): failed to open stream: No such file or directory in /home/jacques/mylibs/iris_git/library/Iris/OS/_OS.php on line 268
+  Creating /srv/www/testiris.local/srv_www_testiris.local.virtual for httpd-virtual.conf.
  */
 
 /**
@@ -17,7 +43,7 @@
  * @version $Id: $
  */
 define('BADINI', "Your param file does not seem to be a valid one. Please check your configuration according to the manual instructions.\n");
-define('IRIS_USER_PARAMFOLDER', '/.iris/');
+define('IRIS_USER_PARAMFOLDER', '/.iris3/');
 define('IRIS_USER_INI', 'iris.ini');
 define('IRIS_PROJECT_INI', 'projects.ini');
 define('NOTCLI', \FALSE);
@@ -61,7 +87,7 @@ class Debug {
 
 //@todo move to another class
     public static function Kill($message = NULL) {
-        die($message); // the only authorized die in programm
+        die($message); // die is translated to Kill
     }
 
     public static function showSections($configs) {
@@ -90,7 +116,12 @@ function iris_debug($var, $die = TRUE, $Message = NULL) {
 }
 
 function echoLine($message) {
-    echo $message . "\n";
+    verboseEchoLine($message, \TRUE);
+}
+
+function verboseEchoLine($message, $verbose) {
+    if ($verbose)
+        echo $message . "\n";
 }
 
 /**
@@ -113,6 +144,11 @@ class FrontEnd {
     private $_paramFileName;
     private $_irisInstallationDir;
 
+    /**
+     * Gets the unique instance of FrontEnd
+     * @staticvar type $instance
+     * @return \FrontEnd
+     */
     public static function GetInstance() {
         static $instance = \NULL;
         if (is_null($instance)) {
@@ -137,14 +173,14 @@ class FrontEnd {
         // PathIris = /mylibs/iris_library
         $iniContent = $this->_readOrCreateIrisDotIni();
         if (count($iniContent) < 2) {
-            die(BADINI);
+            \Debug::Kill(BADINI);
         }
         if (trim($iniContent[0]) != '[Iris]') {
-            die(BADINI);
+            \Debug::Kill(BADINI);
         }
         list($para, $value) = explode('=', $iniContent[1]);
         if (trim($para) != 'PathIris') {
-            die(BADINI);
+            \Debug::Kill(BADINI);
         }
         $this->_irisInstallationDir = str_replace('"', '', trim($value));
     }
@@ -198,6 +234,7 @@ class FrontEnd {
                 $this->_userDir = \NULL;
             }
         }
+        define('USERDIR', 'User directory seems to be ' . $this->_userDir);
     }
 
     /**
@@ -210,7 +247,7 @@ class FrontEnd {
         $userDir = $this->_userDir;
         if (is_null($userDir)) {
             echoLine("iris.php is not able to find where to read or write your parameter files.");
-            die("IRIS PHP CLI will not be functional on your system, sorry.\n");
+            \Debug::Kill("IRIS PHP CLI will not be functional on your system, sorry.\n");
         }
         $paramDir = "$userDir" . IRIS_USER_PARAMFOLDER;
         if (!file_exists($paramDir)) {
@@ -222,12 +259,12 @@ class FrontEnd {
         if (!file_exists($this->_paramFileName)) {
             if ($GLOBALS['argc'] == 1) {
                 echoLine("You must supply the path to your Iris-PHP installation to init your parameter file");
-                die("before beeing able to use this program. See documentation if necessary.\n");
+                \Debug::Kill("before beeing able to use this program. See documentation if necessary.\n");
             }
             else {
                 $this->_irisInstallationDir = $GLOBALS['argv'][1];
                 if (!file_exists("$this->_irisInstallationDir/CLI/Analyser.php")) {
-                    die("$this->_irisInstallationDir does not seem to be a valid Iris-PHP installation directory.\n");
+                    \Debug::Kill("$this->_irisInstallationDir does not seem to be a valid Iris-PHP installation directory.\n");
                 }
                 $data = <<<STOP
 [Iris]
@@ -235,7 +272,7 @@ PathIris = $this->_irisInstallationDir
 STOP;
                 file_put_contents($this->_paramFileName, $data);
                 echoLine("Parameter file $this->_paramFileName has been created");
-                die("Now you can use this program (iris.php --help for help)\n");
+                \Debug::Kill("Now you can use this program (iris.php --help for help)\n");
             }
         }
         return file($this->_paramFileName);
@@ -258,9 +295,11 @@ STOP;
             '/CLI/_Process.php',
             '/CLI/_Help.php', '/CLI/Help/French.php', '/CLI/Help/English.php',
             // Various
+            '/Iris/Design/iSingleton.php',
             '/Iris/Engine/tSingleton.php',
             '/Iris/Engine/Memory.php',
-            '/Iris/Log.php',
+            '/Iris/Engine/LogItem.php',
+            '/Iris/Engine/Log.php',
             '/Iris/Exceptions/_Exception.php',
             '/Iris/Exceptions/CLIException.php',
             '/Iris/Exceptions/NotSupportedException.php',
@@ -293,7 +332,22 @@ STOP;
             echoLine("Exception during parameters reading");
         }
         echoLine($ex->getMessage() . "");
-        die($type);
+        \Debug::Kill($type);
+    }
+
+    public function run() {
+        // Loads the classes shared by all treatment
+        $this->PreloadClasses();
+        \Iris\OS\_OS::GetInstance();
+        iris_debug($this->IrisInstallationDir);
+        die('RUN');
+        try {
+            $type = 1;
+            $this->brol();
+        }
+        catch (Exception $ex) {
+            $this->displayException($ex, $type);
+        }
     }
 
 }
@@ -302,11 +356,13 @@ STOP;
  * M A I N   P R O G R A M
  * ============================================================================ */
 
-// Gets a unique instance of the front end controller
-$frontEnd = FrontEnd::GetInstance();
-// Loads the classes shared by all treatment
-$frontEnd->PreloadClasses();
-\Iris\OS\_OS::GetInstance();
+// Gets a unique instance of the front end controller and execute run
+$frontEnd = FrontEnd::GetInstance()->run();
+
+//
+//// Loads the classes shared by all treatment
+//$frontEnd->PreloadClasses();
+//\Iris\OS\_OS::GetInstance();
 
 try {
 

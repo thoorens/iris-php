@@ -28,12 +28,14 @@ class Analyser {
     const PROJECT = 1;  // manage a project
     const CORECODE = 2; // create Core class
     const SHOW = 3;
-    const PARAM = 4;
+    const PARAMPROJECT = 4;
     const WORKDONE = 5;
     const CODE = 6;
     const PASSWORD = 7;
     const BASE = 8;
     const GLOBALPARAM = 9;
+    const NOOPTION = 10;
+    const NEWPROJECT = 11;
 
     /**
      * The current OS is windows
@@ -116,6 +118,7 @@ class Analyser {
         'I' => 'makedbini',
         'O:' => 'otherdb:',
         'e:' => 'entitygenerate:',
+        'v' => 'verbose',
     ];
 
     /**
@@ -124,6 +127,7 @@ class Analyser {
      * @var string
      */
     private $_processingOption;
+    private $_newParameters = [];
 
     /**
      * The Iris system directory name
@@ -131,6 +135,13 @@ class Analyser {
      * @var string
      */
     private static $_LibraryDir;
+
+    /**
+     * The iris program directory name
+     * 
+     * @var string
+     */
+    private static $_ProgramDir;
 
     /**
      * The constructor initializes some defaults vars and then
@@ -156,160 +167,197 @@ class Analyser {
      * init respective private variables
      */
     private function _AnalyseCmdLine() {
+        $this->_processor = self::NOOPTION;
         $parameters = Parameters::GetInstance();
         // Read options
         $options = $this->cliOptions();
+        $verbose = \FALSE;
         foreach ($options as $option => $value) {
             switch ($option) {
                 // -------------------
                 // Project functions
                 // -------------------
-                case 'c': case 'createproject':
-                    // special requirement for createproject
-                    if (($this->_linux and $value[0] != '/') or ($this->_windows and $value[1] != ':')) {
-                        throw new \Iris\Exceptions\CLIException('The path to project must be absolue');
-                    }
-                // NO BREAK HERE createproject continues
+                case 'v' : case 'verbose':
+                    $verbose = \TRUE;
+                    verboseEchoLine(USERDIR, $verbose);
+                    break;
                 case 'd': case 'setdefaultproject':
                 case 'L': case 'lockproject':
                 case 'U': case 'unlockproject':
                 case 'r': case 'removeproject':
-                    $dir = str_replace('\\', '/', $value);
-                    if ($this->_linux) {
-                        // if path given, create name
-                        if ($dir[0] == '/') {
-                            $name = substr(str_replace('/', '_', $dir), 1);
-                        }
-                        // if name given, create path (not possible for creating project see above)
-                        else {
-                            $name = $dir;
-                            $dir = "/" . str_replace('_', '/', $name);
-                        }
-                    }
-                    else { // windows
-                        if ($dir[1] == ':') {
-                            $name = str_replace('/', '_', $dir);
-                            $name[1] = '-';
-                        }
-                        else {
-                            $name = $dir;
-                            $dir = str_replace('_', '/', $name);
-                            $dir[1] = ':';
-                        }
-                    }
-                    $parameters->setProjectName($name);
-                    $parameters->setProjectDir($dir);
-                    $this->_processor = self::PROJECT;
+//                    if (strlen($option) == 1)
+//                        $option = isset(self::$Functions[$option]) ? self::$Functions[$option] : self::$Functions[$option . ':'];
+//                    verboseEchoLine("Main option will be $option with $value", $verbose);
                     $this->_processingOption = $option;
-                    $this->_defaultProject = $name;
+                    $this->_processor = self::PROJECT;
                     break;
+
+                // ------------------------------------------------------------------------------------------------------------
+                // create a project
+                case 'c': case 'createproject':
+                    // special requirement for createproject
+                    if (($this->_linux and $value[0] != '/') or ( $this->_windows and $value[1] != ':')) {
+                        throw new \Iris\Exceptions\CLIException('The path to project must be absolue');
+                    }
+                    verboseEchoLine("Creating a new project $value", $verbose);
+                    $this->_manageProjectName($value);
+                    $this->_processor = self::NEWPROJECT;
+                    break;
+                // Set public dir  (default is public)
+                case 'p': case 'publicdir':
+                    if ($this->_processor != self::NEWPROJECT) {
+                        throw new \Iris\Exceptions\CLIException("--public may only come after can complete --createproject option");
+                    }
+                    $newParameters[Parameters::PUBLICDIR] = $value;
+                    verboseEchoLine('Public dir name : ' . $value, $verbose);
+                    break;
+
+                // set application dir (default is application)
+                case 'a': case 'applicationdir':
+                    if ($this->_processor != self::NEWPROJECT) {
+                        throw new \Iris\Exceptions\CLIException("--applicationdir may only come after --createproject option");
+                    }
+                    $newParameters[Parameters::APPLICATIONDIR] = $value;
+                    verboseEchoLine('Application dir name : ' . $value, $verbose);
+                    break;
+
+                // Set library folder name  (default is library)
+                case 'l': case 'libraryname':
+                    if ($this->_processor != self::NEWPROJECT) {
+                        throw new \Iris\Exceptions\CLIException("--libraryname may only come after --createproject option");
+                    }
+                    $newParameters[Parameters::LIBRARYDIR] = $value;
+                    verboseEchoLine('Library dir name : ' . $value, $verbose);
+                    break;
+
+                // set url (default is mysite.local)
+                case 'u': case 'url':
+                    if ($this->_processor != self::NEWPROJECT) {
+                        throw new \Iris\Exceptions\CLIException("--url may only come after  can complete --createproject option");
+                    }
+                    $newParameters[Parameters::URL] = $value;
+                    verboseEchoLine('Module name : ' . $value, $verbose);
+                    break;
+
                 case 'f': case 'forceproject':
-                    $parameters->setForce(\TRUE);
+                    die("Still not developped\n");
+                    break;
+
+                // ------------------------------------------------------------------------------------------------------------
+                // managing an existing project
+                case 'M':case 'module':
+                    if ($this->_processor != self::NOOPTION and $this->_processor != self::PARAMPROJECT) {
+                        throw new \Iris\Exceptions\CLIException("--module or -M  is not allowed in this context");
+                    }
+                    $this->_newParameters[Parameters::MODULENAME] = $value;
+                    $this->_processingOption = $option;
+                    $this->_processor = self::PARAMPROJECT;
+                    verboseEchoLine('Module name : ' . $value, $verbose);
+                    break;
+                case 'C': case 'controller':
+                    if ($this->_processor != self::NOOPTION and $this->_processor != self::PARAMPROJECT) {
+                        throw new \Iris\Exceptions\CLIException("--controller or -C is not allowed in this context");
+                    }
+                    $this->_newParameters[Parameters::CONTROLLERNAME] = $value;
+                    $this->_processingOption = $option;
+                    $this->_processor = self::PARAMPROJECT;
+                    verboseEchoLine('Controller name : ' . $value, $verbose);
+                    break;
+                case 'A': case 'action':
+                    if ($this->_processor != self::NOOPTION and $this->_processor != self::PARAMPROJECT) {
+                        throw new \Iris\Exceptions\CLIException("--action or -A is not allowed in this context");
+                    }
+                    $this->_newParameters[Parameters::ACTIONNAME] = $value;
+                    $this->_processingOption = $option;
+                    $this->_processor = self::PARAMPROJECT;
+                    verboseEchoLine('Action name : ' . $value, $verbose);
                     break;
                 // generates portions of project
                 case 'g': case 'generate':
                     $this->_processor = self::PROJECT;
                     $this->_processingOption = $option;
                     break;
-
                 // generates portions of work bench
                 case 'W': case 'workbench':
-                    $parameters->workbench = \TRUE;
+                    die("Still not developped\n");
+                    //$parameters->workbench = \TRUE;
                     break;
 
                 // option "interactive" in project creation : metadata are request through
                 // a dialog in console
-                case 'i': case 'interactive':
-                    die($option);
-                    $parameters->setInteractive(TRUE);
-                    break;
-
-                case 'D': case 'doc':
-                    $this->_processor = self::PROJECT;
-                    $this->_processingOption = $option;
-                    break;
-
-                // Set public dir  (default is public)
-                case 'p': case 'publicdir':
-                    $parameters->setProject('public', $value);
-                    break;
-
-                // set application dir (default is application)
-                case 'a': case 'applicationdir':
-                    $parameters->setProject('program', $value);
-                    break;
-
-                // Set library folder name  (default is library)
-                case 'l': case 'libraryname':
-                    $parameters->setProject('library', $value);
-                    break;
-
-                // set url (default is mysite.local)
-                case 'u': case 'url':
-                    $parameters->setProject('url', $value);
-                    break;
-
+//                case 'i': case 'interactive':
+//                    die("Still not developped\n");
+//                    \Debug::Kill($option);
+//                    //$parameters->setInteractive(TRUE);
+//                    break;
+//                case 'D': case 'doc':
+//                    die("Still not developped\n");
+//                    $this->_processor = self::PROJECT;
+//                    $this->_processingOption = $option;
+//                    break;
                 // project metadata management
 //                case 'm': case 'projectmetadata':
 //                    $this->_treatMetadata($value);
 //                    break;
                 // define module/controller/action
-                case 'M':case 'module':
-                    $parameters->setModuleName($value);
-                    $parameters->setControllerName('index');
-                    $parameters->setActionName('index');
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAM;
-                    break;
-                case 'C': case 'controller':
-                    $parameters->setControllerName($value);
-                    $parameters->setActionName('index');
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAM;
-                    break;
-                case 'A': case 'action':
-                    $parameters->setActionName($value);
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAM;
-                    break;
-
-                case 'N': case 'menuname':
-                    $parameters->setMenuName($value);
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAM;
-                    break;
-
-                case 'n': case 'makemenu':
-                    $this->_processor = self::PROJECT;
-                    $this->_processingOption = $option;
-                    $parameters->setItems($value);
-                    break;
-
+//                case 'N': case 'menuname':
+//                    die("Still not developped\n");
+//                    $parameters->setMenuName($value);
+//                    $this->_processingOption = $option;
+//                    $this->_processor = self::PARAM;
+//                    break;
+//
+//                case 'n': case 'makemenu':
+//                    die("Still not developped\n");
+//                    $this->_processor = self::PROJECT;
+//                    $this->_processingOption = $option;
+//                    $parameters->setItems($value);
+//                    break;
                 // database
                 case 'B': case 'database':
+                    if ($this->_processor != self::NOOPTION) {
+                        throw new \Iris\Exceptions\CLIException("--database or -B is not allowed in this context");
+                    }
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option . "_" . $value;
                     break;
                 case 'b': case 'selectbase':
+                    if ($this->_processor != self::NOOPTION) {
+                        throw new \Iris\Exceptions\CLIException("--selectbase or -b is not allowed in this context");
+                    }
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
                     $parameters->setDatabase($value);
                     break;
                 case 'I': case 'makedbini':
+                    if ($this->_processor != self::NOOPTION) {
+                        throw new \Iris\Exceptions\CLIException("--makedbini or -I is not allowed in this context");
+                    }
+                    die("Still not developped\n");
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
                     break;
-                case 'O': case 'otherdb':
-                    $this->_processor = self::BASE;
-                    $this->_processingOption = $option;
-                    break;
+//                case 'O': case 'otherdb':
+//                    if ($this->_processor != self::NOOPTION) {
+//                        throw new \Iris\Exceptions\CLIException("--otherdb or -O is not allowed in this context");
+//                    }
+//                    die("Still not developped\n");
+//                    $this->_processor = self::BASE;
+//                    $this->_processingOption = $option;
+//                    break;
                 case 'e': case 'entitygenerate':
+                    if ($this->_processor != self::NOOPTION) {
+                        throw new \Iris\Exceptions\CLIException("--entitygenerate or -e is not allowed in this context");
+                    }
+                    die("Still not developped\n");
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
                     $parameters->setEntityName($value);
                     break;
+
                 // make core_Class
                 case'k': case 'mkcore':
+                    die("Still not developped\n");
                     $this->_processor = self::CORECODE;
                     $this->_processingOption = $option;
                     $parameters->setClassName($value);
@@ -317,55 +365,107 @@ class Analyser {
 
                 // recreate the file config/overridden.classes
                 case 'K': case 'searchcore':
+                    die("Still not developped\n");
                     $this->_processor = self::CORECODE;
                     $this->_processingOption = $option;
                     break;
 
                 // watermaking
-                case 'o': case 'copyright':
-                    $this->_processor = self::CODE;
-                    $this->_processingOption = $option;
-                    $parameters->setFileName($value);
-                    break;
-
+//                case 'o': case 'copyright':
+//                    die("Still not developped\n");
+//                    $this->_processor = self::CODE;
+//                    $this->_processingOption = $option;
+//                    $parameters->setFileName($value);
+//                    break;
                 // generic parameter
                 case 'G': case 'genericparameter':
+                    die("Still not developped\n");
                     $parameters->setGeneric($value);
                     break;
 
                 // password management
                 case 'w': case 'password':
+                    if ($this->_processor != self::NOOPTION) {
+                        throw new \Iris\Exceptions\CLIException("--password must be a unique option followed by its test value");
+                    }
                     $this->_processor = self::PASSWORD;
                     $this->_processingOption = $value;
                     break;
+
                 // help screen
                 case'h': case 'help':
                     $this->_help($value);
                     break;
 
+                // show projects
                 case 's': case 'show':
+                    if ($this->_processor != self::NOOPTION) {
+                        throw new \Iris\Exceptions\CLIException("--show must be a unique option followed by its test value");
+                    }
+                    verboseEchoLine('Show the internal state', $verbose);
                     $this->_processor = self::SHOW;
                     $this->_processingOption = $option . '_' . $value;
                     break;
 
+                // define used language
                 case 'language':
+                    die("Still not developped\n");
                     $this->_processingOption = $value;
                     $this->_processor = self::GLOBALPARAM;
                     $this->_processingOption = $option;
                     break;
-
+                // 
                 case 'oldapache':
+                    die("Still not developped\n");
                     $this->_processingOption = $value;
                     $this->_processor = self::GLOBALPARAM;
                     $this->_processingOption = $option;
                     break;
 
                 case 't': case 'test':
+                    die("Still not developped\n");
                     $this->_processor = self::SHOW;
                     $this->_processingOption = $option;
                     break;
             }
         }
+        if ($this->_processor == self::NOOPTION) {
+            die("End of analyse: placer l'aide \n");
+        }
+    }
+
+    /**
+     * Transforms /basedir/projectdir to basedir_projectdir
+     * or         basedir_projectdir  to /basedir/projectdi
+     * @param type $value
+     */
+    private function _manageProjectName($value) {
+        $dir = str_replace('\\', '/', $value);
+        if ($this->_linux) {
+            // if path given, create name
+            if ($dir[0] == '/') {
+                $name = substr(str_replace('/', '_', $dir), 1);
+            }
+            // if name given, create path (not possible for creating project see above)
+            else {
+                $name = $dir;
+                $dir = "/" . str_replace('_', '/', $name);
+            }
+        }
+        else { // windows
+            if ($dir[1] == ':') {
+                $name = str_replace('/', '_', $dir);
+                $name[1] = '-';
+            }
+            else {
+                $name = $dir;
+                $dir = str_replace('_', '/', $name);
+                $dir[1] = ':';
+            }
+        }
+        $this->_newParameters['projectName'] = $name;
+        $this->_newParameters['projectDir'] = $dir;
+        $this->_defaultProject = $name;
     }
 
     /**
@@ -410,32 +510,47 @@ class Analyser {
                 $base->process();
                 break;
             case self::PASSWORD:
-                self::Loader(['/Iris/Users/_Password.php', '/Iris/SysConfig/Settings.php']);
-                $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_IRIS);
-                echoLine('Hashed password (internal algorithm): ');
-                echoLine($password);
-                if (defined('PASSWORD_DEFAULT')) {
-                    $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_PHP54);
-                    echoLine('Hashed password (PHP 5.5 algorithm or emumation): ');
-                    echoLine($password);
-                }
-                else {
-                    echoLine('Your system is unable to generate PHP 5.5 password hash.');
-                    echoLine('Use the internal /!admin/password URL to generate this type of hashes.');
-                }
+                $this->_displayPasswordHash();
                 break;
             // Nothing to do
             case self::WORKDONE:
-            case self::PARAM:
                 break;
             case self::GLOBALPARAM:
-                die('Global');
+                \Debug::Kill('Global');
                 break;
             // CLI not complete
+            case self::PARAMPROJECT:
+                $currentProject = Parameters::GetInstance()->getCurrentProject();
+                iris_debug($currentProject);
             default:
                 throw new \Iris\Exceptions\CLIException("The command line is incomplete or incoherent
                     See iris.php --help");
         }
+    }
+
+    /**
+     * Displays 2 password hashes : <ul>
+     * <li> a PHP 5.5 encoded password (simulated if necessary) begiining by '$'
+     * <li> an internal IRIS PHP encoded password
+     * </ul>
+     * 
+     */
+    private function _displayPasswordHash() {
+        self::Loader(['/Iris/Users/_Password.php', '/Iris/SysConfig/Settings.php']);
+        echoLine('');
+        $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_IRIS);
+        echoLine('Hashed password (internal algorithm): ');
+        echoLine($password);
+        if (defined('PASSWORD_DEFAULT')) {
+            $password = \Iris\Users\_Password::EncodePassword($this->_processingOption, \Iris\Users\_Password::MODE_PHP54);
+            echoLine('Hashed password (PHP 5.5 algorithm or emulation): ');
+            echoLine($password);
+        }
+        else {
+            echoLine('Your system is unable to generate PHP 5.5 password hash.');
+            echoLine('Use the internal /!admin/password URL to generate this type of hashes.');
+        }
+        echoLine('');
     }
 
 //    public function _treatMetadata($value) {
@@ -465,7 +580,11 @@ class Analyser {
     public static function SetIrisLibraryDir($dir) {
         self::$_LibraryDir = $dir;
     }
-    
+
+    public static function GetProgramDir() {
+        return self::$_ProgramDir;
+    }
+
     /**
      * Loads all the file listed in the array parameter
      * 

@@ -121,7 +121,7 @@ APACHE;
         // copy and adapt index.php
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/public';
         $destination = "$projectDir/$publicDir";
-        $this->_createFile("$source/index.php", "$destination/index.php", ['{APPLICATION}' => $parameters->getApplicationName()]);
+        $this->_createFile("$source/index.php", "$destination/index.php", ['{APPLICATION}' => $parameters->getApplicationDir()]);
         // other files are simply copied
         $this->_createFile("$source/dothtaccess", "$destination/.htaccess");
         $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php", ['{LIBRARY}' => $parameters->getLibraryName()]);
@@ -155,12 +155,13 @@ APACHE;
         ];
         $parameters = Parameters::GetInstance();
         //iris_debug($parameters->getNewProject()['program'].' - '.$parameters->getApplicationName());
-        $programName = $parameters->getApplicationName();
+        $programName = $parameters->getApplicationDir();
         //iris_debug($programName);
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
         echo "Making application directories and files ($programName/...).\n";
         $this->_createDir($datadir, "$projectDir/data");
         $this->_createDir($programdir, "$projectDir/$programName");
+        $destination = Analyser::GetProgramDir();
         foreach ($files as $template => $file) {
             $this->_createFile("$source/$template", "$destination/$file", ['{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",]);
         }
@@ -230,12 +231,12 @@ APACHE;
      */
     private function _newModule($destination, $moduleName, $controllerName = 'index', $actionName = 'index') {
         $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
-        $directories = array(
+        $directories = [
             "modules/$moduleName/controllers/helpers",
             "modules/$moduleName/views/layouts",
             "modules/$moduleName/views/scripts",
             "modules/$moduleName/views/helpers"
-        );
+        ];
         $this->_createDir($directories, $destination);
         $destinationMod = "$destination/modules/$moduleName";
         // module controller file
@@ -277,14 +278,14 @@ APACHE;
             $template = 'systemindex.php';
         else
             $template = 'index.php';
-        $this->_createFile("$source/$template", $controllerPath, array(
+        $this->_createFile("$source/$template", $controllerPath, [
             '{PHP_TAG}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
             '{MODULECONTROLLER}' => "_$moduleName",
             '{CONTROLLER}' => $controllerName,
             '{CONTROLLER_DESCRIPTION}' => "Description of $controllerName",
             '{TITLE}' => "$title"
-                )
+                ]
         );
         $this->_newAction($destination, $moduleName, $controllerName, $actionName);
     }
@@ -326,10 +327,10 @@ APACHE;
             $source[$last] = <<<END
     public function {$actionName}Action() {
         // these parameters are only for demonstration purpose
-        \$this->__(NULL, array(
+        \$this->__(NULL, [
             'Title' => "'<h1>$moduleName - $controllerName - $actionName</h1>'",
             'buttons' => 1+4,
-            'logoName' => 'mainLogo'));
+            'logoName' => 'mainLogo']);
     }
 }
 
