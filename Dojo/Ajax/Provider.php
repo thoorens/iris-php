@@ -202,7 +202,7 @@ JS;
         if (is_null($this->_debugDisplayObject)) {
             return '';
         }
-        else {die('DEBUG');
+        else {\Iris\Engine\Debug::Abort('DEBUG');
             $output = $this->_debugDisplayObject;
             $param->addModule('dojo/request/notify', 'notify');
             return <<< JS1

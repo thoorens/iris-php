@@ -369,7 +369,7 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
             return self::RC_DISPLAY;
         }
         catch (_Exception $exc) {
-            die("ERREUR");
+            \Iris\Engine\Debug::Abort("ERREUR");
         }
     }
 

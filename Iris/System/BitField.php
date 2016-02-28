@@ -88,7 +88,7 @@ class BitField {
         echo "Reducing to 12<br/>";
         $field->reduceBit(0b1100);
         iris_debug($field->show(), \FALSE);
-        die('End of test');
+        \Iris\Engine\Debug::Abort('End of test');
     }
 
 }

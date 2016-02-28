@@ -56,7 +56,7 @@ abstract class Debug {
             $dieMessage = sprintf('Debugging interrupt in file <b> %s </b> line %s', $trace[$traceLevel]['file'], $trace[$traceLevel]['line']);
         }
         self::Dump($var);
-        self::Kill($dieMessage);
+        self::Abort($dieMessage);
     }
 
     /**
@@ -64,8 +64,8 @@ abstract class Debug {
      * 
      * @param string $message
      */
-    public static function Kill($message = NULL) {
-        die($message); // the only authorized die in programm
+    public static function Abort($message = NULL) {
+        die($message); // die is translated to Kill
     }
 
     
@@ -95,7 +95,7 @@ abstract class Debug {
      */
     public static function ErrorBoxDie($message, $title = "Unkown class"){
         $text = self::ErrorBox($message, $title);
-        self::Kill($text);
+        self::Abort($text);
     }
 }
 

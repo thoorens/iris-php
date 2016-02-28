@@ -8,7 +8,7 @@ namespace Iris\Users;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -53,37 +53,37 @@ abstract class _Password {
      * Contains all the standard uppercase letters
      * @var string
      */
-    private static $_UpperCaseLetters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    public static $UpperCaseLetters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 
     /**
      * Contains all the standard lowercase letters
      * @var string
      */
-    private static $_LowerCaseLetters = 'abcdefghijkmnopqrstuvwxyz';
+    public static $LowerCaseLetters = 'abcdefghijkmnopqrstuvwxyz';
 
     /**
      * Contains all the digits
      * @var string
      */
-    private static $_Digits = '0123456789';
+    public static $Digits = '0123456789';
 
     /**
      * Contains five special characters
      * @var string
      */
-    private static $_SpecialSigns = ",.:_$";
+    public static $SpecialSigns = ",.:_$";
 
     /**
      * Will be inited with both uppercase en lowercase letters
      * @var string
      */
-    private static $_Letters;
+    public static $Letters;
 
     /**
      * Will contains all letters and digits
      * @var string
      */
-    private static $_DigitOrLetter;
+    public static $DigitOrLetter;
     
     /**
      * The mode may contains a forced mode without paying attention to the 
@@ -100,14 +100,14 @@ abstract class _Password {
      * This class initializer is not executed in CLI context
      */
     public static function __ClassInit() {
-        self::$_Letters = self::$_LowerCaseLetters . self::$_UpperCaseLetters;
-        self::$_DigitOrLetter = self::$_Digits . self::$_Letters;
+        self::$Letters = self::$LowerCaseLetters . self::$UpperCaseLetters;
+        self::$DigitOrLetter = self::$Digits . self::$Letters;
         //iris_debug(PHP_VERSION_ID);
         //iris_debug(version_compare(PHP_VERSION, '50500', '<'));
         //iris_debug(\Iris\SysConfig\Settings::$DefaultHashType);
         if (!version_compare(PHP_VERSION, '50500')) {
-            iris_debug(PHP_VERSION);
-            self::ForceCompatibility();
+            //iris_debug(PHP_VERSION);
+            self::_ForceCompatibility();
         }
         // CLI does not use this initializer
         define('NOTCLI', \TRUE);
@@ -116,7 +116,7 @@ abstract class _Password {
     /**
      * A clean way to charge compatibily file
      */
-    public static function ForceCompatibility() {
+    protected static function _ForceCompatibility() {
         if (\Iris\SysConfig\Settings::$DefaultHashType == self::MODE_PHP55 and !defined('PWH_COMPATIBILITY')) {
             $compatibilityFile = dirname(__FILE__) . '/password.php';
             include_once $compatibilityFile;
@@ -168,13 +168,13 @@ abstract class _Password {
             case self::MODE_IRIS:
             case self::MODE_PHP54:
                 self::$_Mode = $mode;
-                self::ForceCompatibility();
+                self::_ForceCompatibility();
                 break;
             case self::MODE_PHP55:
                 // PHP 5.5 mode cannot be forced on a PHP 5.4 server
                 if (defined('NOT_CLI') and version_compare(PHP_VERSION, '5.5', '<')) {
                     self::$_Mode = self::MODE_PHP54;
-                    self::ForceCompatibility();
+                    self::_ForceCompatibility();
                 }
                 else {
                     self::$_Mode = self::MODE_PHP55;
@@ -195,7 +195,7 @@ abstract class _Password {
         }
         if ($mode != self::MODE_IRIS) {
             if($mode == 4){
-                self::ForceCompatibility();
+                self::_ForceCompatibility();
             }
             $encrypt = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
         }
@@ -264,43 +264,43 @@ abstract class _Password {
             switch (array_shift($pattern)) {
 
                 case self::UPPER_ALL:
-                    $source .= self::$_SpecialSigns;
+                    $source .= self::$SpecialSigns;
                 case self::UPPER_DIGIT:
-                    $source .= self::$_Digits;
+                    $source .= self::$Digits;
                 case self::UPPER :
-                    $source .= self::$_UpperCaseLetters;
+                    $source .= self::$UpperCaseLetters;
 
                     $password .= self::GetRandomChar($source);
                     break;
 
                 case self::LOWER_ALL:
-                    $source .= self::$_SpecialSigns;
+                    $source .= self::$SpecialSigns;
                 case self::LOWER_DIGIT :
-                    $source .= self::$_Digits;
+                    $source .= self::$Digits;
                 case self::LOWER:
-                    $source .= self::$_LowerCaseLetters;
+                    $source .= self::$LowerCaseLetters;
 
                     $password .= self::GetRandomChar($source);
                     break;
 
                 case self::ALL:
-                    $source .= self::$_SpecialSigns;
+                    $source .= self::$SpecialSigns;
                 case self::LETTER_DIGIT:
-                    $source .= self::$_Digits;
+                    $source .= self::$Digits;
                 case self::LETTER:
-                    $source .= self::$_Letters;
+                    $source .= self::$Letters;
 
                     $password .= self::GetRandomChar($source);
                     break;
 
                 case self::DIGIT:
-                    $source .= self::$_Digits;
+                    $source .= self::$Digits;
 
                     $password .= self::GetRandomChar($source);
                     break;
 
                 case self::SPECIAL:
-                    $source .= self::$_SpecialSigns;
+                    $source .= self::$SpecialSigns;
 
                     $password .= self::GetRandomChar($source);
                     break;
@@ -370,6 +370,6 @@ abstract class _Password {
     </tr>    
 </table>        
 TABLE;
-        die('Password checked completed');
+        \Iris\Engine\Debug::Abort('Password checked completed');
     }
 }

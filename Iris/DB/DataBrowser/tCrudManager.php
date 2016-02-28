@@ -101,7 +101,7 @@ trait tCrudManager {
      * @param int $num
      */
     public function errorAction($num) {
-        die("There is an error $num");
+        \Iris\Engine\Debug::Abort("There is an error $num");
     }
 
 }
