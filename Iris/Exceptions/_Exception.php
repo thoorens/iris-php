@@ -38,7 +38,7 @@ abstract class _Exception extends \Exception{
      * @param \Exception $previous 
      */
     public function __construct($message, $code = \NULL, $previous = \NULL) {
-        \Iris\Log::Save(); // all output are going to be wiped out
+        \Iris\Engine\Log::Save(); // all output are going to be wiped out
         if(is_null($code)){
             $code = static::$ErrorCode;
         }
