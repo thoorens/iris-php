@@ -2,23 +2,14 @@
 
 namespace CLI;
 
-
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
  * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
-
-
-define('IRIS_DB_FOLDER', '/config/base/');
-define('IRIS_DB_DEMOFILE', 'demo.sqlite');
-define('IRIS_DB_INIFILE', '10_database.ini');
-define('IRIS_DB_PARAMFILE', 'db.ini');
-
-
 
 /**
  * This class manage the code creation for the database management:<ul>
@@ -32,6 +23,11 @@ define('IRIS_DB_PARAMFILE', 'db.ini');
  * @version $Id: $ *
  */
 class Database extends _Process {
+
+    const IRIS_DB_FOLDER = '/config/base/';
+    const IRIS_DB_DEMOFILE = 'demo.sqlite';
+    const IRIS_DB_INIFILE = '10_database.ini';
+    const IRIS_DB_PARAMFILE = 'db.ini';
 
     /**
      * Symbolic names for the database settings
@@ -49,8 +45,6 @@ class Database extends _Process {
 
     /**
      * Selects a database for the default project
-     *
-     * @throws \Iris\Exceptions\CLIException
      */
     protected function _selectbase() {
         $parameters = Parameters::GetInstance();
@@ -58,41 +52,34 @@ class Database extends _Process {
         $baseId = $parameters->getDatabase();
         $dbConfigs = $this->_readDBConfigs();
         if (!isset($dbConfigs[$baseId])) {
-            throw new \Iris\Exceptions\CLIException("
-No database with id $baseId has been found in the system.
-Choose another name ('iris.php -B list' to see the existing names)
-or create it before whith 'iris.php -B create $baseId'.");
+            Messages::Abort('ERR_DBiD', $baseId);
+            
         }
-        echo "Switching database from " . $parameters->getDatabase(\TRUE) . " to $baseId\n";
-        $config = $parameters->getCurrentProject();
+        Messages::Display('', $parameters->getDatabase(\TRUE),$baseId);
+        $config = $parameters->getDefaultProjectName();
         $config->Database = $baseId;
         $parameters->saveProject();
     }
 
     /**
      * Creates a 10_datase.ini file containing current database settings
-     *
-     * @throws \Iris\Exceptions\CLIException
      */
     protected function _makedbini() {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/' . IRIS_DB_INIFILE;
+        $source = IRIS_LIBRARY_DIR . '/CLI/Files/database/' . IRIS_DB_INIFILE;
         $base = $this->_getDBConfig();
         //iris_debug($base->maindb);
         if ($base->maindb == 0) {
-            $name = $parameters->getDatabase();
-            throw new \Iris\Exceptions\CLIException("The database $name is not managed by an INI file.\n");
+            $name = $parameters->getDatabase('ERR_DB_NOTINI', $name);
         }
-        $destination = $parameters->getProjectDir() . '/' . $parameters->getApplicationDir();
-        $destination .= '/config/' . IRIS_DB_INIFILE;
+        $destination = $parameters->getProjectDir() . '/' . $parameters->getApplicationName();
+        $destination .= '/config/' . self::IRIS_DB_INIFILE;
         if (file_exists($destination)) {
-            throw new \Iris\Exceptions\CLIException("A file $destination already exists.
-Would you please edit it by hand according to your database settings?
-You can also delete it and rerun 'iris.php --makedbini'.\n");
+            Messages::Abort('ERR_DBINI', $destination);
         }
         if ($base->adapter == 'sqlite') {
-            $finalFileName = str_replace('%application%', $parameters->getApplicationDir(), $base->dbname);
+            $finalFileName = str_replace('%application%', $parameters->getApplicationName(), $base->dbname);
             $pairs = [
                 '{HOSTNAME}' => 'some_data_base_name',
                 '{USER}' => 'some_user_name',
@@ -129,8 +116,8 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $projectDir = $parameters->getProjectDir();
-        $applicationDir = $parameters->getApplicationDir();
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/database/';
+        $applicationDir = $parameters->getApplicationName();
+        $source = IRIS_LIBRARY_DIR . '/CLI/Files/database/';
         $destination = $projectDir . '/' . $applicationDir;
         $controller = Analyser::PromptUser(
                         "Choose the controller which will manage the CRUD operations", \TRUE, $parameters->getEntityName());
@@ -174,7 +161,6 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
      * The entry point for database management subfunctions
      *
      * @param string $function one among show, list, create
-     * @throws \Iris\Exceptions\CLIException
      */
     protected function _database($function) {
         $parameters = Parameters::GetInstance();
@@ -193,7 +179,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
                 $this->_subShowIniFile();
                 break;
             default:
-                throw new \Iris\Exceptions\CLIException("Function --database $function not implemented.");
+                \Messages::Abort('ERR_BADDBFUNC',$function);
         }
     }
 
@@ -207,17 +193,11 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
     /**
      * Lists all the known databases used by all the project
      * Correspond to --database list
-     *
-     * @throws \Iris\Exceptions\CLIException
      */
     private function _subListDatabase() {
-        $paramFile = $this->_getParamFileName();
-        if (!file_exists($paramFile)) {
-            throw new \Iris\Exceptions\CLIException("No database has been defined by the current user.");
-        }
         $configs = $this->_readDBConfigs();
         echo "List of known databases:\n";
-        echo "------------------------\n";
+        echoLine(Parameters::LINE);
         foreach ($configs as $id => $config) {
             if ($config->adapter == 'sqlite') {
                 echo sprintf("%-10s: %s (sqlite)\n", $id, $config->dbname);
@@ -232,27 +212,25 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
      * Creates a database definition in db.ini for later use. This definition will be associated with
      * a project.
      * Correspond to --database create
-     *
-     * @throws \Iris\Exceptions\CLIException
      */
     private function _subCreateDatabase() {
         $parameters = Parameters::GetInstance();
         $configs = $this->_readDBConfigs(\TRUE);
         $dbid = Analyser::PromptUser('Database id (unique internal value)', '');
         if ($dbid == '') {
-            throw new \Iris\Exceptions\CLIException('The database id must be at least one letter long.');
+            Messages::Abort('ERR_DBSHORT');
         }
         elseif (isset($configs[$dbid])) {
-            throw new \Iris\Exceptions\CLIException("A database with the id $dbid is already referenced. You can use it.");
+            Messages::Abort('ERR_EXISTID', $dbid);
         }
         $config = new \Iris\SysConfig\Config($dbid);
         $config->adapter = Analyser::PromptUser('Adapter name ', \TRUE, 'sqlite');
         if ($config->adapter == 'sqlite') {
-            $applicationDir = $parameters->getApplicationDir();
-            $dbdir = Analyser::PromptUser('Directory ', \TRUE, "/$applicationDir" . IRIS_DB_FOLDER);
-            $dbfile = Analyser::PromptUser('Database file ',\TRUE,  IRIS_DB_DEMOFILE);
+            $applicationDir = $parameters->getApplicationName();
+            $dbdir = Analyser::PromptUser('Directory ', \TRUE, "/$applicationDir" . self::IRIS_DB_FOLDER);
+            $dbfile = Analyser::PromptUser('Database file ', \TRUE, self::IRIS_DB_DEMOFILE);
             $sep = '/';
-            if(substr($dbdir, strlen($dbdir)-1)== $sep or $dbfile[0] == $sep){
+            if (substr($dbdir, strlen($dbdir) - 1) == $sep or $dbfile[0] == $sep) {
                 $sep = '';
             }
             $config->dbname = $dbdir . $sep . $dbfile;
@@ -279,7 +257,7 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         $base = $this->_getDBConfig();
         $projectName = Parameters::GetInstance()->getProjectName();
         echo "Default database definition:\n";
-        echo "----------------------------\n";
+        echoLine(Parameters::LINE);
         echo "Project name        : $projectName\n";
         echo "Database adapter    : $base->adapter\n";
         if ($base->adapter == 'sqlite') {
@@ -300,17 +278,16 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
         echo "Managed by INI file : $management\n";
     }
 
-    
     /**
      * Gives all the known setting of the database associated to the project
      * Correspond to --database ini
      */
     private function _subShowIniFile() {
-        $fileName =$this->_getParamFileName();
+        $fileName = $this->_getParamFileName();
         echo(file_get_contents($fileName));
         echo ("\n");
-        }
-    
+    }
+
     /*
      * End of subfunctions
      * ------------------------------------------------------------------------- */
@@ -319,19 +296,18 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
      * Returns the database settings associated to the current project.
      *
      * @return \Iris\SysConfig\Config
-     * @throws \Iris\Exceptions\CLIException
      */
     private function _getDBConfig() {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $baseName = $parameters->getDatabase();
         if ($baseName == "==NONE==") {
-            throw new \Iris\Exceptions\CLIException("No database associated to the project");
+            \Messages::Abort('ERR_DBNONE', $baseName);
         }
         $fileName = $this->_getParamFileName();
         $configs = $parameters->readParams($fileName);
         if (!isset($configs[$baseName])) {
-            throw new \Iris\Exceptions\CLIException("The database $baseName is not defined");
+            \Messages::Abort('ERR_UNDEFDB', $baseName);
         }
         return $configs[$baseName];
     }
@@ -342,9 +318,10 @@ You can also delete it and rerun 'iris.php --makedbini'.\n");
      * @return string
      */
     private function _getParamFileName() {
+        die('IRIS_DB_PARAMFILE removed');
         $os = \Iris\OS\_OS::GetInstance();
-        $paramDir = $os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
-        $paramFile = $paramDir . IRIS_DB_PARAMFILE;
+        $paramDir = $os->getUserHomeDirectory() . FrontEnd::IRIS_USER_FOLDER;
+        $paramFile = $paramDir . self::IRIS_DB_PARAMFILE;
         return $paramFile;
     }
 
@@ -460,19 +437,18 @@ END;
      *
      * @param boolean $create
      * @return array(Config)
-     * @throws \Iris\Exceptions\CLIException
      */
     private function _readDBConfigs($create = \FALSE) {
-        $parameters = Parameters::GetInstance();
-        $paramFile = $this->_getParamFileName();
+        $paramFile = FrontEnd::GetFilePath('db', 'test');
         if (file_exists($paramFile)) {
-            $configs = $parameters->readParams($paramFile);
+            $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
+            $configs = $parser->processFile($fileName);
         }
         elseif ($create) {
             $configs = [];
         }
         else {
-            throw new \Iris\Exceptions\CLIException("No database has been defined by the current user.");
+            \Messages::Abort('ERR_NODBINI');
         }
         return $configs;
     }

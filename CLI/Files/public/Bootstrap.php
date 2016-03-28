@@ -15,14 +15,14 @@ require_once IRIS_LIBRARY.'/Iris/Engine/Bootstrap.php';
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /* 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $/**
+ * @version $Id: $
  * This class is just a subclass of core_Bootstrap
  * for customisation purpose.
  * 

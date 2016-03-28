@@ -50,27 +50,23 @@ abstract class _Process {
      */
     public function process() {
         $processingOption = $this->_analyser->getProcessingOption();
-        list($method, $param) = explode('_', $processingOption . '_');
+        list($method, $projectName) = explode('!', $processingOption . '!');
         if (strlen($method) == 1) {
             if (!isset(Analyser::$Functions[$method])) {
                 $method .= ':';
             }
             $method = str_replace(':', '', Analyser::$Functions[$method]);
         }
-        $method = "_$method";
-        $this->$method($param);
+        $methodName = "_$method";
+        $this->$methodName($projectName);
     }
 
     /**
-     * Rewrite the configs to the project.ini file in ~/.iris directory
-     * @param Config[] $configs
+     * Creates a collection of directories in a named base
+     * 
+     * @param string[] $directories an array of directory names
+     * @param string $base the directory to serve as a destination
      */
-    protected function _updateConfig($configs) {
-        $paramDir = $this->_os->getUserHomeDirectory() . IRIS_USER_PARAMFOLDER;
-        $parameters = Parameters::GetInstance();
-        $parameters->writeParams($paramDir . IRIS_PROJECT_INI, $configs);
-    }
-
     protected function _createDir($directories, $base) {
         foreach ($directories as $directory) {
             $permissions = $this->_os->GetPrivateMod();
@@ -94,7 +90,7 @@ abstract class _Process {
     protected function _createFile($source, $destination, $replacement = [], $backupNumber = 10) {
         $this->_checkExistingFile($destination, $backupNumber);
         $parameters = Parameters::GetInstance();
-        $config = $parameters->getCurrentProject();
+        $config = $parameters->getProject();
         $replacement['{PROJECTNAME}'] = "Project : $config->ProjectName";
         $replacement['{LICENSE}'] = $config->License;
         $replacement['{AUTHOR}'] = $config->Author;
@@ -113,7 +109,7 @@ abstract class _Process {
             Analyser::Loader('/Iris/FileSystem/File.php');
             $file = new \Iris\FileSystem\File(basename($fileName), dirname($fileName));
             $file->backup($backupNumber);
-            echo "The file $fileName already exists. A backup has been made.\n";
+            \Messages::Display('MSG_NEWFILEBU', $fileName);
         }
     }
 
@@ -121,6 +117,7 @@ abstract class _Process {
         echo $text;
     }
 
+    
     
 
 }

@@ -91,7 +91,7 @@ Messages::$error['En']['ERR_CANNOTDELETE'] = "The project %s does not exist and 
 Messages::$error['Fr']['ERR_LOCKED'] = "Attention : le projet %s est protégé. Vous devriez utiliser d'abord  --unlockproject.";
 Messages::$error['En']['ERR_LOCKED'] = "Caution : the project %s is locked. You may wish to use --unlockproject.";
 
-Messages::$error['Fr']['ERR_CONFIRM'] = "Vous devez terminer la commande --removeproject par le mot \";confirm\"; pour procéder à l'effacement réel du projet.";
+Messages::$error['Fr']['ERR_CONFIRM'] = "Vous devez terminer la commande --removeproject par le mot \"confirm\"; pour procéder à l'effacement réel du projet.";
 Messages::$error['En']['ERR_CONFIRM'] = "You must terminate the command removeproject by the word 
 \"confirm\"; to actually delete the project.";
 
@@ -221,7 +221,7 @@ Messages::$error['Fr']['ERR_DBID'] = "Aucune base de données avec l'identifiant
 Choisissez un autre nom ('iris.php -B list' pour voir les identifiants connus)
 ou créez-en un à l'aide de 'iris.php -B create %s'.";
 
-Messages::$error['En']['ERR_DBiD'] = "No database with id $baseId has been found in the system.
+Messages::$error['En']['ERR_DBID'] = "No database with id %s has been found in the system.
 Choose another name ('iris.php -B list' to see the existing names)
 or create it before whith 'iris.php -B create %s'.";
 

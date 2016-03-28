@@ -53,20 +53,19 @@ class CoreMaker extends _Process {
         // verify the class is not an invalid one
         $className = $parameters->getClasseName();
         if (array_search($className, $this->_protectedClasses) !== FALSE) {
-            throw new \Iris\Exceptions\CLIException("Class $className can't be overridden through CLI. 
-Overwrite __construct in public/Bootstrap.php instead and load your own class manually.");
+            Messages::Abort('ERR_OVER', $className);
         }
         // Please no initial backslash
         if($className == '\\'){
             $className = substr($className,1);
         }
-        $project = $parameters->getCurrentProject();
+        $project = $parameters->getDefaultProjectName();
         $libraryName = $this->_getLibraryName($project);
         $iris_library = $project->ProjectDir . "/$libraryName/";
         $classPath = str_replace('\\', '/', $className) . '.php';
         $fromPath = $iris_library . $classPath;
         if (!file_exists($fromPath)) {
-            throw new \Iris\Exceptions\CLIException("Class $className does not exist. Don't forget to use double \\ in CLI.");
+            Messages::Abort('ERR_NOCLASS', $ClassName);
         }
 
         // copy class to core_class
@@ -83,7 +82,7 @@ of the class from the current version of Iris-PHP.\n";
         // make new class
         $extendPath = $this->_newFileAndDir($iris_library, 'Extensions/', $classPath);
         if (file_exists($extendPath)) {
-            throw new \Iris\Exceptions\CLIException("The file $extendPath exists. It may be convenient to check its content.");
+            Messages::Abort('ERR_FILE_EXISTS', $extendPath);
         }
         $arClass = explode('\\', $className);
         $class = array_pop($arClass);
@@ -105,7 +104,7 @@ END;
         file_put_contents($extendPath, $file);
 
         // add the class to overridden.classes file
-        $extendPath = $project->ProjectDir . '/' . $parameters->getApplicationDir() . self::CLASS_FILE_NAME;
+        $extendPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . self::CLASS_FILE_NAME;
         $text = "\t\\Iris\\Engine\\Loader::";
         $text .= '$UserClasses' . "['$className']=\\TRUE;\n";
         if (!file_exists($extendPath)) {
@@ -137,7 +136,7 @@ END;
     protected function _searchcore() {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
-        $project = $parameters->getCurrentProject();
+        $project = $parameters->getDefaultProjectName();
         $iris_library = $this->_getLibraryName($project);
         $classes = [];
         $this->_readCoreFile($project->ProjectDir . '/' . $iris_library . '/Core', '', $classes);
@@ -148,7 +147,7 @@ END;
             $text .= sprintf("\t\\Iris\\Engine\\Loader::\$UserClasses['%s']=\\TRUE;\n", $class);
         }
         if (count($classes)) {
-            $toPath = $project->ProjectDir . '/' . $parameters->getApplicationDir() . self::CLASS_FILE_NAME;
+            $toPath = $project->ProjectDir . '/' . $parameters->getApplicationName() . self::CLASS_FILE_NAME;
             $this->_checkExistingFile($toPath);
             file_put_contents($toPath, $text);
             echo "File $toPath has been created.\n";

@@ -8,7 +8,7 @@ namespace CLI;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -112,20 +112,21 @@ APACHE;
      */
     public function makePublic($projectDir, $parameters) {
         $publicDir = $parameters->getPublicDir();
-        echo "Making public directories and files ($publicDir/...).\n";
+        \Messages::Display('MSG_PUBLIC',$publicDir);
         $permissions = $this->_os->GetPrivateMod();
         $this->_os->mkDir("$projectDir/$publicDir", $permissions);
         $this->_os->mkDir("$projectDir/$publicDir/images", $permissions);
         $this->_os->mkDir("$projectDir/$publicDir/css", $permissions);
         $this->_os->mkDir("$projectDir/$publicDir/js", $permissions);
         // copy and adapt index.php
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/public';
+        $source = IRIS_LIBRARY_DIR . '/CLI/Files/public';
         $destination = "$projectDir/$publicDir";
-        $this->_createFile("$source/index.php", "$destination/index.php", ['{APPLICATION}' => $parameters->getApplicationDir()]);
+        $this->_createFile("$source/index.php", "$destination/index.php", ['{APPLICATION}' => $parameters->getApplicationName()]);
         // other files are simply copied
         $this->_createFile("$source/dothtaccess", "$destination/.htaccess");
-        $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php", ['{LIBRARY}' => $parameters->getLibraryName()]);
-        echo "You may have to edit $publicDir/.htaccess to suit your provider requirement.\n";
+        $this->_createFile("$source/Bootstrap.php", "$destination/Bootstrap.php", ['{LIBRARY}' => $parameters->getLibraryDir()]);
+        \Messages::Display('MSG_HTACCESS', $publicDir);
+        ;
     }
 
     /**
@@ -139,7 +140,9 @@ APACHE;
             'models/crud',
             '!config/admin',
             '!config/base',
-            '!config/forms',
+            '!config/form',
+            '!data/private',
+            '!data/protected',
             '!log',
             'modules'
         ];
@@ -154,16 +157,14 @@ APACHE;
             'CrudIconManager.php' => 'models/crud/CrudIconManager.php',
         ];
         $parameters = Parameters::GetInstance();
-        //iris_debug($parameters->getNewProject()['program'].' - '.$parameters->getApplicationName());
-        $programName = $parameters->getApplicationDir();
-        //iris_debug($programName);
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
-        echo "Making application directories and files ($programName/...).\n";
-        $this->_createDir($datadir, "$projectDir/data");
-        $this->_createDir($programdir, "$projectDir/$programName");
-        $destination = Analyser::GetProgramDir();
+        //$parameters->getNewProject()['program'].' - '.$parameters->getApplicationName();
+        $programName = $parameters->getApplicationName();
+        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
+        $destination = "$projectDir/$programName";
+        \Messages::Display('MSG_APPLICATION', $programName);
+        $this->_createDir($programdir, $destination);
         foreach ($files as $template => $file) {
-            $this->_createFile("$source/$template", "$destination/$file", ['{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",]);
+            $this->_createFile("$source/$template", "$destination/$file",['{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",]);
         }
         $this->_newModule($destination, "main");
     }
@@ -180,7 +181,7 @@ APACHE;
         $parameters = Parameters::GetInstance();
         $this->_os = \Iris\OS\_OS::GetInstance();
         $configs = $parameters->getProjects();
-        $defaultProject = $configs['Iris']->DefaultProject; //must exist
+        $defaultProject = $configs[Parameters::IRISDEF]->DefaultProject; //must exist
         $projectDir = "/" . str_replace('_', '/', $defaultProject);
         $projectConfig = $configs[$defaultProject];
         $programName = $projectConfig->ApplicationName;
@@ -201,7 +202,7 @@ APACHE;
             }
         }
         if ($doneJobs == 0) {
-            throw new \Iris\Exceptions\CLIException("$module/$controller/$action already exists.");
+            Messages::Abort('ERR_EXISTING_MCA',"$module/$controller/$action");
         }
         else {
             if ($doneJobs & self::MODULE) {
@@ -217,20 +218,20 @@ APACHE;
             }
             $projectConfig->ActionName = $action;
             $configs[$defaultProject] = $projectConfig;
-            $this->_updateConfig($configs);
+            $parameters->saveProject(\TRUE);
         }
     }
 
     /**
      * Generates a new module with its default controller and action
      * 
-     * @param string $destinationn The application directory name 
+     * @param string $destination The application directory name 
      * @param string $moduleName The module name
      * @param string $controllerName The controller name
      * @param string $actionName The action name
      */
     private function _newModule($destination, $moduleName, $controllerName = 'index', $actionName = 'index') {
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
+        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
         $directories = [
             "modules/$moduleName/controllers/helpers",
             "modules/$moduleName/views/layouts",
@@ -255,14 +256,13 @@ APACHE;
     /**
      * Generates a new controller with its default action
      * 
-     * @param type $destinationn The application directory name
+     * @param type $destination The application directory name
      * @param string $moduleName The module name
      * @param string $controllerName The controller name
      * @param string $actionName The action name
-     * @throws \Iris\Exceptions\CLIException
      */
     private function _newController($destination, $moduleName, $controllerName, $actionName = 'index') {
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
+        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
         $destinationMod = "$destination/modules/$moduleName";
         if ($moduleName == 'main' and $controllerName == 'index') {
             $title = '$this->callViewHelper("welcome",1)';
@@ -272,12 +272,15 @@ APACHE;
         }
         $controllerPath = "$destinationMod/controllers/$controllerName.php";
         if (file_exists($controllerPath)) {
-            throw new \Iris\Exceptions\CLIException("Controller $controllerName already exists.");
+            Messages::Abort("MSG_EXISTING_C", $controllerName);
         }
-        if (\CLI\Parameters::GetInstance()->workbench)
+        $parameters = Parameters::GetInstance();
+        if ($parameters->getProject()->workbench) {
             $template = 'systemindex.php';
-        else
+        }
+        else {
             $template = 'index.php';
+        }
         $this->_createFile("$source/$template", $controllerPath, [
             '{PHP_TAG}' => '<?php', // To avoid syntactic validation by IDE
             '{MODULE}' => $moduleName,
@@ -297,14 +300,13 @@ APACHE;
      * @param string $moduleName The module name
      * @param string $controllerName The controller name
      * @param string $actionName The action name
-     * @throws \Iris\Exceptions\CLIException
      */
     private function _newAction($destination, $moduleName, $controllerName, $actionName) {
-        $source = Analyser::GetIrisLibraryDir() . '/CLI/Files/application';
+        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
         $destinationMod = "$destination/modules/$moduleName";
         $scriptName = "$destinationMod/views/scripts/{$controllerName}_$actionName.iview";
         if (file_exists($scriptName)) {
-            throw new \Iris\Exceptions\CLIException("The action $actionName already exists.");
+            Messages::Abort("MSG_EXISTING_A", $actionName);
         }
         $defaultViewName = "$destination/modules/main/views/scripts/_DEFAULTVIEW.iview";
         if (file_exists($defaultViewName)) {
@@ -350,14 +352,13 @@ END;
      * Example : 
      * find -name '*.php' -exec iris.php -o {} \;
      * 
-     * @throws \Iris\Exceptions\CLIException
      * @deprecated since version 2015
      */
     protected function _copyright() {
         $parameters = Parameters::GetInstance();
         $fileName = $parameters->getFileName();
         if (basename($fileName) == 'Code.php') {
-            throw new \Iris\Exceptions\CLIException('Code.php cannot modify itself!');
+            Messages::Abort('ERR_AUTOCODE');
         }
         echo "Reading $fileName\n";
         $genericParameter = $parameters->getGeneric();
@@ -368,24 +369,13 @@ END;
         else {
             $searchtext = '\* Project IRIS-PHP';
             $gpl = <<<TEXT
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2014 Jacques THOORENS
- *
-
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
+ *                  
 TEXT;
         }
         $file = file($fileName);
