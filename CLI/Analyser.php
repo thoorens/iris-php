@@ -33,7 +33,7 @@ class Analyser {
     const CODE = 6; // used in --copyright
     const PASSWORD = 7; // used in --password
     const BASE = 8; // used by database management option
-    const GLOBALPARAM = 9; // used by --oldapache option
+//    const GLOBALPARAM = 9; // used by --oldapache option
     const INITIAL = 10; // initial value of processor
     const NEWPROJECT = 11; // used by --createproject option
     const PARAM = 12; // only used in --menuname
@@ -135,7 +135,6 @@ class Analyser {
         // special
         'v' => 'verbose',
         '1:' => 'language:', //supposed to be used as a long form option
-        '2' => 'oldapache', //supposed to be used as a long form option
         // languages
         'E' => 'english',
         'F' => 'french',
@@ -156,24 +155,23 @@ class Analyser {
 //        's:' => 'show:',
         't' => 'test',
         // projects
-        'c:' => 'createproject:',
-        'r:' => 'removeproject:',
-        'f' => 'forceproject',
+//      'c:' => 'createproject:',
+//      'r:' => 'removeproject:',
         'i' => 'interactive',
         'D' => 'docproject',
-//        'L:' => 'lockproject:',
-//        'U:' => 'unlockproject:',
-//        'd:' => 'setdefaultproject',
+//      'L:' => 'lockproject:',
+//      'U:' => 'unlockproject:',
+//      'd:' => 'setdefaultproject',
         'm:' => 'projectmetadata:',
-        'a:' => 'applicationdir:',
-        'p:' => 'publicdir:',
-        'l:' => 'librarydir:',
-        'u:' => 'url:',
+//      'a:' => 'applicationdir:',
+//      'p:' => 'publicdir:',
+//      'l:' => 'librarydir:',
+//      'u:' => 'url:',
         // piece of code
-        'g' => 'generate',
-        'C:' => 'controller:',
-        'A:' => 'action:',
-        'M:' => 'module:',
+//      'g' => 'generate',
+//      'C:' => 'controller:',
+//      'A:' => 'action:',
+//      'M:' => 'module:',
         'W' => 'workbench',
         // menus
         'N:' => 'menuname',
@@ -184,7 +182,7 @@ class Analyser {
         // watermaking
         'o:' => 'copyright:',
         'G:' => 'genericparameter',
-        'w:' => 'password:',
+//      'w:' => 'password:',
         // database
         'B:' => 'database:',
         'b:' => 'selectbase:',
@@ -192,9 +190,8 @@ class Analyser {
         'O:' => 'otherdb:',
         'e:' => 'entitygenerate:',
         // special
-        'v' => 'verbose',
-        '1:' => 'language:', //supposed to be used as a long form option
-        '2' => 'oldapache', //supposed to be used as a long form option
+//      'v' => 'verbose',
+//      '1:' => 'language:', //supposed to be used as a long form option
     ];
 
     /**
@@ -498,12 +495,12 @@ class Analyser {
                 case 'english': case 'E':
                     self::$_TempLanguage = \Messages::$Languages[$option];
                     break;
-                case 'oldapache':
-                    \Messages::Abort("ERR_NOTDEV");
-                    $this->_processingOption = $value;
-                    $this->_processor = self::GLOBALPARAM;
-                    $this->_processingOption = $option;
-                    break;
+//                case 'oldapache':
+//                    \Messages::Abort("ERR_NOTDEV");
+//                    $this->_processingOption = $value;
+//                    $this->_processor = self::GLOBALPARAM;
+//                    $this->_processingOption = $option;
+//                    break;
 
                 case 't': case 'test':
                     \Messages::Abort("ERR_NOTDEV");
@@ -616,9 +613,9 @@ class Analyser {
             case self::WORKDONE:
             case self::PARAM:
                 break;
-            case self::GLOBALPARAM:
-                die('Global');
-                break;
+//            case self::GLOBALPARAM:
+//                die('Global');
+//                break;
             // CLI not complete
             default:
                 \Messages::Abort("ERR_INCOMPLETE");

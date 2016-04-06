@@ -155,7 +155,7 @@ namespace CLI {
             $this->_os = \Iris\OS\_OS::GetInstance();
             $this->_os->setSimulate($simulating);
             $projectDir = $parameters->getProjectDir();
-            $projectName = $parameters->getProjectName();
+            //$projectName = $parameters->getProjectName();
             \echoLine("Creating new project $projectName in folder $projectDir");
             if (!file_exists($projectDir)) {
                 $this->_os->mkDir($projectDir);
@@ -167,8 +167,6 @@ namespace CLI {
             FrontEnd::Loader('/CLI/Code.php');
             $coder = new Code($parameters);
             $coder->_os = $this->_os;
-            $specialPara = $parameters->getNewProject();
-            //$parameters->setPublicDir(isset($specialPara['public']) ? $specialPara['public'] : 'public');
             $coder->makePublic($projectDir, $parameters);
             $coder->makeApplication($projectDir);
             $this->_makeLibrary($projectDir, $parameters->getLibraryDir());
@@ -273,11 +271,9 @@ namespace CLI {
             else {
                 $parameters->removeProject($projectName);
                 $defaultProject = $projects[Parameters::IRISDEF]->DefaultProject;
-                \Messages::Display("MSG_DELETED");
-                \echoLine("The project $projectName has been completely removed.");
+                \Messages::Display("MSG_DELETED",$projectName);
                 if ($projectName == $defaultProject) {
-                    \echoLine("There is no more default project.
-Use'iris.php --selectdefaultproject' to define a new one.");
+                    \Messages::Display("MSG_NOMOREDEF");
                     $Iris = $projects[Parameters::IRISDEF];
                     unset($Iris->DefaultProject);
                 }
@@ -296,7 +292,7 @@ Use'iris.php --selectdefaultproject' to define a new one.");
             $moduleName = $parameters->getModuleName();
             $controllerName = $parameters->getControllerName();
             $actionName = $parameters->getActionName();
-            Analyser::Loader('/CLI/Code.php');
+            FrontEnd::Loader('/CLI/Code.php');
             $coder = new Code($parameters);
             $coder->makeNewCode($moduleName, $controllerName, $actionName);
         }

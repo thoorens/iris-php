@@ -442,7 +442,7 @@ END;
         $paramFile = FrontEnd::GetFilePath('db', 'test');
         if (file_exists($paramFile)) {
             $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
-            $configs = $parser->processFile($fileName);
+            $configs = $parser->processFile($paramFile);
         }
         elseif ($create) {
             $configs = [];

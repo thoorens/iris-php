@@ -155,14 +155,6 @@ class Parameters {
         return $this->_getValue($name, \FALSE);
     }
 
-//    public function setProject($field, $value) {
-//        $this->_newProject[$field] = $value;
-//    }
-
-    public function getNewProject() {
-        return $this->_newProject;
-    }
-
     /**
      * A quick way to define a internal parameter
      *
@@ -360,6 +352,7 @@ class Parameters {
         return $this->_getValue(self::ACTIONNAME, 'index');
     }
 
+    
     public function getMenuName() {
         
     }
@@ -373,7 +366,9 @@ class Parameters {
      * @return string
      */
     public function getApplicationName() {
-        return $this->_getValue(self::APPLICATIONDIR, 'application');
+        $value = $this->_getValue(self::APPLICATIONDIR, 'application');
+        //iris_debug($value);
+        return $value;
     }
 
     public function getDatabase($old = \FALSE) {
@@ -425,11 +420,25 @@ class Parameters {
         }
         else {
             $defaultProject = $this->getProject();
-            $value = $defaultProject->$name;
+            $foundValue = $defaultProject->$name;
+            if($foundValue == ""){
+                $value = $default;
+            }
+            else{
+                $value = $foundValue;
+            }
         }
         return $value;
     }
 
+    public function setValue($paramName, $value) {
+        $defaultProject = $this->getProject();
+        $defaultProject->$paramName = $value;
+        $this->_dirty = \TRUE;
+    }
+
+    
+    
     /**
      * Returns the local URL (by default the name of the base dir + .local
      *
@@ -639,6 +648,7 @@ class Parameters {
         die('----');
     }
 
+    
 //    public static function GetProjectIniPath(){
 //        static $fileName = \NULL;
 //        if($fileName == \NULL){

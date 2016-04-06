@@ -112,7 +112,7 @@ APACHE;
      */
     public function makePublic($projectDir, $parameters) {
         $publicDir = $parameters->getPublicDir();
-        \Messages::Display('MSG_PUBLIC',$publicDir);
+        \Messages::Display('MSG_PUBLIC', $publicDir);
         $permissions = $this->_os->GetPrivateMod();
         $this->_os->mkDir("$projectDir/$publicDir", $permissions);
         $this->_os->mkDir("$projectDir/$publicDir/images", $permissions);
@@ -163,10 +163,25 @@ APACHE;
         $destination = "$projectDir/$programName";
         \Messages::Display('MSG_APPLICATION', $programName);
         $this->_createDir($programdir, $destination);
+        $defaultLanguage = Analyser::GetLanguage();
+        if ($defaultLanguage == 'EN') {
+            $language = '//Iris\SysConfig\Settings::$DefaultLanguage = ' . "'en';";
+            '';
+        }
+        else {
+            $defaultLanguage = strtolower($defaultLanguage);
+            $language = 'Iris\SysConfig\Settings::$DefaultLanguage = ' . "'$defaultLanguage';";
+        }
+        $changes = [
+            '{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",
+            '{PHP_TAG}' => '<?php', // To avoid syntactic validation by IDE
+            '{LocalLanguage}' => $language,
+        ];
         foreach ($files as $template => $file) {
-            $this->_createFile("$source/$template", "$destination/$file",['{CONTROLLER_DESCRIPTION}' => "This is the grand father of all controllers in the application",]);
+            $this->_createFile("$source/$template", "$destination/$file", $changes);
         }
         $this->_newModule($destination, "main");
+        $parameters->saveProject();
     }
 
     /**
@@ -180,48 +195,27 @@ APACHE;
     public function makeNewCode($module, $controller, $action) {
         $parameters = Parameters::GetInstance();
         $this->_os = \Iris\OS\_OS::GetInstance();
-        $configs = $parameters->getProjects();
-        $defaultProject = $configs[Parameters::IRISDEF]->DefaultProject; //must exist
-        $projectDir = "/" . str_replace('_', '/', $defaultProject);
-        $projectConfig = $configs[$defaultProject];
-        $programName = $projectConfig->ApplicationName;
+        $programName = $parameters->getApplicationName();
+        $projectDir = $parameters->getProjectDir();
         $destination = "$projectDir/$programName";
-        $doneJobs = 0;
         if (!file_exists("$destination/modules/$module")) {
             $this->_newModule($destination, $module, $controller, $action);
-            $doneJobs = self::MODULE + self::CONTROLLER + self::ACTION;
+            $parameters->saveProject();
+        }
+        elseif (!file_exists("$destination/modules/$module/controllers/$controller.php")) {
+            $this->_newController($destination, $module, $controller, $action);
+            $parameters->saveProject();
+        }
+        elseif (!file_exists("$destination/modules/$module/views/scripts/{$controller}_$action.iview")) {
+            $this->_newAction($destination, $module, $controller, $action);
+            $parameters->saveProject();
         }
         else {
-            if (!file_exists("$destination/modules/$module/controllers/$controller.php")) {
-                $this->_newController($destination, $module, $controller, $action);
-                $doneJobs = self::CONTROLLER + self::ACTION;
-            }
-            elseif (!file_exists("$destination/modules/$module/views/scripts/{$controller}_$action.iview")) {
-                $this->_newAction($destination, $module, $controller, $action);
-                $doneJobs = self::ACTION;
-            }
-        }
-        if ($doneJobs == 0) {
-            Messages::Abort('ERR_EXISTING_MCA',"$module/$controller/$action");
-        }
-        else {
-            if ($doneJobs & self::MODULE) {
-                echo "Module $module has been created.\n";
-            }
-            $projectConfig->ModuleName = $module;
-            if ($doneJobs & self::CONTROLLER) {
-                echo "Controller $controller has been created.\n";
-            }
-            $projectConfig->ControllerName = $controller;
-            if ($doneJobs & self::ACTION) {
-                echo "Action $action has been created.\n";
-            }
-            $projectConfig->ActionName = $action;
-            $configs[$defaultProject] = $projectConfig;
-            $parameters->saveProject(\TRUE);
+            \Messages::Abort('ERR_EXISTING_MCA', "$module/$controller/$action");
         }
     }
 
+    
     /**
      * Generates a new module with its default controller and action
      * 
@@ -248,9 +242,8 @@ APACHE;
             '{CONTROLLER_DESCRIPTION}' => "Description of _$moduleName",
                 ]
         );
-        if (!is_null($controllerName)) {
-            $this->_newController($destination, $moduleName, $controllerName, $actionName);
-        }
+        Parameters::GetInstance()->setValue(Parameters::MODULENAME, $moduleName);
+        $this->_newController($destination, $moduleName, $controllerName, $actionName);
     }
 
     /**
@@ -290,7 +283,9 @@ APACHE;
             '{TITLE}' => "$title"
                 ]
         );
+        Parameters::GetInstance()->setValue(Parameters::CONTROLLERNAME, $controllerName);
         $this->_newAction($destination, $moduleName, $controllerName, $actionName);
+        \Messages::Display('MSG_CREATE_C', $controllerName);
     }
 
     /**
@@ -308,10 +303,12 @@ APACHE;
         if (file_exists($scriptName)) {
             Messages::Abort("MSG_EXISTING_A", $actionName);
         }
+        // if a special standard script exists in the application, use it
         $defaultViewName = "$destination/modules/main/views/scripts/_DEFAULTVIEW.iview";
         if (file_exists($defaultViewName)) {
             $this->_createFile($defaultViewName, $scriptName);
         }
+        // otherwise use a default script
         else {
             $this->_createFile("$source/index_index.iview", $scriptName);
         }
@@ -325,12 +322,11 @@ APACHE;
                     $last = $lineNumber;
                 }
             }
-
             $source[$last] = <<<END
     public function {$actionName}Action() {
         // these parameters are only for demonstration purpose
         \$this->__(NULL, [
-            'Title' => "'<h1>$moduleName - $controllerName - $actionName</h1>'",
+            'Title' => "<h1>$moduleName - $controllerName - $actionName</h1>",
             'buttons' => 1+4,
             'logoName' => 'mainLogo']);
     }
@@ -340,6 +336,8 @@ END;
             $content = implode('', $source);
             file_put_contents($controllerPath, $content);
         }
+        Parameters::GetInstance()->setValue(Parameters::ACTIONNAME, $actionName);
+        \Messages::Display('MSG_CREATE_A', $actionName);
     }
 
     /**

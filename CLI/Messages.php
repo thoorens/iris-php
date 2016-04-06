@@ -86,10 +86,11 @@ class Messages {
     public static function DumpAndDie($var, $dieMessage = \NULL) {
         if (is_null($dieMessage)) {
             $trace = debug_backtrace();
-            $dieMessage = sprintf("Debugging interrupt in file \033[1m%s\033[0m  line \033[1m%s\033[0m\n", $trace[0]['file'], $trace[0]['line']);
+            $dieMessage = sprintf("Debugging interrupt in file \033[1m%s\033[0m  line \033[1m%s\033[0m\n", $trace[1]['file'], $trace[1]['line']);
         }
         self::Dump($var);
-        self::Abort($dieMessage);
+        echo $dieMessage;
+        die();
     }
 
     /**
@@ -99,8 +100,13 @@ class Messages {
      * @param type $param2
      */
     public static function Abort($messageId = \NULL, $param1 = \NULL, $param2 = \NULL) {
-        $errorMessage = self::Get($messageId, $param1, $param2);
-        echo "$errorMessage\n";
+        if (isset($messageId)) {
+            $errorMessage = self::Get($messageId, $param1, $param2);
+            echo "$errorMessage\n";
+        }
+        else{
+            echo $messageId;
+        }
         die();
     }
 
@@ -128,7 +134,12 @@ class Messages {
             $msgFile = sprintf($format, 'Msg');
             CLI\FrontEnd::Loader($msgFile);
         }
-        $text = self::$error[$language][$messageId];
+        if (!isset(self::$error[$language][$messageId])) {
+            $text = $messageId;
+        }
+        else {
+            $text = self::$error[$language][$messageId];
+        }
         if ($param1 != \NULL) {
             $text = sprintf($text, $param1, $param2);
         }

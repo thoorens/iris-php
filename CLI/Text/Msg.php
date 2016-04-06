@@ -98,6 +98,13 @@ Messages::$error['En']['ERR_CONFIRM'] = "You must terminate the command removepr
 Messages::$error['Fr']['MSG_DELETED'] = "Le projet %s a été complètement effacé.";
 Messages::$error['En']['MSG_DELETED'] = "The project %s has been completely removed.";
 
+Messages::$error['Fr']['MSG_NOMOREDEF'] = "Il n'y a plus de projet par défaut.
+Employez 'iris.php --selectdefaultproject' pour en définir un autre.";
+Messages::$error['En']['MSG_NOMOREDEF'] = "There is no more default project.
+Use 'iris.php --selectdefaultproject' to define a new one.";
+
+
+
 Messages::$error['Fr']['MSG_LANGUAGE'] = "Change le langage de l'interface en %s. ";
 Messages::$error['En']['MSG_LANGUAGE'] = "Change the interface language to %s.";
 
@@ -208,6 +215,16 @@ Messages::$error['Fr']['ERR_OVER'] = "La classe '%s' ne peut être surchargée �
 Surchargez '__construct' in 'public/bootstrap.php et charger votre propre classe à la main";
 Messages::$error['En']['ERR_OVER'] = "Class '%s' can't be overridden through CLI. 
 Overwrite __construct in public/Bootstrap.php instead and load your own class manually.";
+
+Messages::$error['Fr']['MSG_CREATE_M'] = "Le module %s a été créé.";
+Messages::$error['En']['MSG_CREATE_M'] = "Module %s has been created";
+Messages::$error['Fr']['MSG_CREATE_C'] = "Le contrôleur %s a été créé.";
+Messages::$error['En']['MSG_CREATE_C'] = "Controller %s has been created.";
+Messages::$error['Fr']['MSG_CREATE_A'] = "L'action %s a été créée.";
+Messages::$error['En']['MSG_CREATE_A'] = "Action %s has been created.";
+
+Messages::$error['Fr']['MSG_VIEWTEXT'] = "Vous pouvez maintenannt commencer à modifier cette page.";
+Messages::$error['En']['MSG_VIEWTEXT'] = "Now you can begin to modify this page...";
 
 
 # Related to databases errors

@@ -173,7 +173,6 @@ Messages::$help['Fr']['h'] =
         iris.php -h=test (ou -h=t)
         iris.php -h=createproject (ou -h=c)
         iris.php -h=removeproject (ou -h=r)
-        iris.php -h=forceproject (ou -h=f)
         iris.php -h=interactive (ou -h=i)
         iris.php -h=docproject (ou -h=D)
         iris.php -h=lockproject (ou -h=L)
