@@ -152,7 +152,7 @@ class Manager {
     }
 
     public function getResource($params) {
-        $pathName = sprintf("%s/library/ILO/%s", IRIS_ROOT_PATH, implode('/', $params));
+        $pathName = sprintf("%s/%s/ILO/%s", IRIS_ROOT_PATH, IRIS_LIBRARY, implode('/', $params));
         $name = basename($pathName);
         $mime = $this->_getMime($name);
         if (file_exists($pathName)) {
