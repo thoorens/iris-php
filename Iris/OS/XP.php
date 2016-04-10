@@ -27,7 +27,7 @@ class XP extends _OS{
     
     protected function __construct() {
         $version = self::_DetectOS();
-        throw new \Iris\Exceptions\CLIException("For now, Iris CLI does not support $version");
+        Messages::Abort('ERR_BAD_OS',$version);
         parent::__construct();
     }
 

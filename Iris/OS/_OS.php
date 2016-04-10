@@ -33,8 +33,10 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     const TOUCH = 8;
     const PUT = 9;
     const GET = 10;
+    
     const UNKNOWN = 'UNKNOWN';
     const LINUX = 'LINUX';
+    const WIN10 = 'WINDOWS 10';
     const WIN8 = 'WINDOWS 8';
     const WIN7 = 'WINDOWS 7';
     const WINVI = 'WINDOWS VISTA';
@@ -44,6 +46,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     private static $_OS = [
         self::UNKNOWN,
         self::LINUX,
+        self::WIN10,
         self::WIN8,
         self::WIN7,
         self::WINVI,
@@ -61,7 +64,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * 
      * @var string[]
      */
-    protected $_format = array();
+    protected $_format = [];
 
     /**
      *
@@ -80,6 +83,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
                 case self::LINUX:
                     self::$_Instance = new Unix();
                     break;
+                case self::WIN10:
                 case self::WIN8:
                 case self::WIN7:
                     self::$_Instance = new Windows();
@@ -146,7 +150,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
         $this->_version = self::_DetectOS();
         $this->_format[self::MKDIR] = "Creating directory %s\n";
         $this->_format[self::COPY] = "Copying %s to %s\n";
-        $this->_format[self::UNLINK] = "Removing %s\n";
+        $this->_format[self::UNLINK] = "Removing file %s\n";
         $this->_format[self::RENAME] = "Moving/renaming %s to %s\n";
         $this->_format[self::RMDIR] = "Removing directory %s\n";
         $this->_format[self::LINK] = "Creating a link from %s to %s \n";
@@ -238,7 +242,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param string $filename
      */
     public function unlink($filename) {
-        $this->_verbose and $this->_echo(self::UNLINK, $filename, $this->tabLevel + 1);
+        $this->_verbose and $this->_echo(self::UNLINK, $filename, $this->tabLevel);
         $this->_simulate or unlink($filename);
     }
 
@@ -289,7 +293,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param string $destination the path to the new file
      * @param mixed[] $replacement an associative array with the fields and values 
      */
-    public function createFromTemplate($source, $destination, $replacement = array()) {
+    public function createFromTemplate($source, $destination, $replacement = []) {
         $text = $this->file_get_contents($source);
         foreach ($replacement as $from => $to) {
             $text = preg_replace("/$from/", "$to", $text);
@@ -351,8 +355,9 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param string/array $value  parameters (1 or 2)
      */
     protected function _echo($messageType, $values, $level = 0) {
-        for ($l = 0; $l < $level; $l++) {
-            echo "  ";
+        $number = -$level * 4;
+        if ($number) {
+            echo(sprintf("%${number}s", ' '));
         }
         //echo $level;
         if (is_string($values)) {
