@@ -1,27 +1,19 @@
 <?php
-
 namespace Iris\Errors;
 
-use Iris\Engine\Memory;
-
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
- *
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
+ */
+
+
+/**
+ * This class groups everything needed to
+ * treat error in an application
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
@@ -30,12 +22,6 @@ use Iris\Engine\Memory;
  * Thank you to Eric Daspet and Cyril Pierre de Geyser
  * for their clear explanations in their book
  * "PHP avancé" (Editions Eyrolles)
- */
-
-/**
- * This class groups everything needed to
- * treat error in an application
- * 
  */
 class Handler implements \Iris\Design\iSingleton {
 
@@ -70,7 +56,7 @@ class Handler implements \Iris\Design\iSingleton {
      * @param Iris\Exceptions\_Exception $exception The not treated exception
      * @param string $ErrorURI The URI of the current error (NULL if first error)
      */
-    public function treatException($program, $exception, $ErrorURI) {
+    public function treatException($program, $exception, $ErrorURI) {;
         $subHelper = \Iris\Subhelpers\ErrorDisplay::GetInstance();
         $subHelper->prepareExceptionDisplay($exception);
         $this->_wipeAllText();
@@ -120,7 +106,7 @@ class Handler implements \Iris\Design\iSingleton {
     }
 
     public function trapError($level, $message, $file, $line) {
-        die('Trapping error');
+        \Iris\Engine\Debug::Abort('Trapping error');
     }
 
     /**
@@ -174,8 +160,8 @@ class Handler implements \Iris\Design\iSingleton {
             if ($error['type'] == E_RECOVERABLE_ERROR) {
                 $this->_wipeAllText();
                 $errorExc = new ErrorException($error['message'], \NULL, $error['type'], $error['file'], $error['line']);
-                Memory::Set('Exception', $errorExc);
-                Memory::Set('Log', \Iris\Log::GetInstance());
+                \Iris\Engine\Memory::Set('Exception', $errorExc);
+                \Iris\Engine\Memory::Set('Log', \Iris\Engine\Log::GetInstance());
                 $program = new \Iris\Engine\Program(\Iris\Engine\Program::$ProgramName);
                 $program->run('/ERROR');
             }
@@ -223,7 +209,7 @@ class Handler implements \Iris\Design\iSingleton {
      */
     public function setIniParameters() {
         $application = \Iris\Engine\Program::$ProgramName;
-        $mustLog = \Iris\Errors\Settings::$Log ? 'on' : 'off';
+        $errorLogStatus = \Iris\Errors\Settings::$Log ? 'on' : 'off';
         if (\Iris\Engine\Mode::IsProduction()) {
             error_reporting(E_ALL);
             ini_set('track_error', 'off');
@@ -234,8 +220,8 @@ class Handler implements \Iris\Design\iSingleton {
             ini_set('track_error', 'off');
             ini_set('display_errors', 'on');
         }
-        ini_set('log_errors', $mustLog);
-        ini_set('error_log', IRIS_ROOT_PATH . '/' . $application . Settings::$LogFile);
+        ini_set('log_errors', $errorLogStatus);
+        ini_set('error_log', \Iris\Errors\Settings::$LogFile);
         ini_set('log_errors_max_len', '1024');
         return $this;
     }
