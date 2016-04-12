@@ -566,6 +566,7 @@ class Parameters {
         $config->{Parameters::PUBLICDIR} = 'public';
         $config->{Parameters::URL} = \basename($projectDir) . '.local';
         $config->{Parameters::LIBRARYDIR} = 'library';
+        $config->{Parameters::DATABASE} = Database::DB_NONE;
         $this->_projects[$projectName] = $config;
         $this->setCurrentProjectName($projectName);
         $this->markDirty();

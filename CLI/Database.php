@@ -28,6 +28,7 @@ class Database extends _Process {
     const IRIS_DB_DEMOFILE = 'demo.sqlite';
     const IRIS_DB_INIFILE = '10_database.ini';
     const IRIS_DB_PARAMFILE = 'db.ini';
+    const DB_NONE = "==NONE==";
 
     /**
      * Symbolic names for the database settings
@@ -301,7 +302,7 @@ class Database extends _Process {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $baseName = $parameters->getDatabase();
-        if ($baseName == "==NONE==") {
+        if ($baseName == self::DB_NONE) {
             \Messages::Abort('ERR_DBNONE', $baseName);
         }
         $fileName = $this->_getParamFileName();

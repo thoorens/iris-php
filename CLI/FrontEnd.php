@@ -140,6 +140,7 @@ STOP;
             '/CLI/Parameters.php',
             '/CLI/Analyser.php',
             '/CLI/_Process.php',
+            '/CLI/Database.php',
             // Various
             '/Iris/Design/iSingleton.php',
             '/Iris/Engine/tSingleton.php',
