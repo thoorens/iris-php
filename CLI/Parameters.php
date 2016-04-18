@@ -21,16 +21,40 @@ namespace CLI;
 class Parameters {
 
     // project
+    /**
+     * One parameter of the project
+     */
     const PROJECTNAME = 'ProjectName';
     const PROJECTDIR = 'ProjectDir';
     // project structure
-    const LIBRARYDIR = 'LibraryDir';
+    /**
+     * Project library folder name
+     */
+    const LIBRARYDIR = 'LibraryDir'; // project library name
+    /**
+     * Project library folder name
+     */
     const APPLICATIONDIR = "ApplicationDir";
+    /**
+     * Project application folder name
+     */
     const PUBLICDIR = 'PublicDir';
+    /**
+     * Project public folder name
+     */
     const URL = 'Url';
     // code details
+    /**
+     * The module name parameter
+     */
     const MODULENAME = 'ModuleName';
+    /**
+     * The controller name parameter
+     */
     const CONTROLLERNAME = 'ControllerName';
+    /**
+     * The action name parameter
+     */
     const ACTIONNAME = 'ActionName';
     const WORKBENCH = "Workbench";
     const INTERACTIVE = "Interactive";
@@ -40,8 +64,13 @@ class Parameters {
     const CORECLASSNAME = 'CoreClassName';
     const FILENAME = 'FileName';
     const MENUNAME = 'MenuName';
-    const LANGUAGES = "En Fr";
     const IRISDEF = 'Iris';
+    /**
+     * Default value for the project database (default none)
+     */
+    const DB_NONE = "==NONE==";
+
+    // display
     const LINE = '------------------------------------------------------------------------------------';
     const DBLINE = "====================================================================================";
 
@@ -66,24 +95,15 @@ class Parameters {
     private static $_Parameters = [];
 
     /**
-     * The content of the projects.ini file
+     * The content of the projects.ini file as an array of Config
      *
      * @var \Iris\SysConfig\Config[]
      */
     private $_projects = [];
 
-    /**
-     * The saved parameters for the current project
-     *
-     * @var \Iris\SysConfig\Config
-     */
-    //private $_activeProject = \NULL;
-    private $_newProject = [];
-    private $_windows;
-    private $_linux;
 
     /**
-     *
+     * If TRUE indicates that the project file has to be saved
      * @var boolean
      */
     private $_dirty = \FALSE;
@@ -115,11 +135,42 @@ class Parameters {
     }
 
     /**
-     * A classical constructor for singleton
+     * A classical constructor for singleton.
+     * It reads or creates the default project file
      *
      */
     private function __construct() {
-        $this->readParamFile();
+        $this->_readParamFile();
+    }
+
+    
+    /**
+     * Reads an ini file and analyses its content in a array of configs
+     * If the file does not exist, creates a config array with an initial 'Iris' element with <ul>
+     * <li> the iris library path
+     * <li> no default project
+     * <li> the default language (by default French)
+     * </ul>
+     */
+    private function _readParamFile() {
+        //$this->_verbose = \TRUE;
+        $paramFile = FrontEnd::GetFilePath('projects', 'notest');
+        if (!file_exists($paramFile)) {
+            verboseEchoLine("create an unnamed unique project", $this->_verbose);
+            $config0 = new \Iris\SysConfig\Config(Parameters::IRISDEF);
+            $config0->PathIris = IRIS_LIBRARY_DIR;
+            $config0->defaultProject = '';
+            $config0->language = \Messages::DEFAULT_LANGUAGE;
+            $this->setCurrentProjectName('');
+            $this->_projects = [Parameters::IRISDEF => $config0];
+            $this->_dirty = \TRUE;
+        }
+        else {
+            $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
+            $this->_projects = $parser->processFile($paramFile);
+            $this->setCurrentProjectName($this->_projects[Parameters::IRISDEF]->DefaultProject);
+            $this->_dirty = \FALSE;
+        }
     }
 
     /**
@@ -167,43 +218,7 @@ class Parameters {
         $this->_parameters[$name] = $value;
     }
 
-    /**
-     * Reads an ini file and analyses its content in a array of configs
-     * If file does not exist, creates a config array with an initial 'Iris' element
-     *
-     * @param type $mode
-     * @return array(\Iris\SysConfig\Config)
-     */
-    public function readParamFile($mode = 'test') {
-        //$this->_verbose = \TRUE;
-        $paramFile = FrontEnd::GetFilePath('projects', $mode);
-        if (!file_exists($paramFile)) {
-            verboseEchoLine("create an unnamed unique project", $this->_verbose);
-            $config0 = new \Iris\SysConfig\Config(Parameters::IRISDEF);
-            $config0->PathIris = IRIS_LIBRARY_DIR;
-            $config0->defaultProject = '';
-            $config0->language = 'Fr';
-            $this->setCurrentProjectName('');
-            $this->_projects = [Parameters::IRISDEF => $config0];
-            $this->_dirty = \TRUE;
-        }
-        else {
-            $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
-            $this->_projects = $parser->processFile($paramFile);
-            $this->setCurrentProjectName($this->_projects[Parameters::IRISDEF]->DefaultProject);
-//            if (isset($this->_projects[$currentName])) {
-//                $this->_activeProject = $this->_projects[$currentName];
-//                verboseEchoLine($currentName, $this->_verbose);
-//            }
-//            else {
-//                $this->_activeProject = \NULL;
-//                verboseEchoLine("No currrent project", $this->_verbose);
-//            }
-            $this->_dirty = \FALSE;
-        }
-        return $this->_projects;
-    }
-
+    
     /**
      * (Re)creates a ini file with the content of an array of configs
      *
@@ -300,6 +315,10 @@ class Parameters {
         return $this->_getValue(self::PROJECTNAME);
     }
 
+    /**
+     * 
+     * @return type
+     */
     public static function GetParameters() {
         return self::$_Parameters;
     }
@@ -352,7 +371,6 @@ class Parameters {
         return $this->_getValue(self::ACTIONNAME, 'index');
     }
 
-    
     public function getMenuName() {
         
     }
@@ -372,7 +390,7 @@ class Parameters {
     }
 
     public function getDatabase($old = \FALSE) {
-        return $this->_getValue('Database', '==NONE==', $old);
+        return $this->_getValue('Database', self::DB_NONE, $old);
     }
 
 //    public function getLocked() {
@@ -392,7 +410,7 @@ class Parameters {
      * @return string
      */
     public function getCommandLine() {
-        $last = count($GLOBALS['argv'])-1;
+        $last = count($GLOBALS['argv']) - 1;
         if (isset($GLOBALS['argv'][$last])) {
             return $GLOBALS['argv'][$last];
         }
@@ -421,10 +439,10 @@ class Parameters {
         else {
             $defaultProject = $this->getProject();
             $foundValue = $defaultProject->$name;
-            if($foundValue == ""){
+            if ($foundValue == "") {
                 $value = $default;
             }
-            else{
+            else {
                 $value = $foundValue;
             }
         }
@@ -437,8 +455,6 @@ class Parameters {
         $this->_dirty = \TRUE;
     }
 
-    
-    
     /**
      * Returns the local URL (by default the name of the base dir + .local
      *
@@ -533,12 +549,18 @@ class Parameters {
 
     /**
      * Get the array of project configs
+     * 
      * @return [\Iris\SysConfig\Config]
      */
     public function getProjects() {
         return $this->_projects;
     }
 
+    /**
+     * 
+     * @param type $projectName
+     * @return type
+     */
     public function getProject($projectName = '') {
         $errorCode = "ERR_UNKNOWNPROJECT";
         if ($projectName == '') {
@@ -566,20 +588,28 @@ class Parameters {
         $config->{Parameters::PUBLICDIR} = 'public';
         $config->{Parameters::URL} = \basename($projectDir) . '.local';
         $config->{Parameters::LIBRARYDIR} = 'library';
-        $config->{Parameters::DATABASE} = Database::DB_NONE;
+        $config->{Parameters::DATABASE} = self::DB_NONE;
         $this->_projects[$projectName] = $config;
         $this->setCurrentProjectName($projectName);
         $this->markDirty();
     }
 
+    /**
+     * Seter for the current project name
+     * 
+     * @param string $projectName The new current project name
+     */
     public function setCurrentProjectName($projectName) {
         verboseEchoLine("Current project is now $projectName", $this->_verbose);
         $this->_currentProjectName = $projectName;
     }
 
     /**
+     * Tries to return the default project name, if not existent returns a
+     * empty string or emits a fatal message according to the $error parameter
      * 
-     * @return \Iris\SysConfig\Config 
+     * @param boolean $error If TRUE, 
+     * @return string
      */
     public function getDefaultProjectName($error = \TRUE) {
         if ($this->_currentProjectName == \NULL) {
@@ -649,7 +679,6 @@ class Parameters {
         die('----');
     }
 
-    
 //    public static function GetProjectIniPath(){
 //        static $fileName = \NULL;
 //        if($fileName == \NULL){

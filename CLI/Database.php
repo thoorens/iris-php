@@ -27,8 +27,7 @@ class Database extends _Process {
     const IRIS_DB_FOLDER = '/config/base/';
     const IRIS_DB_DEMOFILE = 'demo.sqlite';
     const IRIS_DB_INIFILE = '10_database.ini';
-    const IRIS_DB_PARAMFILE = 'db.ini';
-    const DB_NONE = "==NONE==";
+    ///const IRIS_DB_PARAMFILE = 'db.ini';
 
     /**
      * Symbolic names for the database settings
@@ -48,6 +47,7 @@ class Database extends _Process {
      * Selects a database for the default project
      */
     protected function _selectbase() {
+        die('Select base');
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $baseId = $parameters->getDatabase();
@@ -69,9 +69,9 @@ class Database extends _Process {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $source = IRIS_LIBRARY_DIR . '/CLI/Files/database/' . IRIS_DB_INIFILE;
-        $base = $this->_getDBConfig();
+        $dbConfig = $this->_getDBConfig();
         //iris_debug($base->maindb);
-        if ($base->maindb == 0) {
+        if ($dbConfig->maindb == 0) {
             $name = $parameters->getDatabase('ERR_DB_NOTINI', $name);
         }
         $destination = $parameters->getProjectDir() . '/' . $parameters->getApplicationName();
@@ -79,8 +79,8 @@ class Database extends _Process {
         if (file_exists($destination)) {
             Messages::Abort('ERR_DBINI', $destination);
         }
-        if ($base->adapter == 'sqlite') {
-            $finalFileName = str_replace('%application%', $parameters->getApplicationName(), $base->dbname);
+        if ($dbConfig->adapter == 'sqlite') {
+            $finalFileName = str_replace('%application%', $parameters->getApplicationName(), $dbConfig->dbname);
             $pairs = [
                 '{HOSTNAME}' => 'some_data_base_name',
                 '{USER}' => 'some_user_name',
@@ -91,14 +91,14 @@ class Database extends _Process {
         }
         else {
             $pairs = [
-                '{HOSTNAME}' => $base->hostname,
-                '{USER}' => $base->username,
-                '{PASSWORD}' => $base->password,
+                '{HOSTNAME}' => $dbConfig->hostname,
+                '{USER}' => $dbConfig->username,
+                '{PASSWORD}' => $dbConfig->password,
                 '{COM}' => '',
-                '{NAME}' => $base->dbname,
+                '{NAME}' => $dbConfig->dbname,
             ];
         }
-        $pairs['{ADAPTER}'] = $base->adapter;
+        $pairs['{ADAPTER}'] = $dbConfig->adapter;
         \Iris\OS\_OS::GetInstance()->createFromTemplate($source, $destination, $pairs);
         echo "File $destination now contains all your settings.\n";
     }
@@ -247,7 +247,10 @@ class Database extends _Process {
         }
         $config->maindb = Analyser::PromptUserLogical("Database managed by config INI file ", "TRUE");
         $configs[$dbid] = $config;
-        $parameters->writeParams($this->_getParamFileName(), $configs);
+        ///$parameters->writeParams($this->_getParamFileName(), $configs);
+        $paramFile = FrontEnd::GetFilePath('db');
+        $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
+        $parser->exportFile($paramFile, $configs);
     }
 
     /**
@@ -257,26 +260,26 @@ class Database extends _Process {
     private function _subShowDatabase() {
         $base = $this->_getDBConfig();
         $projectName = Parameters::GetInstance()->getProjectName();
-        echo "Default database definition:\n";
+        \Messages::Display('MSG_DBTIT');
         echoLine(Parameters::LINE);
-        echo "Project name        : $projectName\n";
-        echo "Database adapter    : $base->adapter\n";
+        \Messages::Display('MSG_DBPRJNM',$projectName);
+        \Messages::Display('MSG_DBAD',$base->adapter);
         if ($base->adapter == 'sqlite') {
-            echo "File name           : $base->dbname\n";
+            \Messages::Display('MSG_DBFN',$base->dbname);
         }
         else {
-            echo "Host name          : $base->hostname\n";
-            echo "Database           : $base->dbname\n";
-            echo "User name          : $base->username\n";
+            \Messages::Display('MSG_DBHST',$base->hostname);
+            \Messages::Display('MSG_DBNAM',$base->dbname);
+            \Messages::Display('MSG_DBUSRNAM',$base->username);
             if ($base->password != '') {
-                echo "Password           : == defined in file (not listed for security reasion) ==\n";
+                \Messages::Display('MSG_PW');
             }
             else {
-                echo "Password           : undefined\n";
+                 \Messages::Display('MSG_PW2');
             }
         }
-        $management = $base->maindb == 1 ? 'YES' : 'NO';
-        echo "Managed by INI file : $management\n";
+        $management = $base->maindb == 1 ? \Messages::Get('MSG_BOOL1') :  \Messages::Get('MSG_BOOL0') ;
+        \Messages::Display('MSG_DBINI',$management);
     }
 
     /**
@@ -284,7 +287,8 @@ class Database extends _Process {
      * Correspond to --database ini
      */
     private function _subShowIniFile() {
-        $fileName = $this->_getParamFileName();
+        $fileName = FrontEnd::GetFilePath('db');
+        ///$fileName = $this->_getParamFileName();
         echo(file_get_contents($fileName));
         echo ("\n");
     }
@@ -302,11 +306,14 @@ class Database extends _Process {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $baseName = $parameters->getDatabase();
-        if ($baseName == self::DB_NONE) {
+        if ($baseName == Parameters::DB_NONE) {
             \Messages::Abort('ERR_DBNONE', $baseName);
         }
-        $fileName = $this->_getParamFileName();
-        $configs = $parameters->readParams($fileName);
+        ///$fileName = $this->_getParamFileName();
+        $fileName = FrontEnd::GetFilePath('db');
+        $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
+        $configs = $parser->processFile($fileName);
+        //$configs = $parameters->readParams($fileName);
         if (!isset($configs[$baseName])) {
             \Messages::Abort('ERR_UNDEFDB', $baseName);
         }
@@ -318,13 +325,12 @@ class Database extends _Process {
      *
      * @return string
      */
-    private function _getParamFileName() {
-        die('IRIS_DB_PARAMFILE removed');
-        $os = \Iris\OS\_OS::GetInstance();
-        $paramDir = $os->getUserHomeDirectory() . FrontEnd::IRIS_USER_FOLDER;
-        $paramFile = $paramDir . self::IRIS_DB_PARAMFILE;
-        return $paramFile;
-    }
+//    private function _getParamFileName() {
+//        $os = \Iris\OS\_OS::GetInstance();
+//        $paramDir = $os->getUserHomeDirectory() . FrontEnd::IRIS_USER_FOLDER;
+//        $paramFile = $paramDir . self::IRIS_DB_PARAMFILE;
+//        return $paramFile;
+//    }
 
     /**
      * Returns a setting of the database by its number (symbolic const) to

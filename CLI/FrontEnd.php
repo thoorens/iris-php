@@ -140,7 +140,6 @@ STOP;
             '/CLI/Parameters.php',
             '/CLI/Analyser.php',
             '/CLI/_Process.php',
-            '/CLI/Database.php',
             // Various
             '/Iris/Design/iSingleton.php',
             '/Iris/Engine/tSingleton.php',
@@ -201,6 +200,9 @@ STOP;
             case 'irisdir':
                 $fileName = "$userIrisDirectory/.iris";
                 break;
+            case 'fifo':
+                $fileName = "/tmp/.iris.temp";
+                break;
             default:
                 $fileName = "$userIrisDirectory/.iris/$fileType.ini";
                 break;
@@ -255,7 +257,6 @@ STOP;
             $analyser->analyseCmdLine();
         }
         catch (Exception $ex) {
-            die('YOOO');
             $this->_displayException($ex, 1);
         }
 // process commands

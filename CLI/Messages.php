@@ -11,14 +11,23 @@
 
 class Messages {
 
+    /**
+     * 
+     */
     const DEFAULT_LANGUAGE = 'Fr';
-    public static $Languages = [
-      'E' => 'En',
-      'F' => 'Fr',  
-    ];
 
-    public static $error = [];
-    public static $help = [];
+    /**
+     * the list or recognized languages
+     * @var string[]
+     */
+    public static $Languages = [
+        'E' => 'En',
+        'english' => 'En',
+        'F' => 'Fr',
+        'french' => 'Fr',
+    ];
+    public static $Error = [];
+    public static $Help = [];
 
     /**
      * Displays, if possible, an help for the parameter $option
@@ -28,7 +37,7 @@ class Messages {
     public static function Help($option) {
         // reads help file
         $format = '/CLI/Text/%s.php';
-        if (count(self::$help) == 0) {
+        if (count(self::$Help) == 0) {
             $hlpFile = sprintf($format, 'Hlp');
             CLI\FrontEnd::Loader($hlpFile);
         }
@@ -47,25 +56,26 @@ class Messages {
                 $option = CLI\Analyser::$Functions[$option . ':'];
             }
         }
+        $language = CLI\Analyser::GetLanguage();
         echoLine(CLI\Parameters::DBLINE);
         echoLine('Iris-PHP --' . $option);
+        Messages::Display(self::$Help[$language]['more']);
         echoLine(CLI\Parameters::DBLINE);
-        $language = CLI\Analyser::GetLanguage();
-        if (!isset(self::$help[$language][$command])) {
+        if (!isset(self::$Help[$language][$command])) {
             Messages::Display('ERR_INHELP', $command);
         }
         else {
-            echo self::$help[$language][$command];
-            $extension = self::$help['Ext'][$command];
-            if ($extension != 'TRUE' and $extension != 'FALSE') {
-                echo self::$help[$language][$extension];
+            Messages::Display(self::$Help[$language][$command]);
+            //echo self::$help[$language][$command];
+            $extension = self::$Help['Ext'][$command];
+            while ($extension != 'TRUE' and $extension != 'FALSE') {
+                Messages::Display(self::$Help[$language][$extension]);
+                $extension = self::$Help['Ext'][$extension];
             }
         }
-        die(CLI\Parameters::DBLINE . "\n");
+        echoLine(CLI\Parameters::DBLINE );
+        die('');
     }
-
-
-    
 
     /**
      * Display a var_dump between <pre> tags
@@ -104,7 +114,7 @@ class Messages {
             $errorMessage = self::Get($messageId, $param1, $param2);
             echo "$errorMessage\n";
         }
-        else{
+        else {
             echo $messageId;
         }
         die();
@@ -130,15 +140,15 @@ class Messages {
     public static function Get($messageId = \NULL, $param1 = \NULL, $param2 = \NULL) {
         $language = CLI\Analyser::GetLanguage();
         $format = '/CLI/Text/%s.php';
-        if (count(self::$error) == 0) {
+        if (count(self::$Error) == 0) {
             $msgFile = sprintf($format, 'Msg');
             CLI\FrontEnd::Loader($msgFile);
         }
-        if (!isset(self::$error[$language][$messageId])) {
+        if (!isset(self::$Error[$language][$messageId])) {
             $text = $messageId;
         }
         else {
-            $text = self::$error[$language][$messageId];
+            $text = self::$Error[$language][$messageId];
         }
         if ($param1 != \NULL) {
             $text = sprintf($text, $param1, $param2);
@@ -146,7 +156,7 @@ class Messages {
         return $text;
     }
 
-}
+} // end of class Messages
 
 /**
  * A debugging tool using Debug static methods

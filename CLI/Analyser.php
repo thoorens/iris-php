@@ -135,6 +135,7 @@ class Analyser {
         // special
         'v' => 'verbose',
         '1:' => 'language:', //supposed to be used as a long form option
+        '2' => 'context', //supposed to be used as a long form option
         // languages
         'E' => 'english',
         'F' => 'french',
@@ -168,17 +169,17 @@ class Analyser {
 //      'l:' => 'librarydir:',
 //      'u:' => 'url:',
         // piece of code
-//      'g' => 'generate',
-//      'C:' => 'controller:',
-//      'A:' => 'action:',
-//      'M:' => 'module:',
+//        'g' => 'generate',
+//        'C:' => 'controller:',
+//        'A:' => 'action:',
+//        'M:' => 'module:',
         'W' => 'workbench',
         // menus
-        'N:' => 'menuname',
-        'n:' => 'makemenu',
+//        'N:' => 'menuname',
+//        'n:' => 'makemenu',
         // extensions
-        'k:' => 'makecore:',
-        'K' => 'searchcore',
+//        'k:' => 'makecore:',
+//        'K' => 'searchcore',
         // watermaking
         'o:' => 'copyright:',
         'G:' => 'genericparameter',
@@ -189,7 +190,7 @@ class Analyser {
         'I' => 'makedbini',
         'O:' => 'otherdb:',
         'e:' => 'entitygenerate:',
-        // special
+            // special
 //      'v' => 'verbose',
 //      '1:' => 'language:', //supposed to be used as a long form option
     ];
@@ -224,7 +225,6 @@ class Analyser {
         $this->_processor = self::INITIAL;
         // Read options
         $options = $this->cliOptions();
-        //$newParameters = & Parameters::GetParameters();
         $verbose = \FALSE;
         foreach ($options as $option => $value) {
             switch ($option) {
@@ -284,7 +284,8 @@ class Analyser {
 
                 // generates portions of work bench
                 case 'W': case 'workbench':
-                    $newParameters[Parameters::WORKBENCH] = \TRUE;
+                    \Messages::Abort("ERR_NOTDEV");
+                    $this->_parameters->addParameter(Parameters::WORKBENCH, \TRUE);
                     break;
 
                 // option "interactive" in project creation : metadata are request through
@@ -367,37 +368,41 @@ class Analyser {
                         \Messages::Abort("ERR_BADACTION");
                     }
                     $this->_parameters->addParameter(Parameters::ACTIONNAME, $value);
-                    $newParameters[Parameters::ACTIONNAME] = $value;
                     $this->_processingOption = $option;
                     $this->_processor = self::PARAMPROJECT;
                     verboseEchoLine('Action name : ' . $value, $verbose);
                     break;
 
                 case 'N': case 'menuname':
-                    $newParameters[Parameters::MENUNNAME] = $value;
+                    \Messages::Abort("ERR_NOTDEV");
+                    $this->_parameters->addParameter(Parameters::MENUNAME, $value);
                     $this->_processingOption = $option;
                     $this->_processor = self::PARAM;
                     break;
 
                 case 'n': case 'makemenu':
+                    \Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::PROJECT;
                     $this->_processingOption = $option;
-                    $newParameters[Parameters::ITEMS] = $value;
-                    die('yes');
+                    $this->_parameters->addParameter(Parameters::ITEMS, $value);
                     break;
 
                 // database
                 case 'B': case 'database':
+                    if (strpos('list List Show show create Create ini', $value) === \FALSE) {
+                        \Messages::Abort('ERR_DBPARAM', $value);
+                    }
                     $this->_processor = self::BASE;
-                    $this->_processingOption = $option . "_" . $value;
+                    $this->_processingOption = $option . "!" . $value;
                     break;
                 case 'b': case 'selectbase':
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_BADSELECTDB");
                     }
+                    \Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
-                    $newParameters[Parameters::DATABASE] = $value;
+                    $this->_parameters->addParameter(Parameters::DATABASE, $value);
                     break;
                 case 'I': case 'makedbini':
                     if ($this->_processor != self::INITIAL) {
@@ -416,20 +421,21 @@ class Analyser {
 //                    $this->_processingOption = $option;
 //                    break;
                 case 'e': case 'entitygenerate':
+                    \Messages::Abort("ERR_NOTDEV");
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_BADENTITY");
                     }
                     \Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
-                    $newParameters[Parameters::ENTITYNAME] = $value;
+                    $this->_parameters->addParameter(Parameters::ENTITYNAME, $value);
                     break;
                 // make core_Class
                 case'k': case 'mkcore':
                     \Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::CORECODE;
                     $this->_processingOption = $option;
-                    $newParameters[Parameters::CORECLASSNAME] = $value;
+                    $this->_parameters->addParameter(Parameters::CORECLASSNAME, $value);
                     break;
 
                 // recreate the file config/overridden.classes
@@ -444,13 +450,13 @@ class Analyser {
                     \Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::CODE;
                     $this->_processingOption = $option;
-                    $newParameters[Parameters::FILENAME] = $value;
+                    $this->_parameters->addParameter(Parameters::FILENAME, $value);
                     break;
 
                 // generic parameter
                 case 'G': case 'genericparameter':
                     \Messages::Abort("ERR_NOTDEV");
-                    $newParameters[Parameters::GENERIC] = $value;
+                    $this->_parameters->addParameter(Parameters::GENERIC, $value);
                     break;
 
                 // password management
@@ -465,7 +471,9 @@ class Analyser {
                 case'h': case 'help':
                     \Messages::Help($value);
                     break;
-
+                case 'context': case '2':
+                    $this->_context();
+                    break;
                 // show projects
                 case 's': case 'show':
                     if ($this->_processor != self::INITIAL) {
@@ -478,7 +486,8 @@ class Analyser {
 
                 // modify language in iris.ini
                 case 'language': case '1':
-                    $possibleLanguages = Parameters::LANGUAGES;
+                    $languages = \Messages::$Languages;
+                    $possibleLanguages = implode(' ',  array_values($languages));
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_LANG", $possibleLanguages);
                     }
@@ -506,9 +515,6 @@ class Analyser {
                     \Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::SHOW;
                     $this->_processingOption = $option;
-                    break;
-                case '2':
-                    die("DEUX");
                     break;
             }
         }
@@ -591,7 +597,6 @@ class Analyser {
             case self::BASE:
                 FrontEnd::Loader('/CLI/Database.php');
                 $base = new \CLI\Database($this);
-                $this->_processingOption = 'database!list';
                 $base->process();
                 break;
             case self::PASSWORD:
@@ -829,6 +834,20 @@ class Analyser {
             }
         }
         return $longOption;
+    }
+
+    /**
+     * Will display all the parameter file names
+     */
+    private function _context() {
+        \Messages::Display(Parameters::LINE);
+        echoLine('Present library folder :'.IRIS_LIBRARY_DIR);
+        echoLine('User folder :'.FrontEnd::GetFilePath('user', 'notest'));
+        echoLine('Personal iris folder :'.FrontEnd::GetFilePath('irisdir', 'notest'));
+        echoLine('Personal iris parameter file :'.FrontEnd::GetFilePath('iris', 'notest'));
+        echoLine('Project file :'.FrontEnd::GetFilePath('project', 'notest'));
+        echoLine('Database file :'.FrontEnd::GetFilePath('db', 'notest'));
+        \Messages::Abort(Parameters::DBLINE);
     }
 
 }
