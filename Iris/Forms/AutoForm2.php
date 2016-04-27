@@ -76,7 +76,6 @@ class AutoForm2 {
                 }
                 else {
                     $type = $elementSpecs->getType();
-                    echo $type;
                     $this->_addComponent($name, $type, $elementSpecs);
                 }
             }

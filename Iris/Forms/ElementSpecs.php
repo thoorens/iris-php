@@ -145,7 +145,7 @@ class ElementSpecs implements \Iris\Translation\iTranslatable {
         foreach ($specs as $index => $value) {
             switch ($index) {
                 case self::TYPE:
-                    //die('YYYYES');
+                    //not_survive'YYYYES');
                     if ($value == '-') {
                         $this->setNotShown(\TRUE);
                         $this->setType('hidden');
@@ -273,7 +273,7 @@ class ElementSpecs implements \Iris\Translation\iTranslatable {
     }
 
 //    public function __call($name, $args) {
-//        die('OLD _call has benn called');
+//not_survive'OLD _call has benn called');
 //        if (strpos($name, 'put') === 0) {
 //            $function = "set" . substr($name, 3);
 //            $value = "_" . strtolower(substr($name, 3));

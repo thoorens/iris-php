@@ -28,7 +28,7 @@ abstract class _FormFactory {
      */
     protected static $_Library = null;
 
-    public static function __classInit() {
+    public static function __ClassInit() {
         $formClassName = get_called_class();
         $nameChunks = explode('\\', $formClassName);
         array_pop($nameChunks);
