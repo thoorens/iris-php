@@ -22,6 +22,7 @@ namespace Dojo\views\helpers;
  */
 class TimerStackContainer extends StackContainer {
 
+    const DEFAULT_FIRST_PAUSE = 3;
     protected static $_Type = 'StackContainer';
     
     protected $_firstPause = 0;
@@ -61,7 +62,7 @@ class TimerStackContainer extends StackContainer {
         return $closingDiv ."\n". $timer;
     }
 
-    public function putTimes($times, $first = 0){
+    public function putTimes($times, $first = self::DEFAULT_FIRST_PAUSE){
         if(count($this->_items) == 0){
             throw new \Iris\Exceptions\LibraryException('You must put times after page definitions');
         }

@@ -29,40 +29,43 @@ class EventManager extends \Iris\Ajax\_EventManager {
      * @var string[]
      */
     private $_modules = [];
-    
+
     /**
      * 
      * @param string[] $modules
      * 
      * @return \Dojo\Ajax\EventManager
      */
-    public function addModules($modules){
+    public function addModules($modules) {
         $this->_modules = $modules;
         return $this;
     }
-    
-    public function onClick($sender, $functionCode, $modules = [])  {
-        $this->_onEvent('click' ,$sender, $functionCode, $modules);
+
+    public function onClick($sender, $functionCode, $modules = []) {
+        $this->_onEvent('click', $sender, $functionCode, $modules);
     }
 
-    
-    
     private function _onEvent($eventName, $sender, $functionCode, $modules = []) {
-        $bubble = \Dojo\Engine\Bubble::getBubble($sender."_$eventName");
-        $bubble->addModule('dojo/dom','dom');
+        $bubble = \Dojo\Engine\Bubble::getBubble($sender . "_$eventName");
+        $bubble->addModule('dojo/dom', 'dom');
         //$bubble->addModule('dojo/connect','connect');
-        $bubble->addModule('dojo/on','on');
+        $bubble->addModule('dojo/on', 'on');
         $bubble->addModule('dojo/domReady!');
-        foreach(array_merge($modules,$this->_modules) as $var=>$module){
+        if (\Dojo\Manager::IsActive()) {
+            $buttonType = 'dijit';
+        }
+        else {
+            $buttonType = 'dojo';
+        }
+        foreach (array_merge($modules, $this->_modules) as $var => $module) {
             $bubble->addModule($module, $var);
         }
         $bubble->defFunction(<<<JS
-
-on(dom.byId("$sender"), "$eventName", function(){
+on($buttonType.byId("$sender"), "$eventName", function(){
     $functionCode
   });
-
 JS
-);
+        );
     }
+
 }

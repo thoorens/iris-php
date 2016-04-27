@@ -313,7 +313,7 @@ SCRIPTEND;
     public function getItem($name) {
         //iris_debug($name);
         if (!isset($this->_items[$name])) {
-            iris_debug($name);
+            //iris_debug($name);
         }
         return $this->_items[$name];
     }

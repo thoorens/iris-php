@@ -1,8 +1,5 @@
 <?php
-
 namespace Dojo\Engine;
-
-use Iris\System\tRepository;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -10,7 +7,7 @@ use Iris\System\tRepository;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -23,8 +20,7 @@ use Iris\System\tRepository;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Bubble {
-
-    use tRepository;
+    use \Iris\System\tRepository;
 
     const TEXT = 1;
     const JSON = 2;
