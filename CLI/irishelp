@@ -1,2 +1,2 @@
 # This program will launch iris.php with |less
-iris.php $1 |less
+iris.php -h=$1 |less

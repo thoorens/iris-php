@@ -175,7 +175,7 @@ Messages::$Help['Ext']['v'] ='FALSE';
 // help
 // ==========================================================================================================================================
 Messages::$Help['Fr']['h2'] = "
-        iris.php -h=help: (ou -h=h:)
+        iris.php -h=help (ou -h=h)
         iris.php -h=show (ou -h=s)
         iris.php -h=language (ou -h=1)
         iris.php -h=test (ou -h=t)
