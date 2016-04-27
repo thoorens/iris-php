@@ -1,8 +1,6 @@
 #! /usr/bin/env php
 <?php
 
-
-
 /**
  * 
  * @param type $var
@@ -14,33 +12,52 @@ function winShellVar($var) {
 
 /**
  * Borrowed from http://php.net/manual/fr/function.rcopy.php
+ * https://secure.php.net/manual/fr/function.copy.php
  */
 // removes files and non-empty directories
 function rrmdir($dir) {
     if (is_dir($dir)) {
         $files = scandir($dir);
-        foreach ($files as $file)
-            if ($file != "." && $file != "..")
+        foreach ($files as $file) {
+            if ($file != "." && $file != "..") {
                 rrmdir("$dir/$file");
+            }
+        }
         rmdir($dir);
     }
-    else if (file_exists($dir))
+    else if (file_exists($dir)) {
         unlink($dir);
+    }
 }
 
-// copies files and non-empty directories
-function rcopy($src, $dst) {
-    if (file_exists($dst))
+/**
+ * copies files and non-empty directories
+ * 
+ * @param type $src
+ * @param type $dst
+ * @param boolean $windows
+ */
+function rcopy($src, $dst, $windows) {
+    if (file_exists($dst)) {
         rrmdir($dst);
+    }
     if (is_dir($src)) {
         mkdir($dst);
         $files = scandir($src);
-        foreach ($files as $file)
-            if ($file != "." && $file != "..")
-                rcopy("$src/$file", "$dst/$file");
+        foreach ($files as $file) {
+            if ($file != "." && $file != "..") {
+                rcopy("$src/$file", "$dst/$file", $windows);
+            }
+        }
     }
-    else if (file_exists($src))
-        copy($src, $dst);
+    else if (file_exists($src)) {
+        if ($windows) {
+            copy($src, $dst);
+        }
+        else {
+            system("cp -a $src $dst");
+        }
+    }
 }
 
 // end of borrowing
@@ -49,8 +66,9 @@ function rcopy($src, $dst) {
 
 /* Only root may install Iris-PHP */
 
-if (PHP_OS == 'Linux')
+if (PHP_OS == 'Linux') {
     $windows = \FALSE;
+}
 elseif (PHP_OS == 'WINNT') {
     $windows = \TRUE;
 }
@@ -98,35 +116,51 @@ else:
         echo "Creating directory $target\n";
         mkdir($target, 0777, \TRUE);
         echo "Copying library folders...\n";
-        echo "  -main library (Iris)\n";
-        rcopy('Iris', "$target/Iris");
-        echo "  -Iris LayOut resources (ILO)\n";
-        rcopy('ILO', "$target/ILO");
-        echo "  -Iris Internal modules (IrisInternal)\n";
-        rcopy('IrisInternal', "$target/IrisInternal");
-        echo "  -Iris Command Line Interpreter (CLI)\n";
-        rcopy('CLI', "$target/CLI");
-        echo "  -Dojo extensions (Dojo)\n";
-        rcopy('Dojo', "$target/Dojo");
-        echo "  -Iris WorkBench (IrisWB)\n";
-        rcopy('IrisWB', "$target/IrisWB");
-        echo "  -Tutorial internal library (Tutorial)\n";
-        rcopy('Tutorial', "$target/Tutorial");
-        echo "  -Payoff library (Tutorial)\n";
-        rcopy('Tutorial', "$target/Payoff");
-        echo "  -Special folders Extensions and Core (for class customisation)\n";
-        rcopy('Extensions', "$target/Extensions");
-        rcopy('Core', "$target/Core");
+        $folders = [
+            "CLI" => "  -Iris Command Line Interpreter (CLI)",
+            "Calendar" => "  -A library for Calendar extensions",
+            "Core" => "  -Special folder Core (for class customisation)",
+            "Extensions" => "  -Special folder Extensions (for class customisation)",
+            "Dojo" => "  -Dojo extensions (Dojo)",
+            "IrisWB" => "  -Iris WorkBench (IrisWB)",
+            "Iris" => "  -main library (Iris)",
+            "ILO" => "  -Iris LayOut resources (ILO)",
+            "IrisInternal" => "  -Iris Internal modules (IrisInternal)",
+            "JQuery" => "  -A library for JQuery extensions",
+            "Payoff" => "  -Payoff library (Payoff)",
+            "TextFormat" => "Conceived as an extension of Vendor\MarkDown",
+            "Tutorial" => "  -Tutorial internal library (Tutorial)",
+            "Vendors" => "composed of libraries written by other programmers",
+        ];
+        foreach ($folders as $name => $description) {
+            echo $description."\n";
+            rcopy($name, "$target/$name", $windows);
+        }
+        $files = [
+            'gpl-3.0.txt' => "A copy of the GNU general Licence",
+        ];
+        foreach ($files as $name => $description) {
+            echo $description."\n";
+            copy($name, "$target/$name");
+        }
         if ($windows) {
             $system32 = winShellVar("systemroot");
             $system32 .= "\\system32";
             $wtarget = str_replace('/', '\\', $target);
-            $cmd = "mklink $system32\iris.php $wtarget\\CLI\iris.php";
+            $cmd = "mklink $system32\\iris.php $wtarget\\CLI\\iris.php";
             shell_exec($cmd);
         }
         else {
-            echo "Creating iris.php in /usr/local/bin\n";
-            link("$target/CLI/iris.php", "/usr/local/bin/iris.php");
+            echo "Creating a symbolic link from $target/CLI/iris.php to /usr/local/bin\n";
+            if (file_exists("/usr/local/bin/iris.php")) {
+                unlink("/usr/local/bin/iris.php");
+            }
+            symlink("$target/CLI/iris.php", "/usr/local/bin/iris.php");
+            echo "Creating irishelp in /usr/local/bin\n";
+            if (file_exists("/usr/local/bin/irishelp")) {
+                unlink("/usr/local/bin/irishelp");
+            }
+            symlink("$target/CLI/irishelp", "/usr/local/bin/irishelp");
         }
     endif;
 endif;
