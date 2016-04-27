@@ -1,15 +1,26 @@
 <?php
+
 namespace IrisInternal\documents\controllers;
 
 use Iris\Documents\Manager;
 
 /*
- * This file is part of IRIS-PHP, distributed under the General Public License version 3.
- * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
- * More details about the copyright may be found at
- * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
- *  
- * @copyright 2011-2015 Jacques THOORENS
+ * This file is part of IRIS-PHP.
+ *
+ * IRIS-PHP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * IRIS-PHP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @copyright 2012 Jacques THOORENS
  */
 
 /**
@@ -27,14 +38,6 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
      */
     public function security() {
         \Iris\SysConfig\Settings::$DisplayRuntimeDuration = \FALSE;
-    }
-
-    /**
-     * A standart controller has to verify that the user is allowed to 
-     * have access to it. This controller grants access to everybody
-     */
-    protected function _verifyAcl() {
-        
     }
 
     public function saveAction() {
@@ -71,10 +74,8 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         $this->_resource('bg');
     }
 
-    /**
-     * Download a css file from ILO
-     */
     public function cssAction() {
+        die('CSS');
         $this->_resource('css');
     }
 
@@ -95,7 +96,7 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
     }
 
     private function _resource($base) {
-        $manager = \Iris\Documents\Manager::GetInstance();
+        $manager = Manager::GetInstance();
         $params = $this->_response->getParameters();
         array_unshift($params, $base);
         if (strpos('privateprotected', $base) == \FALSE) {
@@ -108,8 +109,9 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
     }
 
     private function _manageFile($save) {
-        $manager = \Iris\Documents\ Manager::GetInstance();
+        $manager = Manager::GetInstance();
         $params = $this->_response->getParameters();
+        iris_debug($params);
         switch ($manager->getFile($save, $params)) {
             case Manager::GOTIT:
                 exit;
@@ -122,6 +124,9 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         }
     }
 
+    protected function _verifyAcl() {
+        
+    }
 
 }
 

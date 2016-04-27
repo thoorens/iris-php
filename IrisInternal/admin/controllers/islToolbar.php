@@ -38,6 +38,7 @@ class islToolbar extends \Iris\MVC\_Islet {
      * @param boolean $menu if true, display the action menu
      */
     public function indexAction($color, $menu = \FALSE) {
+        die('islet Toolbar');
         // the code is shared by the ajax version (see Iris\controllers\helpers)
         $this->__color=$color;
         $this->__time = "n/a";

@@ -1,5 +1,5 @@
 {section(language)} 
-    {block('FR')}
+    {block('fr')}
         <h1>Création du fichier sitemap</h1>
         {button('Création','/!admin/sitemap/create','Crée le fichier de site map')}
     {/block}

@@ -2,7 +2,7 @@
 
 <div id="iris_admintoolbar">
     {ILO_colorStyle($color)}
-    {if($MENU)}
+    {if($MENU and \TRUE)}
         <div id="menu_admin">
             &nbsp;{ILO_menu()}
         </div><!-- menu_admin -->
