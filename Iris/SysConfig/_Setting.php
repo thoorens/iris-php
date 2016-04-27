@@ -93,7 +93,7 @@ abstract class _Setting {
         else {
             $setting = new StandardSetting();
         }
-        \Iris\Log::Debug("Initing setting $camelcaseName with $initialValue", \Iris\Engine\Debug::SETTINGS);
+        \Iris\Engine\Log::Debug("Initing setting $camelcaseName with $initialValue", \Iris\Engine\Debug::SETTINGS);
         $setting->_fullName = $camelcaseName;
         $setting->_value = $initialValue;
         $setting->_defined = \TRUE;
@@ -340,7 +340,7 @@ abstract class _Setting {
      */
     public static function ErrorManagement($message) {
         if (is_null(self::$_CurrentGroup) or !\Iris\Errors\Settings::HasSettingException()) {
-            \Iris\Engine\Debug::Kill("Error in settings: $message");
+            \Iris\Engine\Debug::Abort("Error in settings: $message");
         }
         die($message);
         throw new \Iris\Exceptions\SettingException($message);

@@ -35,7 +35,7 @@ class TSections extends \Iris\DB\_Entity{
 class DBParser extends _Parser {
 
     public function processFile($dsn, $sectionName=FALSE, $inheritance=_Parser::COPY_AND_LINK) {
-     
+        throw new \Iris\Exceptions\NotSupportedException('DBParser is not yet functional');
         echo "ATTENTION A l'ORDRE";
         
         $em = \Iris\DB\_EntityManager::EMFactory($dsn);

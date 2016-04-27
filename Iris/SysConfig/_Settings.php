@@ -65,7 +65,7 @@ abstract class _Settings implements \Iris\Design\iSingleton {
      * a distinct repository for each Settings class
      */
     protected final function __construct() {
-        \Iris\Log::Debug("<u>Creating Setting class for " . static::$_GroupName . '</u>', \Iris\Engine\Debug::SETTINGS);
+        \Iris\Engine\Log::Debug("<u>Creating Setting class for " . static::$_GroupName . '</u>', \Iris\Engine\Debug::SETTINGS);
         _Setting::SetCurrentGroup(static::$_GroupName);
         $this->_init();
         _Setting::ResetGroup();

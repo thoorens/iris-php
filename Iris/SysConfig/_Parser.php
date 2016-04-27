@@ -30,7 +30,7 @@ abstract class _Parser {
      * @param type $type
      * @return _Parser 
      */
-    public static function ParserBuilder($type) {
+    public static function ParserBuilder($type){
         switch ($type) {
             case 'ini':
                 return new IniParser();

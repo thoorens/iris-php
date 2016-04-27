@@ -53,6 +53,8 @@ class Settings {
         self::$DateMode = \Iris\Time\TimeDate::JAPAN;
         // By default the view script templates are not cached
         self::$CacheTemplate = \Iris\MVC\Template::CACHE_NEVER;
+        // By default the debug message will not be emited
+        self::$DebugMode = \Iris\Engine\Log::POS_NONE;
     }
 
     /**
@@ -159,6 +161,22 @@ class Settings {
      * @var int
      */
     public static $ErrorDebuggingLevel = 1;
+    
+    /**
+     * The path to the database used internally by admintoolbar to contain
+     * the application module, controller and method names
+     * 
+     * @var string
+     */
+    public static $InternalDatabase = "/config/base/adminparams.sqlite";
+
+
+    /**
+     *Debug position : will be inited to POS_NONE
+     * @var int
+     */
+    public static $DebugMode = \NULL;
+    
 
     /* -------------------------------------------------------------------------
      * Parameters related to databases
@@ -166,7 +184,8 @@ class Settings {
     
     
     public static $DefaultEntityMananagerClass = '\\Iris\\DB\\Dialects\\Em_PDOmySQL';
-   
+    
+    public static $SqliteCreateMissingFile = \TRUE;
     
     /* -------------------------------------------------------------------------
      * Parameters related to forms
