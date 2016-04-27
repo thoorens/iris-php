@@ -39,15 +39,37 @@ abstract class _EntityManager {
     const FK_TABLE = 0;
     const FK_FROM = 1;
     const FK_TO = 2;
+    const PATH = '\Iris\DB\Dialects\\';
 
+    /**
+     * The recognized DBMS
+     */
+    const MYSQL = 1;
+    const SQLITE = 2;
+    const POSTGRESQL = 3;
+    const ORACLE = 4;
+
+    private static $_DBClasses = [
+        self::MYSQL => 'Em_PDOmySQL',
+        self::SQLITE => 'Em_PDOSQLite',
+        self::POSTGRESQL => 'Em_PDOPostgresql',
+        self::ORACLE => 'EmPDO_Oracle'
+    ];
+    private static $_DBNames = [
+        self::MYSQL => 'mysql',
+        self::SQLITE => 'sqlite',
+        self::POSTGRESQL => 'postgresql',
+        self::ORACLE => 'oracle'
+    ];
     public static $LeftLimits = "SELECT min(%s) First, max(%s) Previous FROM %s WHERE %s < '%s'";
     public static $RightLimits = "SELECT max(%s) Last, min(%s) Next FROM %s WHERE %s > '%s'";
+    private static $_Repository = array();
 
     /**
      * Mainly for test purpose (permits to place models in other places)
      * @var string 
      */
-    public static $entityPath = '\\models';
+    protected static $_EntityPath = '\\models';
 
     /**
      * Instance privilégiée
@@ -68,6 +90,36 @@ abstract class _EntityManager {
      * @var _Entity[]
      */
     private $_entityRepository = [];
+
+    /**
+     * Converts a data base system number to its equivalent name
+     * 
+     * @param int $type
+     * @return string
+     */
+    public static function DBName($type) {
+        return self::$_DBNames[$type];
+    }
+
+    /**
+     * Converts a data base system number to its equivalent class name
+     * 
+     * @param int $type
+     * @return string
+     */
+    public static function DBClass($type) {
+        return self::$_DBClasses[$type];
+    }
+
+    /**
+     * Converts a database system name to its equivalent number
+     * 
+     * @param string $name
+     * @return int
+     */
+    public static function DBNumber($name) {
+        return array_search($name, self::$_DBNames);
+    }
 
     /**
      * Only first instance is registred. Another instance
@@ -124,6 +176,17 @@ abstract class _EntityManager {
         return $entity;
     }
 
+    protected static function _GetNew($manager, $id, $dsn, $username, $passwd, &$options = []) {
+        if (!isset(self::$_Repository[$id])) {
+            //$entityManager = new $manager($dsn, $username, $passwd, $options);
+            self::$_Repository[$id] = new $manager($dsn, $username, $passwd, $options);
+        }
+        else {
+            
+        }
+        return self::$_Repository[$id];
+    }
+
     /**
      * The constructor mustn't be used except in a factory
      * 
@@ -133,11 +196,12 @@ abstract class _EntityManager {
      * @param boolean $default : if TRUE store this EM as default
      * @param string[] $options additional options
      */
-    protected function __construct($dsn, $username, $passwd, &$options = []) {
-        foreach (static::$_Options as $key => $value) {
-            $options[$key] = $value;
-        }
-    }
+    protected abstract function __construct($dsn, $username, $passwd, &$options = []);
+//    {
+//        foreach (static::$_Options as $key => $value) {
+//            $options[$key] = $value;
+//        }
+//    }
 
     /**
      * Return the default instance (creating it if necessary)
@@ -201,6 +265,30 @@ abstract class _EntityManager {
         return sprintf("%s:host=%s;dbname=%s;", $param->database_adapter, $param->database_host, $param->database_dbname);
     }
 
+    public static function GetEntityPath() {
+        return self::$_EntityPath;
+    }
+
+    public static function SetEntityPath($entityPath) {
+        self::$_EntityPath = $entityPath;
+    }
+
+    /**
+     *
+     * @param string $dsn
+     * @param string $username
+     * @param string $passwd
+     * @param boolean $default
+     * @param mixed $options
+     * @return _EntityManager
+     * @deprecated since january 2016 
+     */
+    public static function EMFactory($dsn, $username = \NULL, $passwd = \NULL, $options = []) {
+        $type = strtok($dsn, ':');
+        $typeNumber = self::DBNumber($type);
+        return self::_EMFactory($typeNumber, -1, $dsn, $username, $passwd, $options);
+    }
+
     /**
      *
      * @param string $dsn
@@ -210,14 +298,37 @@ abstract class _EntityManager {
      * @param mixed $options
      * @return _EntityManager 
      */
-    public static function EMFactory($dsn, $username = \NULL, $passwd = \NULL, $options = []) {
+    protected static function _EMFactory($type, $id, $dsn, $username = \NULL, $passwd = \NULL, $options = []) {
+        if(isset(self::$_Repository[$id])){
+            return self::$_Repository[$id];
+        }
         if (!is_string($dsn)) {
             throw new \Iris\Exceptions\NotSupportedException('No analyse written of config');
             //@todo extraire le dsn, username et password
         }
-        $manager = '\\Iris\\DB\\Dialects\\' . self::_GetDBType($dsn);
+        if (!empty($dsn)) {
+            switch ($type) {
+                case self::MYSQL:
+                    $class = self::DBClass(self::MYSQL);
+                    break;
+                case self::SQLITE :
+                    $class = self::DBClass(self::SQLITE);
+                    break;
+                case self::POSTGRESQL:
+                    $class = self::DBClass(self::POSTGRESQL);
+                    break;
+                case self::MYSQL:
+                    $class = self::DBClass(self::ORACLE);
+                    break;
+                default:
+                    throw new \Iris\Exceptions\NotSupportedException('Invalid database type');
+            }
+        }
+        $manager = self::PATH . $class;
         try {
-            $entityManager = new $manager($dsn, $username, $passwd, $options);
+            if ($id == -1)
+                $id = $dsn;
+            $entityManager = self::_GetNew($manager, $id, $dsn, $username, $passwd, $options);
         }
         catch (Exception $exc) {
             $message = $exc->getMessage();
@@ -225,6 +336,52 @@ abstract class _EntityManager {
             throw new \Iris\Exceptions\DBException('Error opening the database. Check parameters');
         }
         return $entityManager;
+    }
+
+    public static function EMByNumber($entityNumber = 0, &$options = []) {
+        // the number 999 permits to access the internal database for admin toolbar
+        if ($entityNumber == 999) {
+            $fileName = IRIS_PROGRAM_PATH . \Iris\SysConfig\Settings::$InternalDatabase;
+            return self::_EMFactory(self::SQLITE, $entityNumber, "sqlite:$fileName");
+        }
+        elseif ($entityNumber == 998) {
+            $fileName = 'library/IrisInternal/iris/irisad.sqlite';
+            return self::_EMFactory(self::SQLITE, $entityNumber, "sqlite:$fileName");
+        }
+        $varName = 'param_database';
+        // database.ini has no appended number
+        if ($entityNumber != 0) {
+            $varName .= $entityNumber;
+        }
+        $params = \Iris\Engine\Memory::Get($varName);
+        $mode = \Iris\Engine\Mode::GetSiteMode();
+        $param = $params[$mode];
+        $adapterName = $param->database_adapter;
+        $adapterNumber = self::DBNumber($adapterName);
+        $host = $param->database_host;
+        $dbname = $param->database_dbname;
+        if($adapterNumber == self::SQLITE){
+            //die('sqlite');
+            $dsn = "$adapterName:$param->database_file";
+        }
+        else{//die('not sqlite');
+            $dsn = "$adapterName:host=$host;dbname=$dbname";
+        }
+        $username = $param->database_username;
+        $password = $param->database_password;
+        return self::_EMFactory($adapterNumber, $entityNumber, $dsn, $username, $password, $options);
+
+        /*
+          database_adapter=mysql
+          database_dbname=u3a
+          database_host=localhost
+          database_username=u3a
+          database_password=codd
+
+          ; * in normal cases, these two settings are all right
+          database_charset=utf8
+          database_collate=utf8_general_ci */
+        ;
     }
 
     /**
@@ -306,8 +463,8 @@ abstract class _EntityManager {
                 $identifier[$id] = $result[$id];
             }
         }
-        if(count($identifier)==0){
-            foreach($result as $field=>$value){
+        if (count($identifier) == 0) {
+            foreach ($result as $field => $value) {
                 $identifier[$field] = $value;
             }
         }

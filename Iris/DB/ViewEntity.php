@@ -35,6 +35,10 @@ class ViewEntity extends _Entity {
      */
     protected $_readOnly = \TRUE;
 
+    /**
+     * 
+     * @return _Entity
+     */
     public static function GetEntity() {
         $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());
         if ($entityBuilder->getClass() == 'Iris\\DB\\ViewEntity') {

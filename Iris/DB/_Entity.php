@@ -72,7 +72,7 @@ abstract class _Entity {
 
     /**
      * the _Entity manager used to manage the entity (linked to  
-     * database dns and  parameters
+     * database dns and  parameters)
      * 
      * @var \Iris\DB\_EntityManager
      */
@@ -141,6 +141,8 @@ abstract class _Entity {
      * @var boolean
      */
     protected $_register = \TRUE;
+    
+    protected static $_EntityNumber = 0;
 
     /* =======================================================================================================
      * C O N S T R U C T O R    A N D  F A C T O R Y   M E T H O D S
@@ -156,7 +158,9 @@ abstract class _Entity {
      * @throws \Iris\Exceptions\EntityException
      */
     public static function GetEntity() {
-        $entityBuilder = new EntityBuilder(get_called_class(), func_get_args());
+        $args[] = static::$_EntityNumber;
+        //iris_debug(static::$_EntityNumber,\FALSE);
+        $entityBuilder = new EntityBuilder(get_called_class(), $args);
         return $entityBuilder->createExplicitModel();
     }
 

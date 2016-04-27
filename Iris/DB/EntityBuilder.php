@@ -40,7 +40,7 @@ class EntityBuilder {
 
     /**
      *
-     * @var type 
+     * @var \Iris\DB\Metadatatype 
      */
     private $_metadata = \NULL;
 
@@ -52,7 +52,7 @@ class EntityBuilder {
 
     /**
      *
-     * @var type 
+     * @var string 
      */
     private $_proposedEntityName = \NULL;
 
@@ -101,8 +101,13 @@ class EntityBuilder {
                 $this->_proposedEntityName = strtolower(substr($className, 1));
         }
         foreach ($params as $param) {
+            if (is_numeric($param)) {
+                $this->_entityManager = _EntityManager::EMByNumber($param);
+                //iris_debug($param);
+                //iris_debug($this->_entityManager);
+            }
             // A parameter may be an _EntityManager
-            if ($param instanceof \Iris\DB\_EntityManager) {
+            elseif ($param instanceof \Iris\DB\_EntityManager) {
                 $this->_entityManager = $param;
             }
             // A parameter may be metadata as on object 
@@ -125,6 +130,7 @@ class EntityBuilder {
     /**
      * 
      * @return _Entity
+     * @throws EntityException
      */
     public function createExplicitModel() {
         $entity = $this->_getModel(\FALSE);
@@ -138,6 +144,7 @@ class EntityBuilder {
     /**
      * 
      * @return _Entity
+     * @throws EntityException
      */
     public function createExplicitView() {
         $entity = $this->_getModel(\TRUE);
@@ -162,22 +169,24 @@ class EntityBuilder {
         // error analysis
         $strings = $this->_strings;
         if (count($strings)) {
-            if ($view) {
-                $message = 'An explicit view model class cannot have entity specifications. Put parameters in the class if necessary.';
+            if (count($strings) == 1 and ! is_numeric($strings[0])) {
+                if ($view) {
+                    $message = 'An explicit view model class cannot have entity specifications. Put parameters in the class if necessary.';
+                }
+                else {
+                    $message = 'An explicit model class cannot have entity specifications. Put parameters in the class if necessary.';
+                }
+                throw new EntityException($message, EntityException::$ErrorCode + 1);
             }
-            else {
-                $message = 'An explicit model class cannot have entity specifications. Put parameters in the class if necessary.';
+            if ($this->_hasMetadata()) {
+                if ($view) {
+                    $message = 'An explicit view model class cannot have a metadata parameter';
+                }
+                else {
+                    $message = 'An explicit model class cannot have a metadata parameter';
+                }
+                throw new EntityException($message, EntityException::$ErrorCode + 2);
             }
-            throw new EntityException($message, EntityException::$ErrorCode + 1);
-        }
-        if ($this->_hasMetadata()) {
-            if ($view) {
-                $message = 'An explicit view model class cannot have a metadata parameter';
-            }
-            else {
-                $message = 'An explicit model class cannot have a metadata parameter';
-            }
-            throw new EntityException($message, EntityException::$ErrorCode + 2);
         }
         $entity = $this->_seekEntity($this->_proposedEntityName);
         if (is_null($entity)) {
@@ -186,14 +195,14 @@ class EntityBuilder {
                 $entity = $this->_createInstance($className, $this->_proposedEntityName);
             }
             catch (\Exception $ex) {
-                die('Table inconnue');
+                \Iris\Engine\Debug::Abort('Table inconnue');
             }
         }
         return $entity;
     }
 
     /**
-     * Tries to retrive an table entity by using its name or its metadata. If necessary,
+     * Tries to retrieve a table entity by using its name or its metadata. If necessary,
      * it creates it. It does not use any predefined model class.
      * 
      * @return _Entity
@@ -202,20 +211,18 @@ class EntityBuilder {
     public function createTable() {
         $stringNumber = count($this->_strings);
         // no metadata : 1 and only 1 string
-        if (is_null($this->_metadata)) {
+        if($this->_hasMetadata()){
+           if ($stringNumber != 0) {
+                throw new EntityException('TableEntity::CreateEntity() with a metadata parameter cannot have a table name as parameter.');
+            }
+            $this->_proposedEntityName = $this->_metadata->getTablename(); 
+        }
+        else{
             if ($stringNumber != 1) {
                 throw new EntityException('TableEntity::CreateEntity() expects a metadata or a table name as parameter.');
             }
             $this->_proposedEntityName = $this->_strings[0];
         }
-        // if metadata : no string
-        else {
-            if ($stringNumber != 0) {
-                throw new EntityException('TableEntity::CreateEntity() with a metadata parameter cannot have a table name as parameter.');
-            }
-            $this->_proposedEntityName = $this->_metadata->getTablename();
-        }
-
         $entity = $this->_seekEntity($this->_proposedEntityName);
         if (is_null($entity)) {
             $className = $this->_initialClassName;
@@ -296,6 +303,7 @@ class EntityBuilder {
 
     /**
      * Tries to find an entity by its name in the repository
+     * 
      * @param string $entityName
      * @return _Entity
      */
@@ -312,9 +320,10 @@ class EntityBuilder {
      * @return _EntityManager
      */
     public function getEntityManager() {
+
         if (is_null($this->_entityManager)) {
-            if ($this->_entityManager == 'customers')
-                die($this->_initialClassName);
+//            if ($this->_entityManager == 'customers')
+//not_survive$this->_initialClassName);
             $this->_entityManager = call_user_func([$this->_initialClassName, 'DefaultEntityManager']);
         }
         return $this->_entityManager;

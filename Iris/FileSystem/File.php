@@ -383,7 +383,7 @@ class File {
     }
 
 //    private function _log($message) {
-//        \Iris\Log::Debug($message, \Iris\Engine\Debug::FILE, 'File');
+//        \Iris\Engine\Log::Debug($message, \Iris\Engine\Debug::FILE, 'File');
 //    }
 
     /**

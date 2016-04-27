@@ -156,7 +156,7 @@ class Upload extends _Crud {
         $tempFile->setCreateMissingDir($this->_createMissingDir);
         $newFile = $this->_getFilePath();
 
-        //die("Mode: ".$this->_replaceExistentFile);
+        //not_survive"Mode: ".$this->_replaceExistentFile);
         // why not move_uploaded_file() ?
         $tempFile->moveToFile($newFile, $this->_replaceExistentFile);
         $this->_sharedData['name'] = $tempFile->getBaseName();
@@ -219,7 +219,7 @@ class Upload extends _Crud {
         }
         $trans = new \Iris\Translation\UTF8($fileName);
         $fileName2 = $trans->spaceToUnderscore()->noAccent()->__toString();
-        //die($fileName." - ".$fileName2);
+        //not_survive$fileName." - ".$fileName2);
         return $fileName2;
     }
 

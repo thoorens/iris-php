@@ -21,6 +21,18 @@ namespace Iris\DB\Dialects;
 class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
 
     /**
+     * Each EM will have its own name
+     * @var string
+     */
+    protected static $_EntityManagerName = 'Em_PDOSQLite';
+
+    /**
+     * Sqlite : create the file if not existing
+     * @var boolean
+     */
+    public static $CreateMissingFile = \FALSE;
+
+    /**
      * SQLite uses a file as a container
      * 
      * @var string 
@@ -57,8 +69,8 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
             self::CreateFile($fullFileName);
         }
         $this->_fileName = $fullFileName;
-        $dsn = "$adapter:$fullFileName";
-        parent::__construct($dsn, $userName, $passwd, $options);
+        $fullDSN = "$adapter:$fullFileName";
+        parent::__construct($fullDSN, $userName, $passwd, $options);
     }
 
     public function getFileName() {
@@ -75,28 +87,26 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
         if ($fileName[0] != '/') {
             $fullName = IRIS_ROOT_PATH . '/' . $fileName;
         }
-        else{
+        else {
             $fullName = $fileName;
         }
-        return $fullName;
+       return $fullName;
     }
-    
 
-    public static function CreateFile($fileName){
+    public static function CreateFile($fileName) {
         $fullFileName = self::FullPathName($fileName);
-        if(!file_exists($fullFileName)){
+        if (!file_exists($fullFileName)) {
             touch($fullFileName);
         }
     }
-    
-    public static function PurgeFile($fileName){
+
+    public static function PurgeFile($fileName) {
         $fullFileName = self::FullPathName($fileName);
-        if(file_exists($fullFileName)){
+        if (file_exists($fullFileName)) {
             unlink($fullFileName);
         }
-        
     }
-    
+
     /**
      * SQLite manages Dsn differently and override the _GetDsn method.
      * 
@@ -227,7 +237,6 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
         throw new \Iris\Exceptions\NotSupportedException('BitAnd not implemented');
     }
 
-    
     /**
      * Creates a LIMIT clause for SQLite, in mysql syntax. The syntax with
      * OFFSET keyword is not uses.
@@ -237,6 +246,13 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
     public function getLimitClause() {
         return ' LIMIT %d , %d';
     }
-    
-}
 
+    /**
+     * Indicates that a empty file must be created if the required SQLite file does not exist
+     * @param boolean $CreateMissingFile
+     */
+    public static function setCreateMissingFile($CreateMissingFile) {
+        self::$CreateMissingFile = $CreateMissingFile;
+    }
+
+}

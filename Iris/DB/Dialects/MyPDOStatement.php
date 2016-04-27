@@ -89,11 +89,11 @@ class MyPDOStatement extends \PDOStatement {
             foreach ($input_parameters as $stmt_parameter => $stmt_value) {
                 $this->_preBindingStatement = str_replace("{$stmt_parameter}", "'{$stmt_value}'", $this->_preBindingStatement);
             }
-            \Iris\Log::Debug($this->_preBindingStatement, \Iris\Engine\Debug::DB, 'SQL');
+            \Iris\Engine\Log::Debug($this->_preBindingStatement, \Iris\Engine\Debug::DB, 'SQL');
             $result = parent::execute($input_parameters);
         }
         else {
-            \Iris\Log::Debug($this->_preBindingStatement, \Iris\Engine\Debug::DB, 'SQL');
+            \Iris\Engine\Log::Debug($this->_preBindingStatement, \Iris\Engine\Debug::DB, 'SQL');
             $result = parent::execute();
         }
 

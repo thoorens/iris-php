@@ -1,6 +1,7 @@
 <?php
-
 namespace Iris\DB\Dialects;
+
+use Iris\Exceptions as ie;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -8,30 +9,65 @@ namespace Iris\DB\Dialects;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
- * Implementation of a mySQL entity manager
+ * Implementation of a Posgresql entity manager
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
+class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
+    
+    /**
+     * Each EM will have its own name
+     * @var string
+     */
+    protected static $_EntityManagerName = 'Em_PDOPosgresql';
 
     /**
-     *
-     * @var type 
+     * Postgresql default schema name
+     * @var string
+     */
+    private static $_DefaultSchema = 'public';
+
+    /**
+     * Postgresql default port number
+     * @var int
+     */
+    public static $lDefaultPortNumber = 5432;
+    
+    /**
+     * The port number of the active instance
+     * @var int
      */
     protected $_portNumber;
 
-
-    protected function __construct($dsn, $userName, $passwd, &$options = array()) {
-        // In the case of mySQL, it is necessary to add an option to have utf8 characters
-        $options[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+    private $_schema;
+    
+    /**
+     * Postgresql constructor must add a schema name
+     * 
+     * @param type $dsn
+     * @param type $userName
+     * @param type $passwd
+     * @param type $options
+     */
+    public function __construct($dsn, $userName, $passwd, $options) {
         parent::__construct($dsn, $userName, $passwd, $options);
+        $this->_schema = static::$_DefaultSchema;
     }
+
+    
+
+    /**
+     * In the case of Posgresql, it is necessary to add an option to have utf8 characters
+     *
+     * @var array
+     */
+//    protected static $_Options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
 
     /*
       Example of SHOW COLUMNS FROM output:
@@ -53,6 +89,10 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      */
     public function readFields($tableName) {
         $pdo = $this->_connexion;
+//        SELECT *
+//FROM information_schema.columns
+//WHERE table_schema = 'public'
+//  AND table_name   = 'Customers'
         $results = $pdo->query("show columns from $tableName");
         $fields = $results->fetchAll(\PDO::FETCH_OBJ);
         $metadata = new \Iris\DB\Metadata($tableName);
@@ -77,6 +117,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      * CONSTRAINT `ligne_ibfk_2` FOREIGN KEY (`facture_id`) REFERENCES `facture` (`id`),
      */
 
+    
     public function getForeignKeys($tableName) {
         //@todo find a better way to do it !!!!
         $pdo = $this->_connexion;
@@ -107,6 +148,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      * @return array
      */
     public function listTables($views = \TRUE) {
+//        SELECT table_name FROM information_schema.tables where table_schema = 'public'
         $connexion = $this->getConnexion();
         $results = $connexion->query("SHOW FULL TABLES");
         $data = $results->fetchAll(\PDO::FETCH_NUM);
@@ -129,19 +171,36 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      * @return string
      */
     public function bitXor() {
-        throw new \Iris\Exceptions\NotSupportedException('XOR not supported in mySQL');
+        throw new ie\NotSupportedException('XOR not supported in mySQL');
     }
 
+    
     public function getLimitClause() {
         return ' LIMIT %d, %d';
     }
 
-    /**
-     * In the case of mySQL, it is advisable to add an option to have utf8 characters
-     * @param array $options
-     */
-    public function _addOption(&$options) {
-        $options[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+    public static function getDefaultSchema() {
+        return self::$_DefaultSchema;
     }
 
+    public static function setDefaultSchema($defaultSchema) {
+        self::$_DefaultSchema = $defaultSchema;
+    }
+
+    public function getSchema() {
+        return $this->_schema;
+    }
+
+    public function setSchema($schema) {
+        $this->_schema = $schema;
+    }
+
+
+
+    
+
+    
+    
+
 }
+

@@ -1,23 +1,13 @@
 <?php
-
 namespace Iris\Admin\models;
 
 /*
- * This file is part of IRIS-PHP.   
- * 
- * IRIS-PHP is free software: you can redistribute it and/or modify   
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or   
- * (at your option) any later version.   
- * 
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   
- * GNU General Public License for more details.   
- * 
- * You should have received a copy of the GNU General Public License   
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>. 
- *
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -29,9 +19,9 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDeletable {
 
-    const DB_PARAM_FILE = "/config/base/adminparams.sqlite";
-
     protected static $_InsertionKeys;
+
+    protected static $_EntityNumber = 999;
 
     /**
      * This pragma enabled referential integrity
@@ -39,20 +29,15 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
      */
     protected static $_TableDefinition = 'PRAGMA foreign_keys = ON;';
 
-//    protected static function _AnalyseParameters($params) {
-//        die('ToolBar ?');
-//        $params = parent::_AnalyseParameters($params);
-//        $params[self::ENTITYMANAGER] = $this->_getSystemEM();
-//    }
-
     /**
      * Returns the EM for the system table database.
-     * Its is in /application/config/admin/params.sqlite
+     * Its is usually in /application/config/admin/params.sqlite
+     * If necessary a new database will be created
      * 
      * @return \Iris\DB\_EntityManager 
      */
     public static function DefaultEntityManager() {
-        $dbFile = IRIS_PROGRAM_PATH . self::DB_PARAM_FILE;
+        $dbFile = IRIS_PROGRAM_PATH . \Iris\SysConfig\Settings::$InternalDatabase;
         $errorBase = $newBase = FALSE;
         if (!file_exists($dbFile)) {
             if (!is_writable(dirname($dbFile))) {
@@ -72,8 +57,7 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
             throw new \Iris\Exceptions\FileException("$dbFile cannot be created (verify directory structure and file permissions).");
         }
         else {
-            $dsn = "sqlite:" . $dbFile;
-            $EM = \Iris\DB\_EntityManager::EMFactory($dsn);
+            $EM = \Iris\DB\_EntityManager::EMByNumber(999);
             if ($newBase) {
                 // table creation
                 $connexion = $EM->getConnexion();

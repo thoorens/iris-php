@@ -1,9 +1,5 @@
 <?php
-
 namespace Iris\DB\Dialects;
-
-use Iris\DB\Object,
-    Iris\DB\_Entity;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -24,6 +20,8 @@ use Iris\DB\Object,
  * @version $Id: $ */
 abstract class _Em_PDO extends \Iris\DB\_EntityManager {
 
+    private $dsn;
+
     /**
      * PDO manages the connexion by using a variable
      *
@@ -31,6 +29,16 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      */
     protected $_connexion = NULL;
 
+    
+     /**
+     * database default port number
+     * @var int
+     */
+    protected static $_DefaultPortNumber = \NULL;
+    
+    
+    protected $_portNumber;
+    
     /**
      * The constructor for PDO entity manager.
      *
@@ -40,8 +48,9 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      * @param mixed[] $options additional options
      */
     protected function __construct($dsn, $userName, $passwd, &$options = []) {
-        parent::__construct($dsn, $userName, $passwd, $options);
+        $this->setPortNumber(static::$_DefaultPortNumber);
         try {
+            $this->_addOption($options);
             $pdo = new \PDO($dsn, $userName, $passwd, $options);
             $pdo->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array('\Iris\DB\Dialects\MyPDOStatement', array($this)));
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -113,6 +122,34 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
             $statement->bindValue($key, $value);
         }
         return $statement->execute();
+    }
+
+    /**
+     * Some databases have a portNumber
+     * @param int $portNumber
+     */
+    public static function SetDefaultPortNumber($portNumber) {
+        static::$_DefaultPortNumber = $portNumber;
+    }
+
+    /**
+     * An read accessor for the used port number
+     * @return int
+     */
+    public function getPortNumber() {
+        return $this->_portNumber;
+    }
+
+    public function setPortNumber($portNumber) {
+        $this->_portNumber = $portNumber;
+    }
+
+    /**
+     * If necessary a special option may be added
+     * @param array $options
+     */
+    public function _addOption(&$options) {
+        
     }
 
 }

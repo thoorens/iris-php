@@ -41,9 +41,9 @@ class Em_PDOOracle extends \Iris\DB\Dialects\_Em_PDO {
      */
     public static $BitWiseExtensionEnabled = \FALSE;
 
-    protected function __construct($dsn, $userName = NULL, $passwd = NULL, $default = TRUE, &$options = []) {
+    protected function __construct($dsn, $userName, $passwd, &$options = []) {
         throw new ie\NotSupportedException('Not yet implemented');
-        parent::__construct($dsn, $userName, $passwd, $default, $options);
+        parent::__construct($dsn, $userName, $passwd, $options);
     }
 
     /** @todo need to be implemented */

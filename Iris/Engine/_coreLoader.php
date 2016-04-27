@@ -163,7 +163,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
                 }
             }
             if (!$found and $throwException) {
-                throw new Iris\Exceptions\LoaderException("Can't find standard class $className");
+                throw new \Iris\Exceptions\LoaderException("Can't find standard class $className");
             }
         }
         return $found;

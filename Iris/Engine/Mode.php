@@ -121,7 +121,7 @@ final class Mode {
                         case 'WHAT':
                             print "Exec mode : <br/>";
                             print "DEV - TEST - RECEPT - PROD - WHAT";
-                            \Iris\Engine\Debug::Kill('');
+                            \Iris\Engine\Debug::Abort('');
                             break;
                         case '':
                             $mode = $apacheMode;

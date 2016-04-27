@@ -53,7 +53,7 @@ function iris_assert_callback($script, $line, $message) {
     list($expression, $comment) = explode('//', $message . '//');
     $msg .= "Tested expression: <b>$expression</b><br/>";
     $msg .= "Message : $comment";
-    \Debug::Kill($msg);
+    \Iris\Engine\Debug::Abort($msg);
 }
 
 /**
