@@ -38,9 +38,9 @@ class IrisCSS extends _ViewHelper {
 
     
     public function help($force=FALSE) {
-        $log = \Iris\Log::GetInstance();
+        $log = \Iris\Engine\Log::GetInstance();
         // in development mode, a simplified CSS to manage PAGE logs
-        if (\Iris\Engine\Mode::IsDevelopment() and $log->getPosition()==\Iris\Log::POS_PAGE){
+        if (\Iris\Engine\Mode::IsDevelopment() and $log->getPosition()==\Iris\Engine\Log::POS_PAGE){
             return <<<HTML
 <link href="/iris_aspect/css/iris_debug.css" rel="stylesheet" type="text/css" />
 HTML;

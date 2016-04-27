@@ -141,7 +141,7 @@ class Menu extends _ViewHelper {
     public function render($name = '#def#', $recursive = \FALSE) {
         $menu = is\MenuCollection::GetInstance()->getMenu($name);
         $data = $menu->asArray();
-        \Iris\Log::Debug("ACL ------------------------------------------------", \Iris\Engine\Debug::ACL);
+        \Iris\Engine\Log::Debug("ACL ------------------------------------------------", \Iris\Engine\Debug::ACL);
         return $this->_render($data, $recursive);
     }
 

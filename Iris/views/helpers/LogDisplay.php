@@ -40,7 +40,7 @@ class LogDisplay extends _ViewHelper {
     
     public function help() {
         if (\Iris\Engine\Mode::IsDevelopment()) {
-            $logMessages = \Iris\Log::GetInstance()->render();
+            $logMessages = \Iris\Engine\Log::GetInstance()->render();
             if ($logMessages != '') {
                 return "<div class=\"log\">\n$logMessages\n</div>";
             }
