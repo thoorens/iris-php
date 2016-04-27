@@ -1,6 +1,5 @@
 <?php
 namespace Iris\Subhelpers;
-
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
  * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
@@ -11,7 +10,7 @@ namespace Iris\Subhelpers;
  */
 
 /**
- * Description of Icon
+ * A return to an old version of Icon (before the integration in _SuperlLink family
  *
  * Project IRIS-PHP
  *
@@ -20,7 +19,7 @@ namespace Iris\Subhelpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-class Icon extends _SuperLink{
+class Icon {
 
     private $_tooltipTemplate;
 
@@ -53,7 +52,6 @@ class Icon extends _SuperLink{
     private $_specialUrl = \NULL;
 
     function __construct($name, $tooltipTemplate, $urlParam = '') {
-        parent::__construct($args);
         $this->_operationName = $name;
         if (strpos('create_read_delete_update_upload_first_previous_next_last', $name) !== \FALSE) {
             $this->_predefined = \TRUE;
@@ -68,8 +66,7 @@ class Icon extends _SuperLink{
      * @param boolean $active By default use an active icon (may not active)
      * @return string
      */
-    protected function _render() { //  _render($active) 
-        throw new \Iris\Exceptions\DBException('Render must be modified');
+    function render($active) {
         $manager = \models\crud\CrudIconManager::GetInstance();
         if ($this->_predefined) {
             $dir = $manager->getSystemIconDir();
@@ -124,14 +121,6 @@ class Icon extends _SuperLink{
 
     public function getUrlParam() {
         return $this->_urlParam;
-    }
-
-    public function button($url = BLANKSTRING) {
-        
-    }
-
-    public function link($url = BLANKSTRING) {
-        throw new \Iris\Exceptions\DBException('An icon cannot be displayed as a link');
     }
 
 }

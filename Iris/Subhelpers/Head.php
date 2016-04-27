@@ -266,6 +266,7 @@ HTML;
      * @param string $text The prefinal html text for the page (to be modified)
      * @param \Iris\Time\RuntimeDuration $runtimeDuration The time mesurement since the index.php start
      * @param string $componentId The id of the component to write into 
+     * @todo clarify ajaxmod : no action - why
      */
     private static function _MakeTuning($ajaxMode, &$text, $runtimeDuration, $componentId) {
         try {
