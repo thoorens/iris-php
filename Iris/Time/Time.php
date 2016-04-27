@@ -1,8 +1,5 @@
 <?php
-
 namespace Iris\Time;
-
-use Iris\Exceptions as ie;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -10,7 +7,7 @@ use Iris\Exceptions as ie;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -22,6 +19,12 @@ use Iris\Exceptions as ie;
  * @version $Id: $ */
 class Time extends TimeDate {
 
+    /**
+     * Defines the default format used by __toString and C symbol in toString functions
+     * example : 17:50:10
+     * 
+     * @return string
+     */
     protected function _defaultFormat() {
         $this->isValid(\FALSE);
         return $this->toString('H:i:s');
@@ -35,7 +38,7 @@ class Time extends TimeDate {
 
     public function isValid($test = TRUE) {
         if (!$test and is_null($this->_internalDate)) {
-            throw new ie\InternalException('No operation possible on invalid object of class '.__CLASS__);
+            throw new \Iris\Exceptions\InternalException('No operation possible on invalid object of class '.__CLASS__);
         }
         return !is_null($this->_internalDate);
     }
@@ -47,55 +50,55 @@ class Time extends TimeDate {
      */
 
     public function addDay($day, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function subDay($day, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function addWeek($week, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function subWeek($week, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function addMonth($month, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function subMonth($month, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function addYear($year, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function subYear($year, $clone = \FALSE, $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function getDay($format = 'j', $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function getMonth($format = 'n', $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function getMonthLength($safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function getDayOfWeek($format = 'w', $safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     public function getYear($safe = \TRUE) {
-        return $this->_dateFunction(__FUNCTION__, $safe);
+        return $this->_invalidDateFunction(__FUNCTION__, $safe);
     }
 
     /**
@@ -105,12 +108,12 @@ class Time extends TimeDate {
      * @param string $type The function used
      * @param boolean $safe Safe mode or not
      * @return int Always 0 in unsafe mode
-     * @throws ie\TimeDateException
+     * @throws \Iris\Exceptions\TimeDateException
      */
-    private function _dateFunction($type, $safe) {
+    private function _invalidDateFunction($type, $safe) {
         $this->isValid(\FALSE);
         if ($safe) {
-            throw new ie\TimeDateException("Date operation ($type) is not legal on time function");
+            throw new \Iris\Exceptions\TimeDateException("Date operation ($type) is not legal on time function");
         }
         return 0;
     }

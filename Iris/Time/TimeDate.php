@@ -10,7 +10,7 @@ use Iris\Exceptions as ie;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -59,7 +59,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * @param \DateTimeZone $timeZone
      * @todo change default Time Zone
      */
-    public function __construct($date = NULL, $timeZone = NULL) {
+    public function __construct($date = \NULL, $timeZone = \NULL) {
         if ($date instanceof TimeDate) {
             $this->_internalDate = clone $date->_internalDate;
             if (!is_null($timeZone))
@@ -89,20 +89,20 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * Returns the japanese name of today (e.g. 2015-11-14)
      * @return string
      */
-    public static function Today(){
+    public static function Today() {
         $today = new static();
         return $today->toString();
     }
-    
+
     public function __clone() {
         $this->_internalDate = clone $this->_internalDate;
     }
 
     /**
      * 
-     * @param type $date
-     * @param type $timeZone
-     * @throws \Iris\Exceptions\NotSupportedException
+     * @param type $string1
+     * @param type $string2
+     * @param type $ampm
      */
     protected function _analyseString($string1, $string2, $ampm) {
         $this->_analyseDateString($string1);
@@ -262,6 +262,7 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
                     break;
                 case 't':
                     $string .= $this->getMonthLength($safe);
+                    break;
                 // day of week
                 case 'D': case 'l':
                     $string .= $this->getDayOfWeek($char, $safe);
@@ -275,8 +276,12 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
                 case 'H': case 'h':
                     $string .= $this->getHours($char);
                     break;
-                // minute
-                // second
+                case 'i':
+                    $string .= $this->getMinutes($char);
+                    break;
+                case 's':
+                    $string .= $this->getSeconds($char);
+                    break;
                 case '':
                 // added e.g. 2012-04-09
                 case 'C':
@@ -291,8 +296,10 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     /**
+     * Defines the default format used by __toString and C symbol in toString functions
+     * example : 2016-01-30 17:50:10
      * 
-     * @return type
+     * @return string
      */
     protected function _defaultFormat() {
         $this->isValid(\FALSE);
@@ -303,77 +310,172 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * By default return TRUE if the internal date is initialised. With FALSE parameter,
      * will throw an exception in case of invalid date.
      * 
-     * @param type $test
-     * @return type
+     * @param boolean $test
+     * @return boolean
      * @throws ie\TInternalException
      */
-    public function isValid($test = TRUE) {
+    public function isValid($test = \TRUE) {
         if (!$test and is_null($this->_internalDate)) {
             throw new ie\TInternalException('No operation possible on invalid date');
         }
         return !is_null($this->_internalDate);
     }
 
+    /**
+     * The auto string conversion (using the default format
+     * @return string
+     */
     public function __toString() {
         return $this->_defaultFormat();
     }
 
+    /**
+     * 
+     * @param int $day
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function addDay($day, $clone = \FALSE) {
         return $this->_addInterval($day, 'P%dD', $clone);
     }
 
+    /**
+     * 
+     * @param int $day
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function subDay($day, $clone = \FALSE) {
         return $this->addDay(-$day, $clone);
     }
 
+    /**
+     * 
+     * @param int $week
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function addWeek($week, $clone = \FALSE) {
         return $this->addDay(7 * $week, $clone);
     }
 
+    /**
+     * 
+     * @param int $week
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function subWeek($week, $clone = \FALSE) {
         return $this->addDay(-7 * $week, $clone);
     }
 
+    /**
+     * 
+     * @param int $month
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function addMonth($month, $clone = \FALSE) {
         return $this->_addInterval($month, 'P%dM', $clone);
     }
 
+    /**
+     * 
+     * @param int $month
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function subMonth($month, $clone = \FALSE) {
         return $this->addMonth(-$month, $clone);
     }
 
+    /**
+     * 
+     * @param int $year
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function addYear($year, $clone = \FALSE) {
         return $this->_addInterval($year, 'P%dY', $clone);
     }
 
+    /**
+     * 
+     * @param int $year
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function subYear($year, $clone = \FALSE) {
         return $this->addYear(-$year, $clone);
     }
 
+    /**
+     * 
+     * @param int $hour
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function addHour($hour, $clone = \FALSE) {
         return $this->_addInterval($hour, 'P%dh', $clone);
     }
 
+    /**
+     * 
+     * @param int $minute
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function addMinute($minute, $clone = \FALSE) {
         return $this->_addInterval($minute, 'P%di', $clone);
     }
 
+    /**
+     * 
+     * @param int $second
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function addSecond($second, $clone = \FALSE) {
         return $this->_addInterval($second, 'P%ds', $clone);
     }
 
+    /**
+     * 
+     * @param int $hour
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function subHour($hour, $clone = \FALSE) {
         return -$this->addHour(-$hour, $clone);
     }
 
+    /**
+     * 
+     * @param int $minute
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function subMinute($minute, $clone = \FALSE) {
         return $this->addMinute(-$minute, $clone);
     }
 
+    /**
+     * 
+     * @param int $second
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return type
+     */
     public function subSecond($second, $clone = \FALSE) {
         return $this->addSecond(-$second, $clone);
     }
 
+    /**
+     * 
+     * @param int $int
+     * @param string $format
+     * @param boolean $clone If true, a copy of the object is returned with a modified value
+     * @return \Iris\Time\TimeDate
+     */
     protected function _addInterval($int, $format, $clone = \FALSE) {
         $this->isValid(\FALSE);
         $duration = abs($int);
@@ -398,6 +500,14 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
      * ----------------------------------------------
      */
 
+    /**
+     * Setter for year, month and day in internal date/time
+     * 
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @return \Iris\Time\TimeDate for fluent interface
+     */
     public function setDate($year, $month, $day) {
         if (\is_null($year)) {
             $year = $this->getYear();
@@ -412,18 +522,44 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         return $this;
     }
 
+    /**
+     * Setter for the day  in internal date/time 
+     * 
+     * @param int $day
+     * @return \Iris\Time\TimeDate for fluent interface
+     */
     public function setDay($day) {
         return $this->setDate(\NULL, \NULL, $day);
     }
 
+    /**
+     * Setter for the month in internal date/time 
+     * 
+     * @param int month
+     * @return \Iris\Time\TimeDate for fluent interface
+     */
     public function setMonth($month) {
         return $this->setDate(\NULL, $month, \NULL);
     }
 
+    /**
+     * Setter for the year in internal date/time 
+     * 
+     * @param int $year
+     * @return  \Iris\Time\TimeDate for fluent interface
+     */
     public function setYear($year) {
         return $this->setDate($year, \NULL, \NULL);
     }
 
+    /**
+     * Setter for the hours, minutes and seconds in internal date/time 
+     * 
+     * @param type $hour
+     * @param type $minute
+     * @param type $second
+     * @return \Iris\Time\TimeDate for fluent interface
+     */
     public function setTime($hour, $minute, $second) {
         if (\is_null($hour)) {
             $hour = $this->getHours();
@@ -438,28 +574,50 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         return $this;
     }
 
+    /**
+     * Setter for the hours in internal date/time
+     * 
+     * @param int hour
+     * @return  \Iris\Time\TimeDate for fluent interface
+     */
     public function setHours($hour) {
         return $this->setTime($hour, \NULL, \NULL);
     }
 
+    /**
+     * Setter for the minutes in internal date/time 
+     * 
+     * @param int $minute
+     * @return  \Iris\Time\TimeDate for fluent interface
+     */
     public function setMinutes($minute) {
         return $this->setTime(\NULL, $minute, \NULL);
     }
 
+    /**
+     * Setter for the seconds in internal date/time 
+     * 
+     * @param int $seconds
+     * @return  \Iris\Time\TimeDate for fluent interface
+     */
     public function setSeconds($second) {
         return $this->setTime(\NULL, \NULL, $second);
     }
 
     /**
+     * Compares the current object timedate to another, using string comparison
      * 
      * @param \Iris\Time\DateTime $date
      * return int
      */
     protected function _compare(TimeDate $date) {
+        $this->isValid(\FALSE);
+        $date->isValid(\FALSE);
         return strcmp($this, $date);
     }
 
     /**
+     * Verify that the current object is after another date
      * 
      * @param \Iris\Time\TimeDate $date
      * @return boolean
@@ -469,7 +627,8 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     /**
-     *
+     * Verify that the current object is before another date
+     * 
      * @param \Iris\Time\TimeDate $date
      * @return boolean
      */
@@ -478,7 +637,9 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     /**
-     *
+     * Verify that the current object is after another date
+     * or equal to it
+     * 
      * @param \Iris\Time\TimeDate $date
      * @return boolean
      */
@@ -487,7 +648,9 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     /**
-     *
+     * Verify that the current object is before another date
+     * or equal to it
+     * 
      * @param \Iris\Time\TimeDate $date
      * @return boolean
      */
@@ -496,7 +659,8 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     /**
-     *
+     * Verify that the current object is equal to another date
+     * 
      * @param \Iris\Time\TimeDate $date
      * @return boolean
      */
@@ -505,14 +669,20 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
     }
 
     /**
+     * Gets the day part from the internal date/time
      * 
-     * @return static
+     * @return string
      */
     public function getDay($format = 'j') {
         $this->isValid(\FALSE);
         return $this->_internalDate->format($format);
     }
 
+    /**
+     * Gets the  month part from the internal date/time
+     * 
+     * @return string
+     */
     public function getMonth($format = 'n') {
         $this->isValid(\FALSE);
         switch ($format) {
@@ -525,10 +695,21 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         return $this->_internalDate->format($format);
     }
 
+    /**
+     * Gets the month length part from the internal date/time
+     * 
+     * @return string
+     */
     public function getMonthLength() {
+        $this->isValid(\FALSE);
         return $this->_internalDate->format('t');
     }
 
+    /**
+     * Gets the day of week part from the internal date/time
+     * 
+     * @return string
+     */
     public function getDayOfWeek($format = 'w') {
         $this->isValid(\FALSE);
         switch ($format) {
@@ -541,36 +722,67 @@ class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
         return $this->_internalDate->format($format);
     }
 
-    public function getYear() {
+    /**
+     * Gets the year part from the internal date/time
+     * 
+     * @return string
+     */
+    public function getYear($char = 'Y') {
         $this->isValid(\FALSE);
-        return $this->_internalDate->format('Y');
+        return $this->_internalDate->format($char);
     }
 
+    /**
+     * Gets the hours part from the internal date/time
+     * 
+     * @return string
+     */
     public function getHours($format = 'G') {
         $this->isValid(\FALSE);
         return $this->_internalDate->format($format);
     }
 
+    /**
+     * Gets the minute part from the internal date/time
+     * 
+     * @return string
+     */
     public function getMinutes() {
         $this->isValid(\FALSE);
         return $this->_internalDate->format('i');
     }
 
+    /**
+     * Gets the second part from the internal date/time
+     * 
+     * @return string
+     */
     public function getSeconds() {
         $this->isValid(\FALSE);
         return $this->_internalDate->format('s');
     }
 
+    /**
+     * Translates the object to a string
+     * 
+     * @return string
+     */
     public function serialize() {
         return $this->toString();
     }
 
-    public function unserialize($serialized) {
-        list($year, $month, $day) = explode('-', $serialized);
+    /**
+     * Creates an object from the serialized string 
+     * 
+     * @param string $serializedstring
+     */
+    public function unserialize($serializedstring) {
+        list($year, $month, $day) = explode('-', $serializedstring);
         $this->_internalDate->setDate($year, $month, $day);
     }
 
     /**
+     * Gets the date time zone
      * 
      * @return \DateTimeZone
      */
