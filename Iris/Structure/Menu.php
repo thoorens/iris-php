@@ -134,11 +134,11 @@ class Menu {
 //                $action = $uri[3];
 //            }
 //            if ($externalLink) {
-//                \Iris\Log::Debug('Autorisation external',\Iris\Engine\Debug::ACL);
+//                \Iris\Engine\Log::Debug('Autorisation external',\Iris\Engine\Debug::ACL);
 //                $data[] = $item->asArray();
 //            }
 //            if ($acl->hasPrivilege($resource, $action)) {
-//                \Iris\Log::Debug('Autorisation ACL',\Iris\Engine\Debug::ACL);
+//                \Iris\Engine\Log::Debug('Autorisation ACL',\Iris\Engine\Debug::ACL);
 //                $data[] = $item->asArray();
 //            }
 //        }
