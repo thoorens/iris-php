@@ -34,7 +34,7 @@ abstract class _TranslatedEntity extends \Iris\DB\_Entity {
     protected $_translatedFields = [];
     protected static $_Language;
 
-    public static function __classInit() {
+    public static function __ClassInit() {
         self::$_Language = strtoupper(_Translator::GetCurrentLanguage());
     }
 

@@ -45,7 +45,7 @@ abstract class _Translator {
         
     }
 
-    public static function __ClassInit(){
+    public static function __ClassInit() {
         self::SetLanguage();
     }
     
@@ -75,6 +75,7 @@ abstract class _Translator {
      */
     public static function SetLanguage($newLanguage = \NULL) {
         static $cliLanguage = 'English';
+        echo $newLanguage;
         if (php_sapi_name() == 'cli') {
             if (!is_null($newLanguage)) {
                 $cliLanguage = $newLanguage;
