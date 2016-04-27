@@ -22,14 +22,15 @@ class javascript extends _ajax {
 
     public function indexAction() {
         $this->__functionCode = <<<JS
-   alert('Bouton pressé');             
    domClass.add('zone2','yellowcolor');
-JS
-        ;
+JS;
     }
 
+    /**
+     * create a syncho sending MESS message during 10 000 milliseconds
+     */
     public function synchroAction() {
-        // create a syncho sending MESS message during 10 seconds
+        // the helper is in the script
         //$this->callViewHelper('synchro')->send('MESS', 10000);
     }
 

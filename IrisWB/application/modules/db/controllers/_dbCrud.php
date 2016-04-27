@@ -22,6 +22,7 @@ class _dbCrud extends \modules\db\controllers\_db {
         $this->__form = "Form";
         
         $subhelper = $this->callViewHelper('crudIcon');// \Iris\Subhelpers\_CrudIconManager::GetInstance();
+        iris_debug($actionName);
         list($action, $entity) = explode('_', $actionName);
         $arEntity = explode('Action', $entity);
         $entity = $arEntity[0];

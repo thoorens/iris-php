@@ -35,7 +35,7 @@ namespace Iris\views\helpers;
 class WbExplain extends \Iris\views\helpers\_ViewHelper{
     
     public function help($view){
-        $sequence = \Iris\Structure\_Sequence::GetInstance();
+        $sequence = \wbClasses\DBSequence::GetInstance();
         return $sequence->getContext($view, 'workbench\\Context')."\n<p />\n";
     }
     

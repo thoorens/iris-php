@@ -1,5 +1,4 @@
 <?php
-
 namespace models;
 
 /*
@@ -27,6 +26,7 @@ abstract class _dbManager extends \Iris\DB\_Entity {
      */
     const MYSQL = 1;
     const SQLITE = 2;
+    const POSTGRESQL = 3;
 
     /**
      * Eachs subclasses will have its proper SQL DDL string to create a table
@@ -74,7 +74,7 @@ abstract class _dbManager extends \Iris\DB\_Entity {
      * @return array
      */
     public static function CreateAll() {
-        die('This method <b>CreateAll</b> should be overwritten to be usable');
+        \Iris\Engine\Debug::Abort('This method <b>CreateAll</b> should be overwritten to be usable');
     }
 
     
@@ -96,7 +96,7 @@ abstract class _dbManager extends \Iris\DB\_Entity {
      * Deletes all the tables and views from the database.
      */
     public static function DropAll() {
-        die('This method <b>DropAll</b> should be overwritten to be usable');
+        \Iris\Engine\Debug::Abort('This method <b>DropAll</b> should be overwritten to be usable');
     }
 
     /**

@@ -1,0 +1,38 @@
+{wbHeader()}
+<div id="content" {wbBG()}>
+    <table  class="show">
+        <tr>
+            <th colspan="2">Date</th>
+        </tr>
+        <tr>
+            <td>$date = new \Iris\Time\Date()</td>
+            <td>{(date->toString('d/m/Y'))}</td>
+        </tr>
+        <tr> 
+            <td>$date2 = new \Iris\Time\Date('2015/12/31')</td>
+            <td>{(date2->toString('d/m/Y'))}</td>
+        </tr>
+        <tr>
+            <th colspan="2">Time</th>
+        </tr>
+        <tr>
+            <td>$time = new \Iris\Time\Time()</td>
+            <td>{(time->toString('H:i:s'))}</td>
+        </tr>
+        <tr>
+            <td>$time2 = new \Iris\Time\Time('7:10:20')</td>
+            <td>{(time2->toString('H:i:s'))}</td>
+        </tr>
+        <tr>
+            <th colspan="2">DateTime</th>
+        </tr>
+        <tr>
+            <td>$datetime = new \Iris\Time\DateTime()</td>
+            <td>{(datetime->toString('d/m/Y H:i:s'))}</td>
+        </tr>
+        <tr>
+            <td>$datetime2 = new \Iris\Time\DateTime('2015/12/31 7:10:20')</td>
+            <td>{(datetime2->toString('d/m/Y H:i:s'))}</td>
+        </tr>
+    </table>
+</div>

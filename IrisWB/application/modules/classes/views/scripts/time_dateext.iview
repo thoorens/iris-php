@@ -1,0 +1,79 @@
+<div>
+    <b>All words have been translated into French to test translation features.</b>
+</div>
+<div>
+    <div id="page">
+        <table class="show">
+            <tr>
+                <th colspan="2">Date : {(baseDate->toString('D j F Y'))}</th>
+            </tr>
+            <tr>
+                <td>addDay(1, \TRUE)</td>
+                <td>{(baseDate->addDay(1,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <td>subDay(3, \TRUE)</td>
+                <td>{(baseDate->subDay(3,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <td>addWeek(2, \TRUE)</td>
+                <td>{(baseDate->addWeek(2,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <td>subWeek(3, \TRUE)</td>
+                <td>{(baseDate->subWeek(3,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <td>addMonth(1, \TRUE)</td>
+                <td>{(baseDate->addMonth(1,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <td>subMonth(3, \TRUE)</td>
+                <td>{(baseDate->subMonth(3,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <td>addYear(1, \TRUE)</td>
+                <td>{(baseDate->addYear(1,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <td>subYear(10, \TRUE)</td>
+                <td>{(baseDate->subYear(10,\TRUE)->toString('D j F Y'))}</td>
+            </tr>
+            <tr>
+                <th colspan="2">Compare with {(otherDate->toString('D j F Y'))}</th>
+            </tr><tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>equals($otherDate)</td>
+                <td>{equals}</td>
+            </tr>
+            <tr>
+                <td>after($otherDate)</td>
+                <td>{after}</td>
+            </tr>
+            <tr>
+                <td>before($otherDate)</td>
+                <td>{before}</td>
+            </tr>
+            <tr>
+                <td>since($otherDate)</td>
+                <td>{since}</td>
+            </tr>
+            <tr>
+                <td>since($otherDate)</td>
+                <td>{since2}</td>
+            </tr>
+            <tr>
+                <td>until($otherDate)</td>
+                <td>{until}</td>
+            </tr>
+            <tr>
+                <td>until($otherDate)</td>
+                <td>{until2}</td>
+            </tr>
+        </table>
+    </div>
+
+</div>

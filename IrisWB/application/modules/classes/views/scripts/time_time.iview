@@ -1,0 +1,5 @@
+{wbHeader()}
+<div id="content" {wbBG()}>
+    <h3>Time formating</h3>
+    {TableTime($time,$times)}
+</div>        

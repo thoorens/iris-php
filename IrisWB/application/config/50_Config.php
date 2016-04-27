@@ -1,4 +1,5 @@
 <?php
+ \Iris\SysConfig\Settings::$DataFolder = '/application/data';
 // Test Loader for plain classes:
 //\IrisTest\Engine\Loader::DoTest(1, array('index','transTest'));
 //\Iris\SysConfig\Settings::$DefaultTranslator = '\Iris\Translation\SystemTranslator';
@@ -14,7 +15,7 @@
 \ILO\views\helpers\AdminToolBar::$AjaxMode = \FALSE;
 // MD5 signature is an important feature of Work Bench
 \Iris\SysConfig\Settings::$MD5Signature = \TRUE;
-
+\Iris\SysConfig\Settings::$AvailableLanguages="defresenitnl";
 
 //\Iris\Errors\Settings::$Controller = '/errordemo/Error';
 //echo "Error modified";

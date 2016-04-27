@@ -1,0 +1,11 @@
+{wbHeader()}
+<div>
+    <b>All words have been translated into French to test translation features.</b>
+</div>
+<div id="content" {wbBG()}>
+    <h3>Day formating</h3>
+    {TableDate($date,$dayFormats)}
+    <p>
+        Ces symboles déclenchent une erreur appliqués à un objet de type Time.
+    </p>
+</div>

@@ -91,9 +91,8 @@ class AutoEM {
     public static function GetInstance() {
         if (is_null(self::$_Instance)) {
             $instance = new \wbClasses\AutoEM();
-            $session = \Iris\Users\Session::GetInstance();
-            $instance->_dbType = $session->getValue('entityType', self::SQLITE);
-            $instance->_sqlParameters = $session->getValue('SQLParams', ['file'=>  self::DF_FILENAME]);
+            $instance->_dbType = \Iris\Engine\Superglobal::GetSession('entityType', self::SQLITE);
+            $instance->_sqlParameters = \Iris\Engine\Superglobal::GetSession('SQLParams', ['file'=>  self::DF_FILENAME]);
             $instance->setEm();
             self::$_Instance = $instance;
         }
@@ -146,14 +145,21 @@ class AutoEM {
             switch ($this->_dbType) {
                 case self::SQLITE:
                     $file = $this->_sqlParameters['file'];
-                    $this->_em = \Iris\DB\_EntityManager::EMFactory("sqlite:$file");
+                    $this->_em = \Iris\DB\_EntityManager::EMByNumber(1);
                     break;
                 case self::MYSQL:
                     $host = $this->_sqlParameters['host'];
                     $base = $this->_sqlParameters['base'];
                     $user = $this->_sqlParameters['user'];
                     $password = $this->_sqlParameters['password'];
-                    $this->_em = \Iris\DB\Dialects\Em_PDOmySQL::EMFactory("mysql:host=$host;dbname=$base", $user, $password);
+                    $this->_em = \Iris\DB\_EntityManager::EMByNumber(2);
+                    break;
+                case self::POSTGRESQL:
+                    $host = $this->_sqlParameters['host'];
+                    $base = $this->_sqlParameters['base'];
+                    $user = $this->_sqlParameters['user'];
+                    $password = $this->_sqlParameters['password'];
+                    $this->_em = \Iris\DB\_EntityManager::EMByNumber(3);
                     break;
             }
         }

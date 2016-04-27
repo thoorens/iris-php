@@ -1,0 +1,8 @@
+{wbHeader()}
+<div>
+    <b>All words have been translated into French to test translation features.</b>
+</div>
+<div id="content" {wbBG()}>
+    <h3>Year formating</h3>
+    {TableDate($date,$yearFormats)}
+</div>

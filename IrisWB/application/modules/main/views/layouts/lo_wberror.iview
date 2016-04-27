@@ -9,7 +9,7 @@
             {ILO_adminToolBar()}
             <div id="container">
                 <div id='Title'>
-                    <h1>wbTitle}</h1>
+                    <h1>{wb()}</h1>
                 </div><!-- Title -->
                 <div class="column one">
                     <h2>Col1</h2>

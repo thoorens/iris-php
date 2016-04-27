@@ -16,7 +16,7 @@
         {loremIpsum([0,71,72,73])}
     </div>
     <h3>This zone is yellow (through a new class) added by javascript (and a button event)</h3>
-    {dojo_button("Change color","!",'Change the zone background color to yellow')->setId('myButton')}
+    {button("Change color","!",'Change the zone background color to yellow')->setId('myButton')}
     <div id="zone2">
         {loremIpsum([0,71,72,73])}
     </div>
@@ -29,5 +29,5 @@
 </script>
 
 <!-- EventManager receives a functionCode written in Dojo and so uses Dojo modules -->
-{eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('myButton', $functionCode)}
+eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('myButton', $functionCode)}
  

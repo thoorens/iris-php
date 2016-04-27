@@ -75,6 +75,7 @@ class sample extends _db {
     public function verifyAction() {
         $db = $this->dbOpen(\TRUE); // a call to a helper
         $em = $db->getEm();
+        //iris_debug($em->listTables());
         $tables = $em->listTables();
         foreach ($tables as $table) {
             if ($table[0] == 'v') {
@@ -84,7 +85,7 @@ class sample extends _db {
                 $objects[] = [$table, 'table'];
             }
         }
-        if (count($tables) == 8) {
+        if (count($tables) >0) {
             $this->__Objects = $objects;
             $this->__Complete = \TRUE;
         }

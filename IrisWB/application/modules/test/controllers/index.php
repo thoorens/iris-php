@@ -2,30 +2,17 @@
 
 namespace modules\test\controllers;
 
-/**
- * srv_IrisWB
- * Created for IRIS-PHP 0.9 - beta
- * Description of index
- * 
- * @author jacques
- * @license not defined
+/*
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
  */
-class index extends _test {
 
-    public function indexAction() {
-        // this Title var is required by the default layout defined in _test
-        $this->__Title = "Test des classes Admin";
-        //$scanner = new \Iris\Admin\Scanner();
-        //$scanner->scanApplication();
-        
-    }
+class index extends _test {
+use \wbClasses\tTest;
     
-     public function index2Action() {
-        // this Title var is required by the default layout defined in _test
-        $this->__Title = "Test des classes Admin 2";
-        //$scanner = new \Iris\Admin\Scanner();
-        //$scanner->scanApplication();
-        
-    }
 
 }

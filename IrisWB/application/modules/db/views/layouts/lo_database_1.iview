@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+    <!-- This layout is used only as an exemple of an application defined layout -->
+    <head>
+        {head()}
+        {wbCSS()}
+    </head>
+    <body {wbColors('GREEN2')}>
+        <div id="main">
+            {ILO_adminToolBar()}
+            <div id="container">
+                <div id='Title'>
+                    <h1>{Title}</h1>
+                </div><!-- Title -->
+                <div class="column one">
+                    {if($specialScreen)}
+                        {partial('commons/column1', $this)}
+                    {else}
+                        {subView(1)}
+                    {/if}
+                    <div class="dblogo">
+                        {dbLogo()}
+                    </div>
+                </div><!-- 1 -->
+                <div class="column two2">
+                    {mainView()}
+                </div><!-- 2 -->
+
+            </div><!-- container -->
+            <div id="foot">
+                wbFooter()}
+            </div><!--foot-->
+        </div><!--main-->
+    </body>
+</html>

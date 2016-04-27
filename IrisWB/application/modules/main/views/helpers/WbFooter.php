@@ -38,7 +38,7 @@ class WbFooter extends _ViewHelper {
     const BUTTONS = 5;
 
     public function help($buttons = self::BUTTONS) {
-        $sequence = \Iris\Structure\DBSequence::GetInstance();
+        $sequence = \wbClasses\DBSequence::GetInstance();
         if (\Iris\SysConfig\Settings::$MD5Signature) {
             $signature = ' - ' . $this->callViewHelper('signature')->display();
             $buttonMD5 = $this->callViewHelper('signature')->saveButton();
@@ -47,11 +47,11 @@ class WbFooter extends _ViewHelper {
         else {
             $signature = $buttonMD5 = $buttonCode = '';
         }
-        //@todo : get the layout Name automatically
-        //$html = "<b>Layout :</b> $layoutName";
+        $language = $this->callViewHelper('language');
         $html = "<b>Layout :</b> " . $this->callViewHelper('ILO_layoutName');
         $html .= $signature;
         $html .= '<br/>';
+        $html .= $language->getCaution();
         $html .= $this->callViewHelper('ILO_goInternal', $buttons);
         $html .= $buttonMD5; // possibly no shown
         $html .= $buttonCode; // possibly no shown
@@ -60,6 +60,7 @@ class WbFooter extends _ViewHelper {
         $html .= $this->callViewHelper('button', 'TOC', '/index/toc', 'Table of tests');
         $next = $sequence->getNext();
         $html .= $this->callViewHelper('button', $next);
+        $html .= $language->setTags('btn')->render(['de','en','es','fr','it','nl']);
         return $html;
     }
 

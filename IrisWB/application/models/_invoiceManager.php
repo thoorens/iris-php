@@ -70,6 +70,14 @@ abstract class _invoiceManager extends \models\_dbManager {
                 $em = static::GetEM();
                 $dropView = "DROP VIEW IF EXISTS %s;";
                 $dropTable = "DROP TABLE IF EXISTS %s;";
+                break;
+            case self::POSTGRESQL:
+                $em = static::GetEM();
+                $dropView = "DROP VIEW IF EXISTS %s;";
+                $dropTable = "DROP TABLE IF EXISTS %s CASCADE;";
+                break;
+            case self::POSTGRESQL:
+                
         }
         try {
             $em->directSQLExec(sprintf($dropView, 'vcustomers'));

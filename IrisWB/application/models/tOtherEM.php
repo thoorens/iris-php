@@ -43,7 +43,8 @@ trait tOtherEM {
      * This method will be called upon class loading and will find the correct
      * entity manager for this demo table.
      */
-    public static function __classInit(){
+    public static function __ClassInit() {
+        die('Other');
         self::$_PrivateEntityManager = \Iris\DB\_EntityManager::EMFactory('sqlite:library/IrisWB/application/config/base/acl.sqlite');
     }
 

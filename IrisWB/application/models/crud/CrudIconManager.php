@@ -28,7 +28,7 @@ class CrudIconManager extends \Iris\Subhelpers\_CrudIconManager {
     protected $_iconDir = '/images/icons';  
 
     public function _init() {
-        //die("CrudIconManager");
+        //not_survive"CrudIconManager");
         
         
         $this->_systemIconDir = '/!documents/file/images/icons';

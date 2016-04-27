@@ -33,7 +33,7 @@ namespace models\crud;
  * @version $Id: $ */
 abstract class _localCrud extends \Iris\DB\DataBrowser\_Crud {
  
-    public static function __ClassInit(){
+    public static function __ClassInit() {
         $EM = \models\_dbManager::GetEM();
         static::$_EntityManager = $EM;
     }
