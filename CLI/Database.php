@@ -53,7 +53,7 @@ class Database extends _Process {
         $baseId = $parameters->getDatabase();
         $dbConfigs = $this->_readDBConfigs();
         if (!isset($dbConfigs[$baseId])) {
-            Messages::Abort('ERR_DBiD', $baseId);
+            \Messages::Abort('ERR_DBiD', $baseId);
             
         }
         Messages::Display('', $parameters->getDatabase(\TRUE),$baseId);
@@ -77,7 +77,7 @@ class Database extends _Process {
         $destination = $parameters->getProjectDir() . '/' . $parameters->getApplicationName();
         $destination .= '/config/' . self::IRIS_DB_INIFILE;
         if (file_exists($destination)) {
-            Messages::Abort('ERR_DBINI', $destination);
+            \Messages::Abort('ERR_DBINI', $destination);
         }
         if ($dbConfig->adapter == 'sqlite') {
             $finalFileName = str_replace('%application%', $parameters->getApplicationName(), $dbConfig->dbname);
@@ -219,10 +219,10 @@ class Database extends _Process {
         $configs = $this->_readDBConfigs(\TRUE);
         $dbid = Analyser::PromptUser('Database id (unique internal value)', '');
         if ($dbid == '') {
-            Messages::Abort('ERR_DBSHORT');
+            \Messages::Abort('ERR_DBSHORT');
         }
         elseif (isset($configs[$dbid])) {
-            Messages::Abort('ERR_EXISTID', $dbid);
+            \Messages::Abort('ERR_EXISTID', $dbid);
         }
         $config = new \Iris\SysConfig\Config($dbid);
         $config->adapter = Analyser::PromptUser('Adapter name ', \TRUE, 'sqlite');

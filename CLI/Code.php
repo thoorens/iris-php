@@ -215,7 +215,6 @@ APACHE;
         }
     }
 
-    
     /**
      * Generates a new module with its default controller and action
      * 
@@ -265,7 +264,7 @@ APACHE;
         }
         $controllerPath = "$destinationMod/controllers/$controllerName.php";
         if (file_exists($controllerPath)) {
-            Messages::Abort("MSG_EXISTING_C", $controllerName);
+            \Messages::Abort("ERR_EXISTING_C", $controllerName);
         }
         $parameters = Parameters::GetInstance();
         if ($parameters->getProject()->workbench) {
@@ -284,8 +283,11 @@ APACHE;
                 ]
         );
         Parameters::GetInstance()->setValue(Parameters::CONTROLLERNAME, $controllerName);
-        $this->_newAction($destination, $moduleName, $controllerName, $actionName);
         \Messages::Display('MSG_CREATE_C', $controllerName);
+        if ($actionName != 'index') {
+            $this->_newAction($destination, $moduleName, $controllerName, "index");
+        }
+        $this->_newAction($destination, $moduleName, $controllerName, $actionName);
     }
 
     /**
@@ -301,7 +303,7 @@ APACHE;
         $destinationMod = "$destination/modules/$moduleName";
         $scriptName = "$destinationMod/views/scripts/{$controllerName}_$actionName.iview";
         if (file_exists($scriptName)) {
-            Messages::Abort("MSG_EXISTING_A", $actionName);
+            \Messages::Abort("ERR_EXISTING_A", $actionName);
         }
         // if a special standard script exists in the application, use it
         $defaultViewName = "$destination/modules/main/views/scripts/_DEFAULTVIEW.iview";
@@ -356,7 +358,7 @@ END;
         $parameters = Parameters::GetInstance();
         $fileName = $parameters->getFileName();
         if (basename($fileName) == 'Code.php') {
-            Messages::Abort('ERR_AUTOCODE');
+            \Messages::Abort('ERR_AUTOCODE');
         }
         echo "Reading $fileName\n";
         $genericParameter = $parameters->getGeneric();

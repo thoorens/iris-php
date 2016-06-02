@@ -128,7 +128,7 @@ namespace CLI {
             $configs = $parameters->getProjects();
             $projectName = $parameters->getProjectName();
             if (!isset($configs[$projectName])) {
-                Messages::Abort('ERR_NOPROJECT',$projectName);
+                \Messages::Abort('ERR_NOPROJECT',$projectName);
             }
             $this->_readProjectDocumentation();
             $parameters->saveProject(); // no necessary ??

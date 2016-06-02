@@ -53,7 +53,7 @@ class CoreMaker extends _Process {
         // verify the class is not an invalid one
         $className = $parameters->getClasseName();
         if (array_search($className, $this->_protectedClasses) !== FALSE) {
-            Messages::Abort('ERR_OVER', $className);
+            \Messages::Abort('ERR_OVER', $className);
         }
         // Please no initial backslash
         if($className == '\\'){
@@ -65,7 +65,7 @@ class CoreMaker extends _Process {
         $classPath = str_replace('\\', '/', $className) . '.php';
         $fromPath = $iris_library . $classPath;
         if (!file_exists($fromPath)) {
-            Messages::Abort('ERR_NOCLASS', $ClassName);
+            \Messages::Abort('ERR_NOCLASS', $ClassName);
         }
 
         // copy class to core_class
@@ -82,7 +82,7 @@ of the class from the current version of Iris-PHP.\n";
         // make new class
         $extendPath = $this->_newFileAndDir($iris_library, 'Extensions/', $classPath);
         if (file_exists($extendPath)) {
-            Messages::Abort('ERR_FILE_EXISTS', $extendPath);
+            \Messages::Abort('ERR_FILE_EXISTS', $extendPath);
         }
         $arClass = explode('\\', $className);
         $class = array_pop($arClass);
