@@ -140,7 +140,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @param string type $className the full name of the class
      * @param boolean $throwException if TRUE and doesn't find, throws an exception
      * @return boolean
-     * @throws Iris\Exceptions\LoaderException
+     * @throws \Iris\Exceptions\LoaderException
      */
     public function loadClass($className, $throwException = \TRUE) {
         //echo "$className<br>";
@@ -175,7 +175,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @param string $className
      * @param int $helperType
      * @return boolean TRUE if the class has been loaded
-     * @throws Iris\Exceptions\LoaderException
+     * @throws \Iris\Exceptions\LoaderException
      */
     public function loadHelper($className, $helperType) {
 // helpers are loaded only once
@@ -197,7 +197,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             }
         }
         if (!$found) {
-            throw new Iris\Exceptions\LoaderException("$className : can't find this class");
+            throw new \Iris\Exceptions\LoaderException("$className : can't find this class");
         }
         $this->_loadedClasses[$helperType][$className] = \TRUE;
         return $found;
@@ -286,7 +286,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
             $viewFile = basename($scriptName);
             $this->_loadDebug("Unable to find ", "$viewFile", \Iris\Engine\Debug::VIEW);
             $context = implode(' - ', $viewFiles);
-            throw new Iris\Exceptions\LoaderException("$controllerDirectory$viewFile.iview" . " : not existing in $context");
+            throw new \Iris\Exceptions\LoaderException("$controllerDirectory$viewFile.iview" . " : not existing in $context");
         }
         return $foundClassFile;
     }
