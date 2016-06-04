@@ -20,6 +20,9 @@ return;
  * \Iris\Engine\Log::POS_AUTO : where it occurs (may spoil the layout)
  * \Iris\Engine\Log::POS_NONE : no message
 */
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_FILE);
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_PAGE);
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_AUTO);
 \Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_NONE);
 
 /*
@@ -29,20 +32,31 @@ return;
 
 /* loader messages (general classes) */
 //\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::LOADER);
-/*                 (view classes) */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
-/*                 (helper classes) */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
+
 /* You can precise here what classes to trace when \Debug::LOADER is set */
 //\Iris\Engine\Loader::AddTrace(['test']);
 
 /* router messages */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
-//
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
+
 /* database (SQL queries) messages */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
+
+/*                 (view classes) */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
+
+/*                 (helper classes) */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
+
+/* ACL management */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ACL);
+
+/* FILE is presently not used */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::FILE);
+
+/* changes in settings */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::SETTINGS);
 
 /* All messages (they are many) */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ALL)
-
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ALL);
 
