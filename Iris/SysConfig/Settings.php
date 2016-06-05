@@ -163,13 +163,16 @@ class Settings {
     public static $ErrorDebuggingLevel = 1;
     
     /**
-     * The path to the database used internally by admintoolbar to contain
-     * the application module, controller and method names
-     * 
-     * @var string
+     *
+     * @var int
      */
-    public static $InternalDatabase = "/config/base/adminparams.sqlite";
-
+    public static $InternalDatabaseNumber = 99;
+    
+    /**
+     *
+     * @var int
+     */
+    public static $AdDatabaseNumber = 98;
 
     /**
      *Debug position : will be inited to POS_NONE
