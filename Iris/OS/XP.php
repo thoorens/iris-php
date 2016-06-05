@@ -27,7 +27,7 @@ class XP extends _OS{
     
     protected function __construct() {
         $version = self::_DetectOS();
-        Messages::Abort('ERR_BAD_OS',$version);
+        \Messages::Abort('ERR_BAD_OS',$version);
         parent::__construct();
     }
 
