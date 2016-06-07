@@ -6,7 +6,7 @@
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS 
  */
 
 /** 
@@ -22,14 +22,36 @@ $irisLibrary = IRIS_ROOT_PATH . '/' . IRIS_LIBRARY;
 $irisEngineDir = "$irisLibrary/Iris/Engine/";
 
 
-require_once $irisEngineDir . 'coreFunctions.php';
-include_once $irisLibrary . '/Iris/Design/iSingleton.php';
-include_once $irisEngineDir . '/tSingleton.php';
-include_once $irisEngineDir . '/Debug.php';
-include_once $irisEngineDir . '/PathArray.php';
-include_once $irisEngineDir . '/Mode.php';
-include_once $irisEngineDir . '/_coreLoader.php';
+
 // If you use your own copy of LoadLoader, this is the place to specify
 // the path to your personal version of \Iris\Engine\Loader
 $customDir = $irisEngineDir;
-include_once $customDir . '/Loader.php';
+$coreClasses = [
+    'coreFunctions.php',
+    'Debug.php',
+    '/Iris/Design/iSingleton.php',
+    'tSingleton.php',
+    'Log.php',
+    'LogItem.php',
+    '/Iris/SysConfig/Settings.php',
+    'PathArray.php',
+    'Mode.php',
+    '_coreLoader.php',
+    '!Loader.php'
+];
+foreach($coreClasses as $class){
+    switch($class[0]){
+        case '/':
+            $path = $irisLibrary . $class;
+            break;
+        case '!':
+            $path =  $customDir . substr($class, 1);
+            break;
+        default:
+            $path =  $irisEngineDir . $class;
+    }
+    if(defined('IRIS_CORE')) echo "Loading $path<br/>";
+    include_once $path;    
+}
+Iris\SysConfig\Settings::__ClassInit();
+if(defined('IRIS_CORE'))die('OK');
