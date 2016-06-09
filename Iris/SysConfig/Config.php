@@ -182,7 +182,7 @@ class Config implements \IteratorAggregate {
     }
 
     protected function _debug($color='red') {
-        echo '<h1>' . $this->getName() . '</h1>';
+        print '<h1>' . $this->getName() . '</h1>';
         /**
          * @var Config config
          */
@@ -194,7 +194,7 @@ class Config implements \IteratorAggregate {
             if ($this->isProperKey($key)) {
                 $key = "<span style=\"{color:$color}\">$key</span>";
             }
-            echo "<b>$key</b>: $value<br/>\n";
+            print "<b>$key</b>: $value<br/>\n";
         }
     }
 

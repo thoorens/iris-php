@@ -206,7 +206,7 @@ class AutoForm0 {
      */
     private function _fromMetadata($field, $formFactory) {
         $name = $field->getFieldName();
-        //echo $field->getType();
+        //print $field->getType();
         switch ($field->getType()) {
             case 'BOOL':
                 $element = $formFactory->createCheckbox($name);

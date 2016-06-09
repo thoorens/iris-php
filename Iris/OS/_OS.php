@@ -359,7 +359,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
         if ($number) {
             echo(sprintf("%${number}s", ' '));
         }
-        //echo $level;
+        //print $level;
         if (is_string($values)) {
             $values = array($values);
         }

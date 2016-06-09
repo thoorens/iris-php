@@ -49,7 +49,7 @@ class ButtonLinkGroup extends _ElementGroup implements iAidedValue {
         $value = '';
         foreach($this->_subComponents as $name=>$option){
             $index = $this->_name.$name;
-            // echo "$index : ".$option->getValue()."<br/> ";
+            // print "$index : ".$option->getValue()."<br/> ";
             if(isset($data[$index])){
                 $value = $option->getValue();
             }

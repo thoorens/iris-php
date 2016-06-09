@@ -30,11 +30,11 @@ define('IRIS_DEBUG', TRUE);
  */
 
 /* loader messages (general classes) */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::LOADER);
+\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::LOADER);
 /*                 (view classes) */
 //\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
 /*                 (helper classes) */
-\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
 /* You can precise here what class to trace when \Debug::LOADER is set */
 //\Iris\Engine\Loader::AddTrace(array('test'));
 

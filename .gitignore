@@ -7,3 +7,6 @@
 /Payoff/Examples/
 /IrisWB/application/log/
 /IrisWB/public/Dojo/
+/IrisWB/application/modules/acl/controllers/.php
+/IrisWB/application/modules/db/controllers/.php
+/CLI/help.sqlite

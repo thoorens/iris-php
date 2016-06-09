@@ -65,27 +65,27 @@ class BitField {
     }
 
     public static function Test() {
-        echo "Initing 4<br/>";
+        print "Initing 4<br/>";
         $field = new \Iris\System\BitField(4);
         iris_debug($field->show(), \FALSE);
-        echo "Testing 1 <br/>";
+        print "Testing 1 <br/>";
         iris_debug($field->hasBit(0b1), \FALSE);
-        echo "Testing 5 <br/>";
+        print "Testing 5 <br/>";
         iris_debug($field->hasBit(0b101), \FALSE);
-        echo "Testing all 5 <br/>";
+        print "Testing all 5 <br/>";
         iris_debug($field->hasAllBits(0b101), \FALSE);
-        echo "Testing all 4 <br/>";
+        print "Testing all 4 <br/>";
         iris_debug($field->hasAllBits(0b100), \FALSE);
-        echo "Setting 2<br/>";
+        print "Setting 2<br/>";
         $field->setBit(0b10);
         iris_debug($field->show(), \FALSE);
-        echo "Unsetting 5<br/>";
+        print "Unsetting 5<br/>";
         $field->unsetBit(0b101);
         iris_debug($field->show(), \FALSE);
-        echo "Reversing 9<br/>";
+        print "Reversing 9<br/>";
         $field->reverseBit(0b1001);
         iris_debug($field->show(), \FALSE);
-        echo "Reducing to 12<br/>";
+        print "Reducing to 12<br/>";
         $field->reduceBit(0b1100);
         iris_debug($field->show(), \FALSE);
         \Iris\Engine\Debug::Abort('End of test');

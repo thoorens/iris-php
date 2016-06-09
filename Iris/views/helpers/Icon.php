@@ -46,7 +46,9 @@ class Icon extends _ViewHelper {
      * By default, base directory is the one specified in settings
      */
     protected function _init() {
-        $this->_baseDir = \Iris\SysConfig\Settings::$IconDir;
+        $imageDir =  \Iris\SysConfig\Settings::$ImageFolder;
+        $iconDir = \Iris\SysConfig\Settings::$IconDir;
+        $this->_baseDir = "$imageDir/$iconDir";
     }
 
     /**
@@ -61,6 +63,7 @@ class Icon extends _ViewHelper {
      * @return \Iris\views\helpers\Icon
      */
     public function help($iconName = \NULL, $ref = \NULL, $help = \NULL, $desc = null, $iconText = '', $class = \NULL) {
+        
         if (is_null($iconName)) {
             return $this;
         }

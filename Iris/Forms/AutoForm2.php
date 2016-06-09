@@ -87,7 +87,7 @@ class AutoForm2 {
 //            }
 //            else {
 //                $type = $field->getType();
-//                echo $name;
+//                print $name;
 //                $this->_addComponent($name, $type, $field);
 //            }
 //        }
