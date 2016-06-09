@@ -1,14 +1,6 @@
 <?php
 namespace Iris\Engine;
 
-define('IRIS_ROOT_PATH', dirname(__DIR__));
-define('IRIS_PUBLIC_PATH', __DIR__);
-define('IRIS_LIBRARY','{LIBRARY}');
-set_include_path(IRIS_ROOT_PATH . PATH_SEPARATOR . get_include_path());
-
-
-require_once IRIS_LIBRARY.'/Iris/Engine/Bootstrap.php';
-
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
  * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
@@ -17,6 +9,16 @@ require_once IRIS_LIBRARY.'/Iris/Engine/Bootstrap.php';
  *  
  * @copyright 2011-2016 Jacques THOORENS
  */
+
+\define('IRIS_ROOT_PATH', dirname(__DIR__));
+\define('IRIS_PUBLIC_PATH', __DIR__);
+\define('IRIS_LIBRARY','{LIBRARY}');
+set_include_path(IRIS_ROOT_PATH . PATH_SEPARATOR . get_include_path());
+// Remove comment operator to enable a debug display during core classes loading
+//\define('IRIS_CORE', \TRUE);
+
+require_once IRIS_LIBRARY.'/Iris/Engine/Bootstrap.php';
+
 
 /* 
  * @author Jacques THOORENS (irisphp@thoorens.net)

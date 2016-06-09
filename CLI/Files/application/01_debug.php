@@ -23,7 +23,7 @@ return;
 //\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_FILE);
 //\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_PAGE);
 //\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_AUTO);
-\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_NONE);
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_NONE);
 
 /*
  * Choose the type of message you want to see
