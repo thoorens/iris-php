@@ -7,11 +7,13 @@ namespace Iris\Engine;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 defined('CRLF') or define('CRLF', "\n");
 defined('BLANKSTRING') or define('BLANKSTRING','');
+define('IRIS_INTERNAL', IRIS_PROGRAM_PATH . "/config/base/adminparams.sqlite");
+define('IRIS_AD',IRIS_ROOT_PATH.'/library/IrisInternal/iris/irisad.sqlite');
 
 /**
  * First class to be called, it loads the Autoloader,

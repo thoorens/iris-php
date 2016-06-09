@@ -46,7 +46,7 @@ final class Mode {
     }
 
     /**
-     * Determine if the server is in production mode
+     * Determine if the server is in production/reception mode
      * 
      * @param boolean $server if TRUE, evaluates mode according to server only
      * @return boolean : TRUE if in production or reception, FALSE otherwise
@@ -119,8 +119,8 @@ final class Mode {
                             $mode = 'reception';
                             break;
                         case 'WHAT':
-                            print "Exec mode : <br/>";
-                            print "DEV - TEST - RECEPT - PROD - WHAT";
+                            echo "Exec mode : <br/>";
+                            echo "DEV - TEST - RECEPT - PROD - WHAT";
                             \Iris\Engine\Debug::Abort('');
                             break;
                         case '':

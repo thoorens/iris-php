@@ -143,13 +143,13 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @throws \Iris\Exceptions\LoaderException
      */
     public function loadClass($className, $throwException = \TRUE) {
-        //echo "$className<br>";
+        //print "$className<br>";
         if ($this->_findOverriddenClass($className)) {
             $found = \TRUE;
         }
         else {
             $this->_stackType = self::PLAIN_CLASS;
-            $this->_loadDebug("Searching class ", $className);
+            \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("Searching class ", $className);
             $classPath = $this->classToPath($className);
             $found = FALSE;
             foreach ($this->_classPath[self::PLAIN_CLASS] as $basePath) {
@@ -182,7 +182,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         if (isset($this->_loadedClasses[$helperType][$className])) {
             return \TRUE;
         }
-        $this->_loadDebug("Searching class ", $className, \Iris\Engine\Debug::HELPER);
+        \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("Searching class ", $className, \Iris\Engine\Debug::HELPER);
 // if necessary tries to load an overridden class
         if ($this->_findOverriddenClass($className)) {
             return \TRUE;
@@ -265,14 +265,14 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         $viewFiles[] = sprintf(self::LIBRARY, $this->library . '/Iris/modules/main', $controllerDirectory, $scriptName);
         $found = FALSE;
         $index = 0;
-        $this->_loadDebug("Searching view ", $scriptName, \Iris\Engine\Debug::VIEW);
+        \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("Searching view ", $scriptName, \Iris\Engine\Debug::VIEW);
         while ($index < count($viewFiles)) {
             $file = $viewFiles[$index];
             $extension = (strpos(basename($file), '.') === FALSE) ? '.iview' : '';
             $pathToViewFile = IRIS_ROOT_PATH . '/' . $file . $extension;
-            $this->_loadDebug("Testing $pathToViewFile", "", \Iris\Engine\Debug::VIEW);
+            \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("Testing $pathToViewFile", "", \Iris\Engine\Debug::VIEW);
             if (file_exists($pathToViewFile)) {
-                $this->_loadDebug("Found ", $pathToViewFile, \Iris\Engine\Debug::VIEW);
+                \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("Found ", $pathToViewFile, \Iris\Engine\Debug::VIEW, \TRUE);
                 $foundClassFile = $file;
                 $found = TRUE;
                 if (basename($controllerDirectory) === 'lo') {
@@ -284,7 +284,7 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
         }
         if (!$found) {
             $viewFile = basename($scriptName);
-            $this->_loadDebug("Unable to find ", "$viewFile", \Iris\Engine\Debug::VIEW);
+            \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("Unable to find ", "$viewFile", \Iris\Engine\Debug::VIEW);
             $context = implode(' - ', $viewFiles);
             throw new \Iris\Exceptions\LoaderException("$controllerDirectory$viewFile.iview" . " : not existing in $context");
         }
@@ -354,12 +354,12 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      */
     protected function _tryToLoad($classPath, $debugMode = \Iris\Engine\Debug::LOADER) {
         $fileName = IRIS_ROOT_PATH . "/$classPath.php";
-        $this->_loadDebug("Testing $fileName...", \NULL, $debugMode);
+        \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("Testing $fileName...", \NULL, $debugMode);
         if (!file_exists($fileName)) {
             $found = \FALSE;
         }
         else {
-            $this->_loadDebug("<i>FOUND $fileName !</i>", \NULL, $debugMode);
+            \Iris\Engine\Mode::IsDevelopment() and $this->_loadDebug("FOUND $fileName !", \NULL, $debugMode, \TRUE);
             require_once $fileName;
             $found = \TRUE;
         }
@@ -470,10 +470,13 @@ abstract class _coreLoader implements \Iris\Design\iSingleton {
      * @param string $className the name of the class to follow
      * @param type $mode the mode corresponding to the class (has to marked for debugging)
      */
-    protected function _loadDebug($message, $className = NULL, $mode = \Iris\Engine\Debug::LOADER) {
+    protected function _loadDebug($message, $className = NULL, $mode = \Iris\Engine\Debug::LOADER, $found = \FALSE) {
 // no debugging in production
-        if (!defined('IRIS_DEBUG') or \Iris\Engine\Mode::IsProduction()) {
+        if (!defined('IRIS_DEBUG')) {
             return;
+        }
+        if($found and Log::GetInstance()->getPosition() != Log::POS_FILE){
+            $message = "<b>$message</b>";
         }
 // helpers have to be identified specificly
         if ($this->_stackType != self::PLAIN_CLASS) {

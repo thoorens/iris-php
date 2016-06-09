@@ -84,18 +84,22 @@ class Log implements \Iris\Design\iSingleton{
      * 
      * @var LogItem (array) lines of log
      */
-    private $_items = array();
+    private $_items = [];
 
     public function getPosition() {
         return $this->_position;
     }
 
     /**
-     * Accessor set for position
+     * Accessor set for position. If necessary adds the iris_debug.css file
+     * 
      * @param int $position 
      */
     public function setPosition($position) {
         $this->_position = $position;
+        if($position != Log::POS_NONE){
+            \Iris\views\helpers\StyleLoader::GetInstance()->load('/!documents/file/css/iris_debug.css');
+        }
     }
 
     /**
@@ -126,10 +130,11 @@ class Log implements \Iris\Design\iSingleton{
      * @param LogItem $item 
      */
     private function insert($item) {
-        if ($this->_position & (self::POS_AUTO | self::POS_FILE)) {
+        
+        if ($this->_position & (self::POS_AUTO)) {
             echo $item->render();
         }
-        // for later processingr
+        // for later processing
         $this->_items[] = $item;
     }
 
@@ -142,8 +147,9 @@ class Log implements \Iris\Design\iSingleton{
      * @param int $severity : severity of the message 
      */
     public static function Debug($message, $level = \Iris\Engine\Debug::NONE, $title = NULL, $severity = Log::SEV_DEBUG) {
-        //echo "DEBUG :$message<br>"; 
-        $show = \Iris\SysConfig\Settings::$DebugMode & $level;
+        $debugMode = \Iris\SysConfig\Settings::$DebugMode;
+        $show = $debugMode & $level;
+        //echo "DebugMode ".\Iris\SysConfig\Settings::$DebugMode. "- Level : $level - Show : $show <br/>";
         if ($show) {
             $item = new LogItem($message, $title, $severity);
             self::GetInstance()->insert($item);
@@ -163,7 +169,7 @@ class Log implements \Iris\Design\iSingleton{
                 foreach ($this->_items as $item) {
                     $text .= $item->render($this->_position);
                 }
-                $this->_items = array();
+                $this->_items = [];
                 if ($this->_position == Log::POS_FILE) {
                     $fileName = IRIS_PROGRAM_PATH . '/log/message.log';
                     file_put_contents($fileName, $text, FILE_APPEND);
@@ -181,7 +187,22 @@ class Log implements \Iris\Design\iSingleton{
      * @param int $flag 
      */
     public static function AddDebugFlag($flag) {
-        self::$Debug_Mode += $flag;
+        $old = \Iris\SysConfig\Settings::$DebugMode;
+        \Iris\SysConfig\Settings::$DebugMode |= $flag;
+        //echo "$old to ". \Iris\SysConfig\Settings::$DebugMode . '<br/>';
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public static function Page() {
+        $instance = self::GetInstance();
+        $debugInfo = '';
+        if($instance->_position == self::POS_PAGE){
+            $debugInfo = $instance->render();
+        }
+        return $debugInfo;
     }
 
 }

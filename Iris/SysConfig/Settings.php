@@ -178,7 +178,7 @@ class Settings {
      *Debug position : will be inited to POS_NONE
      * @var int
      */
-    public static $DebugMode = \NULL;
+    public static $DebugMode = 0;
     
 
     /* -------------------------------------------------------------------------

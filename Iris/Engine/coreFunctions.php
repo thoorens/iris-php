@@ -70,6 +70,26 @@ function iris_debug($var, $die = \TRUE, $message = \NULL) {
         \Iris\Engine\Debug::Dump($var);
     }
 }
+
+/**
+ * Print a variable value with an optional message, if the message begins
+ * with '!' it is printed before otherwise it is print after
+ * 
+ * @param mixed $var A printable message or variable
+ * @param string $message The optional message to display
+ */
+function iris_dump($var, $message = \NULL){
+    if(!is_null($message) and $message[0]=='!'){
+        echo substr($message, 1);
+        $message = \NULL;
+    }
+    \Iris\Engine\Debug::Dump($var);
+    if(!is_null($message)){
+        echo $message;
+    }
+}
+
+
 /**
  * Shows an object member value, even if it is protected or private
  * 

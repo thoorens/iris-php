@@ -296,6 +296,7 @@ HTML;
                 if (\Iris\SysConfig\Settings::$DisplayRuntimeDuration and !is_null($runtimeDuration)) {
                     $starter .= $runtimeDuration->jsDisplay($componentId);
                 }
+                $starter .= \Iris\Engine\Log::Page();
                 $text = \str_replace('</body>', $starter . "\n</body>", $text);
             }
         }

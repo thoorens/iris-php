@@ -39,7 +39,7 @@ abstract class Debug {
      */
     public static function Dump($var) {
         echo "<pre>\n";
-        var_dump($var);
+        \var_dump($var);
         echo "</pre>\n";
     }
 
