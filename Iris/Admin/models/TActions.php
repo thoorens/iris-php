@@ -22,7 +22,6 @@ namespace Iris\Admin\models;
 class TActions extends _IrisObject {
 
     protected static $_InsertionKeys = ['Name', 'controller_id'];
-//    protected static $_EntityNumber = 999;
 
     public static function DDLText() {
         return <<<SQL2

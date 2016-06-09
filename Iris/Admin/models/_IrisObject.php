@@ -21,8 +21,11 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
 
     protected static $_InsertionKeys;
 
-    protected static $_EntityNumber = 999;
 
+    public static function __ClassInit() {
+         static::$_EntityNumber = \Iris\SysConfig\Settings::$InternalDatabaseNumber;
+    }
+    
     /**
      * This pragma enabled referential integrity
      * @var string 
@@ -57,7 +60,7 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
             throw new \Iris\Exceptions\FileException("$dbFile cannot be created (verify directory structure and file permissions).");
         }
         else {
-            $EM = \Iris\DB\_EntityManager::EMByNumber(999);
+            $EM = \Iris\DB\_EntityManager::EMByNumber(static::$_EntityNumber);
             if ($newBase) {
                 // table creation
                 $connexion = $EM->getConnexion();

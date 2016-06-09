@@ -149,6 +149,7 @@ abstract class _Entity {
      * =======================================================================================================
      */
 
+       
     /**
      * Finds an entity from 3 possible types of parameters : strings, entity Manager and metadata.
      * The entity is taken from the repository or created if necessary.
@@ -158,8 +159,9 @@ abstract class _Entity {
      * @throws \Iris\Exceptions\EntityException
      */
     public static function GetEntity() {
+        
         $args[] = static::$_EntityNumber;
-        //iris_debug(static::$_EntityNumber,\FALSE);
+        //iris_debug($args);
         $entityBuilder = new EntityBuilder(get_called_class(), $args);
         return $entityBuilder->createExplicitModel();
     }

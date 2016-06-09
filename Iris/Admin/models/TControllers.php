@@ -21,7 +21,6 @@ class TControllers extends _IrisObject {
 
     protected static $_InsertionKeys = ['Name', 'module_id'];
     
-    //protected static $_EntityNumber = 999;
 
     public static function DDLText() {
         return <<<SQL

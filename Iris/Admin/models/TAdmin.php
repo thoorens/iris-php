@@ -19,7 +19,6 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 class TAdmin extends _IrisObject {
 
-    //protected static $_EntityNumber = 999;
 
     public static function DDLText() {
         return <<<SQL2

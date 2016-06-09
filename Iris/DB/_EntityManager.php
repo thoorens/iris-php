@@ -23,6 +23,7 @@ defined('IRIS_PARENT') or define('IRIS_PARENT', '_at_');
 defined('IRIS_CHILDREN') or define('IRIS_CHILDREN', '_children_');
 defined('IRIS_FIELDSEP') or define('IRIS_FIELDSEP', '__');
 
+
 /**
  * This class creates objects based on DSN, UserName and 
  * Password. One of them is conserved as the default.
@@ -91,6 +92,8 @@ abstract class _EntityManager {
      */
     private $_entityRepository = [];
 
+    
+   
     /**
      * Converts a data base system number to its equivalent name
      * 
@@ -339,18 +342,20 @@ abstract class _EntityManager {
     }
 
     public static function EMByNumber($entityNumber = 0, &$options = []) {
-        // the number 999 permits to access the internal database for admin toolbar
-        if ($entityNumber == 999) {
-            $fileName = IRIS_PROGRAM_PATH . \Iris\SysConfig\Settings::$InternalDatabase;
+        // the number $InternalDatabaseNumber permits to access the internal database for admin toolbar
+        if ($entityNumber == \Iris\SysConfig\Settings::$InternalDatabaseNumber) {
+            $fileName = IRIS_INTERNAL;
             return self::_EMFactory(self::SQLITE, $entityNumber, "sqlite:$fileName");
         }
-        elseif ($entityNumber == 998) {
-            $fileName = 'library/IrisInternal/iris/irisad.sqlite';
+        // the number $AdDatabaseNumber permits to access the internal database for adds in demo site
+        elseif ($entityNumber == \Iris\SysConfig\Settings::$AdDatabaseNumber) {
+            $fileName = IRIS_AD;
             return self::_EMFactory(self::SQLITE, $entityNumber, "sqlite:$fileName");
         }
         $varName = 'param_database';
         // database.ini has no appended number
         if ($entityNumber != 0) {
+            iris_debug($entityNumber);
             $varName .= $entityNumber;
         }
         $params = \Iris\Engine\Memory::Get($varName);
