@@ -1,11 +1,11 @@
 <?php
 
 /**
- * This library is a creation of Michel Fortin (based on the work of John Gruber .
+ * This library is a creation of Michel Fortin (based on the work of John Gruber) .
  * See the file License.md in the directory for a complete description 
  * of the work.
  * 
- * The file are taken from an archive downloaded on April 26 2014
+ * The file are taken from an archive downloaded on May 2016
  * https://github.com/michelf/php-markdown
  * 
  * For other explanations, see Michel Fortin's site:
@@ -25,7 +25,10 @@
  * │   └── Markdown.php               (moved to main directory, namespace modified)                                                                                                                                  
  * ├── Readme.md                      (left unchanged)                                                                                                                                                     
  * └── Readme.php                     (left unchanged)
+ *  
  */
+
+
 
 /**
  * 
