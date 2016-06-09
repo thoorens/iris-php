@@ -38,7 +38,7 @@ class Menu extends \Iris\views\helpers\_ViewHelper {
 
     public function help() {
         // If database file doesn't exists, no display
-        if (!file_exists(IRIS_PROGRAM_PATH . \Iris\SysConfig\Settings::$InternalDatabase)) {
+        if (!file_exists(IRIS_INTERNAL)) {
             return '';
         }
         $this->_scanner = new \Iris\Admin\Scanner;
