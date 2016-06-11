@@ -61,14 +61,25 @@ function iris_assert_callback($script, $line, $message) {
  * @param mixed $var A printable message or variable
  * @param boolean $die If true, program dies
  * @param string $message The message to display in die instruction
+ * @param int $traceLevel The trace level for DumpAndDie call will be 2 from i_d() 
  */
-function iris_debug($var, $die = \TRUE, $message = \NULL) {
+function iris_debug($var, $die = \TRUE, $message = \NULL, $traceLevel = 1) {
     if ($die) {
-        \Iris\Engine\Debug::DumpAndDie($var, $message, 1);
+        \Iris\Engine\Debug::DumpAndDie($var, $message, $traceLevel);
     }
     else {
         \Iris\Engine\Debug::Dump($var);
     }
+}
+/**
+ * An alias for iris_debug
+ * 
+ * @param mixed $var A printable message or variable
+ * @param boolean $die If true, program dies
+ * @param string $message The message to display in die instruction
+ */
+function i_d($var, $die = \TRUE, $message = \NULL){
+    iris_debug($var, $die, $message, 2);
 }
 
 /**
