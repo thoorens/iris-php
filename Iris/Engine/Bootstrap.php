@@ -129,7 +129,6 @@ abstract class core_Bootstrap {
         foreach ($configFiles as $filePath) {
             \Iris\Engine\Log::Debug("<b>Reading setting file: $filePath</b>", \Iris\Engine\Debug::SETTINGS);
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
-            print($filePath.'<br/>');
             switch ($ext) {
                 case 'php':
                     require $filePath;
