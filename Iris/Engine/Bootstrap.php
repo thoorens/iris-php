@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\Engine;
 
 /*
@@ -11,17 +12,18 @@ namespace Iris\Engine;
  */
 
 defined('CRLF') or define('CRLF', "\n");
-defined('BLANKSTRING') or define('BLANKSTRING','');
-define('IRIS_INTERNAL', IRIS_PROGRAM_PATH . "/config/base/adminparams.sqlite");
-define('IRIS_AD',IRIS_ROOT_PATH.'/library/IrisInternal/iris/irisad.sqlite');
+/** */
+defined('BLANKSTRING') or define('BLANKSTRING', '');
+//** the database used for some ads in irisphp.org*/
+define('IRIS_AD', IRIS_ROOT_PATH . '/library/IrisInternal/iris/irisad.sqlite');
 
+// IRIS_INTERNAL defined in newProgramm()
 /**
  * First class to be called, it loads the Autoloader,
  * reads all the configuration files
  * and permits to create an instance of Program.
  *
  */
-
 abstract class core_Bootstrap {
 
     /**
@@ -33,21 +35,12 @@ abstract class core_Bootstrap {
     protected $_standardLoaderPath = 'Iris/Engine/LoadLoader.php';
 
     /**
-     * An ordered array of config files to be read automaticaly (instead
-     * of the files in /config). It is not deprecated, but /config offers
-     * a more convenient way to manage parameter files.
-     *
-     * @var string[]
-     */
-    private $_configToRead = NULL;
-
-    /**
      * Implied in the internal overridden class mechanism
      * @var string[]
      *
      * @deprecated will be soon replaced by another mechanism
      */
-    public static $AlternativeClasses = array();
+    public static $AlternativeClasses = [];
 
     /**
      * Default mode for INI parameter files in /config
@@ -85,6 +78,7 @@ abstract class core_Bootstrap {
      * @return Program
      */
     public function newProgram($programName = 'application') {
+        define('IRIS_INTERNAL', IRIS_ROOT_PATH . "/$programName/config/base/adminparams.sqlite");
         // if necessary, load the overridden class names
         $overriddenClasses = "$programName/config/overridden.classes";
         if (file_exists(IRIS_ROOT_PATH . '/' . $overriddenClasses)) {
@@ -92,13 +86,10 @@ abstract class core_Bootstrap {
         }
         $program = new Program($programName);
         // normal case : no configToRead defined, create it
-        if (!is_array($this->_configToRead) or count($this->_configToRead) == 0) {
-            $this->_configToRead = array();
-            $this->_takeAllConfig($programName);
-        }
+        $configFiles = $this->_takeAllConfig($programName);
         // _preConfig normally do nothing and return TRUE
-        if ($this->_preConfig($programName)) {
-            $this->_readConfig($programName);
+        if ($this->_preConfig($programName, $configFiles)) {
+            $this->_readConfig($configFiles);
         }
         $this->_configureErrors();
         $this->_postConfig($programName);
@@ -111,8 +102,10 @@ abstract class core_Bootstrap {
      * and if it returns FALSE, normal _readConfig() is not called
      *
      * @param string $programName The application name
+     * @param string[] $configFiles an array with the file in /config
+     * @return boolean
      */
-    public function _preConfig($programName) {
+    public function _preConfig($programName, &$configFiles) {
         return \TRUE;
     }
 
@@ -131,11 +124,12 @@ abstract class core_Bootstrap {
      *
      * @param string[] $filess
      */
-    private function _readConfig($programName) {
-        sort($this->_configToRead); 
-        foreach ($this->_configToRead as $filePath) {
+    private function _readConfig($configFiles) {
+        sort($configFiles); 
+        foreach ($configFiles as $filePath) {
             \Iris\Engine\Log::Debug("<b>Reading setting file: $filePath</b>", \Iris\Engine\Debug::SETTINGS);
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+            print($filePath.'<br/>');
             switch ($ext) {
                 case 'php':
                     require $filePath;
@@ -165,23 +159,26 @@ abstract class core_Bootstrap {
      *
      * @param string $applicationName
      */
-    private function _takeAllConfig($applicationName) {
+    private function _takeAllConfig($applicationName, $configFiles) {
         $dir = new \DirectoryIterator(IRIS_ROOT_PATH . '/' . $applicationName . '/config/');
         foreach ($dir as $file) {
             if ($file->isFile()) {
-                $this->addConfigFile($file->getPathName());
+                $fileName = $file->getPathName();
+                $index = basename($fileName);
+                $configFiles[$index] = $fileName;
             }
         }
+        return $configFiles;
     }
 
     /**
      * Add a file to the list of files to process at start time.
      * @param string $fileName
      */
-    public function addConfigFile($fileName) {
-        $index = basename($fileName);
-        $this->_configToRead[$index] = $fileName;
-    }
+//    public function addConfigFile($fileName) {
+//        $index = basename($fileName);
+//        $this->_configToRead[$index] = $fileName;
+//    }
 
     /**
      *
