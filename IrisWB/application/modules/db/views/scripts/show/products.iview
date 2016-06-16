@@ -3,7 +3,7 @@
     <h1>List of products</h1>
     {container->divMaster()}
     {foreach(products,product)}
-        <div {container->item($product['Description'])}>
+        <div {container->item($product['id'])}>
             <h3>{(product['Description'])}</h3>
             Price : {(product['Price'])}<br/>
             <ul>

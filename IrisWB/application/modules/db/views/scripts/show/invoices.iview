@@ -3,7 +3,7 @@
     <h1>List of invoices</h1>
     {container->divMaster()}
     {foreach(invoices,invoice)}
-        <div {container->item('Invoice '.$invoice['id'])}>
+        <div {container->item($invoice['id'])}>
             <b>Date: </b>{simpleDate($invoice['Date'])}<br/> 
             <b>Customer's name:</b> {(invoice['CustName'])}
             <ul>
