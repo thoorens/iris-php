@@ -23,7 +23,6 @@ defined('IRIS_PARENT') or define('IRIS_PARENT', '_at_');
 defined('IRIS_CHILDREN') or define('IRIS_CHILDREN', '_children_');
 defined('IRIS_FIELDSEP') or define('IRIS_FIELDSEP', '__');
 
-
 /**
  * This class creates objects based on DSN, UserName and 
  * Password. One of them is conserved as the default.
@@ -45,10 +44,10 @@ abstract class _EntityManager {
     /**
      * The recognized DBMS
      */
-    const MYSQL = 1;
-    const SQLITE = 2;
-    const POSTGRESQL = 3;
-    const ORACLE = 4;
+    const MYSQL = 'mysql'; // 1;
+    const SQLITE = 'sqlite'; //2
+    const POSTGRESQL = 'postgresql'; //3;
+    const ORACLE = 'oracle'; //4;
 
     private static $_DBClasses = [
         self::MYSQL => 'Em_PDOmySQL',
@@ -56,15 +55,10 @@ abstract class _EntityManager {
         self::POSTGRESQL => 'Em_PDOPostgresql',
         self::ORACLE => 'EmPDO_Oracle'
     ];
-    private static $_DBNames = [
-        self::MYSQL => 'mysql',
-        self::SQLITE => 'sqlite',
-        self::POSTGRESQL => 'postgresql',
-        self::ORACLE => 'oracle'
-    ];
+
     public static $LeftLimits = "SELECT min(%s) First, max(%s) Previous FROM %s WHERE %s < '%s'";
     public static $RightLimits = "SELECT max(%s) Last, min(%s) Next FROM %s WHERE %s > '%s'";
-    private static $_Repository = array();
+    private static $_Repository = [];
 
     /**
      * Mainly for test purpose (permits to place models in other places)
@@ -92,17 +86,15 @@ abstract class _EntityManager {
      */
     private $_entityRepository = [];
 
-    
-   
     /**
      * Converts a data base system number to its equivalent name
      * 
      * @param int $type
      * @return string
      */
-    public static function DBName($type) {
-        return self::$_DBNames[$type];
-    }
+//    public static function DBName($type) {
+//        return self::$_DBNames[$type];
+//    }
 
     /**
      * Converts a data base system number to its equivalent class name
@@ -119,8 +111,10 @@ abstract class _EntityManager {
      * 
      * @param string $name
      * @return int
+     * @deprecated since version 2016-6-11
      */
     public static function DBNumber($name) {
+        die('Deprecated');
         return array_search($name, self::$_DBNames);
     }
 
@@ -180,12 +174,10 @@ abstract class _EntityManager {
     }
 
     protected static function _GetNew($manager, $id, $dsn, $username, $passwd, &$options = []) {
+        //print "Creating $id<br/>";
         if (!isset(self::$_Repository[$id])) {
             //$entityManager = new $manager($dsn, $username, $passwd, $options);
             self::$_Repository[$id] = new $manager($dsn, $username, $passwd, $options);
-        }
-        else {
-            
         }
         return self::$_Repository[$id];
     }
@@ -288,21 +280,24 @@ abstract class _EntityManager {
      */
     public static function EMFactory($dsn, $username = \NULL, $passwd = \NULL, $options = []) {
         $type = strtok($dsn, ':');
-        $typeNumber = self::DBNumber($type);
-        return self::_EMFactory($typeNumber, -1, $dsn, $username, $passwd, $options);
+        //$typeNumber = self::DBNumber($type);
+        return self::_EMFactory($type, -1, $dsn, $username, $passwd, $options);
     }
 
     /**
-     *
-     * @param string $dsn
-     * @param string $username
-     * @param string $passwd
-     * @param boolean $default
-     * @param mixed $options
-     * @return _EntityManager 
+     * 
+     * @param type $type
+     * @param type $id
+     * @param type $dsn
+     * @param type $username
+     * @param type $passwd
+     * @param type $options
+     * @return type
+     * @throws \Iris\Exceptions\NotSupportedException
+     * @throws \Iris\Exceptions\DBException
      */
     protected static function _EMFactory($type, $id, $dsn, $username = \NULL, $passwd = \NULL, $options = []) {
-        if(isset(self::$_Repository[$id])){
+        if (isset(self::$_Repository[$id])) {
             return self::$_Repository[$id];
         }
         if (!is_string($dsn)) {
@@ -310,24 +305,11 @@ abstract class _EntityManager {
             //@todo extraire le dsn, username et password
         }
         if (!empty($dsn)) {
-            switch ($type) {
-                case self::MYSQL:
-                    $class = self::DBClass(self::MYSQL);
-                    break;
-                case self::SQLITE :
-                    $class = self::DBClass(self::SQLITE);
-                    break;
-                case self::POSTGRESQL:
-                    $class = self::DBClass(self::POSTGRESQL);
-                    break;
-                case self::MYSQL:
-                    $class = self::DBClass(self::ORACLE);
-                    break;
-                default:
-                    throw new \Iris\Exceptions\NotSupportedException('Invalid database type');
+            if (!isset(self::$_DBClasses[$type])) {
+                throw new \Iris\Exceptions\NotSupportedException('Invalid database type');
             }
+            $manager = '\Iris\DB\Dialects\\' . self::DBClass($type);
         }
-        $manager = self::PATH . $class;
         try {
             if ($id == -1)
                 $id = $dsn;
@@ -342,52 +324,37 @@ abstract class _EntityManager {
     }
 
     public static function EMByNumber($entityNumber = 0, &$options = []) {
-        // the number $InternalDatabaseNumber permits to access the internal database for admin toolbar
-        if ($entityNumber == \Iris\SysConfig\Settings::$InternalDatabaseNumber) {
-            $fileName = IRIS_INTERNAL;
-            return self::_EMFactory(self::SQLITE, $entityNumber, "sqlite:$fileName");
+        if ($entityNumber > 80) {
+            $internalScanner = [\Iris\SysConfig\Settings::$InternalDBClass, 'InternalDB'];
+            $p = $internalScanner($entityNumber);
+            $entityManager = self::_EMFactory($p['type'],$p['id'], $p['dsn'], $p['username'], $p['passwd'],  $options);
         }
-        // the number $AdDatabaseNumber permits to access the internal database for adds in demo site
-        elseif ($entityNumber == \Iris\SysConfig\Settings::$AdDatabaseNumber) {
-            $fileName = IRIS_AD;
-            return self::_EMFactory(self::SQLITE, $entityNumber, "sqlite:$fileName");
+        else {
+            $varName = 'param_database';
+            // database.ini has no appended number
+            if ($entityNumber != 0) {
+                $varName .= $entityNumber;
+            }
+            $params = \Iris\Engine\Memory::Get($varName);
+            //i_d($entityNumber);
+            $param = $params[\Iris\Engine\Mode::GetSiteMode()];
+            $adapterName = $param->database_adapter;
+            $host = $param->database_host;
+            $dbname = $param->database_dbname;
+            if ($adapterName == self::SQLITE) {
+                $dsn = "$adapterName:$param->database_file";
+            }
+            else {
+                $dsn = "$adapterName:host=$host;dbname=$dbname";
+            }
+            $username = $param->database_username;
+            $password = $param->database_password;
+            $entityManager = self::_EMFactory($adapterName, $entityNumber, $dsn, $username, $password, $options);
         }
-        $varName = 'param_database';
-        // database.ini has no appended number
-        if ($entityNumber != 0) {
-            iris_debug($entityNumber);
-            $varName .= $entityNumber;
-        }
-        $params = \Iris\Engine\Memory::Get($varName);
-        $mode = \Iris\Engine\Mode::GetSiteMode();
-        $param = $params[$mode];
-        $adapterName = $param->database_adapter;
-        $adapterNumber = self::DBNumber($adapterName);
-        $host = $param->database_host;
-        $dbname = $param->database_dbname;
-        if($adapterNumber == self::SQLITE){
-            //die('sqlite');
-            $dsn = "$adapterName:$param->database_file";
-        }
-        else{//die('not sqlite');
-            $dsn = "$adapterName:host=$host;dbname=$dbname";
-        }
-        $username = $param->database_username;
-        $password = $param->database_password;
-        return self::_EMFactory($adapterNumber, $entityNumber, $dsn, $username, $password, $options);
-
-        /*
-          database_adapter=mysql
-          database_dbname=u3a
-          database_host=localhost
-          database_username=u3a
-          database_password=codd
-
-          ; * in normal cases, these two settings are all right
-          database_charset=utf8
-          database_collate=utf8_general_ci */
-        ;
+        return $entityManager;
     }
+
+    
 
     /**
      * Each adapter must provide a way to obtain a connexion

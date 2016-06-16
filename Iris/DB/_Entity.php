@@ -51,6 +51,31 @@ abstract class _Entity {
      */
     protected $_entityName = \NULL;
 
+    
+    protected static $_TableName = \NULL;
+    
+    /**
+     * The number of the entity manager linked to the database
+     * If it is 0 the database defined in config/xxdatabase.ini will be used
+     * 
+     * @var int
+     */
+    protected static $_EntityNumber = 0;
+
+    /**
+     * the _Entity manager used to manage the entity (linked to  
+     * database dns and  parameters)
+     * 
+     * @var \Iris\DB\_EntityManager
+     */
+    private $_entityManager = \NULL;
+
+    /**
+     * For extension purpose
+     * @var _EntityManager
+     */
+    protected static $_AlternateEntityManager = \NULL;
+
     /**
      * A way to identify related entities when they have special names
      * 
@@ -64,20 +89,7 @@ abstract class _Entity {
      */
     protected $_reflectionEntity = \NULL;
 
-    /**
-     *
-     * @var _EntityManager
-     */
-    protected static $_AlternateEntityManager = \NULL;
-
-    /**
-     * the _Entity manager used to manage the entity (linked to  
-     * database dns and  parameters)
-     * 
-     * @var \Iris\DB\_EntityManager
-     */
-    private $_entityManager = \NULL;
-
+    
     /**
      * By default, the row are of type Object
      * @var string 
@@ -141,15 +153,12 @@ abstract class _Entity {
      * @var boolean
      */
     protected $_register = \TRUE;
-    
-    protected static $_EntityNumber = 0;
 
     /* =======================================================================================================
      * C O N S T R U C T O R    A N D  F A C T O R Y   M E T H O D S
      * =======================================================================================================
      */
 
-       
     /**
      * Finds an entity from 3 possible types of parameters : strings, entity Manager and metadata.
      * The entity is taken from the repository or created if necessary.
@@ -159,9 +168,10 @@ abstract class _Entity {
      * @throws \Iris\Exceptions\EntityException
      */
     public static function GetEntity() {
-        
-        $args[] = static::$_EntityNumber;
-        //iris_debug($args);
+        $args = func_get_args();
+        if (static::$_EntityNumber > 0) {
+            $args[] = static::$_EntityNumber;
+        }
         $entityBuilder = new EntityBuilder(get_called_class(), $args);
         return $entityBuilder->createExplicitModel();
     }
@@ -172,8 +182,10 @@ abstract class _Entity {
      * 
      */
     protected final function __construct($entityName) {
-        if (is_null($this->_entityName)) {
+        //print "Entity construction : $entityName<br>";
+        if (is_null(static::$_TableName)) {
             $this->_entityName = $entityName;
+            //static::$_TableName = $entityName;
         }
         if (count($this->_idNames)) {
             $primaryKey = new PrimaryKey();
@@ -219,6 +231,21 @@ abstract class _Entity {
         return _EntityManager::GetInstance();
     }
 
+    /**
+     * This method offers a way to modify the entity number
+     * outside the sub class definition
+     * 
+     * @param type $EntityNumber
+     */
+    static function SetEntityNumber($EntityNumber) {
+        self::$_EntityNumber = $EntityNumber;
+    }
+
+    static function SetTableName($TableName) {
+        self::$_TableName = $TableName;
+    }
+
+            
     /**
      * Analyses parameters to find an entityManager if possible, a plausible
      * entityName and a className and the gets the corresponding entity.
@@ -278,7 +305,7 @@ abstract class _Entity {
                 $alternativeClassName = $entityName;
             }
         }
-        if ((is_null($entityName)) or ($entityName == $alternativeClassName)) {
+        if ((is_null($entityName)) or ( $entityName == $alternativeClassName)) {
             $entityName = strtolower(substr(basename(\Iris\System\Functions::ClassToFile($alternativeClassName), '.php'), 1));
         }
     }
@@ -431,9 +458,11 @@ abstract class _Entity {
 
     /**
      * Accessor set for the entity (table) name.
-     * NEVER erases a previously set value
+     * Erases a previously set value only 
+     * if the force paramaeter is set to \TRUE
      * 
      * @param string $entityName
+     * @param bolean $force
      */
     public function setEntityName($entityName, $force = \FALSE) {
         if (is_null($this->_entityName) or $force) {
@@ -468,7 +497,7 @@ abstract class _Entity {
      * @return Object[] 
      */
     public function fetchAll() {
-        $sql = sprintf('SELECT %s FROM %s', $this->_query->renderSelectFields(), $this->_entityName);
+        $sql = sprintf('SELECT %s FROM %s', $this->_query->renderSelectFields(), $this->getEntityName());
         $sql .= $this->_query->renderWhere();
         $sql .= $this->_query->renderOrder();
         $sql .= $this->_query->renderLimits($this->_entityManager->getLimitClause());
@@ -558,7 +587,7 @@ abstract class _Entity {
      * @return mixed
      */
     public function getId($position, $current) {
-        static $ids = array(NULL, \NULL, \NULL, \NULL);
+        static $ids = [NULL, \NULL, \NULL, \NULL];
         if (is_null($ids[$position])) {
             $em = $this->getEntityManager();
             $idNames = $this->getIdNames();
@@ -852,13 +881,12 @@ abstract class _Entity {
     }
 
     /**
+     * For extension purpose
      * 
      * @param type $alternateEntityManager
-     * @return \Iris\DB\_Entity
      */
     public static function SetAlternateEntityManager($alternateEntityManager) {
         static::$_AlternateEntityManager = $alternateEntityManager;
-        return $this;
     }
 
     /**
@@ -874,7 +902,7 @@ abstract class _Entity {
         $normalizedId = $this->_primaryKey->getNamedValues($idValues);
         $this->wherePairs($normalizedId);
         $whereClause = $this->_query->renderWhere();
-        $sql = sprintf("UPDATE %s SET %s %s", $this->_entityName, $setClause, $whereClause);
+        $sql = sprintf("UPDATE %s SET %s %s", $this->getEntityName(), $setClause, $whereClause);
         $done = $this->_entityManager->exec($sql, $this->_query->getPlaceHolders());
         $this->_query->reset();
         return $done;
@@ -889,7 +917,7 @@ abstract class _Entity {
      */
     public function insert($insertFields, $values) {
         list($insertClause, $valueClause) = $this->_query->renderInsert($insertFields, $values);
-        $sql = sprintf("INSERT INTO %s(%s) VALUES(%s);", $this->_entityName, $insertClause, $valueClause);
+        $sql = sprintf("INSERT INTO %s(%s) VALUES(%s);", $this->getEntityName(), $insertClause, $valueClause);
         $done = $this->_entityManager->exec($sql, $this->_query->getPlaceHolders());
         if ($done) {
             $this->_lastInsertedId = $this->_entityManager->getConnexion()->lastInsertId();
@@ -907,7 +935,7 @@ abstract class _Entity {
     public function delete($primaryKeys) {
 
         $this->wherePairs($primaryKeys);
-        $sql = "DELETE FROM " . $this->_entityName;
+        $sql = "DELETE FROM " . $this->getEntityName();
         $sql .= $this->_query->renderWhere();
         $done = $this->_entityManager->exec($sql, $this->_query->getPlaceHolders());
         $this->_query->reset();
@@ -927,7 +955,7 @@ abstract class _Entity {
             if (count($ids) > 1) {
                 return \NULL;
             }
-            $select = sprintf('SELECT MAX(%s) as NUM FROM %s;', $ids[0], $this->_entityName);
+            $select = sprintf('SELECT MAX(%s) as NUM FROM %s;', $ids[0], $this->getEntityName());
 
             /* @var $lignes Dialects\MyPDOStatement */
             $lignes = $this->_entityManager->directSQLQuery($select);
@@ -1010,7 +1038,7 @@ abstract class _Entity {
         if (is_null($metadata)) {
 // reflection entities are only used for views
             if (is_null($this->_reflectionEntity)) {
-                $this->_reflectionEntity = $this->_entityName;
+                $this->_reflectionEntity = $this->getEntityName();
             }
             /* @var $metadata Metadata */
             $metadata = $this->_entityManager->readFields($this->_reflectionEntity);
@@ -1047,7 +1075,7 @@ abstract class _Entity {
      * @throws \Iris\Exceptions\EntityException
      */
     public function validate() {
-        if (is_null($this->_entityName)) {
+        if (is_null($this->getEntityName())) {
             throw new \Iris\Exceptions\EntityException('The entity has no associated object in the database.');
         }
         if (is_null($this->_metadata) or count($this->_metadata->getFields()) == 0) {
@@ -1065,7 +1093,7 @@ abstract class _Entity {
      * @return \Iris\DB\_Entity
      */
     public function limit($limit, $offset = 0) {
-        $indexName = "DB_OFFSET_" . $this->_entityName;
+        $indexName = "DB_OFFSET_" . $this->getEntityName();
 // Recuperate previous offset from Session
         if ($offset == self::CONT) {
             $offset = \Iris\Engine\Superglobal::GetSession($indexName, 0);

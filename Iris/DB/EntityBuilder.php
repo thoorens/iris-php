@@ -101,27 +101,31 @@ class EntityBuilder {
                 $this->_proposedEntityName = strtolower(substr($className, 1));
         }
         foreach ($params as $param) {
-            if (is_numeric($param)) {
-                $this->_entityManager = _EntityManager::EMByNumber($param);
-                //iris_debug($param);
-                //iris_debug($this->_entityManager);
-            }
             // A parameter may be an _EntityManager
-            elseif ($param instanceof \Iris\DB\_EntityManager) {
+            if ($param instanceof \Iris\DB\_EntityManager) {
+                print('registering EM -');
                 $this->_entityManager = $param;
             }
             // A parameter may be metadata as on object 
             elseif ($param instanceof \Iris\DB\Metadata) {
+            print("metadata -");
                 $this->_metadata = $param;
             }
             // A parameter may be a serialized metadata
             elseif (is_string($param) and strpos($param, 'TABLE@') === 0) {
+                print("serialized metadata");
                 $metadata = new Metadata();
                 $metadata->unserialize($param);
                 $this->_metadata = $metadata;
             }
-            // every other parameter will put in an array
+            // An entity number has only an effect if no entity manager has been previously defined
+            elseif (is_numeric($param) and is_null($this->_entityManager)){
+                    print('number -');
+                    $this->_entityManager = _EntityManager::EMByNumber($param);
+            }
+// every other parameter will put in an array
             else {
+                print('string -');
                 $this->_strings[] = $param;
             }
         }
@@ -211,13 +215,13 @@ class EntityBuilder {
     public function createTable() {
         $stringNumber = count($this->_strings);
         // no metadata : 1 and only 1 string
-        if($this->_hasMetadata()){
-           if ($stringNumber != 0) {
+        if ($this->_hasMetadata()) {
+            if ($stringNumber != 0) {
                 throw new EntityException('TableEntity::CreateEntity() with a metadata parameter cannot have a table name as parameter.');
             }
-            $this->_proposedEntityName = $this->_metadata->getTablename(); 
+            $this->_proposedEntityName = $this->_metadata->getTablename();
         }
-        else{
+        else {
             if ($stringNumber != 1) {
                 throw new EntityException('TableEntity::CreateEntity() expects a metadata or a table name as parameter.');
             }
