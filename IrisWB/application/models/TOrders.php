@@ -49,7 +49,7 @@ class TOrders extends _invoiceManager {
      */
     protected static $_SQLCreate = [
         /* ---------------------------------------------------------- */
-        self::SQLITE =>
+        self::SQLITE_NUMBER =>
         'CREATE TABLE orders(
     invoice_id INTEGER NOT NULL ,
     product_id INTEGER NOT NULL ,
@@ -59,7 +59,7 @@ class TOrders extends _invoiceManager {
     FOREIGN KEY (invoice_id) REFERENCES invoices(id),
     FOREIGN KEY (product_id) REFERENCES products(id))',
         /* ---------------------------------------------------------- */
-        self::MYSQL =>
+        self::MYSQL_NUMBER =>
         'CREATE TABLE orders(
     invoice_id INTEGER NOT NULL ,
     product_id INTEGER NOT NULL ,

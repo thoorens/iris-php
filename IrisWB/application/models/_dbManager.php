@@ -24,9 +24,9 @@ abstract class _dbManager extends \Iris\DB\_Entity {
     /**
      * The recognized DBMS
      */
-    const MYSQL = 1;
-    const SQLITE = 2;
-    const POSTGRESQL = 3;
+    const MYSQL_NUMBER = 1;
+    const SQLITE_NUMBER = 2;
+    const POSTGRESQL_NUMBER = 3;
 
     /**
      * Eachs subclasses will have its proper SQL DDL string to create a table
@@ -43,8 +43,12 @@ abstract class _dbManager extends \Iris\DB\_Entity {
      * @return \Iris\DB\_EntityManager
      */
     public static function GetEM() {
-        $instance = \wbClasses\AutoEM::GetInstance();
-        return $instance->getEm();
+        static $instance = \NULL;
+        if(is_null($instance)){
+            $dbini = \Iris\Engine\Superglobal::GetSession('dbini', self::SQLITE_NUMBER);
+            $instance = \Iris\DB\_EntityManager::EMByNumber($dbini);
+        }
+        return $instance;
     }
 
     /**
@@ -63,8 +67,8 @@ abstract class _dbManager extends \Iris\DB\_Entity {
      * @return int
      */
     public static function GetCurrentDbType() {
-        $instance = \wbClasses\AutoEM::GetInstance();
-        return $instance->getDbType();
+        $em =  self::GetEM();
+        return $em->database_adapter;
     }
 
     /**

@@ -50,10 +50,9 @@ abstract class _db extends \modules\_application {
     protected function _moduleInit() {
         $this->_setLayout('database');
         $this->registerSubcontroller(1, 'menu');
-        $this->callViewHelper('subtitle','Databases');
+        $this->callViewHelper('subtitle', 'Databases');
     }
 
-    
     /**
      * In case of a broken database, the action is redirected here
      * 
@@ -68,7 +67,7 @@ abstract class _db extends \modules\_application {
         switch ($mode) {
 
             case self::FROM_STRING:
-                return <<<STRING
+                $metadata = <<<STRING
 TABLE@customers 
 FIELD@fieldName:id!type:INTEGER!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*TRUE*!primary:*TRUE*!foreignPointer:*NULL* 
 FIELD@fieldName:Name!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
@@ -76,14 +75,14 @@ FIELD@fieldName:Address!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrem
 FIELD@fieldName:Email!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
 PRIMARY@id
 STRING;
-
+                break;
             case self::FROM_TABLE:
                 $EM = \models\_invoiceManager::DefaultEntityManager();
                 $tCustomers = \models\TCustomers::GetEntity($EM);
                 $metadata = $tCustomers->getMetadata();
                 // it is necessary to unregister the entity if we want use a new class for the entity
                 $EM->unregisterEntity('customers');
-                return $metadata;
+                break;
 
             case self::FROM_OBJECT:
                 $metadata = new \Iris\DB\Metadata('customers');
@@ -120,15 +119,15 @@ STRING;
 
                 $metadata->addPrimary('id');
                 //iris_debug($metadata->serialize());
-                return $metadata;
+                break;
         }
+        return $metadata;
     }
 
     protected function _getSampleMetadata($mode) {
         return self::GetSampleMetadata($mode);
     }
 
-    
     /**
      * Common work on entity
      * 
@@ -142,4 +141,5 @@ STRING;
         $this->__customers = $eCustomer->fetchAll();
         $this->__Entity = get_class($eCustomer);
     }
+
 }

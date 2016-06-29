@@ -35,19 +35,20 @@ class TNumbers extends _invoiceManager {
      */
     protected static $_SQLCreate = [
         /* ---------------------------------------------------------- */
-        self::SQLITE =>
+        self::SQLITE_NUMBER =>
         'CREATE TABLE "numbers" (
             "French" VARCHAR NOT NULL,
             "English" VARCHAR NOT NULL ,
             "Data" VARCHAR, 
             PRIMARY KEY ("French", "English"));',
         /* ---------------------------------------------------------- */
-        self::MYSQL =>
+        self::MYSQL_NUMBER =>
         'CREATE TABLE numbers (
             French VARCHAR(50) NOT NULL,
             English VARCHAR(50) NOT NULL ,
             Data VARCHAR(50), 
-            PRIMARY KEY (French, English));',
+            PRIMARY KEY (French, English))
+            ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;',
     ];
 
     public static function Create() {

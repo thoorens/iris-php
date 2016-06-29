@@ -37,14 +37,14 @@ class TCustomers extends _invoiceManager {
      */
     protected static $_SQLCreate = [
         /* ---------------------------------------------------------- */
-        self::SQLITE =>
+        self::SQLITE_NUMBER =>
         'CREATE TABLE customers(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Name TEXT  NOT NULL,
     Address TEXT,
     Email TEXT)',
         /* ---------------------------------------------------------- */
-        self::MYSQL =>
+        self::MYSQL_NUMBER =>
         'CREATE TABLE customers(
     id INTEGER AUTO_INCREMENT NOT NULL , 
     Name VARCHAR(100) NOT NULL,
@@ -53,7 +53,7 @@ class TCustomers extends _invoiceManager {
     PRIMARY KEY(id))
     ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ',
    
-        self::POSTGRESQL =>
+        self::POSTGRESQL_NUMBER =>
     'CREATE TABLE customers(
     id SERIAL NOT NULL , 
     Name VARCHAR(100) NOT NULL,
@@ -67,7 +67,7 @@ class TCustomers extends _invoiceManager {
      */
     private static $_SQLCopy = [
         /* ---------------------------------------------------------- */
-        self::SQLITE => [
+        self::SQLITE_NUMBER => [
             'CREATE TABLE customers2(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Name TEXT  NOT NULL,
@@ -75,7 +75,7 @@ class TCustomers extends _invoiceManager {
     Email TEXT);',
             'INSERT INTO customers2 SELECT * FROM customers'],
         /* ---------------------------------------------------------- */
-        self::MYSQL =>[
+        self::MYSQL_NUMBER =>[
         'CREATE TABLE customers2 AS SELECT * FROM customers;',
         'ALTER TABLE customers2 ADD CONSTRAINT PRIMARY KEY(id);',    
             ]

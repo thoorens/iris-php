@@ -54,7 +54,7 @@ class TInvoices extends _invoiceManager {
      */
     protected static $_SQLCreate = array(
         /* ---------------------------------------------------------- */
-        self::SQLITE =>
+        self::SQLITE_NUMBER =>
         'CREATE TABLE invoices(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     InvoiceDate DATE,
@@ -62,7 +62,7 @@ class TInvoices extends _invoiceManager {
     Amount NUMBER,
     FOREIGN KEY (customer_id) REFERENCES customers(id))',
         /* ---------------------------------------------------------- */
-        self::MYSQL =>
+        self::MYSQL_NUMBER =>
         'CREATE TABLE invoices(
     id INTEGER NOT NULL AUTO_INCREMENT, 
     InvoiceDate DATE,

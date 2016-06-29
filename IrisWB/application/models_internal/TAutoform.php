@@ -42,7 +42,7 @@ class TAutoform extends \Iris\DB\_Entity {
 
     public static function Create() {
         $sql = 'CREATE TABLE autoform (id INTEGER PRIMARY KEY  NOT NULL, Name TEXT, Hidden TEXT, EventDate DATETIME, EventHour DATETIME, Password TEXT, Checkbox BOOL)';
-        $em = \Iris\DB\_EntityManager::GetInstance();
+        $em = \Iris\DB\_EntityManager::EMByNumber(); //GetInstance();
         $list = $em->listTables();
         if (!in_array('autoform', $list)) {
             $em->directSQLExec($sql);

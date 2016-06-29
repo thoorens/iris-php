@@ -36,7 +36,6 @@ class orders extends _dbCrud {
         public function showAction() {
         $tOrders = \models\TOrders::GetEntity();
         $this->__orders = $tOrders->fetchall();
-        die('YES');
     }
     
     

@@ -1,26 +1,13 @@
 <?php
-
 namespace modules\db\controllers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
- *
- * 
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -36,6 +23,7 @@ class show extends _db {
         $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
         $this->__action = "show";
         $this->dbState()->validateDB();
+        $this->setDefaultScriptDir('show');
     }
 
     /**
@@ -44,15 +32,16 @@ class show extends _db {
      * @param type $dbType
      */
     public function invoicesAction() {
+        $container = $this->callViewHelper('dojo_tabContainer', 'container');
+        $container->setDim(300, 700);
         $tInvoices = \models\TInvoices::GetEntity($this->_entityManager);
         $invoices = $tInvoices->fetchAll();
         foreach ($invoices as $invoice) {
             $invs[] = $this->_readInvoice($invoice);
+            $container->addItem($invoice->id, "Invoice #" . $invoice->id);
         }
         $this->__invoices = $invs;
         /* @var $container \Dojo\views\helpers\TabContainer */
-        $container = $this->callViewHelper('dojo_tabContainer', 'container');
-        $container->setDim(300, 700);
     }
 
     /**
@@ -105,18 +94,19 @@ class show extends _db {
      * Displays all the customers
      */
     public function productsAction() {
-        $tProducts = \models\TProducts::GetEntity($this->_entityManager);
-        $products = $tProducts->fetchAll();
-        foreach ($products as $products) {
-            $prods[] = $this->_readProduct($products);
-        }
-        $this->__products = $prods;
-        /* @var $container \Dojo\views\helpers\TabContainer */
         $container = $this->callViewHelper('dojo_tabContainer', 'container');
         $container->setDim(300, 700);
+        $tProducts = \models\TProducts::GetEntity($this->_entityManager);
+        $products = $tProducts->fetchAll();
+        foreach ($products as $product) {
+            $prods[$product->id] = $this->_readProduct($product);
+            $container->addItem($product->id, "Product n# " . $product->id);
+        }
+        $this->__products = $prods;
     }
 
     private function _readProduct($product) {
+        $prod['id'] = $product->id;
         $prod['Description'] = $product->Description;
         $prod['Price'] = $product->Price;
         $orders = $product->_children_orders__product_id;
@@ -156,6 +146,8 @@ class show extends _db {
     public function ordersAction() {
         $tOrders = \models\TOrders::GetEntity();
         $orders = $tOrders->fetchAll();
+        $container = $this->callViewHelper('dojo_tabContainer', 'container');
+        $container->setDim(300, 700);
         foreach ($orders as $order) {
             $evs = [];
             $invoice = $order->_at_invoice_id;
@@ -164,6 +156,7 @@ class show extends _db {
             $ord['Date'] = $date;
             $ord['Description'] = $order->_at_product_id->Description;
             $events = $order->_children_events__invoice_id__product_id;
+            $container->addItem($ord['InvNum'],'Order # '.$ord['InvNum']);
             foreach ($events as $event) {
                 $ev = $event->Moment . ': ' . $event->Description;
                 $evs[] = $ev;
@@ -173,8 +166,13 @@ class show extends _db {
         }
         $this->__orders = $ords;
         /* @var $container \Dojo\views\helpers\TabContainer */
-        $container = $this->callViewHelper('dojo_tabContainer', 'container');
-        $container->setDim(300, 700);
     }
 
+    public function databaseAction() {
+        // these parameters are only for demonstration purpose
+        $this->__(NULL, [
+            'Title' => "<h1>db - show - database</h1>",
+            'buttons' => 1+4,
+            'logoName' => 'mainLogo']);
+    }
 }

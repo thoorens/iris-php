@@ -1,4 +1,5 @@
 <?php
+
 namespace modules;
 
 /*
@@ -85,10 +86,10 @@ class _application extends \Iris\MVC\_Controller {
             return parent::_verifyAcl();
         }
     }
-    
-    protected function _specialScreen($advices){
+
+    protected function _specialScreen($advices) {
         $this->__specialScreen = \TRUE;
-        if(!is_array($advices)){
+        if (!is_array($advices)) {
             $advices = [$advices];
         }
         $this->__advices = $advices;

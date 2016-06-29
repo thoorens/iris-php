@@ -6,7 +6,7 @@
         ->setEntity("N'_product")
         ->setDescField('')
         ->setIdField('id')
-        ->forceLanguage('english');
+        ->forceLanguage('french');
 {/php}
 {wbHeader()}
 <h1>Product management</h1>

@@ -19,6 +19,10 @@ namespace modules\db\controllers;
  * @version $Id: $ */
 class sample extends _db {
 
+    protected function _init() {
+        $this->setDefaultScriptDir('sample');
+    }
+
     /**
      * Show a picture of the example database structure
      */
@@ -85,7 +89,7 @@ class sample extends _db {
                 $objects[] = [$table, 'table'];
             }
         }
-        if (count($tables) >0) {
+        if (count($tables) > 0) {
             $this->__Objects = $objects;
             $this->__Complete = \TRUE;
         }
@@ -116,23 +120,28 @@ class sample extends _db {
     public function sqliteAction() {
         $this->deletefileAction();
         $session = \Iris\Users\Session::GetInstance();
-        $session->entityType = \wbClasses\AutoEM::SQLITE;
-        $session->SQLParams = ['file' => 'library/IrisWB/application/config/base/invoice.sqlite'];
+        $session->dbini = \models\_dbManager::SQLITE_NUMBER;
+//      $session->entityType = \wbClasses\AutoEM::SQLITE;
+//      $session->SQLParams = ['file' => 'library/IrisWB/application/config/base/invoice.sqlite'];
+//     $session->entityType = \Iris\DB\_EntityManager::SQLITE;
+        //$session->SQLParams = ['file' => 'library/IrisWB/application/config/base/invoice.sqlite'];
         $this->reroute('/db/sample/structure');
     }
 
     public function postgresqlAction() {
         $this->deletedataAction();
         $session = \Iris\Users\Session::GetInstance();
-        $session->entityType = \wbClasses\AutoEM::POSTGRESQL;
-        $session->SQLParams = [
-            'host' => 'localhost',
-            'base' => 'wb_db',
-            'user' => 'wb_user',
-            'password' => 'wbwp'];
+        $session->dbini = \models\_dbManager::POSTGRESQL_NUMBER;
+//        $session->entityType = \Iris\DB\_EntityManager::POSTGRESQL;
+//        $session->entityType = \wbClasses\AutoEM::POSTGRESQL;
+//        $session->SQLParams = [
+//            'host' => 'localhost',
+//            'base' => 'wb_db',
+//            'user' => 'wb_user',
+//            'password' => 'wbwp'];
         $this->reroute('/db/sample/structure');
     }
-    
+
     /**
      * Changes some parameter in the current session to prepare a new 
      * database for mySQL (or MariaDB)
@@ -140,12 +149,14 @@ class sample extends _db {
     public function mysqlAction() {
         $this->deletedataAction();
         $session = \Iris\Users\Session::GetInstance();
-        $session->entityType = \wbClasses\AutoEM::MYSQL;
-        $session->SQLParams = [
-            'host' => 'localhost',
-            'base' => 'wb_db',
-            'user' => 'wb_user',
-            'password' => 'wbwp'];
+        $session->dbini = \models\_dbManager::MYSQL_NUMBER;
+//        $session->entityType = \Iris\DB\_EntityManager::MYSQL;
+//        $session->entityType = \wbClasses\AutoEM::MYSQL;
+//        $session->SQLParams = [
+//            'host' => 'localhost',
+//            'base' => 'wb_db',
+//            'user' => 'wb_user',
+//            'password' => 'wbwp'];
         $this->reroute('/db/sample/structure');
     }
 

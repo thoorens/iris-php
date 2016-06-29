@@ -8,13 +8,14 @@ namespace modules\db\controllers;
  * 
  */
 class customers extends _db {
-use \Iris\DB\DataBrowser\tCrudManager;
-    
+
+    use \Iris\DB\DataBrowser\tCrudManager;
+
     public function _init() {
         // A proposal for the title
-        $this->__Title = "Customers manager"; 
+        $this->__Title = "Customers manager";
     }
-    
+
     public function showAction() {
         $icons = \models\crud\CrudIconManager::getInstance();
         $icons
@@ -27,10 +28,11 @@ use \Iris\DB\DataBrowser\tCrudManager;
                 // field containing a significative description 
                 ->setDescField('Name')
                 // primary key field
-                ->setIdField('id');
+                ->setIdField('id')
+                ->forceLanguage('en');
         // Get all the data in Customers
         $EM = \models\_dbManager::GetEM();
-        $tEntity = \models\TCustomers::GetEntity($EM);
+        $tEntity = \models\TCustomers::GetEntity();
         $this->__customers = $tEntity->fetchAll();
     }
 

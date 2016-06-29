@@ -29,7 +29,7 @@ class settings extends _system {
 
     public function iniAction() {
         $this->__defaultsettings = \modules\system\classes\Settings::Debug(\FALSE);
-        $filePath = IRIS_PROGRAM_PATH . '/modules/system/config/settings.ini';
+        $filePath = \IRIS_PROGRAM_PATH . '/modules/system/config/settings.ini';
         $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
         $params = $parser->processFile($filePath, FALSE);
         \modules\system\classes\Settings::FromConfigs($params);

@@ -49,7 +49,7 @@ class TEvents extends _invoiceManager {
      */
     protected static $_SQLCreate = array(
         /* ---------------------------------------------------------- */
-        self::SQLITE =>
+        self::SQLITE_NUMBER =>
         'CREATE TABLE events(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     Description VARCHAR,

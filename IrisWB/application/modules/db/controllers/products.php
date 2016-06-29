@@ -27,9 +27,21 @@ use \Iris\DB\DataBrowser\tCrudManager;
                 // field containing a significative description 
                 ->setDescField('Name')
                 // primary key field
-                ->setIdField('id');
+                ->setIdField('id')
+                ->forceLanguage('english');;
         // Get all the data in Products
-        $tEntity = \models\TProducts::GetEntity();
+        
+        /*$icons = $this->crudIcon();
+    $icons
+        ->setController('/db/customers')
+        ->setActionName('customer')
+        ->setEntity($this->_("N_customer"))
+        ->setDescField('Name')
+        ->setIdField('id')
+        ->setDefaultIconDir('/images/icones')
+        ->forceLanguage('english');*/
+        $EM = \models\_dbManager::GetEM();
+        $tEntity = \models\TProducts::GetEntity($EM);
         $this->__products = $tEntity->fetchAll();
     }
 

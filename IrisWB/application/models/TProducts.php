@@ -35,7 +35,7 @@ class TProducts extends _invoiceManager {
      */
     protected static $_SQLCreate = [
         /* ---------------------------------------------------------- */
-        self::SQLITE =>
+        self::SQLITE_NUMBER =>
         'CREATE TABLE products(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Description TEXT  NOT NULL,
@@ -49,7 +49,7 @@ class TProducts extends _invoiceManager {
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 ',
-        self::POSTGRESQL =>
+        self::POSTGRESQL_NUMBER =>
         'CREATE TABLE IF NOT EXISTS products (
   id SERIAL NOT NULL,
   Description varchar(100) NOT NULL,

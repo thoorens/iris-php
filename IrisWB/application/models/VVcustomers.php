@@ -50,9 +50,9 @@ class VVcustomers extends \Iris\DB\ViewEntity {
      * @var string[]
      */
     protected static $_SQLCreate = [
-        _invoiceManager::SQLITE =>
+        _invoiceManager::SQLITE_NUMBER =>
         'CREATE  VIEW "main"."%s" AS select * from customers WHERE id %s;',
-        _invoiceManager::MYSQL => 
+        _invoiceManager::MYSQL_NUMBER => 
         'CREATE  VIEW %s AS select * from customers WHERE id %s;',
     ];
 

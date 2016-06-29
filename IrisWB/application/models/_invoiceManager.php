@@ -1,6 +1,6 @@
 <?php
-namespace models;
 
+namespace models;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -21,7 +21,6 @@ namespace models;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 abstract class _invoiceManager extends \models\_dbManager {
-    
 
     /**
      * Creates all 5 tables with data in them and returns an array
@@ -48,8 +47,6 @@ abstract class _invoiceManager extends \models\_dbManager {
         }
         return $results;
     }
-    
-    
 
     /**
      * Deletes all the tables and views from the database.
@@ -61,23 +58,23 @@ abstract class _invoiceManager extends \models\_dbManager {
         ];
         $dbType = self::GetCurrentDbType();
         switch ($dbType) {
-            case self::SQLITE:
+            case \Iris\DB\_EntityManager::SQLITE:
                 $em = static::GetEM();
                 $dropTable = "DROP TABLE %s;";
                 $dropView = "DROP VIEW %s;";
                 break;
-            case self::MYSQL:
+            case \Iris\DB\_EntityManager::MYSQL:
                 $em = static::GetEM();
                 $dropView = "DROP VIEW IF EXISTS %s;";
                 $dropTable = "DROP TABLE IF EXISTS %s;";
                 break;
-            case self::POSTGRESQL:
+            case \Iris\DB\_EntityManager::POSTGRESQL:
                 $em = static::GetEM();
                 $dropView = "DROP VIEW IF EXISTS %s;";
                 $dropTable = "DROP TABLE IF EXISTS %s CASCADE;";
                 break;
-            case self::POSTGRESQL:
-                
+            case \Iris\DB\_EntityManager::ORACLE:
+                break;
         }
         try {
             $em->directSQLExec(sprintf($dropView, 'vcustomers'));
@@ -87,12 +84,11 @@ abstract class _invoiceManager extends \models\_dbManager {
             }
         }
         catch (\Exception $exc) {
+            
         }
         return $em;
     }
 
-    
-    
     /**
      * Creates a customer table
      * 
@@ -254,6 +250,4 @@ abstract class _invoiceManager extends \models\_dbManager {
         return $elements;
     }
 
-
 }
-
