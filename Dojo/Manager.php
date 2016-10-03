@@ -1,5 +1,4 @@
 <?php
-
 namespace Dojo;
 
 /*
@@ -8,13 +7,8 @@ namespace Dojo;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
-
-define('URL_DOJO_GOOGLE', "https://ajax.googleapis.com/ajax/libs/dojo/");
-define('URL_DOJO_YANDEX', "http://yandex.st/dojo");
-// AOL disappeared
-//define('URL_DOJO_AOL', "http://o.aolcdn.com/dojo/");
 
 /**
  * This class is used internally by all Dojo helpers to manage the
@@ -30,9 +24,11 @@ class Manager implements \Iris\Design\iSingleton {
 
     const LOCAL = 0;
     const GOOGLE = 1;
+    const URL_DOJO_GOOGLE =  "https://ajax.googleapis.com/ajax/libs/dojo/";
     //const AOL = 2; disappeared
+    //const URL_DOJO_AOL = "http://o.aolcdn.com/dojo/"; disappeared
     const YANDEX = 3;
-
+    const URL_DOJO_YANDEX = "http://yandex.st/dojo";
     /**
      * Part of the singleton mechanism
      * @var Manager
@@ -120,14 +116,14 @@ class Manager implements \Iris\Design\iSingleton {
         $version = \Dojo\Engine\Settings::$Version;
         switch (\Dojo\Engine\Settings::$Source) {
             case self::GOOGLE:
-                $source = URL_DOJO_GOOGLE . $version;
+                $source = self::URL_DOJO_GOOGLE . $version;
                 break;
 //            AOL disappeared
 //            case self::AOL:
 //                $source = URL_DOJO_AOL . $version;
 //                break;
             case self::YANDEX:
-                $source = URL_DOJO_YANDEX . $version;
+                $source = self::URL_DOJO_YANDEX . $version;
                 break;
             default:
                 $source = '/js';
