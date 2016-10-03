@@ -27,21 +27,8 @@ class DbLogo extends \Iris\views\helpers\_ViewHelper {
      * @return string
      */
     public function help() {
-        $instance = \wbClasses\AutoEM::GetInstance();
-        switch($instance->getDbType()){
-            case \Iris\DB\_EntityManager::SQLITE:
-            case \wbClasses\AutoEM::SQLITE:
-                $file = 'sqlite.png';
-                break;
-            case \wbClasses\AutoEM::MYSQL:
-                $file = 'mySQL.png';
-                break;
-            case \wbClasses\AutoEM::POSTGRESQL:
-                $file = 'postgresql.png';
-                break;
-        }
+        $file = \Iris\Engine\Superglobal::GetSession('dbini', \Iris\DB\_EntityManager::DEFAULT_DBMS).'.png';
         return $this->callViewHelper('link','Link to other database','/db/sample/change','Link to other database','Logo')->image('/!documents/file/logos/'.$file);
-        return $this->callViewHelper('link','/db/sample/'.$base,$file,'Logo',\NULL,')/!documents/file/logos/');
     }
 
 }

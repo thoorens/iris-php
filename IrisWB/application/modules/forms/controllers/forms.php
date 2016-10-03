@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\db\controllers;
+namespace modules\forms\controllers;
 
 /**
  * Project : srv_IrisWB
@@ -10,7 +10,7 @@ namespace modules\db\controllers;
  * @author 
  * @license 
  */
-class forms extends _db {
+class forms extends _forms {
 
     const TYPE = 0;
     const LABEL = 1;
@@ -26,6 +26,7 @@ class forms extends _db {
                 $params = explode('!', $field . '!!!!!!');
                 switch ($params[self::TYPE]) {
                     case 'T':
+                        print $params[self::TYPE];
                         /* @var $element Forms\Elements\InputElement */
                         $element = $ff->createText($name);
                         //$element->

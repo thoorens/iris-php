@@ -19,10 +19,10 @@ namespace modules\db\controllers;
  */
 class show extends _db {
 
-    protected function _init() {
-        $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
+    protected function _init() { 
+        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
         $this->__action = "show";
-        $this->dbState()->validateDB();
+        //$this->dbState()->validateDB();
         $this->setDefaultScriptDir('show');
     }
 
@@ -48,23 +48,36 @@ class show extends _db {
      * Converts an invoice to an array, reading the orders and 
      * products corresponding to them
      * 
-     * @param type $invoice
+     * @param \Iris\DB\Object $invoice
      * @return type
      */
     private function _readInvoice($invoice) {
         $inv = [];
         $inv['id'] = $invoice->id;
-        $date = new \Iris\Time\Date($invoice->InvoiceDate);
         $inv['Date'] = $invoice->InvoiceDate;
         $inv['CustName'] = $invoice->_at_customer_id->Name;
-        $orders = $invoice->_children_orders__invoice_id;
-        foreach ($orders as $order) {
+        // same
+        $inv['CustName'] = $invoice->getParent('customer_id')->Name;
+        $targets = $invoice->_bridge_orders;
+        // same
+//      $targets = $invoice->fromBridge('orders');
+        $ord = [];
+        foreach($targets as $target){
+            list($product, $order) = $target;
             $ord['Qty'] = $order->Quantity;
-            $product = $order->_at_product_id;
+            $ord['Description'] = $product->Description;
             $ord['Description'] = $product->Description;
             $ord['UP'] = $product->Price;
             $inv['Orders'][] = $ord;
         }
+//        $orders = $invoice->_children_orders__invoice_id;
+//        foreach ($orders as $order) {
+//            $ord['Qty'] = $order->Quantity;
+//            $product = $order->_at_product_id;
+//            $ord['Description'] = $product->Description;
+//            $ord['UP'] = $product->Price;
+//            $inv['Orders'][] = $ord;
+//        }
         return $inv;
     }
 
@@ -77,8 +90,11 @@ class show extends _db {
         foreach ($customers as $customer) {
             $cust['Name'] = $customer->Name;
             $invoices = $customer->_children_invoices__customer_id;
+            // using an equivalent method
+            $invoices = $customer->getChildren(['invoices','customer_id']);
             // foreign key not necessary here
-            //$invoices = $customer->_children_invoices;
+            $invoices = $customer->_children_invoices;
+            $invoices = $customer->getChildren(['invoices']);
             $invs = [];
             foreach ($invoices as $invoice) {
                 $date = new \Iris\Time\Date($invoice->InvoiceDate);
@@ -105,21 +121,39 @@ class show extends _db {
         $this->__products = $prods;
     }
 
+    /**
+     * 
+     * @param \Iris\DB\Object $product
+     * @return type
+     */
     private function _readProduct($product) {
         $prod['id'] = $product->id;
         $prod['Description'] = $product->Description;
         $prod['Price'] = $product->Price;
-        $orders = $product->_children_orders__product_id;
+        $targets = $product->_bridge_orders;
+        // same
+//      $targets = $product->fromBridge('orders');
         $invs = [];
-        foreach ($orders as $order) {
-            $invoice = $order->_at_invoice_id;
+        foreach($targets as $target){
+            list($invoice,$order) = $target;
             $invs[] = [
                 'Quantity' => $order->Quantity,
                 'Number' => $invoice->id,
-                'Date' => $invoice->Date,
+                'Date' => $invoice->InvoiceDate,
                 'CustomerName' => $invoice->_at_customer_id->Name,
             ];
         }
+//        $orders = $product->_children_orders__product_id;
+//        $invs = [];
+//        foreach ($orders as $order) {
+//            $invoice = $order->_at_invoice_id;
+//            $invs[] = [
+//                'Quantity' => $order->Quantity,
+//                'Number' => $invoice->id,
+//                'Date' => $invoice->Date,
+//                'CustomerName' => $invoice->_at_customer_id->Name,
+//            ];
+//        }
         $prod['Invoices'] = $invs;
         return $prod;
     }
@@ -134,6 +168,11 @@ class show extends _db {
             $ev['Moment'] = $event->Moment;
             $ev['Description'] = $event->Description;
             $order = $event->_at_invoice_id__product_id;
+            //may change the order of the keys
+            //$order = $event->_at_product_id__invoice_id;
+            // using an equivalent method with both orders of parameters
+            //$order = $event->getParent(['product_id','invoice_id']);
+            //$order = $event->getParent(['invoice_id','product_id']);
             $ord['Qty'] = $order->Quantity;
             $ord['Product'] = $order->_at_product_id->Description;
             $ord['Invoice'] = $order->_at_invoice_id->id;
@@ -144,14 +183,17 @@ class show extends _db {
     }
 
     public function ordersAction() {
-        $tOrders = \models\TOrders::GetEntity();
+        $tOrders = \models\TOrders::GetEntity($this->_entityManager);
         $orders = $tOrders->fetchAll();
         $container = $this->callViewHelper('dojo_tabContainer', 'container');
         $container->setDim(300, 700);
         foreach ($orders as $order) {
             $evs = [];
             $invoice = $order->_at_invoice_id;
+            // the double primary key
             $ord['InvNum'] = $order->invoice_id . '/' . $order->product_id;
+            $ord['Quantity'] = $order->Quantity;
+            $ord['UnitPrice'] = $order->UnitPrice;
             $date = new \Iris\Time\Date($invoice->InvoiceDate);
             $ord['Date'] = $date;
             $ord['Description'] = $order->_at_product_id->Description;

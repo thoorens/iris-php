@@ -10,14 +10,14 @@ namespace modules\vendors\controllers;
  * @author 
  * @license 
  */
-class markdown extends _vendors {
+class parsedown extends _vendors {
 
     
     public function indexAction($test=1) {
         $text = $this->textGenerator($test);
         $this->setViewScriptName('/all');
-        $parser = new \Vendors\Markdown\Markdown();
-        $md = $parser->transform($text);
+        $parser = new \Vendors\Parsedown\Parsedown();
+        $md = $parser->text($text);
         $this->__md = $md;
     }
 

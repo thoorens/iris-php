@@ -1,9 +1,0 @@
-<div>
-    <div id="page">
-        {welcome(2)}
-        <p>
-            {md}
-        </p>
-    </div>
-
-</div>

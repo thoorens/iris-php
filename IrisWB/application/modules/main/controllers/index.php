@@ -18,7 +18,7 @@ class index extends _main {
         \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
     }
 
-    public function errorAction($number) {
+    public function errorAction($number=0) {
         switch ($number) {
             case 1:
                 $this->__message = 'Error in sequence';

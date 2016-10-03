@@ -18,10 +18,10 @@
 
 <ul>
     {foreach(invoices,invoice)}
-        {(icons->setData($invoice))}
+        {icons->setData($invoice))}
         <li>
-            {(icons->update())}
-            {(icons->delete())}
+            (icons->update())}
+            (icons->delete())}
             <b>Invoice #{(invoice->id)}</b>
             {(invoice->_at_customer_id->Name)}
         </li>

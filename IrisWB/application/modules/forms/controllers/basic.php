@@ -18,12 +18,12 @@ namespace modules\forms\controllers;
  */
 class basic extends _forms {
 
-    private $_SFF;
-    private $_DFF;
+//    private $_SFF;
+//    private $_DFF;
     
     protected function _init() {
         $this->setViewScriptName('common/all');
-        $this->_SFF = new \Iris\Forms\StandardFormFactory();
+        //$this->_SFF = new \Iris\Forms\StandardFormFactory();
     }
 
     /**

@@ -1,0 +1,16 @@
+<fieldset style="width: 200px;display: inline-block;">
+    <legend>Sans fichier</legend>
+    {button(['HTML','html','HTML 5 version without ini file'])}
+    {button(['DOJO','dojo','Dojo version without ini file'])}
+</fieldset>
+<fieldset style="width: 200px;display: inline-block;">
+    <legend>Avec annotations</legend>
+    {button(['HTML','htmlAnnotations','HTML 5 version with annotations'])}
+    {button(['DOJO','dojoAnnotations','Dojo version with annotations'])}
+</fieldset>
+<fieldset style="width: 200px;display: inline-block;">
+    <legend>Avec fichier</legend>
+    {button(['HTML','htmlFile','HTML 5 version with ini file'])}
+    {button(['DOJO','dojoFile','Dojo version with ini file'])}
+</fieldset>
+

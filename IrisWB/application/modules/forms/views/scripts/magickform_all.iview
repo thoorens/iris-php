@@ -1,0 +1,8 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>Exemple de formuaire automatique</h3>
+    
+    {form}
+</div>
+{partial('links')}    
+

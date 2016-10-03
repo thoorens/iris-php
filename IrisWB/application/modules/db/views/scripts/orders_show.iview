@@ -12,7 +12,7 @@
 <h1>Order management</h1>
 
 {(icons->create())} Add an order
-<h2>Invoice list</h2>
+<h2>Order list</h2>
 
 <ul>
     {foreach(orders,order)}
@@ -21,7 +21,7 @@
             {(icons->update())}
             {(icons->delete())}
             <b>Order # {(order->invoice_id)} - {(order->product_id)}</b>
-            {(order->Quantity)}
+            Quantity : {(order->Quantity)}
         </li>
     {/foreach}
 </ul>

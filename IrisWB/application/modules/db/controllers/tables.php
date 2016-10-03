@@ -39,7 +39,7 @@ class tables extends _db {
     const CODE = 2;
 
     protected function _init() {
-        $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
+        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
         $this->setViewScriptName('/customers');
         $this->dbState()->validateDB();
     }

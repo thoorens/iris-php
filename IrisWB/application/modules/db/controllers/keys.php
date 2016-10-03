@@ -32,7 +32,7 @@ namespace modules\db\controllers;
 class keys extends _db {
 
     private function _createTables($table = 1) {
-        $em = \models\_invoiceManager::GetEM();
+        $em = \models\_invoiceEntity::GetEM();
         $liste = $em->listTables();
         if (array_search('numbers', $liste) === \FALSE) {
             \models\TNumbers::Create();
@@ -44,6 +44,7 @@ class keys extends _db {
         }
         if ($table > 2) {
             if (array_search('numbers3', $liste) === \FALSE) {
+                die('Numbers3');
                 \models\TNumbers3::Create();
             }
         }

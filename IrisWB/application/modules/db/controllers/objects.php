@@ -24,7 +24,7 @@ namespace modules\db\controllers;
 class objects extends _db {
 
     protected function _init() {
-        $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
+        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
     }
 
     public function simpleAction() {

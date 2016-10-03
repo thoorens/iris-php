@@ -14,10 +14,16 @@ class post extends \Iris\MVC\_AjaxController {
 
     protected $_hasACL = \FALSE;
     
-    public function formAction() {
+    public function formAction($submit = 1) {
         $post = \Iris\Engine\Superglobal::GetSession('oldPost',[]);
         $this->__post = $post;
-        $this->__message = count($post) ? '' :'Press one of the 5 submit buttons to see the result';
+        if($submit>1){
+            $message = "Press one of the $submit submit buttons to see the result";
+        }
+        else{
+             $message = "Press the submit button to see the result";
+        }
+        $this->__message = count($post) ? '' :$message;
         $this->_renderScript('post');
     }
 

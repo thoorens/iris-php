@@ -1,25 +1,13 @@
 <?php
-
 namespace modules\db\controllers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2013 Jacques THOORENS
- *
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -58,7 +46,7 @@ abstract class _db extends \modules\_application {
      * 
      * @param int $num
      */
-    public function errorAction($num) {
+    public function errorAction($num=0) {
         $this->__Title = "Error in database";
         $this->setViewScriptName('/commons/error');
     }
@@ -77,7 +65,7 @@ PRIMARY@id
 STRING;
                 break;
             case self::FROM_TABLE:
-                $EM = \models\_invoiceManager::DefaultEntityManager();
+                $EM = \models\_invoiceEntity::DefaultEntityManager();
                 $tCustomers = \models\TCustomers::GetEntity($EM);
                 $metadata = $tCustomers->getMetadata();
                 // it is necessary to unregister the entity if we want use a new class for the entity

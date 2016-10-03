@@ -27,7 +27,7 @@ class sample extends _db {
      * Show a picture of the example database structure
      */
     public function structureAction() {
-        $this->dbOpen(); // a call to a helper
+        //$this->dbOpen(); // a call to a helper
     }
 
     /**
@@ -38,7 +38,7 @@ class sample extends _db {
      */
     public function initAction() {
         $this->__action = 'create';
-        $result = \models\_invoiceManager::CreateAll();
+        $result = \models\TCustomers::CreateAll();
         if (isset($result['Error'])) {
             $this->__error = \TRUE;
         }
@@ -54,11 +54,11 @@ class sample extends _db {
      * 
      * @param string $dbType the rdbms type
      */
-    public function deletedataAction() {
+    public function deletedataAction($unique = \FALSE) {
         $this->dbOpen(); // a call to a helper
         $this->__Result = 'Database deleted';
         $this->setViewScriptName('status');
-        \models\_invoiceManager::DropAll();
+        \models\TCustomers::DropAll($unique);
         $this->dbState()->setDeleted();
     }
 
@@ -66,9 +66,11 @@ class sample extends _db {
      * Deletes the database file (only in Sqlite context)
      */
     public function deletefileAction() {
-        $this->dbOpen(); // a call to a helper
+        /* @var $em \Iris\DB\_EntityManager */
+        $em = $this->dbOpen(); // a call to a helper
         $this->__Result = 'The database file has been deleted';
-        \models\_invoiceManager::DeleteFile(\wbClasses\AutoEM::GetInstance()->getDbType());
+        $type = $em->Type;
+//        \models\_invoiceEntity::DropAll();
         $this->dbState()->setDeleted();
         $this->setViewScriptName('status');
     }
@@ -77,20 +79,29 @@ class sample extends _db {
      * A way to qhickly verify that the database is working
      */
     public function verifyAction() {
-        $db = $this->dbOpen(\TRUE); // a call to a helper
-        $em = $db->getEm();
-        //iris_debug($em->listTables());
+        $em = $this->dbOpen(\TRUE); // a call to a helper
+        $expectedTables = \models\TInvoices::$InvoicesTable;
         $tables = $em->listTables();
-        foreach ($tables as $table) {
-            if ($table[0] == 'v') {
-                $objects[] = [$table, 'view'];
+        $tNumber = $vNumber = 0;
+        foreach ($expectedTables as $table) {
+            if (array_search($table, $tables)) {
+                if ($table[0] == 'v') {
+                    $objects[] = [$table, 'view'];
+                    $vNumber++;
+                }
+                else {
+                    $objects[] = [$table, 'table'];
+                    $tNumber++;
+                }
             }
             else {
-                $objects[] = [$table, 'table'];
+                $objects[] = [$table, 'not found'];
             }
         }
-        if (count($tables) > 0) {
-            $this->__Objects = $objects;
+        $this->__Objects = $objects;
+        $this->__tables = $tNumber;
+        $this->__views = $vNumber;
+        if ($tNumber + $vNumber == count($expectedTables)) {
             $this->__Complete = \TRUE;
         }
         else {
@@ -106,58 +117,64 @@ class sample extends _db {
     }
 
     /**
-     * This action only display some links to permit the change tof
+     * This action only display 4 links to permit the change tof
      * a new database management system
      */
     public function changeAction() {
-        
+        $buttons['mySQL'] = \Iris\DB\_EntityManager::MYSQL;
+        $buttons['SQLite'] = \Iris\DB\_EntityManager::SQLITE;
+        $buttons['PostgreSQL'] = \Iris\DB\_EntityManager::POSTGRESQL;
+        $buttons['Oracle'] = \Iris\DB\_EntityManager::ORACLE;
+        $this->__buttons = $buttons;
     }
 
     /**
-     * Changes some parameter in the current session to prepare a new 
-     * database for Sqlite
+     * Puts the database name for sqlite
+     * in the session variable
      */
     public function sqliteAction() {
-        $this->deletefileAction();
+        //$this->deletefileAction();
         $session = \Iris\Users\Session::GetInstance();
-        $session->dbini = \models\_dbManager::SQLITE_NUMBER;
-//      $session->entityType = \wbClasses\AutoEM::SQLITE;
-//      $session->SQLParams = ['file' => 'library/IrisWB/application/config/base/invoice.sqlite'];
-//     $session->entityType = \Iris\DB\_EntityManager::SQLITE;
-        //$session->SQLParams = ['file' => 'library/IrisWB/application/config/base/invoice.sqlite'];
-        $this->reroute('/db/sample/structure');
-    }
-
-    public function postgresqlAction() {
-        $this->deletedataAction();
-        $session = \Iris\Users\Session::GetInstance();
-        $session->dbini = \models\_dbManager::POSTGRESQL_NUMBER;
-//        $session->entityType = \Iris\DB\_EntityManager::POSTGRESQL;
-//        $session->entityType = \wbClasses\AutoEM::POSTGRESQL;
-//        $session->SQLParams = [
-//            'host' => 'localhost',
-//            'base' => 'wb_db',
-//            'user' => 'wb_user',
-//            'password' => 'wbwp'];
+        $session->dbini = \Iris\DB\_EntityManager::SQLITE;
         $this->reroute('/db/sample/structure');
     }
 
     /**
-     * Changes some parameter in the current session to prepare a new 
-     * database for mySQL (or MariaDB)
+     * Puts the database name for postgresql
+     * in the session variable
+     */
+    public function postgresqlAction() {
+        //$this->deletedataAction();
+        $session = \Iris\Users\Session::GetInstance();
+        $session->dbini = \Iris\DB\_EntityManager::POSTGRESQL;
+        $this->reroute('/db/sample/structure');
+    }
+
+    /**
+     * Puts the database name for mySQL (or MariaDB)
+     * in the session variable
      */
     public function mysqlAction() {
-        $this->deletedataAction();
+        //$this->deletedataAction();
         $session = \Iris\Users\Session::GetInstance();
-        $session->dbini = \models\_dbManager::MYSQL_NUMBER;
-//        $session->entityType = \Iris\DB\_EntityManager::MYSQL;
-//        $session->entityType = \wbClasses\AutoEM::MYSQL;
-//        $session->SQLParams = [
-//            'host' => 'localhost',
-//            'base' => 'wb_db',
-//            'user' => 'wb_user',
-//            'password' => 'wbwp'];
+        $session->dbini = \Iris\DB\_EntityManager::MYSQL;
         $this->reroute('/db/sample/structure');
+    }
+
+    /**
+     * Puts the database name for Oracle
+     * in the session variable
+     */
+    public function oracleAction() {
+        //$this->deletedataAction();
+        $session = \Iris\Users\Session::GetInstance();
+        $session->dbini = \Iris\DB\_EntityManager::ORACLE;
+        $this->reroute('/db/sample/structure');
+    }
+
+    public function testAction() {
+        $value = \Iris\Engine\Superglobal::GetSession('dbini', \Iris\DB\_EntityManager::DEFAULT_DBMS);
+        $this->__data = $value;
     }
 
 }

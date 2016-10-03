@@ -8,9 +8,9 @@
             Choose your database system:
         </p>
         <ul>
-            <li>{link('SQLite','/db/sample/sqlite','Change to the SQLite system')->image('/!documents/file/logos/sqlite.png')}</li>
-            <li>{link('MariaDB/mySQL','/db/sample/mysql','Change to the MariaDB or mySQL system (you need a prepared server)')->image('/!documents/file/logos/mySQL.png')}</li>
-            <li>{link('PostgreSQL','/db/sample/postgresql','Change to the PostgreSQL system (you need a prepared server)')->image('/!documents/file/logos/postgresql.png')}</li>
+            {foreach(buttons,label,system)}
+                <li>{link($label,"/db/sample/$system","Change to the $label system")->image("/!documents/file/logos/$system.png")}</li>
+            {/foreach}
         </ul>
         {dbWarning(110)}
         <br/>

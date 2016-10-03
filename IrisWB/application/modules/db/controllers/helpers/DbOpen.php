@@ -28,9 +28,7 @@ class DbOpen extends \Iris\controllers\helpers\_ControllerHelper {
      * @return wbClasses\AutoEM
      */
     public function help($return = \FALSE) {
-        $dbini = \Iris\Engine\Superglobal::GetSession('dbini', \models\_dbManager::SQLITE_NUMBER);
-//        echo 'DBOpen<br/>';
-//        i_d(DBEM::EMByNumber($dbini));
+        $dbini = \Iris\Engine\Superglobal::GetSession('dbini', DBEM::DEFAULT_DBMS);
         return DBEM::EMByNumber($dbini);
 
 //        $instance = \wbClasses\AutoEM::GetInstance();

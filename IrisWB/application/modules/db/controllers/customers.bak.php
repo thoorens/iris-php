@@ -24,7 +24,7 @@ class customers extends _dbCrud {
     use \Iris\DB\DataBrowser\tCrudManager;
 
     protected function _init() {
-        $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
+        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
     }
 
 

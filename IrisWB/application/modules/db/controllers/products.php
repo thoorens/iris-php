@@ -40,7 +40,7 @@ use \Iris\DB\DataBrowser\tCrudManager;
         ->setIdField('id')
         ->setDefaultIconDir('/images/icones')
         ->forceLanguage('english');*/
-        $EM = \models\_dbManager::GetEM();
+        $EM = \models\_invoiceEntity::GetEM();
         $tEntity = \models\TProducts::GetEntity($EM);
         $this->__products = $tEntity->fetchAll();
     }

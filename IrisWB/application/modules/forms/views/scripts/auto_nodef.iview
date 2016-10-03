@@ -1,9 +1,0 @@
-<div>
-    <div id="page">
-        {welcome(2)}
-        <p>
-            {_('Now you can begin to modify this page...',TRUE)}
-        </p>
-    </div>
-
-</div>

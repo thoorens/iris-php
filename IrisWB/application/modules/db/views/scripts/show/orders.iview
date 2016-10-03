@@ -8,7 +8,15 @@
     {container->divMaster()}
     {foreach(orders,order)}
         <div {container->item($order['InvNum'])}>
-            <p><b>Billing date : </b>{simpleDate($order['Date'])}</p>
+            <p>
+                <b>Quantity : </b>{(order['Quantity'])}
+            </p>
+            <p>
+                <b>UnitPrice : </b>{(order['UnitPrice'])}
+            </p>
+            <p>
+                <b>Billing date : </b>{simpleDate($order['Date'])}
+            </p>
             <p>
                 <b>Product description :</b>{(order['Description'])}
             </p>

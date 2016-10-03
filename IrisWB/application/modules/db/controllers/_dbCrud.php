@@ -22,7 +22,7 @@ class _dbCrud extends \modules\db\controllers\_db {
         $this->__form = "Form";
         
         $subhelper = $this->callViewHelper('crudIcon');// \Iris\Subhelpers\_CrudIconManager::GetInstance();
-        iris_debug($actionName);
+        i_d($actionName);
         list($action, $entity) = explode('_', $actionName);
         $arEntity = explode('Action', $entity);
         $entity = $arEntity[0];
@@ -37,7 +37,7 @@ class _dbCrud extends \modules\db\controllers\_db {
         $this->setViewScriptName('editall');
     }
 
-    public function errorAction($num) {
+    public function errorAction($num=0) {
         die("There is an error $num");
     }
 

@@ -26,7 +26,7 @@ class views extends _db {
      */
     protected function _init() {
         $this->setViewScriptName('/customers');
-        $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
+        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
         $this->dbState()->validateDB();
     }
 

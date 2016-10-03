@@ -33,20 +33,19 @@ namespace modules\db\controllers;
  * @version $Id: $ */
 class invoices extends _dbCrud {
 
-    
-    public function managerAction() {
+    public function showAction() {
         //\Iris\SysConfig\Settings::$IconDir = '/images/icons';
-        $tInvoices = \models\TInvoices::GetEntity();
+         $EM = \models\_invoiceEntity::GetEM();
+        $tInvoices = \models\TInvoices::GetEntity($EM);
         $this->__invoices = $tInvoices->fetchAll();
     }
 
-    
     /**
      * In case of a broken database, the action is redirected here
      *
      * @param int $num
      */
-    public function errorAction($num) {
+    public function errorAction($num = 0) {
         $this->setViewScriptName('commons/error');
     }
 

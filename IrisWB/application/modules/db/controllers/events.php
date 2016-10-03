@@ -36,7 +36,7 @@ class events extends _dbCrud {
     
     
     public function showAction() {
-        $tEvents = \models\TEvents::GetEntity();
+        $tEvents = \models\TEvents::GetEntity(\models\_invoiceEntity::GetEM());
         $this->__events = $tEvents->fetchall();
     }
     /**
@@ -44,7 +44,7 @@ class events extends _dbCrud {
      *
      * @param int $num
      */
-    public function errorAction($num) {
+    public function errorAction($num = 0) {
         $this->setViewScriptName('commons/error');
     }
 

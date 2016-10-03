@@ -33,18 +33,18 @@ namespace modules\db\controllers;
  * @version $Id: $ */
 class orders extends _dbCrud {
 
-        public function showAction() {
-        $tOrders = \models\TOrders::GetEntity();
+    public function showAction() {
+        $entityManager = \models\_invoiceEntity::GetEM();
+        $tOrders = \models\TOrders::GetEntity($entityManager);
         $this->__orders = $tOrders->fetchall();
     }
-    
-    
+
     /**
      * In case of a broken database, the action is redirected here
      *
      * @param int $num
      */
-    public function errorAction($num) {
+    public function errorAction($num = 0) {
         $this->setViewScriptName('commons/error');
     }
 

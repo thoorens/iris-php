@@ -24,10 +24,10 @@ class where extends _db {
      * Common part of the actions
      */
     protected function _init() {
-        $this->_entityManager = \models\_invoiceManager::DefaultEntityManager();
+        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
         $this->__action = "show";
         $this->dbState()->validateDB();
-        $this->setViewScriptName('where');
+        $this->setDefaultScriptDir('where');
     }
 
     /**

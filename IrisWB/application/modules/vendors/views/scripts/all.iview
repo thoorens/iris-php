@@ -1,0 +1,13 @@
+<div>
+    <div id="page">
+        {button(['Standard','/vendors/markdown/index','Version standard'])}
+        {button(['Etendue','/vendors/extended/index','Version "extended"'])}
+        {button(['Parsedown','/vendors/parsedown/index','Version Parsedown'])}
+        {button(['OO','/vendors/markdownoo/index','Version standard'])}
+        {button(['Github','/vendors/markdowng/index','Version adaptée de Github'])}
+        <p>
+            {md}
+        </p>
+    </div>
+{Vendors_cookieConsent()}
+</div>

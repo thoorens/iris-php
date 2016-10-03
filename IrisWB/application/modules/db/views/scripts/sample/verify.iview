@@ -1,15 +1,14 @@
 {wbHeader()}
 <div class="content" {wbBG()}>
     <h2>"Invoice" database sample</h2>
-    {if($Complete)}
-        There is 6 tables and 2 views in the database.
+        There is {tables} tables and {views} views in the database.
         <ul>
             {foreach(Objects, object)}
                 <li>{(object[0])} (<i>{(object[1])}</i>)</li>
             {/foreach}
         </ul>
-    {else}
-        The awaited tables and views are not present in the database.
+    {if(!$Complete)}
+        The awaited tables and views are not all present in the database.
     {/if}
     {dbWarning()}
 </div>

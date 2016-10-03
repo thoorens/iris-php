@@ -31,8 +31,8 @@ class customers extends _db {
                 ->setIdField('id')
                 ->forceLanguage('en');
         // Get all the data in Customers
-        $EM = \models\_dbManager::GetEM();
-        $tEntity = \models\TCustomers::GetEntity();
+        $EM = \models\_invoiceEntity::GetEM();
+        $tEntity = \models\TCustomers::GetEntity($EM);
         $this->__customers = $tEntity->fetchAll();
     }
 

@@ -1,0 +1,6 @@
+<div>
+    <div id="page">
+        Valeur de session : {data}
+    </div>
+
+</div>

@@ -6,15 +6,19 @@
         <div {container->item($product['id'])}>
             <h3>{(product['Description'])}</h3>
             Price : {(product['Price'])}<br/>
-            <ul>
-                {assign(invoices,$product['Invoices'])}
-                {foreach(invoices,invoice)}
-                    <li>
-                        <b>Invoice #{(invoice['Number'])}</b> ({(invoice['CustomerName'])})
-                        Quantity: {(invoice['Quantity'])} 
-                    </li>
-                {/foreach}
-            </ul>
+            {assign(invoices,$product['Invoices'])}
+            {if(count($invoices) == 0)}
+                <b>This product has not been sold</b>
+            {else}
+                <ul>
+                    {foreach(invoices,invoice)}
+                        <li>
+                            <b>Invoice #{(invoice['Number'])}</b> ({(invoice['CustomerName'])} - {(invoice['Date'])})
+                            Quantity: {(invoice['Quantity'])} 
+                        </li>
+                    {/foreach}
+                </ul>
+            {/if}
         </div>
     {/foreach}
     {container->endMaster()}
