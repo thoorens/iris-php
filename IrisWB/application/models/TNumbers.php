@@ -1,4 +1,5 @@
 <?php
+
 namespace models;
 
 /*
@@ -17,7 +18,7 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TNumbers extends _invoiceManager {
+class TNumbers extends _invoiceEntity {
     /*
      * W A R N I N G:
      * 
@@ -35,38 +36,51 @@ class TNumbers extends _invoiceManager {
      */
     protected static $_SQLCreate = [
         /* ---------------------------------------------------------- */
-        self::SQLITE_NUMBER =>
+        \Iris\DB\_EntityManager::SQLITE =>
         'CREATE TABLE "numbers" (
             "French" VARCHAR NOT NULL,
             "English" VARCHAR NOT NULL ,
             "Data" VARCHAR, 
             PRIMARY KEY ("French", "English"));',
         /* ---------------------------------------------------------- */
-        self::MYSQL_NUMBER =>
+        \Iris\DB\_EntityManager::MYSQL =>
         'CREATE TABLE numbers (
             French VARCHAR(50) NOT NULL,
             English VARCHAR(50) NOT NULL ,
             Data VARCHAR(50), 
             PRIMARY KEY (French, English))
             ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;',
+        /* ---------------------------------------------------------- */
+        \Iris\DB\_EntityManager::POSTGRESQL => 'not yet defined',
+
+        /* ---------------------------------------------------------- */
+        \Iris\DB\_EntityManager::ORACLE => 'not yet defined'
     ];
 
-    public static function Create() {
-        parent::Create();
-        $data = [
+    /**
+     * Creates the table
+     * 
+     * @param string $type
+     * @return int the number of created objects in the database
+     */
+    public static function CreateObjects($type) {
+        self::Create($type);
+        $numberList = [
             ['un', 'one', 'first number'],
             ['deux', 'two', 'second number'],
             ['trois', 'three', 'third number'],
         ];
+        $elements = 0;
         $eNumbers = self::GetEntity();
-        foreach($data as $item){
+        foreach ($numberList as $item) {
             $number = $eNumbers->createRow();
             $number->French = $item[0];
             $number->English = $item[1];
             $number->Data = $item[2];
             $number->save();
+            $elements++;
         }
+        return $elements;
     }
 
-    
 }

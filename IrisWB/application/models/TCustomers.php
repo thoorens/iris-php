@@ -1,4 +1,5 @@
 <?php
+
 namespace models;
 
 /*
@@ -17,8 +18,8 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TCustomers extends _invoiceManager {
-
+class TCustomers extends \Iris\DB\_Entity {
+    use tInvoiceEntity;
     /*
      * W A R N I N G:
      * 
@@ -28,8 +29,7 @@ class TCustomers extends _invoiceManager {
      * It is by no way an illustration of a table management
      * 
      */
-    
-    
+
     /**
      * SQL command to construct the table
      * 
@@ -37,14 +37,14 @@ class TCustomers extends _invoiceManager {
      */
     protected static $_SQLCreate = [
         /* ---------------------------------------------------------- */
-        self::SQLITE_NUMBER =>
+        \Iris\DB\_EntityManager::SQLITE =>
         'CREATE TABLE customers(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Name TEXT  NOT NULL,
     Address TEXT,
     Email TEXT)',
         /* ---------------------------------------------------------- */
-        self::MYSQL_NUMBER =>
+        \Iris\DB\_EntityManager::MYSQL =>
         'CREATE TABLE customers(
     id INTEGER AUTO_INCREMENT NOT NULL , 
     Name VARCHAR(100) NOT NULL,
@@ -52,22 +52,24 @@ class TCustomers extends _invoiceManager {
     Email VARCHAR(100),
     PRIMARY KEY(id))
     ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ',
-   
-        self::POSTGRESQL_NUMBER =>
-    'CREATE TABLE customers(
+        \Iris\DB\_EntityManager::POSTGRESQL =>
+        'CREATE TABLE customers(
     id SERIAL NOT NULL , 
     Name VARCHAR(100) NOT NULL,
     Address VARCHAR(100),
     Email VARCHAR(100),
-    PRIMARY KEY(id));'
- ];
+    PRIMARY KEY(id));',
+        \Iris\DB\_EntityManager::ORACLE =>
+        'Still undefined'
+    ];
+
     /**
      * SQL commands to create a copy
      * @var string
      */
     private static $_SQLCopy = [
         /* ---------------------------------------------------------- */
-        self::SQLITE_NUMBER => [
+        \Iris\DB\_EntityManager::SQLITE => [
             'CREATE TABLE customers2(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Name TEXT  NOT NULL,
@@ -75,10 +77,10 @@ class TCustomers extends _invoiceManager {
     Email TEXT);',
             'INSERT INTO customers2 SELECT * FROM customers'],
         /* ---------------------------------------------------------- */
-        self::MYSQL_NUMBER =>[
-        'CREATE TABLE customers2 AS SELECT * FROM customers;',
-        'ALTER TABLE customers2 ADD CONSTRAINT PRIMARY KEY(id);',    
-            ]
+        \Iris\DB\_EntityManager::MYSQL => [
+            'CREATE TABLE customers2 AS SELECT * FROM customers;',
+            'ALTER TABLE customers2 ADD CONSTRAINT PRIMARY KEY(id);',
+        ]
     ];
 
     /**
@@ -94,5 +96,30 @@ class TCustomers extends _invoiceManager {
         return $result > $result2 ? $result : $result2;
     }
 
-}
+    /**
+     * Creates the table
+     * 
+     * @param string $type
+     * @return int the number of created objects in the database
+     */
+    public static function CreateObjects($type) {
+        self::Create($type);
+        $tCustomers = self::GetEntity();
+        $customerList = [
+            ['Jacques Thoorens', 'rue Villette', 'irisphp@thoorens.net'],
+            ['John Smith', 'Bourbon street', 'john@smith.eu'],
+            ['Antonio Sanchez', 'Gran Via', \NULL]
+        ];
+        $elements = 0;
+        foreach ($customerList as $items) {
+            $customer = $tCustomers->createRow();
+            $customer->Name = $items[0];
+            $customer->Address = $items[1];
+            $customer->Email = $items[2];
+            $customer->save();
+            $elements++;
+        }
+        return $elements;
+    }
 
+}

@@ -34,7 +34,7 @@ namespace models\crud;
 class Orders extends _localCrud {
  
     public function __construct($param = NULL) {
-        //static::$_EntityManager = \models\_dbManager::GetEM();
+        //static::$_EntityManager = \models\_invoiceManager::GetEM();
         parent::__construct($param);
         // where to go after CRUD
         $this->setEndUrl('show');

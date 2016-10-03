@@ -38,7 +38,7 @@ class Invoices extends \Iris\DB\DataBrowser\_Crud {
     );
     
     public function __construct($param = NULL) {
-        //static::$_EntityManager = \models\_dbManager::GetEM();
+        //static::$_EntityManager = \models\_invoiceManager::GetEM();
         parent::__construct($param);
         // where to go after CRUD
         $this->setEndUrl('show');

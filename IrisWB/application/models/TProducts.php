@@ -17,12 +17,13 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TProducts extends _invoiceManager {
+class TProducts extends \Iris\DB\_Entity {
+    
+    use tInvoiceEntity;
     /*
      * W A R N I N G:
      * 
-     * the code of this class is only used to create the table and
-     * its copy.
+     * the code of this class is only used to create the table 
      * 
      * It is by no way an illustration of a table management
      * 
@@ -35,28 +36,52 @@ class TProducts extends _invoiceManager {
      */
     protected static $_SQLCreate = [
         /* ---------------------------------------------------------- */
-        self::SQLITE_NUMBER =>
+        \Iris\DB\_EntityManager::SQLITE =>
         'CREATE TABLE products(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , 
     Description TEXT  NOT NULL,
     Price NUMBER)',
         /* ---------------------------------------------------------- */
-        self::MYSQL =>
+        \Iris\DB\_EntityManager::MYSQL =>
         'CREATE TABLE IF NOT EXISTS products (
   id int(11) NOT NULL AUTO_INCREMENT,
   Description varchar(100) NOT NULL,
   Price float NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
-',
-        self::POSTGRESQL_NUMBER =>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;',
+        /* ---------------------------------------------------------- */
+        \Iris\DB\_EntityManager::POSTGRESQL =>
         'CREATE TABLE IF NOT EXISTS products (
   id SERIAL NOT NULL,
   Description varchar(100) NOT NULL,
   Price float NOT NULL,
-  PRIMARY KEY (id)
-);
-'
+  PRIMARY KEY (id));',
+        /* ---------------------------------------------------------- */
+        \Iris\DB\_EntityManager::ORACLE => 'not yet defined'
     ];
 
+    /**
+     * Creates the table
+     * 
+     * @param string $type
+     * @return int the number of created objects in the database
+     */
+    public static function CreateObjects($type) {
+        self::Create($type);
+        $tProducts = self::GetEntity();
+        $productList = [
+            'orange' => 0.50,
+            'banana' => 0.60,
+            'apple' => 0.30,
+        ];
+        $elements = 0;
+        foreach ($productList as $description => $price) {
+            $product = $tProducts->createRow();
+            $product->Description = $description;
+            $product->Price = $price;
+            $product->save();
+            $elements++;
+        }
+        return $elements;
+    }
 }

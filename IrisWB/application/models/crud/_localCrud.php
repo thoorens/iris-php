@@ -34,7 +34,7 @@ namespace models\crud;
 abstract class _localCrud extends \Iris\DB\DataBrowser\_Crud {
  
     public static function __ClassInit() {
-        $EM = \models\_dbManager::GetEM();
+        $EM = \models\_invoiceEntity::GetEM();
         static::$_EntityManager = $EM;
     }
     
