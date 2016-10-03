@@ -37,7 +37,7 @@ class TOrders extends \Iris\DB\_Entity {
     public static function GetDefaultEntityManager() {
         switch (self::$DbType) {
             case 'sqlite':
-                $fileName = sprintf(self::$FileNameTemplate,IRIS_PROGRAM_PATH);
+                $fileName = sprintf(self::$FileNameTemplate,\IRIS_PROGRAM_PATH);
                 if(!file_exists($fileName)){
                     \Iris\OS\_OS::GetInstance()->touch($fileName);
                 }
