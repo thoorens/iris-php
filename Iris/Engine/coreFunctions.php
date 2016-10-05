@@ -83,6 +83,16 @@ function i_d($var, $die = \TRUE, $message = \NULL){
 }
 
 /**
+ * Another alias for iris_debug with no death value
+ * 
+ * @param mixed $var A printable message or variable
+ * @param string $message The message to display in die instruction
+ */
+function i_dnd($var, $message = \NULL){
+    iris_debug($var, \FALSE, $message, 2);
+}
+
+/**
  * Print a variable value with an optional message, if the message begins
  * with '!' it is printed before otherwise it is print after
  * 
