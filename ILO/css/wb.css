@@ -3,259 +3,272 @@ One True Layout
 An idea by Alex Robinson quotted by Eric Meyer
 */
 html {
-  font-family: sans-serif; }
+    font-family: sans-serif; }
 
 h1, h2, h3, h4, h5, h6, th {
-  text-shadow: #AAA 0.1em 0.1em 0.2em; }
+    text-shadow: #AAA 0.1em 0.1em 0.2em; }
 
 #Title {
-  text-align: center; }
+    text-align: center; }
 
 div {
-  /*outline: 1px dashed red;*/ }
+    /*outline: 1px dashed red;*/ }
 
 a.crudlink {
-  text-decoration: none; }
+    text-decoration: none; }
 
 div#main {
-  width: 1020px;
-  margin: 0 auto;
-  background-color: white; }
+    width: 1020px;
+    margin: 0 auto;
+    background-color: white; }
 
 .column {
-  min-height: 520px;
-  float: left;
-  padding: 0 20px;
-  margin: 0; }
+    min-height: 520px;
+    float: left;
+    padding: 0 20px;
+    margin: 0; }
 
 .one {
-  width: 200px;
-  background-color: #f0fff0;
-  font-style: italic;
-  font-family: serif;
-  font-size: 0.9em; }
+    width: 200px;
+    background-color: #f0fff0;
+    font-style: italic;
+    font-family: serif;
+    font-size: 0.9em; }
 
 .two {
-  width: 500px;
-  background-color: #f0f8ff; }
+    width: 500px;
+    background-color: #f0f8ff; }
 
 .onetwo {
-  width: 700px;
-  background-color: #f0f8ff; }
+    width: 700px;
+    background-color: #f0f8ff; }
 
 .two2 {
-  width: 740px;
-  background-color: #f0f8ff; }
+    width: 740px;
+    background-color: #f0f8ff; }
 
 .three {
-  width: 200px;
-  background-color: #fff0f0;
-  font-style: italic;
-  font-family: serif;
-  font-size: 0.9em; }
+    width: 200px;
+    background-color: #fff0f0;
+    font-style: italic;
+    font-family: serif;
+    font-size: 0.9em; }
 
 #foot {
-  clear: both;
-  text-align: center;
-  background-color: #444;
-  color: #ffe;
-  box-shadow: 5px 5px 5px #888;
-  border-radius: 5px; }
+    clear: both;
+    text-align: center;
+    background-color: #444;
+    color: #ffe;
+    box-shadow: 5px 5px 5px #888;
+    border-radius: 5px; }
 
 #iris_admintoolbar {
-  background-color: #148;
-  text-align: center;
-  box-shadow: 5px 5px 5px #888;
-  border-radius: 5px; }
+    background-color: #148;
+    text-align: center;
+    box-shadow: 5px 5px 5px #888;
+    border-radius: 5px; }
 
 .partial {
-  border: outset black 2px;
-  background-color: #484;
-  color: #fff0f0; }
+    border: outset black 2px;
+    background-color: #484;
+    color: #fff0f0; }
 
 p.errorTest {
-  background-color: #FDD; }
+    background-color: #FDD; }
 
 p.errorTrue {
-  background-color: red;
-  color: white; }
+    background-color: red;
+    color: white; }
 
 div.example {
-  color: #080;
-  background-color: #FFD; }
+    color: #080;
+    background-color: #FFD; }
 
 .smallcolumn3 {
-  padding-left: 10px;
-  width: 140px;
-  float: left;
-  font-size: 0.8em; }
+    padding-left: 10px;
+    width: 140px;
+    float: left;
+    font-size: 0.8em; }
 
 .oldscreen {
-  border: double 2px #FFF;
-  margin: 10px;
-  padding: 5px;
-  text-align: center;
-  font-weight: bold;
-  font-family: courier; }
+    border: double 2px #FFF;
+    margin: 10px;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-family: courier; }
 
 .old1 {
-  color: #5F5;
-  background: black; }
+    color: #5F5;
+    background: black; }
 
 .old2 {
-  color: #800;
-  background: #BBB; }
+    color: #800;
+    background: #BBB; }
 
 .old3 {
-  color: #CC0;
-  background: #888; }
+    color: #CC0;
+    background: #888; }
 
 .old4 {
-  color: #44A;
-  background: #FFF; }
+    color: #44A;
+    background: #FFF; }
 
 div#wbexplain {
-  font-size: 0.9em;
-  padding: 2px 10px 2px 10px;
-  margin: 1px 0px 10px 0px;
-  border-radius: 10px;
-  background-color: #cff; }
+    font-size: 0.9em;
+    padding: 2px 10px 2px 10px;
+    margin: 1px 0px 10px 0px;
+    border-radius: 10px;
+    background-color: #cff; }
 
 #content {
-  font-size: 0.9em;
-  padding: 2px 10px 2px 10px;
-  margin: 1px 0px 10px 0px;
-  border-radius: 10px; }
+    font-size: 0.9em;
+    padding: 2px 10px 2px 10px;
+    margin: 1px 0px 10px 0px;
+    border-radius: 10px; }
 
 li.loop {
-  border: black solid 2px;
-  margin-left: -30px;
-  width: 110px;
-  padding-left: 15px;
-  margin-bottom: 5px;
-  background-color: #ccccff;
-  list-style-type: none; }
+    border: black solid 2px;
+    margin-left: -30px;
+    width: 110px;
+    padding-left: 15px;
+    margin-bottom: 5px;
+    background-color: #ccccff;
+    list-style-type: none; }
 
 table.show {
-  border-width: 3px;
-  border-spacing: 1px;
-  border-style: solid;
-  border-color: #008;
-  border-collapse: separate;
-  background-color: white;
-  width: 100%; }
-  table.show tr th {
+    border-width: 3px;
+    border-spacing: 1px;
+    border-style: solid;
+    border-color: #008;
+    border-collapse: separate;
+    background-color: white;
+    width: 100%; }
+table.show tr th {
     border-width: 1px;
     padding: 1px;
     border-style: inset;
     border-color: gray;
     background-color: white; }
-  table.show tr td {
+table.show tr td {
     border-width: 1px;
     padding: 1px;
     border-style: inset;
     border-color: gray;
     background-color: white; }
-    table.show tr td .title {
-      background-color: #FAA;
-      color: white;
-      font-weight: bold;
-      text-align: center; }
-    table.show tr td .center {
-      text-align: center;
-      /*YES*/ }
-  table.show td.show_emph {
+table.show tr td .title {
+    background-color: #FAA;
+    color: white;
+    font-weight: bold;
+    text-align: center; }
+table.show tr td .center {
+    text-align: center;
+    /*YES*/ }
+table.show td.show_emph {
     color: red;
     font-weight: bold;
     text-align: center; }
 
 table.center tr td {
-  text-align: center; }
+    text-align: center; }
 
 .iris_md5_unused {
-  color: #ffcc00; }
+    color: #ffcc00; }
 
 .iris_md5_ok {
-  color: #43e680; }
+    color: #43e680; }
 
 .iris_md5_bad {
-  color: #e88; }
+    color: #e88; }
 
 img.shadow {
-  padding: 10px;
-  box-shadow: 5px 5px 5px #888; }
+    padding: 10px;
+    box-shadow: 5px 5px 5px #888; }
 
 ul.crud li a {
-  text-decoration: none; }
+    text-decoration: none; }
 
 .quoted {
-  color: #A00; }
+    color: #A00; }
 
 .quoted2 {
-  color: #00A; }
+    color: #00A; }
 
 p.dbWarning, p.warning {
-  font-size: 0.8em;
-  border-style: double;
-  padding: 5px; }
+    font-size: 0.8em;
+    border-style: double;
+    padding: 5px; }
 
 .warningUnknown {
-  color: #800;
-  border-color: #800;
-  background-color: white; }
+    color: #800;
+    border-color: #800;
+    background-color: white; }
 
 .warningCreated {
-  color: #080;
-  border-color: #080; }
+    color: #080;
+    border-color: #080; }
 
 .warningModified {
-  color: #FF0;
-  border-color: #FF0;
-  background-color: #AAA; }
+    color: #FF0;
+    border-color: #FF0;
+    background-color: #AAA; }
 
 .warningModified2 {
-  color: #D80;
-  border-color: #D80;
-  background-color: white; }
+    color: #D80;
+    border-color: #D80;
+    background-color: white; }
 
 .warningDeleted, .warningSevere {
-  color: #F00;
-  border-color: #F00; }
+    color: #F00;
+    border-color: #F00; }
 
 .warningDeletion {
-  color: white;
-  border-color: white;
-  background-color: red;
-  font-weight: bold; }
+    color: white;
+    border-color: white;
+    background-color: red;
+    font-weight: bold; }
 
 form#screen {
-  font-size: 0.9em; }
+    font-size: 0.9em; }
 
 .dblogo {
-  margin: 20px;
-  text-align: center; }
+    margin: 20px;
+    text-align: center; }
 
 table.center tr td {
-  text-align: center; }
+    text-align: center; }
 
 pre.presmall {
-  font-size: 0.8em; }
+    font-size: 0.8em; }
 
 /* ------------------------------- 
    Column 1 for special screens 
    ------------------------------- */
 div.special_1 {
-  font-style: normal;
-  margin: 0 -20px -20px -20px;
-  padding: 10px;
-  background-color: #A00;
-  color: white; }
+    font-style: normal;
+    margin: 0 -20px -20px -20px;
+    padding: 10px;
+    background-color: #A00;
+    color: white; }
 
 div.special_1 p {
-  padding: 10px; }
+    padding: 10px; }
 
 div.special_1 ol.advice {
-  background-color: #FFC;
-  color: #00A;
-  padding: 10px;
-  padding-left: 30px; }
+    background-color: #FFC;
+    color: #00A;
+    padding: 10px;
+    padding-left: 30px; }
+
+/* ------------------------------- 
+   Forms
+   ------------------------------- */
+fieldset#left{
+     width: 320px;
+    float: left;
+}
+fieldset#right{
+     width: 320px;
+    float: right;
+}
+
