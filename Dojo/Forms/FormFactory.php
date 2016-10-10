@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Dojo\Forms;
 
 /*
@@ -46,11 +44,12 @@ class FormFactory extends \Iris\Forms\_FormFactory {
      * @param type $options
      * @return Elements\Editor 
      */
-    public function createEditor($name, $options= NULL) {
+    public function createEditor($name, $options = NULL) {
         return new Elements\Editor($name, $options);
     }
 
-    public function createSubmit($name, $options= NULL) {
+    public function createSubmit($name, $options = NULL) {
+        //print('dojo submit<br>');
         return new Elements\Submit($name, $options);
     }
 
@@ -58,5 +57,3 @@ class FormFactory extends \Iris\Forms\_FormFactory {
 //        return new Elements\Password($name, $subType, $options);
 //    }
 }
-
-
