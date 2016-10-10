@@ -1,3 +1,4 @@
+
 /*
 One True Layout
 An idea by Alex Robinson quotted by Eric Meyer
@@ -315,4 +316,17 @@ div.special_1 ol.advice{
 }
 
 div.special_1 ul.advice ol{
+}
+
+
+/* ------------------------------- 
+   Forms
+   ------------------------------- */
+fieldset#left{
+     width: 320px;
+    float: left;
+}
+fieldset#right{
+     width: 320px;
+    float: right;
 }
