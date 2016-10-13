@@ -140,15 +140,11 @@ APACHE;
             'models/crud',
             '!config/admin',
             '!config/base',
-            '!config/form',
+            '!config/forms',
             '!data/private',
             '!data/protected',
             '!log',
             'modules'
-        ];
-        $datadir = [
-            '!data/private',
-            '!data/protected',
         ];
         $files = [
             '_application.php' => "modules/_application.php",

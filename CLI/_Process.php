@@ -69,8 +69,10 @@ abstract class _Process {
      */
     protected function _createDir($directories, $base) {
         foreach ($directories as $directory) {
-            $permissions = $this->_os->GetPrivateMod();
-            if ($directory[0] == '!') {
+            if ($directory[0] !== '!') {
+                $permissions = $this->_os->GetPrivateMod();
+            }
+            else{
                 $directory = substr($directory, 1);
                 $permissions = $this->_os->GetPublicMod();
             }
@@ -117,8 +119,4 @@ abstract class _Process {
         echo $text;
     }
 
-    
-    
-
 }
-
