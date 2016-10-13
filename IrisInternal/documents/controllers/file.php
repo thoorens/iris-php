@@ -94,6 +94,10 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         $this->_resource('views');
     }
 
+    public function javascriptAction(){
+        $this->_resource('javascript');
+    }
+    
     private function _resource($base) {
         $manager = \Iris\Documents\Manager::GetInstance();
         $params = $this->_response->getParameters();
