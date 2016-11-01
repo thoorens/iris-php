@@ -58,6 +58,7 @@ class IniParser extends _Parser {
      * @param type $sectionName section to consider (or FALSE for all)
      * @param int $inheritance copy inherited values (or ref to parent)
      * @return Config (object or array)
+     * @throws \Iris\Exceptions\FileException
      */
     public function processFile($filename, $sectionName = \FALSE, $inheritance = _Parser::COPY_AND_LINK) {
         // in case of single section, it is necessary to copy values
@@ -76,7 +77,7 @@ class IniParser extends _Parser {
                     $configs[$name] = new Config($name);
                 }
                 else{
-                    die('Doublon');
+                    throw new \Iris\Exceptions\FileException("Doublon in ini file $filename");
                 }
                 // inherit base namespace
                 if (isset($configs[$parent])) {
@@ -103,11 +104,12 @@ class IniParser extends _Parser {
         }
         // if no section selected returns an array, otherwise a Config
         if ($sectionName === \FALSE) {
-            return $configs;
+            $returnValue = $configs;
         }
         else {
-            return $configs[$sectionName];
+            $returnValue = $configs[$sectionName];
         }
+        return $returnValue;
     }
 
     /**

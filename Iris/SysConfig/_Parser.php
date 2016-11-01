@@ -20,6 +20,9 @@ namespace Iris\SysConfig;
  * @version $Id: $ */
 abstract class _Parser {
 
+    /**
+     * the ini file is not considered as an inheritance structure
+     */
     const NO_INHERITANCE = 0;
     const COPY_INHERITED_VALUES = 1;
     const LINK_TO_PARENT = 2;
@@ -53,7 +56,7 @@ abstract class _Parser {
      * @param int $inheritance copy inherited values (or ref to parent)
      * @return Config (object or array)
      */
-    public abstract function processFile($fileName, $sectionName = FALSE, $inheritance = self::COPY_AND_LINK);
+    public abstract function processFile($fileName, $sectionName = \FALSE, $inheritance = self::COPY_AND_LINK);
 
     /**
      * Exports an array of configs to a text file
