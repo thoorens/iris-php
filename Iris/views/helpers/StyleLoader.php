@@ -3,30 +3,12 @@
 namespace Iris\views\helpers;
 
 /*
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
- *
- * 
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ * 
- */
-
-/*
- * This file is part of IRIS-PHP.
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -37,50 +19,9 @@ namespace Iris\views\helpers;
  * <li> ->styleLoader('test',"#test {background-color:white}");
  * </ul>
  */
-class StyleLoader extends _ViewHelper {
-
-    use tLoaderRegister;
-
-    /**
-     * It is critical this help be a singleton
-     * @var boolean
-     */
-    protected static $_Singleton = \TRUE;
-
-    /**
-     * a list of internal style definitions
-     * @var string[] 
-     */
-    private $_styles = [];
-
-    /**
-     * A list of css file to load
-     * @var string[] 
-     */
-    private $_styleFiles = [];
-
-    /**
-     * Add a new style or a new style file
-     * 
-     * @param string $name name of the style or of the file
-     * @param string $content content of the style (NULL in case of file)
-     */
-    public function help($name = NULL, $content = NULL) {
-        if (is_null($content) or is_numeric($content)) {
-            // using name as index avoid duplicates
-            $this->_styleFiles[$name] = '';
-        }
-        else {
-            $this->_styles[$name] = $content;
-        }
-        if (is_numeric($content)) {
-            return $this;
-        }
-    }
-
-    public function load($name, $content = NULL) {
-        return $this->help($name, $content);
-    }
+class StyleLoader extends _Loader {
+    
+    protected $_extension = 'css';
 
     /**
      * Renders styles and links to style file (only in non Ajax mode
@@ -94,7 +35,7 @@ class StyleLoader extends _ViewHelper {
         }
         // render styles
         $text = '';
-        foreach ($this->_styles as $style) {
+        foreach ($this->_text as $style) {
             $text .= <<<ENDSTYLE
 <style>\n
         $style    
@@ -102,7 +43,7 @@ class StyleLoader extends _ViewHelper {
 ENDSTYLE;
         }
         // render style files
-        foreach ($this->_styleFiles as $file => $dummy) {
+        foreach ($this->_files as $file) {
             $url = $this->_URL($file);
             $text .= '<link  href="' . $url . '" rel="stylesheet" type="text/css" />';
             $text .= "\n";
@@ -110,23 +51,8 @@ ENDSTYLE;
         return $text;
     }
 
-    /**
-     * A file name is prefixed by '/css/', except if <ul>
-     * <li>it is absolute (beginning by /)
-     * <li>it has a bang operator (!)
-     * <li>it begins with http
-     * </ul>
-     * @param string $file
-     * @return string
-     */
-    private function _URL($file) {
-        if ($file[1] == '!' or $file[0] == '/' or strpos($file, 'http') === 0) {
-            return $file;
-        }
-        if(substr($file,-3)!='css'){
-            $file .= '.css';
-        }
-        return "/css/$file";
+    public function update($mode, &$text) {
+        
     }
 
 }
