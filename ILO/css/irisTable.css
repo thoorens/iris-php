@@ -1,0 +1,33 @@
+/* ------------------------------------------------------------------
+   CSS for default table layout
+   Generated from a sass file
+   ------------------------------------------------------------------ */
+table.demo, table.democ {
+  border-width: 3px;
+  border-spacing: 1px;
+  border-style: solid;
+  border-color: #008;
+  border-collapse: separate;
+  background-color: #FFD;
+  width: 100%; }
+  table.demo tr th, table.democ tr th {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray; }
+  table.demo tr td, table.democ tr td {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray; }
+
+table.democ tr td {
+  text-align: center; }
+
+.class3 {
+  color: blue;
+  text-align: center; }
+
+.class2 {
+  color: red;
+  text-align: center; }

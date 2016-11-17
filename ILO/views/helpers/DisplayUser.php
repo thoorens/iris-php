@@ -29,31 +29,31 @@ class DisplayUser extends \Iris\views\helpers\_ViewHelper {
     protected static $_Singleton = \TRUE;
     
     private $_userName;
-    private $_groupName;
+    private $_roleName;
     
     public function help($mode = self::TBMODE) {
         // name and group
-        $userLabel = $this->_('User');
-        $groupLabel = $this->_('Group');
+        $userLabel = $this->_('User:');
+        $groupLabel = $this->_('Group:');
 
         if ($mode & self::NAMETOOLTIP and $mode & self::GROUPTOOLTIP) {
-            $tooltip = "$this->_userName ($this->_groupName)";
+            $tooltip = "$this->_userName ($this->_roleName)";
             $nameAndGroup = '';
             $label = $userLabel;
         }
         elseif ($mode & self::NAMETOOLTIP) {
             $tooltip = "$userLabel $this->_userName";
-            $nameAndGroup = "$this->_groupName";
+            $nameAndGroup = "$this->_roleName";
             $label = $groupLabel . ': ';
         }
         elseif ($mode & self::GROUPTOOLTIP) {
-            $tooltip = "$groupLabel $this->_groupName";
+            $tooltip = "$groupLabel $this->_roleName";
             $nameAndGroup = "$this->_userName";
             $label = $userLabel . ': ';
         }
         else {
             $tooltip = ''; //"$groupLabel $groupName";
-            $nameAndGroup = "<b>$this->_userName</b> (<i>$this->_groupName</i>)";
+            $nameAndGroup = "<b>$this->_userName</b> (<i>$this->_roleName</i>)";
             $label = '';
         }
         // label
@@ -77,7 +77,7 @@ class DisplayUser extends \Iris\views\helpers\_ViewHelper {
         \Iris\Users\Session::GetInstance();
         $identity = \Iris\Users\Identity::GetInstance();
         $this->_userName = $identity->getName();
-        $this->_groupName = $identity->getRole();
+        $this->_roleName = $identity->getRole();
     }
 
 }

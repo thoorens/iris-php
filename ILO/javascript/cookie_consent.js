@@ -1,4 +1,4 @@
-alert('Hello');
+//alert('Hello');
 !function()
 {if(!window.hasCookieConsent)
     {window.hasCookieConsent=!0;var e="cookieconsent_options",t="update_cookieconsent_options",n="cookieconsent_dismissed",i="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/";
