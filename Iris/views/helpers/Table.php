@@ -24,6 +24,8 @@ class Table extends _ViewHelper {
     
       
     /**
+     * Returns an initialized subhelper
+     * 
      * @param string $label link label
      * @param string $url target URL
      * @param string $tooltip tooltip when mousevoer
@@ -31,9 +33,8 @@ class Table extends _ViewHelper {
      * @param string $id id of the linklabel
      * @return Iris\Subhelpers\Link
      */
-    public function help($name, $columns = 2, $line = 1, $class = BLANKSTRING, $id = BLANKSTRING) {
-        $args = func_get_args();
-        $subhelper = new \Iris\Subhelpers\Table($args);
+    public function help($class = BLANKSTRING, $id = BLANKSTRING) {
+        $subhelper = new \Iris\Subhelpers\Table($class, $id);
         return $subhelper;
     }
 
