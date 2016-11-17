@@ -1,6 +1,8 @@
 /* =====================================================
- * Styles for the admin toolbar
- * ===================================================== */
+ * Styles for the admin toolbar (test)
+ * ===================================================== */ 
+
+@import '_color.scss';
 
 /* Real time duration */
 span#iris_RTD{
@@ -11,9 +13,9 @@ span#iris_RTD{
 #iris_admintoolbar{
     font-size :12px;
     font-family: sans-serif;
-    background-color:#148;
+    background-color:$atb_background;
     text-align: left;
-    color:#eb7;
+    color:$atb_fontcolor;
     font-size: 15px;
     
 }

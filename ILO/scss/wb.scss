@@ -4,6 +4,18 @@ One True Layout
 An idea by Alex Robinson quotted by Eric Meyer
 */
 
+$veryLightBlue : #F0F8FF;
+$veryLightPink : #FFF0F0;
+$veryLightGreen : #F0FFF0;
+$gray4 : #444;
+$gray8 : #888;
+$grayB : #BBB;
+
+$unknown_yellow: #FFCC00;
+$bad_red : #EE8888 ;
+$good_green :#43E680 ;
+
+
 html{
     font-family:sans-serif
 }
@@ -40,29 +52,29 @@ div#main{
 }
 .one{
     width : 200px;
-    background-color:#f0fff0;
+    background-color:$veryLightGreen;
     font-style:italic;
     font-family:serif;
     font-size:0.9em
 }
 .two{
     width:500px;
-    background-color:#f0f8ff
+    background-color:$veryLightBlue;
 }
 
 .onetwo{
     width:700px;
-    background-color:#f0f8ff
+    background-color:$veryLightBlue;
 }
 
 .two2{
     width:740px;
-    background-color:#f0f8ff
+    background-color:$veryLightBlue;
 }
 
 .three{
     width:200px;
-    background-color:#fff0f0;
+    background-color:$veryLightPink;
     font-style:italic;
     font-family:serif;
     font-size:0.9em
@@ -71,16 +83,16 @@ div#main{
 #foot{
     clear:both;
     text-align: center;
-    background-color:#444;
+    background-color:$gray4;
     color: #ffe;
-    box-shadow: 5px 5px 5px #888;
+    box-shadow: 5px 5px 5px $gray8;
     border-radius: 5px;
 }
 
 #iris_admintoolbar{
     background-color:#148;
     text-align: center;
-    box-shadow: 5px 5px 5px #888;
+    box-shadow: 5px 5px 5px $gray8;
     border-radius: 5px;
 }
 
@@ -111,7 +123,7 @@ div.example{
 }
 
 .oldscreen{
-    border : double 2px #FFF;
+    border : double 2px white;
     margin:10px;
     padding: 5px;
     text-align:center;
@@ -126,7 +138,7 @@ div.example{
 
 .old2{
     color: #800;
-    background: #BBB;
+    background: $grayB;
 }
 
 .old3{
@@ -207,19 +219,19 @@ table.center tr td{
 }
 
 .iris_md5_unused{
-    color:#ffcc00;
+    color:$unknown_yellow;
 }
 
 .iris_md5_ok {
-    color:#43e680;
+    color:$good_green;
 }
 .iris_md5_bad {
-    color:#e88;
+    color: $bad_red;
 }
 
 img.shadow{
     padding:10px;
-    box-shadow: 5px 5px 5px #888;
+    box-shadow: 5px 5px 5px $gray8;
 }
 
 ul.crud li a {
@@ -323,10 +335,10 @@ div.special_1 ul.advice ol{
    Forms
    ------------------------------- */
 fieldset#left{
-     width: 320px;
+    width: 320px;
     float: left;
 }
 fieldset#right{
-     width: 320px;
+    width: 320px;
     float: right;
 }
