@@ -1,5 +1,7 @@
 /*
     CSS for inner screen
+    Generated from a sass file
+    Used in irisinternal and iriswb contexts
 */
 body {
   margin-left: auto;
@@ -73,8 +75,9 @@ a:link, a:hover, a:visited {
   /* IE10+ */
   background: linear-gradient(to right, #62db72 0%, #b0ddb6 50%, #dddfdd 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62db72', endColorstr='#dddfdd',GradientType=1 );
-  /* IE6-9 */ }
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$background', endColorstr='$b100',GradientType=1 );
+  /* IE6-9 */
+  /* Thank you http://www.colorzilla.com/gradient-editor/ */ }
 
 #content_panel {
   width: 585px;
@@ -116,9 +119,8 @@ h1 {
   padding-top: 5px;
   border-top: solid gray 1px; }
 
-table, tr, th, td{
-    border: 1px solid black;
-    border-collapse: collapse;
-    background-color: #DFD;
-    border-spacing: 1px;
-}
+table, tr, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  background-color: #DFD;
+  border-spacing: 1px; }
