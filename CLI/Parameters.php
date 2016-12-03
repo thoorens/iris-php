@@ -35,10 +35,12 @@ class Parameters {
      * Project library folder name
      */
     const APPLICATIONDIR = "ApplicationDir";
+
     /**
      * Project application folder name
      */
     const PUBLICDIR = 'PublicDir';
+
     /**
      * Project public folder name
      */
@@ -48,10 +50,12 @@ class Parameters {
      * The module name parameter
      */
     const MODULENAME = 'ModuleName';
+
     /**
      * The controller name parameter
      */
     const CONTROLLERNAME = 'ControllerName';
+
     /**
      * The action name parameter
      */
@@ -65,11 +69,12 @@ class Parameters {
     const FILENAME = 'FileName';
     const MENUNAME = 'MenuName';
     const IRISDEF = 'Iris';
+    const FRAGMENTNAME = 'FragmentName';
+
     /**
      * Default value for the project database (default none)
      */
     const DB_NONE = "==NONE==";
-
     // display
     const LINE = '------------------------------------------------------------------------------------';
     const DBLINE = "====================================================================================";
@@ -100,7 +105,6 @@ class Parameters {
      * @var \Iris\SysConfig\Config[]
      */
     private $_projects = [];
-
 
     /**
      * If TRUE indicates that the project file has to be saved
@@ -143,7 +147,6 @@ class Parameters {
         $this->_readParamFile();
     }
 
-    
     /**
      * Reads an ini file and analyses its content in a array of configs
      * If the file does not exist, creates a config array with an initial 'Iris' element with <ul>
@@ -218,7 +221,6 @@ class Parameters {
         $this->_parameters[$name] = $value;
     }
 
-    
     /**
      * (Re)creates a ini file with the content of an array of configs
      *
@@ -356,8 +358,8 @@ class Parameters {
     }
 
     /**
-     * Accessor get for
-     * @return string the current controller name
+     * Accessor get for the current controller name
+     * @return string 
      */
     public function getControllerName() {
         return $this->_getValue(self::CONTROLLERNAME, 'index');
@@ -371,12 +373,20 @@ class Parameters {
         return $this->_getValue(self::ACTIONNAME, 'index');
     }
 
+    /**
+     * Accessor get for the current menu name
+     * @return string
+     */
     public function getMenuName() {
-        
+        return $this->_getValue(self::MENUNAME);
     }
 
+    /**
+     * Accessor get for the current entity name
+     * @return string
+     */
     public function getEntityName() {
-        return $this->_getValue('EntityName', 'tests');
+        return $this->_getValue(self::ENTITYNAME, 'tests');
     }
 
     /**
@@ -389,8 +399,12 @@ class Parameters {
         return $value;
     }
 
+    /**
+     * Accessor get for the current database name
+     * @return string
+     */
     public function getDatabase($old = \FALSE) {
-        return $this->_getValue('Database', self::DB_NONE, $old);
+        return $this->_getValue(self::DATABASE, self::DB_NONE, $old);
     }
 
 //    public function getLocked() {
@@ -398,7 +412,7 @@ class Parameters {
 //    }
 
     /**
-     * Accessor get for the defaut
+     * Accessor get for the defaut class name
      * @return string
      */
     public function getClasseName() {
@@ -465,11 +479,19 @@ class Parameters {
     }
 
     /**
+     * Accessor get for the code fragment to generate
+     * @return string
+     */
+    public function getFragmentName() {
+        return $this->_getValue('FragmentName', 'fragment_name');
+    }
+
+    /**
      * 
      * @return string
      */
     public function getFileName() {
-        return $this->_parameters['FileName'];
+        return $this->_getValue('EntityName', 'tests');
     }
 
     /**

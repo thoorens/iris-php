@@ -4,43 +4,33 @@
 // ==========================================================================================================================================
 
 Messages::$Help['En']['h'] =
-'iris.php
+"iris.php
 ========
 This program offers an interface for various commands to create and manage
-a site project realized with Iris-PHP
+a site project realized with Iris-PHP. Different parameters are written
+in distinct files in /home/username/.iris (under Linux)
 
-Functions:
+To obtain a complete list of the available help screeens, type :
 
-    iris.php /path/to/IRIS/installation/directory
-
-First invocation of the program and memorisation of the name of the folder
-containing the framework libraries. This path is recorded in a parameter file
-(/home/username/.iris/iris.ini  under Linux)
-
-    iris.php -h ou --help
-
-For an explicit help for a special function, type :
-';
+    iris.php -H
+";
 
 Messages::$Help['Fr']['h'] =        
 "iris.php
 ========
 Ce programme offre une interface pour une série de commandes permettant 
-la création et la gestion d''un projet de site web à l'aide dIris-PHP.
+la création et la gestion d''un projet de site web à l'aide dIris-PHP. 
+Différents paramètres sont enregistrés dans plusieurs fichiers du dossier 
+/home/username/.iris (sous Linux).
 
-Fonctions:
+Pour obtenir la liste des écrans d'aide disponibles, tapez :
 
-    iris.php /path/to/IRIS/installation/directory
+    iris.php -H
 
-Première invocation du programme et mémorisation du répertoire contenant une
-version fonctionnelle du frameworks Iris-PHP. Ce chemin est mémorisé dans
-le fichier de paramétrage (/home/username/.iris/iris.ini sous Linux)
-
-    iris.php -h ou --help
-
-Pour une aide sur une fonction particulière tapez :
-";
-Messages::$Help['Ext']['h'] ='h2';
+"
+;
+Messages::$Help['Ext']['h'] = 'FALSE';
+Messages::$Help['Ext']['h'] ='more';
 
 
 // ==========================================================================================================================================
@@ -174,7 +164,7 @@ Messages::$Help['Ext']['v'] ='FALSE';
 // ==========================================================================================================================================
 // help
 // ==========================================================================================================================================
-Messages::$Help['Fr']['h2'] = "
+Messages::$Help['Fr']['H'] = "
         iris.php -h=help (ou -h=h)
         iris.php -h=show (ou -h=s)
         iris.php -h=language (ou -h=1)
@@ -210,19 +200,21 @@ Messages::$Help['Fr']['h2'] = "
         iris.php -h=entitygenerate (ou -h=e)
         iris.php -h=verbose (ou -h=v)
 ";
-Messages::$Help['En']['h2'] = Messages::$Help['Fr'] ['h2'];
-Messages::$Help['Ext']['h2'] ='more';
+Messages::$Help['En']['H'] = Messages::$Help['Fr'] ['H'];
+Messages::$Help['Ext']['H'] ='more';
 
 Messages::$Help['En']['more'] = "
-        To view this screen more comfortably, consider 
-        adding |more or |less after the help command
-        or using the irishelp command (under linux)
-";
+====================================================================================
+To view this screen more comfortably, consider 
+adding |more or |less after the help command
+or using irishelp command_name (under linux)";
+
 Messages::$Help['Fr']['more'] = "
-        Pour consulter cet écran plus confortablement, pensez 
-        à ajouter |more ou |less après la commande d'aide
-        ou à utiliser la commande irishelp (sous linux)
-";
+====================================================================================    
+Pour consulter cet écran plus confortablement, pensez 
+à ajouter |more ou |less après la commande d'aide
+ou à utiliser la commande irishelp nom_de_commande (sous linux)";
+
 Messages::$Help['Ext']['more'] = "FALSE";
 // ==========================================================================================================================================
 // url
@@ -414,7 +406,7 @@ Les aides suivantes se rapportent à la gestion des bases de données:
 Messages::$Help['Ext']['B'] ='DATABASE';
 
 // ==========================================================================================================================================
-// DATABASE
+// extension - DATABASE
 // ==========================================================================================================================================
 Messages::$Help['En']['DATABASE'] = 
 "        iris.php -h=B  iris.php -h=database
@@ -596,7 +588,7 @@ Messages::$Help['Fr']['A'] =
 Messages::$Help['Ext']['A'] ='g';
 
 // ==========================================================================================================================================
-// Action
+// generate
 // ==========================================================================================================================================
 Messages::$Help['En']['g'] = 
 "The --generate option is used to generate an action method in the required controller and module. Default values may be stored for the default project.
@@ -637,8 +629,6 @@ iris.php --english <other options>
 
 
 ";
-Messages::$Help['En']['F'] = Messages::$Help['En']['1']; 
-Messages::$Help['En']['E'] = Messages::$Help['En']['1']; 
 
 Messages::$Help['Fr']['1'] = 
 "Choisir le language de l''interface et de l''aide : français (Fr) ou anglais (En) et la mémoriser dans le fichier de paramètre
@@ -651,11 +641,18 @@ Affiche des messages dans une autre langue, sans changer la valeur des fichiers 
 iris.php -F <other options> 
 iris.php --english <other options>
 ";
-Messages::$Help['Fr']['F'] = Messages::$Help['Fr']['1']; 
-Messages::$Help['Fr']['E'] = Messages::$Help['Fr']['1']; 
 
 
 Messages::$Help['Ext']['1'] ='FALSE';
+
+Messages::$Help['Fr']['E'] = Messages::$Help['Fr']['1']; 
+Messages::$Help['En']['E'] = Messages::$Help['En']['1']; 
+Messages::$Help['Ext']['E'] ='FALSE';
+
+Messages::$Help['En']['F'] = Messages::$Help['En']['1']; 
+Messages::$Help['Fr']['F'] = Messages::$Help['Fr']['1']; 
+Messages::$Help['Ext']['F'] ='FALSE';
+
 
 // ==========================================================================================================================================
 // defaultproject

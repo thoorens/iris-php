@@ -8,7 +8,7 @@ namespace CLI {
      * More details about the copyright may be found at
      * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
      *  
-     * @copyright 2011-2015 Jacques THOORENS
+     * @copyright 2011-2016 Jacques THOORENS
      */
 
     /**
@@ -20,6 +20,8 @@ namespace CLI {
      * @version $Id: $
      */
     class Project extends _Process {
+
+        public static $Fragments = [];
 
         /**
          * Permits to display some usefull informations about the current projects
@@ -128,7 +130,7 @@ namespace CLI {
             $configs = $parameters->getProjects();
             $projectName = $parameters->getProjectName();
             if (!isset($configs[$projectName])) {
-                \Messages::Abort('ERR_NOPROJECT',$projectName);
+                \Messages::Abort('ERR_NOPROJECT', $projectName);
             }
             $this->_readProjectDocumentation();
             $parameters->saveProject(); // no necessary ??
@@ -149,7 +151,7 @@ namespace CLI {
             if ($parameters->getCommandLine() == 'simulate') {
                 $simulating = TRUE;
             }
-            else{
+            else {
                 $simulating = FALSE;
             }
             $this->_os = \Iris\OS\_OS::GetInstance();
@@ -271,7 +273,7 @@ namespace CLI {
             else {
                 $parameters->removeProject($projectName);
                 $defaultProject = $projects[Parameters::IRISDEF]->DefaultProject;
-                \Messages::Display("MSG_DELETED",$projectName);
+                \Messages::Display("MSG_DELETED", $projectName);
                 if ($projectName == $defaultProject) {
                     \Messages::Display("MSG_NOMOREDEF");
                     $Iris = $projects[Parameters::IRISDEF];
@@ -295,6 +297,48 @@ namespace CLI {
             FrontEnd::Loader('/CLI/Code.php');
             $coder = new Code($parameters);
             $coder->makeNewCode($moduleName, $controllerName, $actionName);
+        }
+
+        /**
+         * Creates a small page with new code
+         */
+        protected function _preparecode() {
+            $programFolders = [
+                '!controllers',
+                '!views/scripts'
+            ];
+            $files = [
+                '/controllers/demo.php',
+                '/views/scripts/demo_index.iview'
+            ];
+            $parameters = Parameters::GetInstance();
+            $projectDir = $parameters->getProjectDir();
+            $programName = $parameters->getApplicationName();
+            $targetFolder = "$projectDir/$programName/modules/draft";
+            if (!file_exists($targetFolder)) {
+                $this->_createDir($programFolders, $targetFolder);
+            }
+            $fragmentName = $parameters->getFragmentName();
+
+            // reads fragment file
+            $format = '/CLI/Text/%s.php';
+            if (count(self::$Fragments) == 0) {
+                $hlpFile = sprintf($format, 'Fragments');
+                FrontEnd::Loader($hlpFile);
+            }
+            
+            $fragmentText = self::$Fragments[$fragmentName];
+            list($codeText, $viewText) = explode('µ', $fragmentText);
+            foreach ($files as $file) {
+                $destination = $targetFolder . $file;
+                $source = IRIS_LIBRARY_DIR . '/CLI/Files/application/' . basename($file);
+                $this->_checkExistingFile($destination, 10);
+                $replacement['{PHP_TAG}'] = '<?php';
+                $replacement['{CODE}'] = $codeText;
+                $replacement['{VIEW}'] = $viewText;
+                $replacement['{OPTION}'] = $fragmentName;
+                $this->_os->createFromTemplate($source, $destination, $replacement);
+            }
         }
 
         /**

@@ -1,0 +1,5 @@
+    {COMMENT} This view fragment has been generated with option {OPTION}{/COMMENT}
+    <h1>DEMO</h1>
+    Please put the following code in your view script
+    {VIEW}
+        

@@ -108,7 +108,7 @@ abstract class _Process {
      */
     protected function _checkExistingFile($fileName, $backupNumber = 10) {
         if (file_exists(($fileName))) {
-            Analyser::Loader('/Iris/FileSystem/File.php');
+            FrontEnd::Loader('/Iris/FileSystem/File.php');
             $file = new \Iris\FileSystem\File(basename($fileName), dirname($fileName));
             $file->backup($backupNumber);
             \Messages::Display('MSG_NEWFILEBU', $fileName);
