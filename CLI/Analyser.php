@@ -95,13 +95,14 @@ class Analyser {
     public static $Functions = [
         // Help is not considered a normal option
         'h::' => 'help::',
+        'H::'  => 'helplist::',
         's:' => 'show:',
         't' => 'test',
         // projects
         'c:' => 'createproject:',
         'r:' => 'removeproject:',
-        'i' => 'interactive',
-        'D' => 'docproject',
+        'i'  => 'interactive',
+        'D'  => 'docproject',
         'L:' => 'lockproject:',
         'U:' => 'unlockproject:',
         'd:' => 'setdefaultproject',
@@ -116,12 +117,13 @@ class Analyser {
         'A:' => 'action:',
         'M:' => 'module:',
         'W' => 'workbench',
+        'P:' => 'preparecode:',
         // menus
         'N:' => 'menuname',
         'n:' => 'makemenu',
         // extensions
         'k:' => 'makecore:',
-        'K' => 'searchcore',
+        'K'  => 'searchcore',
         // watermaking
         'o:' => 'copyright:',
         'G:' => 'genericparameter',
@@ -139,8 +141,8 @@ class Analyser {
         // languages
         'E' => 'english',
         'F' => 'french',
-//        'G' => 'german', // future extension
-//        'S' => 'spanish',// future extension
+//        '2' => 'german', // future extension
+//        '5' => 'spanish',// future extension
 //        '3' => 'dutch',// future extension
 //        '4' => 'italian',// future extension
     ];
@@ -151,48 +153,63 @@ class Analyser {
      * @var string[]
      */
     public static $Functions_Test = [
-        // Help is not considered a normal option
-//        'h::' => 'help::',
-//        's:' => 'show:',
-        't' => 'test',
-        // projects
-//      'c:' => 'createproject:',
-//      'r:' => 'removeproject:',
-        'i' => 'interactive',
-        'D' => 'docproject',
-//      'L:' => 'lockproject:',
-//      'U:' => 'unlockproject:',
-//      'd:' => 'setdefaultproject',
-        'm:' => 'projectmetadata:',
-//      'a:' => 'applicationdir:',
-//      'p:' => 'publicdir:',
-//      'l:' => 'librarydir:',
-//      'u:' => 'url:',
-        // piece of code
-//        'g' => 'generate',
-//        'C:' => 'controller:',
-//        'A:' => 'action:',
-//        'M:' => 'module:',
-        'W' => 'workbench',
-        // menus
-//        'N:' => 'menuname',
-//        'n:' => 'makemenu',
-        // extensions
-//        'k:' => 'makecore:',
-//        'K' => 'searchcore',
-        // watermaking
-        'o:' => 'copyright:',
-        'G:' => 'genericparameter',
-//      'w:' => 'password:',
-        // database
+        'A:' => 'action:',
+//        'a:' => 'applicationdir:',
         'B:' => 'database:',
         'b:' => 'selectbase:',
-        'I' => 'makedbini',
-        'O:' => 'otherdb:',
+        'C:' => 'controller:',
+        'c:' => 'createproject:',
+//      'D' => 'docproject',
+        'd:' => 'setdefaultproject',
+//        'E' => 'english',  PROBLEM
         'e:' => 'entitygenerate:',
-            // special
-//      'v' => 'verbose',
-//      '1:' => 'language:', //supposed to be used as a long form option
+//        'F' => 'french',   PROBLEM
+//        'f'        <<FREE>>        
+//        'G:' => 'genericparameter',
+        'g' => 'generate',
+        'h::' => 'help::',
+        'H::'  => 'helplist::',
+        'I' => 'makedbini',
+//        'i' => 'interactive',
+//        'j'        <<FREE>>
+//        'J'        <<FREE>> 
+        'K' => 'searchcore',
+        'k:' => 'makecore:',
+        'L:' => 'lockproject:',
+//        'l:' => 'librarydir:',
+        'M:' => 'module:',
+//        'm:' => 'projectmetadata:',
+//        'N:' => 'menuname',
+//        'n:' => 'makemenu',
+//        'O:' => 'otherdb:',
+//        'o:' => 'copyright:',
+//      'p:' => 'publicdir:', 
+        'P' => 'preparecode',
+//        'q'        <<FREE>>        
+//        'Q'        <<FREE>>        
+        'r:' => 'removeproject:',
+//        'R'        <<FREE>>        
+        's:' => 'show:',
+//        'S'        <<FREE>>        
+//        't' => 'test',
+//        'T'        <<FREE>>        
+        'U:' => 'unlockproject:',
+        'u:' => 'url:',
+        'v' => 'verbose',
+//        'V'        <<FREE>>        
+//        'w:' => 'password:',
+//        'W' => 'workbench',
+//        'x'        <<FREE>>        
+//        'X'        <<FREE>>        
+//        'y'        <<FREE>>        
+//        'Y'        <<FREE>>        
+//        'z'        <<FREE>>        
+//        'Z'        <<FREE>>        
+        '1:' => 'language:', //supposed to be used as a long form option
+//        '2' => 'german', // future extension
+//        '3' => 'dutch',// future extension
+//        '4' => 'italian',// future extension
+//        '5' => 'spanish',// future extension
     ];
 
     /**
@@ -278,6 +295,16 @@ class Analyser {
                         $longOption = $this->_longOption($option);
                         \Messages::Abort("ERR_GEN", $longOption);
                     }
+                    $this->_processor = self::PROJECT;
+                    $this->_processingOption = $option;
+                    break;
+                // generates portions of code    
+                case 'P': case 'preparecode':
+                    if ($this->_processor != self::INITIAL) {
+                        $longOption = $this->_longOption($option);
+                        \Messages::Abort("ERR_PROJECT", $longOption);
+                    }
+                    $this->_parameters->addParameter(Parameters::FRAGMENTNAME, $value);
                     $this->_processor = self::PROJECT;
                     $this->_processingOption = $option;
                     break;
@@ -372,7 +399,7 @@ class Analyser {
                     $this->_processor = self::PARAMPROJECT;
                     verboseEchoLine('Action name : ' . $value, $verbose);
                     break;
-
+                    
                 case 'N': case 'menuname':
                     \Messages::Abort("ERR_NOTDEV");
                     $this->_parameters->addParameter(Parameters::MENUNAME, $value);
@@ -471,9 +498,13 @@ class Analyser {
                 case'h': case 'help':
                     \Messages::Help($value);
                     break;
+                case 'H': case 'helplist':
+                    \Messages::Help('H');
+                    break;
                 case 'context': case '2':
                     $this->_context();
                     break;
+                
                 // show projects
                 case 's': case 'show':
                     if ($this->_processor != self::INITIAL) {
@@ -487,7 +518,7 @@ class Analyser {
                 // modify language in iris.ini
                 case 'language': case '1':
                     $languages = \Messages::$Languages;
-                    $possibleLanguages = implode(' ',  array_values($languages));
+                    $possibleLanguages = implode(' ', array_values($languages));
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_LANG", $possibleLanguages);
                     }
@@ -841,12 +872,12 @@ class Analyser {
      */
     private function _context() {
         \Messages::Display(Parameters::LINE);
-        echoLine('Present library folder :'.IRIS_LIBRARY_DIR);
-        echoLine('User folder :'.FrontEnd::GetFilePath('user', 'notest'));
-        echoLine('Personal iris folder :'.FrontEnd::GetFilePath('irisdir', 'notest'));
-        echoLine('Personal iris parameter file :'.FrontEnd::GetFilePath('iris', 'notest'));
-        echoLine('Project file :'.FrontEnd::GetFilePath('project', 'notest'));
-        echoLine('Database file :'.FrontEnd::GetFilePath('db', 'notest'));
+        echoLine('Present library folder :' . IRIS_LIBRARY_DIR);
+        echoLine('User folder :' . FrontEnd::GetFilePath('user', 'notest'));
+        echoLine('Personal iris folder :' . FrontEnd::GetFilePath('irisdir', 'notest'));
+        echoLine('Personal iris parameter file :' . FrontEnd::GetFilePath('iris', 'notest'));
+        echoLine('Project file :' . FrontEnd::GetFilePath('project', 'notest'));
+        echoLine('Database file :' . FrontEnd::GetFilePath('db', 'notest'));
         \Messages::Abort(Parameters::DBLINE);
     }
 

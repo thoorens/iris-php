@@ -278,7 +278,7 @@ class Database extends _Process {
                  \Messages::Display('MSG_PW2');
             }
         }
-        $management = $base->maindb == 1 ? \Messages::Get('MSG_BOOL1') :  \Messages::Get('MSG_BOOL0') ;
+        $management = $base->maindb == 1 ? \Messages::ReadMessage('MSG_BOOL1') :  \Messages::ReadMessage('MSG_BOOL0') ;
         \Messages::Display('MSG_DBINI',$management);
     }
 

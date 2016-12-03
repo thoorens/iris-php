@@ -101,26 +101,20 @@ class FrontEnd {
      */
     private function _readIrisParameters() {
         $IrisPath = IRIS_LIBRARY_DIR;
-        // verify user personal directory
-        self::GetFilePath('user', 'test');
         self::GetFilePath('irisdir', 'create');
         $irisIni = self::GetFilePath('iris');
         // if not parameter file, create it
         if (!file_exists($irisIni)) {
-            if ($GLOBALS['argc'] == 1) {
-                \Messages::Abort('ERR_SUPPLYIRISDIR');
+            if (!file_exists("$IrisPath/CLI/Analyser.php")) {
+                \Messages::Abort('ERR_BADIRISFILE');
             }
-            else {
-                if (!file_exists("$IrisPath/CLI/Analyser.php")) {
-                    \Messages::Abort('ERR_BADIRISFILE');
-                }
-                $data = <<<STOP
+            $data = <<<STOP
 [Iris]
 PathIris = $IrisPath
+
 STOP;
-                file_put_contents($irisIni, $data);
-                \Messages::Abort('MSG_NEWPARAMETERFILE');
-            }
+            file_put_contents($irisIni, $data);
+            \Messages::Abort('MSG_NEWPARAMETERFILE', $irisIni);
         }
 //        self::$ParamFileName = $irisIni;
         return file($irisIni);
@@ -168,13 +162,11 @@ STOP;
      * @param string[] $files
      */
     public static function Loader($files) {
-        if (is_array($files)) {
-            foreach ($files as $file) {
-                require_once IRIS_LIBRARY_DIR . $file;
-            }
+        if (!is_array($files)) {
+            $files = [$files];
         }
-        else {
-            require_once IRIS_LIBRARY_DIR . $files;
+        foreach ($files as $file) {
+            require_once IRIS_LIBRARY_DIR . $file;
         }
     }
 
@@ -243,7 +235,7 @@ STOP;
         $options = $analyser->cliOptions();
         $analyser->shift($options);
         iris_debug($GLOBALS['argv'], \FALSE);
-        $last = count($GLOBALS['argv'])-1;
+        $last = count($GLOBALS['argv']) - 1;
         echoLine($GLOBALS['argv'][$last]);
         die('OK');
     }

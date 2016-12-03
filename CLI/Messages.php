@@ -26,7 +26,18 @@ class Messages {
         'F' => 'Fr',
         'french' => 'Fr',
     ];
+    
+    /**
+     * an array containing all the error messages
+     * 
+     * @var string[]
+     */
     public static $Error = [];
+
+    /**
+     * an array containing all the help messages
+     * @var string[]
+     */
     public static $Help = [];
 
     /**
@@ -35,6 +46,9 @@ class Messages {
      * @param string $option the function (single character or full long option=
      */
     public static function Help($option) {
+        if ($option === '') {
+            $option = 'help';
+        }
         // reads help file
         $format = '/CLI/Text/%s.php';
         if (count(self::$Help) == 0) {
@@ -59,7 +73,7 @@ class Messages {
         $language = CLI\Analyser::GetLanguage();
         echoLine(CLI\Parameters::DBLINE);
         echoLine('Iris-PHP --' . $option);
-        Messages::Display(self::$Help[$language]['more']);
+        //Messages::Display(self::$Help[$language]['more']);
         echoLine(CLI\Parameters::DBLINE);
         if (!isset(self::$Help[$language][$command])) {
             Messages::Display('ERR_INHELP', $command);
@@ -77,6 +91,10 @@ class Messages {
         die('');
     }
 
+    public static function MakeCode($codeName){
+        
+    }
+    
     /**
      * Display a var_dump between <pre> tags
      * 
@@ -104,14 +122,15 @@ class Messages {
     }
 
     /**
+     * Displays a message according to its id and optional parameters and ends the script
      * 
-     * @param type $messageId
-     * @param type $param1
-     * @param type $param2
+     * @param string $messageId the symbolic id message
+     * @param string $param1 the optional parameter
+     * @param string $param2
      */
     public static function Abort($messageId = \NULL, $param1 = \NULL, $param2 = \NULL) {
         if (isset($messageId)) {
-            $errorMessage = self::Get($messageId, $param1, $param2);
+            $errorMessage = self::ReadMessage($messageId, $param1, $param2);
             echo "$errorMessage\n";
         }
         else {
@@ -121,28 +140,31 @@ class Messages {
     }
 
     /**
+     * Displays a message according to its id and optional parameters
      * 
-     * @param type $messageId
-     * @param type $param1
-     * @param type $param2
+     * @param string $messageId the symbolic id message
+     * @param string $param1 the optional parameter
+     * @param string $param2
      */
     public static function Display($messageId = \NULL, $param1 = \NULL, $param2 = \NULL) {
-        echo self::Get($messageId, $param1, $param2) . "\n";
+        echo self::ReadMessage($messageId, $param1, $param2) . "\n";
     }
 
     /**
+     * Reads a message and completes it with the optional parameters it contains
      * 
-     * @param type $messageId
-     * @param type $param1
-     * @param type $param2
-     * @return type
+     * @param string $messageId the symbolic id message
+     * @param string $param1 the optional first parameter to include in the message
+     * @param string $param2 the optional second parameter to include in the message
+     * @return string
      */
-    public static function Get($messageId = \NULL, $param1 = \NULL, $param2 = \NULL) {
+    public static function ReadMessage($messageId = \NULL, $param1 = \NULL, $param2 = \NULL) {
         $language = CLI\Analyser::GetLanguage();
         $format = '/CLI/Text/%s.php';
+        // if necessary read the error messages
         if (count(self::$Error) == 0) {
             $msgFile = sprintf($format, 'Msg');
-            CLI\FrontEnd::Loader($msgFile);
+            \CLI\FrontEnd::Loader($msgFile);
         }
         if (!isset(self::$Error[$language][$messageId])) {
             $text = $messageId;

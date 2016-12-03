@@ -12,18 +12,18 @@ Messages::$Error['Fr']['ERR_NOPERSONNALDIR'] = "iris.php n'est pas en mesure de 
 Messages::$Error['En']['ERR_NOPERSONNALDIR'] = "iris.php is not able to find where to read or write your parameter files.
 IRIS PHP CLI will not be functional on your system, sorry.";
 
-Messages::$Error['Fr']['MSG_NEWPARAMETERFILE'] = "Votre fichier de paramètres a été créé. 
+Messages::$Error['Fr']['MSG_NEWPARAMETERFILE'] = "Votre fichier de paramètres %s a été créé. 
 Vous pouvez maintenant utiliser ce programme normalement (iris.php --help pour de l'aide)";
-Messages::$Error['En']['MSG_NEWPARAMETERFILE'] = "Your parameter file has been created.
+Messages::$Error['En']['MSG_NEWPARAMETERFILE'] = "Your parameter file %s has been created.
 Now you can use this program (\"iris.php --help\"; for help].
 ";
 
 Messages::$Error['Fr']['ERR_BADIRISFILE'] = "Le chemin que vous avez indiqué ne semble pas être un répertoire d'une installation valide d'IRIS-PHP";
 Messages::$Error ['En']['ERR_BADIRISFILE'] = ";The suggested path does not seem to be a valid Iris-PHP installation directory.";
 
-Messages::$Error['Fr']['ERR_SUPPLYIRISDIR'] = "Vous devez fournir le chemin de votre installation d'IRIS-PHP pour intitaliser votre fichier de paramètres";
-Messages::$Error['En']['ERR_SUPPLYIRISDIR'] = "You must supply the path to your Iris-PHP installation to init your parameter file
-before beeing able to use this program. See documentation if necessary.";
+//Messages::$Error['Fr']['ERR_SUPPLYIRISDIR'] = "Vous devez fournir le chemin de votre installation d'IRIS-PHP pour intitaliser votre fichier de paramètres";
+//Messages::$Error['En']['ERR_SUPPLYIRISDIR'] = "You must supply the path to your Iris-PHP installation to init your parameter file
+//before beeing able to use this program. See documentation if necessary.";
 
 Messages::$Error['Fr']['ERR_NOPROJECTFILE'] = "Il ne semble pas exister de fichier projects.ini. Créez au préalable un projet: 
 iris.php --createproject /path/to/the/new/project";
@@ -79,7 +79,7 @@ Messages::$Error['En']['ERR_URL'] = "--url may only come after the --createproje
 Messages::$Error['Fr']['ERR_PROJECT'] = "--%s ne peut venir après une autre option (à l'exception de --verbose)";
 Messages::$Error['En']['ERR_PROJECT'] = " --%s cannot be used after another option (except --verbose)";
 
-Messages::$Error['Fr']['ERR_GEN'] = "--%s ne peut venir après une autre option (except --module; --controller or --action)";
+Messages::$Error['Fr']['ERR_GEN'] = "--%s ne peut venir après une autre option (except --module; --controller ou --action)";
 Messages::$Error['En']['ERR_GEN'] = "--%s cannot be used after another option (except --module, --controller or --action)";
 
 Messages::$Error['Fr']['ERR_UNKNOWNPROJECT'] = "Le project nommé %s n'existe pas";
