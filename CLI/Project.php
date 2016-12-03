@@ -328,7 +328,7 @@ namespace CLI {
             }
             
             $fragmentText = self::$Fragments[$fragmentName];
-            list($codeText, $viewText) = explode('µ', $fragmentText);
+            list($codeText, $dummy, $viewText) = explode('µ', $fragmentText);
             foreach ($files as $file) {
                 $destination = $targetFolder . $file;
                 $source = IRIS_LIBRARY_DIR . '/CLI/Files/application/' . basename($file);

@@ -8,6 +8,7 @@ namespace modules\draft\controllers;
 class demo extends \modules\_application {
 
     function indexAction(){
+    // you can put the followin code in your controller
     {CODE}
     }
     
