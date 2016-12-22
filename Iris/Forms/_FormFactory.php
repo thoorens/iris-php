@@ -68,12 +68,18 @@ abstract class _FormFactory {
         }
         // validatorValidatortype
         if (strpos(strtolower($function), 'validator') === 0) {
-            $type = substr($function, 9);
-            return $this->_validator($type, $params);
+            $name = substr($function, 9);
+            return $this->_validator($name, $params);
         }
-        throw new \Iris\Exceptions\NotSupportedException('Element type unknown');
+        throw new \Iris\Exceptions\NotSupportedException("Element type unknown $function");
     }
 
+    /**
+     * 
+     * @param type $type
+     * @param type $params
+     * @return \Iris\Forms\class
+     */
     protected function _validator($type, $params) {
         $class = $this->getClass("\\Validators\\$type");
         // in case $params has not enough elements
@@ -99,9 +105,204 @@ abstract class _FormFactory {
      * @return \Iris\Forms\Elements\InputElement
      */
     public function createSubmit($name, $options = []) {
+        //print('html submit<br>');
         return $this->_createInput($name, 'submit', $options);
     }
 
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createReset($name, $options = []){
+        throw new Iris\Exceptions\FormException('Reset not yet implemented');
+    }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createButton($name, $options = []){
+        throw new Iris\Exceptions\FormException('Button not yet implemented');
+    }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createDateTime($name, $options = []) {
+        if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Datetime not yet implemented');
+         }
+    }
+
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+     public function createDateTimeLocal($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('DatetimeLocal not yet implemented');
+         }
+    }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createWeek($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Week not yet implemented');
+         }
+    }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createUrll($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Url not yet implemented');
+         }
+    }
+
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createTel($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Tel not yet implemented');
+         }
+    }
+
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createSearch($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Search not yet implemented');
+         }
+    }
+
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createRange($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Range not yet implemented');
+         }
+    }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createNumber($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Number not yet implemented');
+         }
+    }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createMonth($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Month not yet implemented');
+         }
+    }
+    
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @return type
+     * @throws Iris\Exceptions\FormException
+     */
+    public function createEmail($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Email not yet implemented');
+         }
+        
+    }
+    
+    public function createColor($name, $options = []) {
+         if($this->_verifyHTMLFive('1')){
+             return $this->createText($name, $options);
+         }
+         else{
+             throw new Iris\Exceptions\FormException('Color not yet implemented');
+         }
+    }
+
+    protected function _verifyHTMLFive($Exclude){
+        return \FALSE;
+    }
+    
     /**
      * 
      * @param type $name
@@ -248,6 +449,18 @@ abstract class _FormFactory {
     }
 
     /**
+     * Creates an element of type Password
+     * 
+     * @param type $name
+     * @param type $options
+     * @return \Iris\Forms\Elements\InputElement
+     */
+    public function createPassword($name, $options = []) {
+        return $this->_createInput($name, 'password', $options);
+    }
+    
+    
+    /**
      * Creates an element of type Hidden
      * 
      * @param type $name
@@ -266,9 +479,11 @@ abstract class _FormFactory {
      * @return _Element
      */
     public function createDate($name, $options = []) {
+        // HTML 5
         return $this->_createInput($name, 'date', $options);
     }
 
+    
     /**
      * Creates an element of type Time
      * 
@@ -277,6 +492,7 @@ abstract class _FormFactory {
      * @return _Element
      */
     public function createTime($name, $options = []) {
+        // HTML 5
         return $this->_createInput($name, 'time', $options);
     }
 
