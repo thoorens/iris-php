@@ -38,6 +38,21 @@ class Settings {
 
     const MODE_PHP54 = 4;
     const MODE_PHP55 = 5;
+    
+    /**
+     * Taditional HTML
+     */
+    const HTML4 = 4;
+    
+    /**
+     * Current HTML
+     */
+    const HTML5 = 5;
+    
+    /**
+     * Try to guess HTML version from browser
+     */
+    const HTMLAuto = 0;
 
     /**
      * Management of special values
@@ -127,7 +142,7 @@ class Settings {
      * @var int
      */
     public static $DefaultHashType; //= self::MODE_PHP55;
-    
+
     /* -------------------------------------------------------------------------
      * Parameters related to development
      * ------------------------------------------------------------------------- */
@@ -161,12 +176,12 @@ class Settings {
      * @var int
      */
     public static $ErrorDebuggingLevel = 1;
-    
+
     /**
      *
-     * @var int
+     * @var string
      */
-    public static $InternalDatabaseNumber = 99;
+    public static $InternalDBClass =  '\Iris\SysConfig\Settings';
     
     /**
      *
@@ -175,32 +190,42 @@ class Settings {
     public static $AdDatabaseNumber = 98;
 
     /**
-     *Debug position : will be inited to POS_NONE
+     * Debug position : will be inited to POS_NONE
      * @var int
      */
     public static $DebugMode = 0;
-    
+
 
     /* -------------------------------------------------------------------------
      * Parameters related to databases
      * ------------------------------------------------------------------------- */
-    
-    
     public static $DefaultEntityMananagerClass = '\\Iris\\DB\\Dialects\\Em_PDOmySQL';
-    
     public static $SqliteCreateMissingFile = \TRUE;
-    
+    public static $DefaultModelLibrary = "\\models\\";
+
     /* -------------------------------------------------------------------------
      * Parameters related to forms
      * ------------------------------------------------------------------------- */
-    
+
     /**
      * Default settings for forms
      * @var string 
      */
     public static $DefaultFormClass = '\\Iris\\Forms\\StandardFormFactory';
 
+    /**
+     * Folder containing the autoform definition files
+     * @var string
+     */
+    public static $FormFolder = '\\forms';
     
+    /**
+     * By default, the HTML version will connected to brwoser type and version
+     * 
+     * @var int
+     */
+    public static $HTMLType = self::HTMLAuto;
+
     /* -------------------------------------------------------------------------
      * Parameters related to date and time
      * ------------------------------------------------------------------------- */
@@ -268,23 +293,23 @@ class Settings {
      * The default time out for production (10 minutes)
      */
     public static $ProductionTimeout = 600;
-    
+
     /* -------------------------------------------------------------------------
      * Paraùeters relative to links, buttons, images and icons
      * ------------------------------------------------------------------------- */
-    
+
     /**
      * The default folder for images files (relative to PUBLIC)
      * @var string
      */
     public static $ImageFolder = '/images';
-    
+
     /**
      * Application icons are placed in an /images/icons folder
      * @var string 
      */
     public static $IconDir = '/icons';
-    
+
     /**
      * The content of the label of a link, button, image or icon which cannot be
      * visible
@@ -292,7 +317,7 @@ class Settings {
      * @var type 
      */
     public static $NoLinkLabel = '!!!!NONE!!!!';
-    
+
     /* -------------------------------------------------------------------------
      * Various parameters 
      * ------------------------------------------------------------------------- */
@@ -316,4 +341,32 @@ class Settings {
     public static $DataFolder;
 
     
+    /**
+     * Adds entity manager settings corresponding to numbers 99 and 98
+     * 
+     * @param int $entityNumber
+     * @return string[] an array containing 5 parameters for the creation of the entity manager
+     * @throws \Iris\Exceptions\DBException
+     */
+    public static function InternalDB($entityNumber) {
+        $params = [
+            'type' => \Iris\DB\_EntityManager::SQLITE, // default
+            'id' => $entityNumber,
+            'username' => \NULL,
+            'passwd' => \NULL
+        ];
+//        //$type, $id, $dsn, $username = \NULL, $passwd = \NULL, $options = [])
+        switch ($entityNumber) {
+            case 99: // internal database used by the administration module
+                $params['dsn'] = 'sqlite:' . IRIS_INTERNAL;
+                break;
+            case 98: // internal database used by the iris promotion sites
+                $params['dsn'] = 'sqlite:' . IRIS_AD;
+                break;
+            default:
+                throw new \Iris\Exceptions\DBException('EM number still not developed');
+        }
+        return $params;
+    }
+
 }

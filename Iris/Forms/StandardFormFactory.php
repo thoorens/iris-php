@@ -1,26 +1,14 @@
 <?php
 
-
-
 namespace Iris\Forms;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -33,21 +21,33 @@ namespace Iris\Forms;
  * @version $Id: $ */
 class StandardFormFactory extends _FormFactory {
 
-    
-    
-    
-
     /**
      *
      * @param type $name
      * @return Form 
      */
     public function createForm($name) {
-        $form =  new \Iris\Forms\Elements\Form($name);
+        switch(\Iris\SysConfig\Settings::$HTMLType){
+            case \Iris\SysConfig\Settings::HTML4:
+                $factory = $this;
+                break;
+            case \Iris\SysConfig\Settings::HTML5:
+                $factory = $this;
+                break;
+            case \Iris\SysConfig\Settings::HTMLAuto:
+                $factory = $this->_getFactory();
+                break;
+        }
+        $form = new \Iris\Forms\Elements\Form($name);
         $form->setFormFactory($this);
         return $form;
     }
 
+    protected  function _getFactory() {
+        $HTTP_USER_AGENT = $_SERVER;
+        i_d($HTTP_USER_AGENT['HTTP_USER_AGENT']);
+        $browser = get_browser($HTTP_USER_AGENT);
+        i_d($browser);
+    }
+
 }
-
-
