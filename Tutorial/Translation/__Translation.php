@@ -1,5 +1,5 @@
 <?php
 /**
- * Dojo extensions need a translation part
+ * Tutorial extensions need a translation part
  */
-namespace Dojo\Translation;
+namespace Tutorial\Translation;

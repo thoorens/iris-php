@@ -21,6 +21,7 @@ namespace Tutorial\views\helpers;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
+ * @deprecated since version 2015
  */
 class SyntaxHighlighter extends \Iris\views\helpers\_ViewHelper{
 

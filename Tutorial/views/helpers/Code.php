@@ -30,6 +30,7 @@ use Iris\System\Stack;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
+ * @deprecated since version 2015
  */
 class Code extends \Dojo\views\helpers\_Sequence {
     /**
