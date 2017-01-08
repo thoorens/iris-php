@@ -16,7 +16,7 @@ class Products extends \Iris\DB\DataBrowser\_Crud {
     
     
     public function __construct($param = NULL) {
-        static::$_EntityManager = \models\_invoiceEntity::GetEM();
+        static::$_EntityManager = \models\TProducts::GetEM();
         parent::__construct($param);
         // where to go after CRUD
         $this->setEndUrl('index');

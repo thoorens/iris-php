@@ -18,7 +18,10 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TNumbers3 extends _invoiceEntity {
+class TNumbers3 extends \Iris\DB\_Entity {
+    
+    use tInvoiceEntity;
+    
     /*
      * W A R N I N G:
      * 
