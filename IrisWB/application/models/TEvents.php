@@ -50,7 +50,7 @@ class TEvents extends \Iris\DB\_Entity{
         /* ---------------------------------------------------------- */
         \Iris\DB\_EntityManager::MYSQL =>
         'CREATE TABLE events(
-    id INTEGER NOT NULL AUTO_INCREMENT NOT NULL,
+    id INTEGER NOT NULL AUTO_INCREMENT,
     Description VARCHAR(100),
     Moment DATETIME,
     invoice_id INTEGER NOT NULL ,

@@ -73,6 +73,7 @@ class TProducts extends \Iris\DB\_Entity {
             'orange' => 0.50,
             'banana' => 0.60,
             'apple' => 0.30,
+            'cherry' => 0.80
         ];
         $elements = 0;
         foreach ($productList as $description => $price) {

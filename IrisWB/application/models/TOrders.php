@@ -64,7 +64,6 @@ class TOrders extends \Iris\DB\_Entity {
         \Iris\DB\_EntityManager::ORACLE => 'not yet defined'
     ];
 
-    
     /**
      * Creates the table
      * 
