@@ -7,7 +7,7 @@ namespace Iris\Engine;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-207 Jacques THOORENS
  */
 
 /**
@@ -145,6 +145,7 @@ final class Mode {
                     break;
             }
             self::$_SiteMode = $mode;
+            // the next call to this method __ClassInit will do nothing
             $once = \TRUE;
         }
     }
