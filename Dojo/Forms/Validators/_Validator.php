@@ -17,7 +17,7 @@ namespace Iris\Forms\Validators;
  * validation and error display.
  * 
  */
-abstract class _Validator implements \Iris\Translation\iTranslatable{
+abstract class _Validator { //implements \Iris\Translation\iTranslatable{
 
     use \Dojo\Translation\tSystemTranslatable;
     

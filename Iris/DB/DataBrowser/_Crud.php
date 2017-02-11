@@ -31,7 +31,7 @@ use Iris\DB\_Entity;
  * @version $Id: $ * 
  * 
  */
-abstract class _Crud implements \Iris\Translation\iTranslatable {
+abstract class _Crud { //implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
 
@@ -218,11 +218,12 @@ abstract class _Crud implements \Iris\Translation\iTranslatable {
     private function findCrudEntity() {
         if (!is_object($this->_crudEntity)) {
             if (is_null(static::$_EntityManager)) {
-                static::$_EntityManager = \Iris\DB\_EntityManager::GetInstance();
+                static::$_EntityManager = \Iris\DB\_EntityManager::EMByNumber(); //GetInstance();
             }
             if (is_null($this->_crudEntity)) {
                 $class = str_replace('\\', '/', get_called_class());
                 $class = 'models\\T' . basename($class);
+                $class = 'models\TUsers';
             }
             else {
                 $class = 'models\\T' . ucfirst($this->_crudEntity);

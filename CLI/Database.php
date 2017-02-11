@@ -106,7 +106,7 @@ class Database extends _Process {
     /**
      * Creates all the necessary files for managing a table in the default
      * database. Existing files are backed up. 5 files are created:<ul>
-     * <li>a model/entity file
+     * <li>a models/entity file
      * <li>a CRUD file
      * <li>a controller (whose name is in -C parameter)
      * <li>a view to choose the line to edit
@@ -125,7 +125,7 @@ class Database extends _Process {
         $module = Analyser::PromptUser(
                         "Choose the module into which $controller will be inserted", $parameters->getModuleName());
         if ($module != $parameters->getModuleName()) {
-            Analyser::Loader('/CLI/Code');
+            FrontEnd::Loader('/CLI/Code.php');
             $code = new Code($this->_analyser);
             $code->makeNewCode($module, \NULL, \NULL);
         }
@@ -391,7 +391,7 @@ END;
                 //@todo suppress dependency from translation implementation
                 $files = [
                     '/Iris/Translation/tSystemTranslatable.php',
-                    '/Iris/Translation/iTranslatable.php',
+//                  '/Iris/Translation/iTranslatable.php',
                     '/Iris/views/helpers/tViewHelperCaller.php',
                     '/Iris/Design/iSingleton.php',
                     '/Iris/Subhelpers/_Subhelper.php',
@@ -403,7 +403,7 @@ END;
                     '/Iris/Translation/SystemTranslator.php',
                     '/CLI/Fake/CrudIconManager.php',
                 ];
-                Analyser::Loader($files);
+                FrontEnd::Loader($files);
 
                 $settings[self::ID] = Analyser::PromptUser('Primary key name ', $settings[self::ID]);
                 $settings[self::DESCRIPTION] = Analyser::PromptUser('Field containing a good description', $settings[self::DESCRIPTION]);

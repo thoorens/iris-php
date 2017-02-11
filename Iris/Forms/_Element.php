@@ -21,7 +21,7 @@ use Iris\Forms\Validators as iv;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class _Element implements \Iris\Translation\iTranslatable {
+abstract class _Element { //implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
 
@@ -76,6 +76,11 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
 
     /**
      *
+     * @var string
+     */
+    protected $_title = \NULL;
+    /**
+     *
      * @var mixed
      */
     protected $_value = '';
@@ -117,7 +122,7 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
      * @var boolean
      */
     protected $_valueAsAttribute = \FALSE;
-    
+
     /**
      * For input file, indicate max file size
      * @var int
@@ -313,8 +318,8 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
                 $text .= " $key = \"$value\" ";
             }
         }
-        if($this->_valueAsAttribute){
-            $text .= ' value = "'.$this->getValue().'" ';
+        if ($this->_valueAsAttribute) {
+            $text .= ' value = "' . $this->getValue() . '" ';
         }
         return $text;
     }
@@ -382,8 +387,6 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         $html = "value = \"$value\" $checkMark";
         return $html;
     }
-
-    
 
     /**
      * Renders a label (or nothing) according to the position
@@ -494,13 +497,19 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         }
         return $this;
     }
-
+    
+    /**
+     * Validate, in necessary, according to the validator
+     * 
+     * @return boolean
+     */
     public function validate() {
-        if ($this->_validator === \NULL) {
-            return \TRUE;
+        /* @var $finalValue boolean */
+        $finalValue = \TRUE;
+        if ($this->_validator !== \NULL) {
+            $finalValue = $this->_validator->validate($this->getValue());
         }
-        $val = $this->getValue();
-        return $this->_validator->validate($this->getValue());
+        return $finalValue;
     }
 
     /**
@@ -538,12 +547,21 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
         return $this->_container->getFormFactory();
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function getValue() {
         return trim($this->_value);
     }
 
+    /**
+     * 
+     * @param type $value
+     * @return $this
+     */
     public function setValue($value) {
-        if($value instanceof \Iris\DB\Object)
+        if ($value instanceof \Iris\DB\Object)
             iris_debug($value);
         $value = str_replace('"', '&quot;', $value);
         $this->_value = $value;
@@ -552,57 +570,110 @@ abstract class _Element implements \Iris\Translation\iTranslatable {
 
     /**
      * getter for the label
+     * 
      * @return string 
      */
     public function getLabel($num = 0) {
         if (is_array($this->_label)) {
-            return $this->_label[$num];
+            $label =  $this->_label[$num];
         }
         else {
-            return $this->_label;
+            $label = $this->_label;
         }
+        return $label;
     }
 
     /**
      * setter for the label
+     * 
      * @param string $label
-     * @return Element 
+     * @return $this 
      */
     public function setLabel($label) {
         $this->_label = explode('|', $label . '|');
         return $this;
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function getName() {
         return $this->_name;
     }
 
+    /**
+     * 
+     * @param type $name
+     * @return $this
+     */
     public function setName($name) {
         $this->_name = $name;
         return $this;
     }
 
+    /**
+     * 
+     * @return string
+     */
+    public function getTitle() {
+        return $this->_title;
+    }
+
+    /**
+     * 
+     * @param type $title
+     * @return $this
+     */
+    public function setTitle($title) {
+        $this->_title = $title;
+        return $this;
+    }
+
+        
+    
+    /**
+     * 
+     * @return type
+     */
     public function getSubtype() {
         return $this->_subtype;
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function getType() {
         return $this->_type;
     }
 
+    /**
+     * 
+     * @param type $message
+     * @return $this
+     */
     public function setError($message) {
         $this->_errorMessage = $message;
         return $this;
     }
 
+    /**
+     * 
+     * @param type $container
+     */
     public function setContainer($container) {
         $this->_container = $container;
     }
 
+    /**
+     * 
+     * @param type $labelPosition
+     * @return $this
+     */
     public function setLabelPosition($labelPosition) {
         $this->_labelPosition = $labelPosition;
         return $this;
     }
 
 }
-

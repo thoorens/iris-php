@@ -24,7 +24,7 @@ use Iris\Engine\Loader;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ * 
  */
-class Template implements \Iris\Translation\iTranslatable {
+class Template { //implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
 

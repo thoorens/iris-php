@@ -21,7 +21,7 @@ defined('TAB2') or define('TAB2', "\t\t");
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
+class Head implements \Iris\Design\iSingleton {//, \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
     use \Iris\Engine\tSingleton;
@@ -97,8 +97,9 @@ class Head implements \Iris\Design\iSingleton, \Iris\Translation\iTranslatable {
      * 
      * @param string $className
      */
-    public function registerManager($className) {
-        $this->_additionalHeadManager[] = $className;
+    public static function RegisterManager($className) {
+        $instance = self::GetInstance();
+        $instance->_additionalHeadManager[] = $className;
     }
 
     /**
@@ -281,7 +282,7 @@ HTML;
                 $loaders .= $loader->render($ajaxMode);
                 $loader->update($ajaxMode, $text);
             }
-            $starter = \Iris\views\helpers\_ViewHelper::HelperCall('javascriptStarter')->render();
+            //$starter = \Iris\views\helpers\_ViewHelper::HelperCall('javascriptStarter')->render();
             $starter = \Iris\views\helpers\JavascriptStarter::GetInstance()->render();
             if ($ajaxMode) {
                 $text = str_replace(self::AJAXMARK, $loaders, $text);

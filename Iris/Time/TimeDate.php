@@ -20,7 +20,7 @@ use Iris\Exceptions as ie;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TimeDate implements \Serializable, \Iris\Translation\iTranslatable {
+class TimeDate implements \Serializable { //, \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
 

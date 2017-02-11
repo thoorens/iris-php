@@ -21,7 +21,7 @@ namespace Iris\Subhelpers;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version :$Id:
  */
-abstract class _SuperLink extends _FlexibleSubhelper implements \Iris\Translation\iTranslatable {
+abstract class _SuperLink extends _FlexibleSubhelper { //implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tTranslatable;
 
