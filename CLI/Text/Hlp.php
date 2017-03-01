@@ -159,7 +159,14 @@ ou
      iris.php --verbose --createproject
 
 ";
-Messages::$Help['En']['v'] = "";
+Messages::$Help['En']['v'] = 
+"When option -v or --verbose is in command line, a few explicit messages are printed during the execution of the main function.
+
+      iris.php -v -c
+or
+     iris.php --verbose --createproject
+
+";
 Messages::$Help['Ext']['v'] ='FALSE';
 // ==========================================================================================================================================
 // help
@@ -537,8 +544,10 @@ Messages::$Help['Ext']['p'] ='FALSE';
 // ==========================================================================================================================================
 // application
 // ==========================================================================================================================================
-Messages::$Help['En']['a'] = "";
-Messages::$Help['Fr']['a'] = "";
+Messages::$Help['En']['a'] = 
+"Used with --createproject, this option gives a special name to the application foldter (by defaut application)";        
+Messages::$Help['Fr']['a'] = 
+"Utilisé avec --createproject cette option permet de donner un nom précis au dossier de l'application (par défaut application).";
 Messages::$Help['Ext']['a'] ='FALSE';
 
 // ==========================================================================================================================================
@@ -594,20 +603,20 @@ Messages::$Help['En']['g'] =
 "The --generate option is used to generate an action method in the required controller and module. Default values may be stored for the default project.
     
 It is advisable to specify them:
-    iris.php --module NouveauModule --controller NouveauContrôleur --action NouvelleAction --generate
-    iris.php -M NouveauModule -C NouveauContrôleur -A NouvelleAction -g
+    iris.php --module NewModule --controller NewController --action NewAction --generate
+    iris.php -M NewModule -C NewController -A NewAction -g
 These parameters are stored. The following example shows the generation of three new actions:
-    iris.php --module NouveauModule --controller NouveauContrôleur --action action1 --generate
+    iris.php --module NewModule --controller NewController --action action1 --generate
     iris.php --action action2 --generate
     iris.php --action action3 --generate
 ";Messages::$Help['Fr']['g'] = 
 "L'option --generate permet de générer une méthode d'action dans le contrôleur et le module prévu. Des valeurs par défaut sont
 mémorisées pour le projet par défaut.
 Il est conseillé de les spécifier:
-    iris.php --module NouveauModule --controller NouveauContrôleur --action NouvelleAction --generate
-    iris.php -M NouveauModule -C NouveauContrôleur -A NouvelleAction -g
+    iris.php --module NouveauModule --controller NouveauControleur --action NouvelleAction --generate
+    iris.php -M NouveauModule -C NouveauControleur -A NouvelleAction -g
 Ces paramètres sont à leur tour mémorisés. Voici un exemple de génération de trois nouvelles actions:
-    iris.php --module NouveauModule --controller NouveauContrôleur --action action1 --generate
+    iris.php --module NouveauModule --controller NouveauControleur --action action1 --generate
     iris.php --action action2 --generate
     iris.php --action action3 --generate
 ";
@@ -680,7 +689,7 @@ Messages::$Help['Ext']['d'] ='FALSE';
 // ==========================================================================================================================================
 // unlock
 // ==========================================================================================================================================
-Messages::$Help['En']['U'] = "";
+Messages::$Help['En']['U'] = 
 "A project may be 'unlocked' to permit its deletion by --removeproject
 
      iris.php --unlock <project_name>
@@ -694,7 +703,11 @@ Messages::$Help['Fr']['U'] =
      iris.php -U <project_name>
 
 ";
-Messages::$Help['Ext']['U'] ='FALSE';
+Messages::$Help['Ext']['U'] ='UL';
+
+Messages::$Help['En']['UL'] ='To see the locked status of the project, use the --status list option (or -s list)';
+Messages::$Help['Fr']['UL'] ="Pour savoir si un projet est verrouillé, utiliser l'option --status list (ou -s list)";
+Messages::$Help['Ext']['UL'] ='FALSE';
 
 // ==========================================================================================================================================
 // lock
@@ -712,4 +725,143 @@ Messages::$Help['Fr']['L'] =
      iris.php -L <project_name>
 
 ";
-Messages::$Help['Ext']['L'] ='FALSE';
+Messages::$Help['Ext']['L'] ='UL';
+
+
+// ==========================================================================================================================================
+// password
+// ==========================================================================================================================================
+Messages::$Help['En']['w'] = 
+"To get an encrypted password, use --password
+
+     iris.php --password <password text>
+     iris.php -w <password text>
+     
+Two forms are provided: one realized with the internal function of Iris-PHP,
+the other with a specific function of PHP 5.5 or its emulation for PHP 5.4.
+";
+Messages::$Help['Fr']['w'] = 
+"Pour obtenir une empreinte de mot de passe, utiliser --password
+
+     iris.php --password <texte du mot de passe>
+     iris.php -w <texte du mot de passe>
+
+
+Deux empreintes sont fournies : l'une réalisée avec la fonction interne d'Iris-PHP, 
+l'autre avec une fonction spécifique de PHP 5.5 ou son émulation pour PHP 5.4.
+";
+Messages::$Help['Ext']['w'] ='FALSE';
+
+// ==========================================================================================================================================
+// Unaivalable helps
+// ==========================================================================================================================================
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['D'] =
+"This help is under construction";
+
+Messages::$Help['En']['D'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['D'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['e'] =
+"This help is under construction";
+
+Messages::$Help['En']['e'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['e'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['G'] =
+"This help is under construction";
+
+Messages::$Help['En']['G'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['G'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['i'] =
+"This help is under construction";
+
+Messages::$Help['En']['i'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['i'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['I'] =
+"This help is under construction";
+
+Messages::$Help['En']['I'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['I'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['k'] =
+"This help is under construction";
+
+Messages::$Help['En']['k'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['k'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['K'] =
+"This help is under construction";
+
+Messages::$Help['En']['K'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['K'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['l'] =
+"This help is under construction";
+
+Messages::$Help['En']['l'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['l'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['m'] =
+"This help is under construction";
+
+Messages::$Help['En']['m'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['m'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['o'] =
+"This help is under construction";
+
+Messages::$Help['En']['o'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['o'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['p'] =
+"This help is under construction";
+
+Messages::$Help['En']['p'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['p'] = "FALSE";
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+Messages::$Help['En']['t'] =
+"This help is under construction";
+
+Messages::$Help['En']['t'] =
+"Aide en construction";
+
+Messages::$Help['Ext']['t'] = "FALSE";
+
+

@@ -48,8 +48,8 @@ Messages::$Error['En']['ERR_ABSOLUTEPATH'] = "The path to the project must be ab
 Messages::$Error['Fr']['ERR_BADMODULE'] = "--module or -M  n'est pas autorisé dans ce contexte";
 Messages::$Error['En']['ERR_BADMODULE'] = " --module or -M is not allowed in this context";
 
-Messages::$Error['Fr']['ERR_BADCOONTROLLER'] = "--controller or -C  n'st pas autorisé dans ce contexte";
-Messages::$Error['En']['ERR_BADCOONTROLLER'] = "--controller or -C is not allowed in this context";
+Messages::$Error['Fr']['ERR_BADCONTROLLER'] = "--controller or -C  n'st pas autorisé dans ce contexte";
+Messages::$Error['En']['ERR_BADCONTROLLER'] = "--controller or -C is not allowed in this context";
 
 Messages::$Error['Fr']['ERR_BADACTION'] = "--action or -A is n'est pas autorisé dans ce contexte";
 Messages::$Error['En']['ERR_BADACTION'] = " --action or -A is not allowed in this context";
