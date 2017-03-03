@@ -1,4 +1,5 @@
 <?php
+
 namespace Dojo;
 
 /*
@@ -24,11 +25,8 @@ class Manager implements \Iris\Design\iSingleton {
 
     const LOCAL = 0;
     const GOOGLE = 1;
-    const URL_DOJO_GOOGLE =  "https://ajax.googleapis.com/ajax/libs/dojo/";
-    //const AOL = 2; disappeared
-    //const URL_DOJO_AOL = "http://o.aolcdn.com/dojo/"; disappeared
-    const YANDEX = 3;
-    const URL_DOJO_YANDEX = "http://yandex.st/dojo";
+    const AOL = 2; //disappeared
+    const YANDEX = 3; //disappeared
     /**
      * Part of the singleton mechanism
      * @var Manager
@@ -66,9 +64,11 @@ class Manager implements \Iris\Design\iSingleton {
      */
     private function __construct() {
         self::SetActive();
-        $this->addStyle("/!documents/file/css/dojo.css");
+        \Iris\views\helpers\StyleLoader::FunctionCall("/!documents/file/css/dojo.css");
+        //$this->addStyle("/!documents/file/css/dojo.css");
         if (!\Iris\Users\Session::JavascriptEnabled()) {
-            $this->addStyle('/!documents/files/css/iris_nojs.css');
+            \Iris\views\helpers\StyleLoader::FunctionCall("/!documents/file/css/iris_nojs.css");
+            //$this->addStyle('/!documents/files/css/iris_nojs.css');
         }
         // init dojo_head to register it in Iris\Subhelpers\Head
         //Engine\Head::GetInstance();
@@ -116,23 +116,22 @@ class Manager implements \Iris\Design\iSingleton {
         $version = \Dojo\Engine\Settings::$Version;
         switch (\Dojo\Engine\Settings::$Source) {
             case self::GOOGLE:
-                $source = self::URL_DOJO_GOOGLE . $version;
+                $source = Engine\Settings::URL_DOJO_GOOGLE . $version;
                 break;
-//            AOL disappeared
+            //AOL disappeared
 //            case self::AOL:
-//                $source = URL_DOJO_AOL . $version;
+//                $source = Engine\Settings::URL_DOJO_AOL . $version;
 //                break;
-            case self::YANDEX:
-                $source = self::URL_DOJO_YANDEX . $version;
-                break;
+            // YANDEX diseppeared
+//            case self::YANDEX:
+//                $source = Engine\Settings::URL_DOJO_YANDEX . $version;
+//                break;
             default:
                 $source = '/js';
                 break;
         }
         return $source;
     }
-
-    
 
     /**
      * Add a style for Dojo
@@ -176,13 +175,13 @@ class Manager implements \Iris\Design\iSingleton {
         return $this->_styleFiles;
     }
 
-    
-    public static function Debug($message){
-        if(\TRUE or (\Iris\Engine\Mode::IsDevelopment() and Engine\Settings::$JSDebug)){
+    public static function Debug($message) {
+        if (\TRUE or ( \Iris\Engine\Mode::IsDevelopment() and Engine\Settings::$JSDebug)) {
             return "//$message";
         }
-        else{
+        else {
             return '';
         }
     }
+
 }

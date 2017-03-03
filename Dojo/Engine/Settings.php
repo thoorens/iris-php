@@ -22,10 +22,7 @@ use Dojo\Manager;
  */
 class Settings {
 
-    
-    
     protected static $_GroupName = 'dojo';
-
 
     /**
      * Version number correspond to the version used to write Iris-PHP.
@@ -34,32 +31,46 @@ class Settings {
      * 
      * @var string 
      */
-    const VERSION = '1.10.4';
+    //const VERSION = '1.12.4';
+    const VERSION = '1.11.2'; //Last version on Google (2017/01/29)
+    //const VERSION = '1.10.4';
     //const VERSION = '1.9.0';
+    const URL_DOJO_GOOGLE = "https://ajax.googleapis.com/ajax/libs/dojo/";
 
+//  const URL_DOJO_AOL = "http://o.aolcdn.com/dojo/"; //disappeared
+    
+//  const URL_DOJO_YANDEX = "http://yandex.st/dojo"; //disappeared
     /**
      * A Dojo theme : claro
      */
     const CLARO = 'claro';
+
     /**
      * A Dojo theme : nihilo
      */
     const NIHILO = 'nihilo';
+
     /**
      * A Dojo theme : tundra
      */
     const TUNDRA = 'tundra';
+
     /**
      * A Dojo theme : soria
      */
     const SORIA = 'soria';
-    
+
+    /**
+     * A value for a form factory
+     */
+    const DOJO = 6;
+
     /**
      * The version of Dojo is defined here
      * @var type 
      */
     public static $Version = self::VERSION;
-        
+
     /**
      * The debug mode of dojo
      * To be defined by __ClassInit
@@ -73,26 +84,27 @@ class Settings {
      * @var string 
      */
     public static $Theme = self::NIHILO;
-    
+
     /**
      * The default repository for Dojo libraries : GoogleApis
      * @var int 
      */
     public static $Source = Manager::GOOGLE;
-    
+
     /**
      * By default Dojo is parsed on page load (the value is JS syntax)
      * 
      * @var string 
      */
     public static $ParseOnLoad = 'true';
-    
+
     /**
      * Indicates that portions of javascript will bear a signature
      * 
      * @var boolean
      */
     public static $JSDebug = \TRUE;
+
     /**
      * Defines some standard settings with a default value
      */
