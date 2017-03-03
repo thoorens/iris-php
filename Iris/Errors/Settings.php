@@ -100,7 +100,7 @@ class Settings  {
      * Execute Development error in production (for desperate debugging purpose)
      * @var boolean
      */
-    public static $ForceDevelopment = \FALSE;
+    protected static $_ExplicitErrorMessages = \FALSE;
     
     /**
      * Default error controller (begins with /)
@@ -193,20 +193,30 @@ class Settings  {
     /**
      * Switches to development error display mode until the specified time
      * 
-     * @param string $timeLimit the time limit in HH:MM:SS format
      * @param string $dateLimit the date in YYYY-MM-DD format
+     * @param string $timeLimit the time limit in HH:MM:SS format
      */
-    public static function ShowErrorOnProd($timeLimit, $dateLimit){
+    public static function ShowErrorOnProd($dateLimit, $timeLimit = '23:59:59'){
         $now = time();
-        list($hour, $minute, $second) = explode(':',"$timeLimit:0:0");
+        list($hours, $minutes, $seconds) = explode(':',"$timeLimit:0:0");
         list($year, $month, $day) = explode('-',$dateLimit);
         $date = new \Iris\Time\Date;
         date_default_timezone_set($date->getTimeZone()->getName());
-        $limit = mktime($hour, $minute, $second, $month, $day, $year);
-        
+        $limit = mktime($hours, $minutes, $seconds, $month, $day, $year);
         if($now < $limit){
-            \Iris\Errors\Settings::$ForceDevelopment = \TRUE;
+            \Iris\Errors\Settings::$_ExplicitErrorMessages = \TRUE;
         }
         
     }
+    
+    /**
+     * Verifies that a development error display is allowed
+     * 
+     * @return boolean
+     */
+    public static function ShowExplicitErrors() {
+        return self::$_ExplicitErrorMessages;
+    }
+
+
 }
