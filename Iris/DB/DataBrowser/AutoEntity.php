@@ -10,18 +10,18 @@
  */
 
 /**
- * iUser was an interface for \Iris\User\Somebody, \Iris\User\Identity and \Iris\User\TUser
- * the trait \Iris\User\tUser plays now the same role
- *
- * 
- * This file has been moved to  BluePrint archives
+ * Description of AutoEntity : suppressed class
+ * Permited to create an instance of _Entity without the need of an explicit class
+ * and class file
  * 
  * Project IRIS-PHP
+ * 
+ * This file has been moved to  BluePrint archives
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @deprecated since version 2017/02
+ * @deprecated since version 2017.02
  * @version :$Id:
  */
 

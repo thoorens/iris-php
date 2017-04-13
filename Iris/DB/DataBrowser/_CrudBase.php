@@ -10,18 +10,16 @@
  */
 
 /**
- * iUser was an interface for \Iris\User\Somebody, \Iris\User\Identity and \Iris\User\TUser
- * the trait \Iris\User\tUser plays now the same role
- *
- * 
- * This file has been moved to  BluePrint archives
+ * This class provided some methods for _Crud and Login
  * 
  * Project IRIS-PHP
+ * 
+ * This file has been moved to  BluePrint archives
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @deprecated since version 2017/02
+ * @deprecated since version 2017.2
  * @version :$Id:
  */
 

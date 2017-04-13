@@ -8,7 +8,7 @@ namespace Dojo\Engine;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -39,6 +39,7 @@ class Head {
         }
         return $Instance;
     }
+    
 
     /**
      * The render collects all javascript and style defined in Dojo\Mananager,
@@ -49,22 +50,23 @@ class Head {
      */
     public function render($ajaxMode) {
         if (!\Dojo\Manager::IsActive()) {
-            return '';
+            $text = '';
         }
-        $manager = \Dojo\Manager::GetInstance();
-        $source = $manager->getURL();
-        $script = $manager->getScript();
-        $theme = \Dojo\Engine\Settings::$Theme;
-        $parseOnLoad = \Dojo\Engine\Settings::$ParseOnLoad;
-        $debug = \Dojo\Engine\Settings::$Debug;
+        else {
+            $manager = \Dojo\Manager::GetInstance();
+            $source = $manager->getURL();
+            $script = $manager->getScript();
+            $theme = \Dojo\Engine\Settings::$Theme;
+            $parseOnLoad = \Dojo\Engine\Settings::$ParseOnLoad;
+            $debug = \Dojo\Engine\Settings::$Debug;
 
-        // Loads css and js scripts
-        $text = '';
-        if (!$ajaxMode) {
-            foreach ($manager->getStyleFiles() as $file => $dummy) {
-                $text .= sprintf('<link rel="stylesheet" type="text/css" href="%s">' . "\n", $file);
-            }
-            $text .= <<< BASE
+            // Loads css and js scripts
+            $text = '';
+            if (!$ajaxMode) {
+                foreach ($manager->getStyleFiles() as $file => $dummy) {
+                    $text .= sprintf('<link rel="stylesheet" type="text/css" href="%s">' . "\n", $file);
+                }
+                $text .= <<< BASE
 <link rel="stylesheet" type="text/css" href="$source/dijit/themes/$theme/$theme.css">
 <script>
     dojoConfig = {parseOnLoad: $parseOnLoad, debug:$debug}
@@ -72,12 +74,13 @@ class Head {
 <script type="text/javascript" src="$script">
 </script>
 BASE;
+            }
+            // loads necessary scripts for dojo functions
+            $text .= "<script type=\"text/javascript\">\n";
+            $text .= \Dojo\Engine\NameSpaceItem::RenderAll();
+            $text .= \Dojo\Engine\Bubble::RenderAll();
+            $text .= "</script>\n";
         }
-        // loads necessary scripts for dojo functions
-        $text .= "<script type=\"text/javascript\">\n";
-        $text .= \Dojo\Engine\NameSpaceItem::RenderAll();
-        $text .= \Dojo\Engine\Bubble::RenderAll();
-        $text .= "</script>\n";
         return $text;
     }
 
@@ -86,10 +89,10 @@ BASE;
      * @param type $ajaxMode
      * @param type $text
      */
-    public function update($ajaxMode, &$text){
+    public function update($ajaxMode, &$text) {
         $theme = \Dojo\Engine\Settings::$Theme;
         $style = "class=\"$theme\" ";
         $text = \str_replace('<body', "<body " . $style, $text);
     }
-}
 
+}

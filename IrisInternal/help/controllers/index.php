@@ -10,18 +10,17 @@
  */
 
 /**
- * iUser was an interface for \Iris\User\Somebody, \Iris\User\Identity and \Iris\User\TUser
- * the trait \Iris\User\tUser plays now the same role
+ * Description of index
  *
  * 
- * This file has been moved to  BluePrint archives
+ * This file has been moved to BluePrint archives
  * 
  * Project IRIS-PHP
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @deprecated since version 2017/02
+ * @deprecated since version 
  * @version :$Id:
  */
 

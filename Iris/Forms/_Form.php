@@ -64,7 +64,7 @@ abstract class _Form implements iFormContainer {
     /**
      * the layout used to render the form and its elements
      *
-     * @var _FormLayout
+     * @var mixed may be a _FormLayout or a string
      */
     protected $_layout = \NULL;
 
@@ -331,8 +331,9 @@ abstract class _Form implements iFormContainer {
      * @return _FormLayout
      */
     public function getLayout() {
-        if ($this->_layout === \NULL)
-            $this->_layout = new DefLayout();
+        if (! $this->_layout instanceof _FormLayout) {
+            $this->_layout = _FormLayout::Factory($this->_layout);
+        }
         return $this->_layout;
     }
 
@@ -355,6 +356,15 @@ abstract class _Form implements iFormContainer {
         $this->_formFactory = $formFactory;
     }
 
+    /**
+     * Change the form name (used in FormMaker)
+     * 
+     * @param string $formName
+     */
+    public function changeFormName($formName){
+        $this->_name = $formName;
+    }
+    
     /**
      * Return a string with all specific attributes of a form
      */
