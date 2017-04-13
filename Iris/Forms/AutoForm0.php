@@ -10,10 +10,10 @@
  */
 
 /**
- * An abstract class for AutoForm and IniForm (never implemented)
+ * Description of AutoForm0
  *
  * 
- * This file has been moved to  BluePrint archives
+ * This file has been moved to BluePrint archives
  * 
  * Project IRIS-PHP
  *
