@@ -84,7 +84,9 @@ abstract class core_Bootstrap {
         if (file_exists(IRIS_ROOT_PATH . '/' . $overriddenClasses)) {
             include $overriddenClasses;
         }
+        define('IRIS_PROGRAM_PATH', IRIS_ROOT_PATH . '/' . $programName);
         $program = new Program($programName);
+        Program::$ProgramPath = IRIS_ROOT_PATH . '/' . $programName;
         // normal case : no configToRead defined, create it
         $configFiles = $this->_takeAllConfig($programName);
         // _preConfig normally do nothing and return TRUE

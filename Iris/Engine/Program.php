@@ -27,20 +27,22 @@ class Program {
      * 
      * @var string
      */
-    public static $ProgramName = 'NONE';
+    public static $ProgramName = 'program';
 
+    
+    public static $ProgramPath;
     /**
      *
      * @var \Iris\Time\RuntimeDuration
      */
     private $_runtimeDuration;
+  
 
     /**
      * Constructor for the Program instance
      * @param string $programName the program directory (not visible)
      */
     public function __construct($programName = 'program') {
-        define('IRIS_PROGRAM_PATH', IRIS_ROOT_PATH . '/' . $programName);
         $this->_log($programName);
         $this->_runtimeDuration = new \Iris\Time\RuntimeDuration(NULL);
         self::$ProgramName = $programName;
@@ -62,6 +64,7 @@ class Program {
                     ->prepareResponse()
                     ->preDispatch()
                     ->dispatch(); // pre and post in dispatch ??????
+
             $dispatcher->postDispatch();
             $done = \TRUE;
         }
