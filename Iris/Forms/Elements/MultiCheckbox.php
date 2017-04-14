@@ -34,7 +34,7 @@ class MultiCheckbox extends _ElementGroup {
     protected $_perLine = 4;
     protected $_itemType = 'Checkbox';
 
-    public function __construct($name, $type, $formFactory, $options = array()) {
+    public function __construct($name, $type, $formFactory, $options = []) {
         parent::__construct($name, 'div', $formFactory, $options);
     }
 

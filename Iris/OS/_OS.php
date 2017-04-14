@@ -33,7 +33,6 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     const TOUCH = 8;
     const PUT = 9;
     const GET = 10;
-    
     const UNKNOWN = 'UNKNOWN';
     const LINUX = 'LINUX';
     const WIN10 = 'WINDOWS 10';
@@ -54,11 +53,8 @@ abstract class _OS {// implements \Iris\Design\iSingleton
         self::WINNT,
     ];
     public $tabLevel = 0;
-
-    
-    
-    
     protected $_version;
+
     /**
      * An array containing all the format for displaying verbose messages
      * 
@@ -104,20 +100,20 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @return int
      * @todo : could be changed for management through Admin
      */
-    public static function GetPrivateMod(){
+    public static function GetPrivateMod() {
         return 0755;
     }
-    
+
     /**
      * Returns the number corresponding to full permission
      * 
      * @return int
      * @todo : could be changed for management through Admin
      */
-    public static function GetPublicMod(){
+    public static function GetPublicMod() {
         return 0777;
     }
-    
+
     /**
      * TRUE if verbosity on
      * @var boolean  
@@ -141,7 +137,7 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @var type 
      */
     public static $OSName;
-    
+
     /**
      * The class behaves as a singleton (not marked by \Iris\Design\iSingleton
      * to minimize dependencies in CLI)
@@ -294,7 +290,16 @@ abstract class _OS {// implements \Iris\Design\iSingleton
      * @param mixed[] $replacement an associative array with the fields and values 
      */
     public function createFromTemplate($source, $destination, $replacement = []) {
-        $text = $this->file_get_contents($source);
+        if (strpos($source, '%') === \FALSE) {
+            $sourceFile = $source;
+        }
+        else{
+            $sourceFile = sprintf($source, 'Myfiles');
+            if (!file_exists($sourceFile)) {
+                $sourceFile = sprintf($source, 'Files');
+            }
+        }
+        $text = $this->file_get_contents($sourceFile);
         foreach ($replacement as $from => $to) {
             $text = preg_replace("/$from/", "$to", $text);
         }
@@ -390,6 +395,5 @@ abstract class _OS {// implements \Iris\Design\iSingleton
     protected function shellvar($var) {
         return str_replace("\n", "", shell_exec("echo %$var%"));
     }
-    
-}
 
+}

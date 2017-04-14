@@ -36,12 +36,13 @@ final class Session implements \Iris\Design\iSingleton{
         if (self::$_Instance === \NULL) {
             $instance = new Session();
             self::$_Instance = $instance;
-            if (isset($_SESSION['identity'])) {
-                $identity = $_SESSION['identity'];
-            }
-            else {
-                $identity = NULL;
-            }
+            $identity = $instance->getValue('identity', \NULL);
+//            if (isset($_SESSION['identity'])) {
+//                $identity = $_SESSION['identity'];
+//            }
+//            else {
+//                $identity = NULL;
+//            }
             Identity::CreateInstance($identity);
             Cookie::LoadUnsentCookies();
         }
