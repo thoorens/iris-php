@@ -23,7 +23,8 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
 
 
     public static function __ClassInit() {
-         static::$_EntityNumber = \Iris\SysConfig\Settings::$InternalDatabaseNumber;
+         static::$_EntityNumber = 99;
+         self::DefaultEntityManager();
     }
     
     /**
@@ -40,7 +41,7 @@ abstract class _IrisObject extends \Iris\DB\_Entity implements \Iris\Design\iDel
      * @return \Iris\DB\_EntityManager 
      */
     public static function DefaultEntityManager() {
-        $dbFile = IRIS_PROGRAM_PATH . \Iris\SysConfig\Settings::$InternalDatabase;
+        $dbFile = IRIS_INTERNAL;
         $errorBase = $newBase = FALSE;
         if (!file_exists($dbFile)) {
             if (!is_writable(dirname($dbFile))) {
