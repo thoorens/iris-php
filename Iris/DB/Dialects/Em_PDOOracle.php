@@ -41,6 +41,13 @@ class Em_PDOOracle extends \Iris\DB\Dialects\_Em_PDO {
      */
     public static $BitWiseExtensionEnabled = \FALSE;
 
+    /**
+     * Each _entityManager has its own type name
+     */
+    public static function __ClassInit() {
+        static::$_TypeName = \Iris\DB\_EntityManager::ORACLE;
+    }
+
     protected function __construct($dsn, $userName, $passwd, &$options = []) {
         throw new ie\NotSupportedException('Not yet implemented');
         parent::__construct($dsn, $userName, $passwd, $options);
@@ -109,6 +116,10 @@ class Em_PDOOracle extends \Iris\DB\Dialects\_Em_PDO {
         else {
             throw new \Iris\Exceptions\NotSupportedException('BitXor not supported by Oracle');
         }
+    }
+
+    protected static function _GetManagerName() {
+        return self::ORACLE;
     }
 
 }

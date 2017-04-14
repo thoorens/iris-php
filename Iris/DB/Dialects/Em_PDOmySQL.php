@@ -1,5 +1,4 @@
 <?php
-
 namespace Iris\DB\Dialects;
 
 /*
@@ -8,7 +7,7 @@ namespace Iris\DB\Dialects;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -25,9 +24,15 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      * @var type 
      */
     protected $_portNumber;
-
-
-    protected function __construct($dsn, $userName, $passwd, &$options = array()) {
+    
+    /**
+     * Each _entityManager has its own type name
+     */
+    public static function __ClassInit() {
+        static::$_TypeName = \Iris\DB\_EntityManager::MYSQL;
+    }
+    
+    protected function __construct($dsn, $userName, $passwd, &$options = []) {
         // In the case of mySQL, it is necessary to add an option to have utf8 characters
         $options[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
         parent::__construct($dsn, $userName, $passwd, $options);
@@ -52,8 +57,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      * @return \Iris\DB\Metadata
      */
     public function readFields($tableName) {
-        $pdo = $this->_connexion;
-        $results = $pdo->query("show columns from $tableName");
+        $results = $this->_connexion->query("show columns from $tableName");
         $fields = $results->fetchAll(\PDO::FETCH_OBJ);
         $metadata = new \Iris\DB\Metadata($tableName);
         foreach ($fields as $line) {
@@ -79,8 +83,7 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
 
     public function getForeignKeys($tableName) {
         //@todo find a better way to do it !!!!
-        $pdo = $this->_connexion;
-        $results = $pdo->query("SHOW CREATE TABLE $tableName");
+        $results = $this->_connexion->query("SHOW CREATE TABLE $tableName");
         $ligne = $results->fetchAll(\PDO::FETCH_ASSOC);
         $def = explode("\n", $ligne[0]['Create Table']);
         $tab = preg_grep('/FOREIGN KEY/i', $def);
@@ -142,6 +145,14 @@ class Em_PDOmySQL extends \Iris\DB\Dialects\_Em_PDO {
      */
     public function _addOption(&$options) {
         $options[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+    }
+
+    /**
+     * 
+     * @return string The name of the RDMS 
+     */
+    protected static function _GetManagerName() {
+        return self::MYSQL;
     }
 
 }

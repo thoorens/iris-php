@@ -20,17 +20,7 @@ namespace Iris\DB\Dialects;
  * @version $Id: $ */
 class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
 
-    /**
-     * Each EM will have its own name
-     * @var string
-     */
-    protected static $_EntityManagerName = 'Em_PDOSQLite';
-
-    /**
-     * Sqlite : create the file if not existing
-     * @var boolean
-     */
-    public static $CreateMissingFile = \FALSE;
+    protected static $_TypeName = 'sqlite';
 
     /**
      * SQLite uses a file as a container
@@ -38,6 +28,13 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      * @var string 
      */
     private $_fileName;
+
+    /**
+     * Each _entityManager has its own type name
+     */
+    public static function __ClassInit() {
+        static::$_TypeName = \Iris\DB\_EntityManager::SQLITE;
+    }
 
     /*
      * INTEGER
@@ -83,27 +80,36 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      * @param string $fileName
      * @return string
      */
-    public static function FullPathName($fileName){
+    public static function FullPathName($fileName) {
         if ($fileName[0] != '/') {
             $fullName = IRIS_ROOT_PATH . '/' . $fileName;
         }
         else {
             $fullName = $fileName;
         }
-       return $fullName;
+        return $fullName;
     }
 
+    /**
+     * Creates the file containing the database if necessary
+     * 
+     * @param type $fileName
+     */
     public static function CreateFile($fileName) {
         $fullFileName = self::FullPathName($fileName);
         if (!file_exists($fullFileName)) {
             touch($fullFileName);
         }
     }
-
+    
+    /**
+     * Deletes the file containing the database (if it exists)
+     * 
+     * @param string $fileName The complete file name of the database
+     */
     public static function PurgeFile($fileName) {
-        $fullFileName = self::FullPathName($fileName);
-        if (file_exists($fullFileName)) {
-            unlink($fullFileName);
+        if (file_exists($fileName)) {
+            unlink($fileName);
         }
     }
 
@@ -178,8 +184,7 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      */
 
     public function getForeignKeys($tableName) {
-        $pdo = $this->_connexion;
-        $results = $pdo->query("PRAGMA foreign_key_list($tableName)");
+        $results = $this->_connexion->query("PRAGMA foreign_key_list($tableName)");
         $results->setFetchMode(\PDO::FETCH_OBJ);
         $foreignKeys = [];
         foreach ($results as $line) {
@@ -245,14 +250,6 @@ class Em_PDOSQLite extends \Iris\DB\Dialects\_Em_PDO {
      */
     public function getLimitClause() {
         return ' LIMIT %d , %d';
-    }
-
-    /**
-     * Indicates that a empty file must be created if the required SQLite file does not exist
-     * @param boolean $CreateMissingFile
-     */
-    public static function setCreateMissingFile($CreateMissingFile) {
-        self::$CreateMissingFile = $CreateMissingFile;
     }
 
 }

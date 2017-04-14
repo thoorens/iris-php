@@ -20,8 +20,6 @@ namespace Iris\DB\Dialects;
  * @version $Id: $ */
 abstract class _Em_PDO extends \Iris\DB\_EntityManager {
 
-    private $dsn;
-
     /**
      * PDO manages the connexion by using a variable
      *
@@ -55,6 +53,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
             $pdo->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array('\Iris\DB\Dialects\MyPDOStatement', array($this)));
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->_connexion = $pdo;
+            
         }
         catch (\PDOException $exp) {
             $message = "DB error : " . $exp->getMessage() . " dsn: $dsn ";
@@ -68,6 +67,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
         catch (\Exception $exp) {
             throw $exp;
         }
+        parent::__construct($dsn, $userName, $passwd, $options);
     }
 
     /**
@@ -86,8 +86,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
      * @return array
      */
     public function getResults($sql, $fieldsPH = []) {
-        $pdo = $this->_connexion;
-        $statement = $pdo->prepare($sql);
+        $statement = $this->_connexion->prepare($sql);
         foreach ($fieldsPH as $key => $value) {
             $statement->bindValue($key, $value);
         }
@@ -116,8 +115,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
     }
 
     public function exec($sql, $fieldsPH) {
-        $pdo = $this->_connexion;
-        $statement = $pdo->prepare($sql);
+        $statement = $this->_connexion->prepare($sql);
         foreach ($fieldsPH as $key => $value) {
             $statement->bindValue($key, $value);
         }

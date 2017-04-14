@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\DB\Dialects;
 
 use Iris\Exceptions as ie;
@@ -20,12 +21,6 @@ use Iris\Exceptions as ie;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
-    
-    /**
-     * Each EM will have its own name
-     * @var string
-     */
-    protected static $_EntityManagerName = 'Em_PDOPosgresql';
 
     /**
      * Postgresql default schema name
@@ -38,15 +33,21 @@ class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
      * @var int
      */
     public static $lDefaultPortNumber = 5432;
-    
+
     /**
      * The port number of the active instance
      * @var int
      */
     protected $_portNumber;
-
     private $_schema;
-    
+
+    /**
+     * Each _entityManager has its own type name
+     */
+    public static function __ClassInit() {
+        static::$_TypeName = \Iris\DB\_EntityManager::POSTGRESQL;
+    }
+
     /**
      * Postgresql constructor must add a schema name
      * 
@@ -59,8 +60,6 @@ class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
         parent::__construct($dsn, $userName, $passwd, $options);
         $this->_schema = static::$_DefaultSchema;
     }
-
-    
 
     /**
      * In the case of Posgresql, it is necessary to add an option to have utf8 characters
@@ -88,12 +87,12 @@ class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
      * @return \Iris\DB\Metadata
      */
     public function readFields($tableName) {
-        $pdo = $this->_connexion;
+        //$pdo = $this->_connexion;
 //        SELECT *
 //FROM information_schema.columns
 //WHERE table_schema = 'public'
 //  AND table_name   = 'Customers'
-        $results = $pdo->query("show columns from $tableName");
+        $results = $thiq->_connection->query("show columns from $tableName");
         $fields = $results->fetchAll(\PDO::FETCH_OBJ);
         $metadata = new \Iris\DB\Metadata($tableName);
         foreach ($fields as $line) {
@@ -117,11 +116,10 @@ class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
      * CONSTRAINT `ligne_ibfk_2` FOREIGN KEY (`facture_id`) REFERENCES `facture` (`id`),
      */
 
-    
     public function getForeignKeys($tableName) {
         //@todo find a better way to do it !!!!
-        $pdo = $this->_connexion;
-        $results = $pdo->query("SHOW CREATE TABLE $tableName");
+        //$pdo = $this->_connexion;
+        $results = $this->_connexion->query("SHOW CREATE TABLE $tableName");
         $ligne = $results->fetchAll(\PDO::FETCH_ASSOC);
         $def = explode("\n", $ligne[0]['Create Table']);
         $tab = preg_grep('/FOREIGN KEY/i', $def);
@@ -174,7 +172,6 @@ class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
         throw new ie\NotSupportedException('XOR not supported in mySQL');
     }
 
-    
     public function getLimitClause() {
         return ' LIMIT %d, %d';
     }
@@ -195,12 +192,8 @@ class Em_PDOPostgresql extends \Iris\DB\Dialects\_Em_PDO {
         $this->_schema = $schema;
     }
 
-
-
-    
-
-    
-    
+    protected static function _GetManagerName() {
+        return self::POSTGRESQL;
+    }
 
 }
-
