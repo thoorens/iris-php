@@ -101,31 +101,33 @@ class EntityBuilder {
                 $this->_proposedEntityName = strtolower(substr($className, 1));
         }
         foreach ($params as $param) {
+            if(is_numeric($param) and $param == -2){
+                $this->_entityManager = _EntityManager::EMByNumber(-2);
+            }
             // A parameter may be an _EntityManager
-            if ($param instanceof \Iris\DB\_EntityManager) {
-                print('registering EM -');
+            elseif ($param instanceof \Iris\DB\_EntityManager) {
                 $this->_entityManager = $param;
             }
             // A parameter may be metadata as on object 
             elseif ($param instanceof \Iris\DB\Metadata) {
-            print("metadata -");
+            //print("metadata -");
                 $this->_metadata = $param;
             }
             // A parameter may be a serialized metadata
             elseif (is_string($param) and strpos($param, 'TABLE@') === 0) {
-                print("serialized metadata");
+                //print("serialized metadata");
                 $metadata = new Metadata();
                 $metadata->unserialize($param);
                 $this->_metadata = $metadata;
             }
             // An entity number has only an effect if no entity manager has been previously defined
             elseif (is_numeric($param) and is_null($this->_entityManager)){
-                    print('number -');
+                    //print('number -');
                     $this->_entityManager = _EntityManager::EMByNumber($param);
             }
 // every other parameter will put in an array
             else {
-                print('string -');
+                //print('string -');
                 $this->_strings[] = $param;
             }
         }

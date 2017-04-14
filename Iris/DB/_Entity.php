@@ -71,6 +71,13 @@ abstract class _Entity {
     private $_entityManager = \NULL;
 
     /**
+     * 
+     * @var String[]
+     */
+    public static $_Bridges = [];
+    
+    
+    /**
      * For extension purpose
      * @var _EntityManager
      */
@@ -153,7 +160,10 @@ abstract class _Entity {
      * @var boolean
      */
     protected $_register = \TRUE;
-
+    
+    
+    protected $_parents = [];
+        
     /* =======================================================================================================
      * C O N S T R U C T O R    A N D  F A C T O R Y   M E T H O D S
      * =======================================================================================================
@@ -228,7 +238,7 @@ abstract class _Entity {
      * @return _EntityManager
      */
     public static function DefaultEntityManager() {
-        return _EntityManager::GetInstance();
+        return _EntityManager::EMByNumber(); //GetInstance();
     }
 
     /**
@@ -298,8 +308,7 @@ abstract class _Entity {
     protected static function _SpecificPlugIn(&$entityName, &$alternativeClassName) {
         if ($alternativeClassName == 'Iris\DB\_Entity') {
             if ($entityName[0] != '\\') {
-
-                $alternativeClassName = "\\models\\T" . ucfirst($entityName);
+                $alternativeClassName = \Iris\System\Functions::TableToEntity($entityName);
             }
             else {
                 $alternativeClassName = $entityName;
@@ -1061,6 +1070,11 @@ abstract class _Entity {
                 }
                 $metadata->addForeign($foreignKey);
             }
+ //if necessary adds bridges
+//            $class = get_called_class();
+//            foreach(static::$_Bridges as $bridge){
+//                $metadata->addBridge($bridge);
+//            }
         }
 
         return $metadata;
@@ -1068,7 +1082,7 @@ abstract class _Entity {
 
     /**
      * Verifies an entity has a complete definition: <ul>
-     * <li> a entity name
+     * <li> an entity name
      * <li> a primary key
      * <li> a metadata object with all other specification</ul>
      * 
@@ -1103,4 +1117,12 @@ abstract class _Entity {
         return $this;
     }
 
+    public function GetParentList($key){
+        return $this->_parents;
+        
+    }
+    
+    public function SetParentList($values){
+        $this->_parents = $values;
+    }
 }

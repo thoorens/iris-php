@@ -40,7 +40,29 @@ class Object {
     const DATAROWSET = 10;
     const NULL_VALUE = '##NULL##';
 
-    
+    /**
+     * IRIS_PARENT, IRIS_CHILDREN, _BRIDGE_ and IRIS_FILESEP are used to detect pseudo fields. 
+     * In case they conflict with an existing field, it is possible to use the method they call
+     */
+
+    /**
+     *
+     * @var string 
+     */
+    const PARENT_PREFIX = '_at_';
+
+    /**
+     *
+     * @var string 
+     */
+    const CHILDREN_PREFIX = '_children_';
+
+    /**
+     *
+     * @var string 
+     */
+    const BRIDGE_PREFIX = '_bridge_';
+
     /**
      * The field names (in keys) and offsets (in values)
      * @var int[]
@@ -179,20 +201,43 @@ class Object {
         if (isset($this->_fields[$field])) {
             $offset = $this->_fields[$field];
             if ($this->_dirty and isset($this->_modifiedContent[$offset])) {
-                return $this->_modifiedContent[$offset];
+                $value = $this->_modifiedContent[$offset];
             }
             else {
-                return $this->_currentContent[$offset];
+                $value = $this->_currentContent[$offset];
             }
         }
-        // try to use a pseudo field
-        if (strpos($field, IRIS_PARENT) === 0) {
-            return $this->_getParent(substr($field, strlen(IRIS_PARENT)));
+        else {
+            // try to use a pseudo field
+            $value = \NULL;
+            if (strpos($field, self::PARENT_PREFIX) === 0) {
+                $value = $this->getParent(substr($field, strlen(self::PARENT_PREFIX)));
+            }
+            elseif (strpos($field, self::CHILDREN_PREFIX) === 0) {
+                $arguments = substr($field, strlen(self::CHILDREN_PREFIX));
+                $value = $this->getChildren(explode(Metadata::FIELD_SEP, $arguments));
+            }
+            elseif (strpos($field, self::BRIDGE_PREFIX) === 0) {
+                $value = $this->fromBridge(substr($field, strlen(self::BRIDGE_PREFIX)));
+            }
+            else {
+                $value = \NULL;
+                //throw new \Iris\Exceptions\BadParameterException("Field or pseudo field unknow : " .$field);
+            }
         }
-        if (strpos($field, IRIS_CHILDREN) === 0) {
-            return $this->_getChildren(substr($field, strlen(IRIS_CHILDREN)));
-        }
-        return \NULL;
+        return $value;
+    }
+
+    /**
+     * 
+     * @param string $bridgeName name of the bridge entity
+     */
+    public function fromBridge($bridgeName) {
+        $bridgeClass = \Iris\System\Functions::TableToEntity($bridgeName);
+        $entity = $this->getEntity();
+        /* @var $bridge _Entity */
+        $bridge = $bridgeClass::GetEntity($entity->getEntityManager());
+        return $bridge->getMetadata()->manageBridge($entity, $this, $bridge->getEntityName());
     }
 
     /**
@@ -201,24 +246,22 @@ class Object {
      * @param string $keyFields
      * @return Object
      */
-    private function _getParent($keyFields) {
-        $entityManager = $this->_entity->getEntityManager();
-        list($parentEntityName, $foreignKeyPairs) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
-        // Caution : two differents set of FromKeys may go to the same entity
-        //$joinID = $parentEntityName . '-' . implode(':', $fromKeyNames);
-        //if (!isset($this->_parents[$joinID])) {
-        $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
-        //$i = 0;
-        //$primaryKey = $parentEntity->getIdNames();
-        foreach ($foreignKeyPairs as $foreignName => $primaryName) {
-            $primaryKeys[$primaryName] = $this->$foreignName;
+    public function getParent($keyFields) {
+        $entity = $this->getEntity();
+        $parents = $entity->GetParentList($keyFields);
+        $localId = implode('-',$this->primaryKeyValue());
+        if(!isset($parents[$keyFields][$localId])){
+            $entityManager = $this->_entity->getEntityManager();
+            list($parentEntityName, $foreignKeyPairs) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
+            $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
+            foreach ($foreignKeyPairs as $foreignName => $primaryName) {
+                $primaryKeys[$primaryName] = $this->$foreignName;
+            }
+            $parent = $parentEntity->find($primaryKeys);
+            $parents[$keyFields][$localId] = $parent;
+            $entity->SetParentList($parents);
         }
-        $joinId = $parentEntityName . ":" . implode(':', $primaryKeys);
-        if (!isset($this->_parents[$joinId])) {
-        $parent = $parentEntity->find($primaryKeys);
-            $this->_parents[$joinId] = $parent;
-        }
-        return $this->_parents[$joinId];
+        return $parents[$keyFields][$localId];
     }
 
     /**
@@ -227,10 +270,10 @@ class Object {
      * @param string $keyFields
      * @return array
      */
-    private function _getChildren($keyFields) {
+    public function getChildren($params) {
+        $chldName = array_shift($params);
         $entityManager = $this->_entity->getEntityManager();
-        $fKeys = explode(IRIS_FIELDSEP, $keyFields);
-        $chldName = array_shift($fKeys);
+        $fKeys = $params;
         $chldEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $chldName);
         list($parentFields, $childFields) = $chldEntity->getMetadata()->getChildrenParams($this->_entity->getEntityName(), $fKeys);
         $i = 0;
@@ -239,7 +282,7 @@ class Object {
             $conditions[$childFields[$i++]] = $value;
             $childValues[] = $value;
         }
-        $chldId = implode(IRIS_FIELDSEP, $childValues) . "@$chldName";
+        $chldId = implode(Metadata::FIELD_SEP, $childValues) . "@$chldName";
         if (!isset($this->_children[$chldId])) {
             $chldEntity->wherePairs($conditions);
             $children = $chldEntity->fetchAll();

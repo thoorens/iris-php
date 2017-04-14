@@ -25,6 +25,11 @@ namespace Iris\DB;
 class Metadata implements \Serializable, \Countable {
 
     /**
+     * 
+     */
+    const FIELD_SEP = '__';
+
+    /**
      * A string containing the table name
      * 
      * @var string
@@ -50,19 +55,32 @@ class Metadata implements \Serializable, \Countable {
      * @var ForeignKey[]
      */
     private $_foreigns = [];
-    
+
+    /**
+     *
+     * @var string
+     */
+    private $_bridgeId;
+
+    /**
+     *
+     * @var string 
+     */
+    private $_targetId;
+
     /**
      * Spectifies if the table has an auto increment primary key
      * @var boolean
      */
     private $_autoIncrementPrimary = \FALSE;
+    private $_parentRows = [];
 
     /**
      * 
      * @param string $tableName
      */
     public function __construct($tableName = \NULL) {
-        if (!is_null($tableName)) {
+        if (!\is_null($tableName)) {
             $this->_tablename = $tableName;
         }
         $this->_primary = new PrimaryKey();
@@ -86,7 +104,7 @@ class Metadata implements \Serializable, \Countable {
     public function addPrimary($field) {
         $this->_primary->addField($field);
         // Multikey primary key are not autoincrement
-        if($this->_primary->isMultiField()){
+        if ($this->_primary->isMultiField()) {
             $this->_autoIncrementPrimary = \FALSE;
             $this->_primary->setAutoIncrement(\FALSE);
         }
@@ -101,7 +119,7 @@ class Metadata implements \Serializable, \Countable {
      */
     public function addItem($item) {
         $key = $item->getFieldName();
-        if($item->isAutoIncrement() and $item->isPrimary()){
+        if ($item->isAutoIncrement() and $item->isPrimary()) {
             $this->_autoIncrementPrimary = \TRUE;
             $this->_primary->setAutoIncrement();
         }
@@ -168,8 +186,8 @@ class Metadata implements \Serializable, \Countable {
      */
     public function addForeign(ForeignKey $foreign, $number = \NULL) {
         $this->_foreigns[] = $foreign;
-        if (is_null($number)) {
-            $number = count($this->_foreigns) - 1;
+        if (\is_null($number)) {
+            $number = \count($this->_foreigns) - 1;
         }
         $foreign->setNumber($number);
         foreach ($foreign->getFromKeys() as $fromKey) {
@@ -186,23 +204,34 @@ class Metadata implements \Serializable, \Countable {
      * @return array
      */
     public function getParentRowParams($links) {
-        $foreigns = $this->getForeigns();
-        $found = \FALSE;
-        /** @var ForeignKey $foreign */
-        foreach ($foreigns as $foreign) {
-            $fk = implode(IRIS_FIELDSEP, $foreign->getFromKeys());
-            if ($fk == $links) {
-                $found = \TRUE;
-                // sorry Dijkstra, but each(), current() and other stuffs suck.
-                break;
+        if (\is_array($links)) {
+            $links = \implode(self::FIELD_SEP, $links);
+        }
+        if (!isset($this->_parentRows[$links])) {
+            $foreigns = $this->getForeigns();
+            $found = \FALSE;
+            /** @var ForeignKey $foreign */
+            foreach ($foreigns as $foreign) {
+                $fromKeys = $foreign->getFromKeys();
+                $fk = \implode(self::FIELD_SEP, $fromKeys);
+                if ($fk === $links) {
+                    $found = \TRUE;
+                    break; // sorry Dijkstra, but each(), current() and other stuffs suck.
+                }
+                $fk2 = \implode(self::FIELD_SEP, \array_reverse($fromKeys));
+                if ($fk2 === $links) {
+                    $found = \TRUE;
+                    break; // sorry Dijkstra, but each(), current() and other stuffs suck.
+                }
             }
+            if (!$found) {
+                $links = \str_replace(self::FIELD_SEP, ' and ', $links);
+                throw new \Iris\Exceptions\DBException("A parent record from field(s) $links doesn't exist.");
+            }
+            $entityName = $foreign->getTargetTable();
+            $this->_parentRows[$links] = [$entityName, $foreign->getKeys()];
         }
-        if (!$found) {
-            $links = str_replace(IRIS_FIELDSEP, ' and ', $links);
-            throw new \Iris\Exceptions\DBException("A parent record from field(s) $links doesn't exist.");
-        }
-        $entityName = $foreign->getTargetTable();
-        return [$entityName, $foreign->getKeys()];
+        return $this->_parentRows[$links];
     }
 
     /**
@@ -216,20 +245,20 @@ class Metadata implements \Serializable, \Countable {
         $found = \FALSE;
         foreach ($this->_foreigns as $foreign) {
             if ($foreign->getTargetTable() == $parentName) {
-                if (count($fkeys) == 0) {
+                if (\count($fkeys) === 0) {
                     $found = \TRUE;
                 }
-                elseif (implode(IRIS_FIELDSEP, $fkeys) == implode(IRIS_FIELDSEP, $foreign->getFromKeys())) {
+                elseif (\implode(self::FIELD_SEP, $fkeys) === \implode(self::FIELD_SEP, $foreign->getFromKeys())) {
                     $found = \TRUE;
                 }
             }
-            // sorry Dijkstra, but each(), current() and other stuffs suck.
-            if ($found)
-                break;
+            if ($found) {
+                break;// sorry Dijkstra, but each(), current() and other stuffs suck.
+            }
         }
 
         if (!$found) {
-            $links = implode(' ', $fkeys);
+            $links = \implode(' ', $fkeys);
             throw new \Iris\Exceptions\DBException("A children recordset based on field(s) $links doesn't exist.");
         }
         return [$foreign->getToKeys(), $foreign->getFromKeys()];
@@ -256,6 +285,7 @@ class Metadata implements \Serializable, \Countable {
         foreach ($this->_foreigns as $foreign) {
             $strings[] = $foreign->serialize();
         }
+//        $strings[] = 'BRIDGES@' . implode('!', $this->_bridges);
         $strings[] = 'AUTOPK@' . ($this->_autoIncrementPrimary ? MetaItem::S_TRUE : MetaItem::S_FALSE);
         return implode("\n", $strings);
     }
@@ -288,6 +318,10 @@ class Metadata implements \Serializable, \Countable {
                 case 'AUTOPK':
                     $this->_autoIncrementPrimary = $value === MetaItem::S_TRUE;
                     $this->_primary->setAutoIncrement($this->_autoIncrementPrimary);
+                    break;
+//                case 'BRIDGES':
+//                    $this->_bridges = explode('!', $value);
+//                    break;
             }
         }
     }
@@ -299,6 +333,44 @@ class Metadata implements \Serializable, \Countable {
      */
     public function count() {
         return count($this->_fields);
+    }
+
+    /**
+     * 
+     * @param _Entity $entity
+     */
+    public function getBridgeParams($entity) {
+        foreach ($this->getForeigns() as $foreign) {
+            //print($foreign->getTargetTable().':' );
+            //print($entity->getEntityName().' - ');
+            if ($foreign->getTargetTable() == $entity->getEntityName()) {
+                $this->_bridgeId = $foreign->getFromKeys()[0];
+                //print('bridge : '.$foreign->getFromKeys()[0].'<br/>');
+            }
+            else {
+                $this->_targetId = $foreign->getFromKeys()[0];
+                //print('target : '.$foreign->getFromKeys()[0].'<br/>');
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param _Entity $entity
+     * @param Object $object
+     * @param string $bridgeName
+     * @return array
+     */
+    public function manageBridge($entity, $object, $bridgeName) {
+        $result = []; // maybe no result
+        if (is_null($this->_bridgeId)) {
+            $this->getBridgeParams($entity);
+        }
+        $pivots = $object->getChildren([$bridgeName, $this->_bridgeId]);
+        foreach ($pivots as $pivot) {
+            $result[] = [$pivot->getParent($this->_targetId), $pivot];
+        }
+        return $result;
     }
 
 }
