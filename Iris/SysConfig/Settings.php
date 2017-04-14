@@ -135,8 +135,20 @@ class Settings {
      * If ACL are used, no entity is defined in Settings (DIY)
      * @var string
      */
-    public static $SystemUserEntity = '';
+    public static $SystemUserEntity = \NULL;
 
+    /**
+     * The default names for the user fields
+     * 
+     * @var string[]
+     */
+    public static $UserFields = [
+        'id' => 'id',
+        'UserName' => 'UserName',
+        'Role' => 'Role',
+        'Email' => 'Email'
+    ];
+    
     /**
      * Type of Password conversion (PHP 5.5 internal conversion)
      * @var int
@@ -225,6 +237,12 @@ class Settings {
      * @var int
      */
     public static $HTMLType = self::HTMLAuto;
+    
+    /**
+     * By default the default form layout is DefLayout
+     * @var string
+     */
+    public static $DefaultFormLayout = "DefLayout";
 
     /* -------------------------------------------------------------------------
      * Parameters related to date and time

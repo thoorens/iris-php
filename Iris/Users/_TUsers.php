@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Iris\Users;
 
 /*
@@ -21,56 +19,69 @@ namespace Iris\Users;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-abstract class TUsers extends \Iris\DB\_Entity{
+abstract class _TUsers extends \Iris\DB\_Entity {
 
-    
-    
-    
-    public static $systemUserEntity = \NULL;
-    
-    protected $_idField = 'id';
-    protected $_nameField = 'Username';
-    protected $_emailField = 'Email';
-    protected $_roleField = "Role";
-    
-    protected $_rowType = '\\Iris\\Users\\User';
-    
+    /**
+     * Gets the id field name
+     * 
+     * @return string
+     */
     public function getIdField() {
-        return $this->_idField;
+        return \Iris\SysConfig\Settings::$UserFields['id'];
     }
 
-        
+    /**
+     * Gets the username field name
+     * 
+     * @return string
+     */
     public function getNameField() {
-        return $this->_nameField;
+        return \Iris\SysConfig\Settings::$UserFields['UserName'];
     }
+
+    /**
+     * Gets the email field name
+     * 
+     * @return string
+     */
     public function getEmailField() {
-        return $this->_nameField;
+        return \Iris\SysConfig\Settings::$UserFields['EmailField'];
     }
-    
-    public function getRoleField(){
-        return $this->_roleField;
+
+    /**
+     * Gets the role field name
+     * 
+     * @return string
+     */
+    public function getRoleField() {
+        return\Iris\SysConfig\Settings::$UserFields['RoleField'];
     }
-    
+
     /**
      *
      * @param type $name 
      * @return User
      */
-    public function fetchUser($name){
+    public function fetchUser($name) {
 //        $object = $this->fetchRow("$this->_nameField =",$name);
 //        return new User($object);
-        return $this->fetchRow("$this->_nameField =",$name);
+        return $this->fetchRow("$this->_nameField =", $name);
     }
-    
-    public static function UserList(){
+
+    /**
+     * Gets a list of known user name indexed by their id
+     * 
+     * @return array
+     */
+    public static function UserList() {
         $tusers = static::GetEntity();
-        $tusers->select(array($tusers->getIdField(),$tusers->getNameField()));
+        $tusers->select(array($tusers->getIdField(), $tusers->getNameField()));
         $users = $tusers->fetchAll();
         $nameField = $tusers->getNameField();
-        foreach($users as $user){
-            $list[$user->id]=$user->$nameField;
+        foreach ($users as $user) {
+            $list[$user->id] = $user->$nameField;
         }
         return $list;
     }
-}
 
+}
