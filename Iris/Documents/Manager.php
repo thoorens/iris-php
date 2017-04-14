@@ -5,23 +5,14 @@ namespace Iris\Documents;
 use \Iris\Exceptions as _IEx_;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
  */
+
 
 /**
  *  A document manager for creating documents on the fly.
@@ -31,12 +22,18 @@ use \Iris\Exceptions as _IEx_;
  * @version $Id: $ *
  */
 class Manager {
+
     const GOTIT = 1;
     const BADNUMBER = 2;
     const NOTFOUND = 3;
 
-    protected static $_TutorialDir;
-    
+    /**
+     *
+     * @var string
+     * @deprecated since sept 2016
+     */
+//    protected static $_TutorialDir;
+
     /**
      *
      * @var Manager
@@ -45,9 +42,15 @@ class Manager {
 
     /**
      *
-     * @var string
+     * @var string 
      */
     protected $_baseDirectory;
+
+    /**
+     * A list of standard mime names corresponding with classical extensions
+     * 
+     * @var string
+     */
     protected $_mimeTypes = array(
         'pdf' => 'application/pdf',
         'ps' => 'application/postscript',
@@ -116,7 +119,6 @@ class Manager {
         if (!is_null(self::$_Instance)) {
             throw new _IEx_\FileException('One Document File Manager may be active at a time.');
         }
-        $this->_baseDirectory = \Iris\SysConfig\Settings::$DataFolder;
         self::$_Instance = $this;
     }
 
@@ -128,8 +130,9 @@ class Manager {
      */
     public function getFile($save, $params) {
         $protpriv = array_shift($params);
+        $baseDirectory = \Iris\SysConfig\Settings::$DataFolder;
         if ($protpriv == 'protected') {
-            $pathName = sprintf("%s/protected/%s", $this->_baseDirectory, implode('/', $params));
+            $pathName = sprintf("%s/protected/%s", $baseDirectory, implode('/', $params));
         }
         // get Magic Number for control in private area
         else {
@@ -139,7 +142,7 @@ class Manager {
             if ($internalSecurity != $externalSecurity) {
                 return self::BADNUMBER;
             }
-            $pathName = sprintf("%s/private/%s", $this->_baseDirectory, implode('/', $params));
+            $pathName = sprintf("%s/private/%s", $baseDirectory, implode('/', $params));
         }
         $name = basename($pathName);
         $mime = $this->_getMime($name);
@@ -147,10 +150,15 @@ class Manager {
             return $this->_execRead($save, $pathName, $mime);
         }
         ///if (\Iris\Engine\Mode::IsProduction()) {
-            return self::NOTFOUND;
+        return self::NOTFOUND;
         ///}
     }
 
+    /**
+     * 
+     * @param type $params
+     * @return type
+     */
     public function getResource($params) {
         $pathName = sprintf("%s/%s/ILO/%s", IRIS_ROOT_PATH, IRIS_LIBRARY, implode('/', $params));
         $name = basename($pathName);
@@ -163,19 +171,31 @@ class Manager {
         }
     }
 
-    
-    public function getTutorial($params) {
-        $tutorialDir = self::$_TutorialDir;
-        $pathName = sprintf("%s/%s/%s", IRIS_ROOT_PATH, $tutorialDir, implode('/', $params));
-        $name = basename($pathName);
-        $mime = $this->_getMime($name);
-        if (file_exists($pathName)) {
-            return $this->_execRead(FALSE, $pathName, $mime);
-        }
-        else {
-            return self::NOTFOUND;
-        }
-    }
+    /**
+     * An old method in relation with tutorials
+     * 
+     * @param type $params
+     * @return type
+     * @deprecated since version 2016
+     */
+//    public function getTutorial($params) {
+//        $tutorialDir = self::$_TutorialDir;
+//        $pathName = sprintf("%s/%s/%s", IRIS_ROOT_PATH, $tutorialDir, implode('/', $params));
+//        $name = basename($pathName);
+//        $mime = $this->_getMime($name);
+//        if (file_exists($pathName)) {
+//            return $this->_execRead(FALSE, $pathName, $mime);
+//        }
+//        else {
+//            return self::NOTFOUND;
+//        }
+//    }
+
+    /**
+     * 
+     * @param type $fileName
+     * @return string
+     */
     protected function _getMime($fileName) {
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
         if (isset($this->_mimeTypes[$ext])) {
@@ -203,8 +223,12 @@ class Manager {
         return self::GOTIT;
     }
 
-    public static function setTutorialDir($directory){
-        self::$_TutorialDir = $directory;
-    }
-    
+    /**
+     * 
+     * @param type $directory
+     * @deprecated since sept 2016
+     */
+//    public static function setTutorialDir($directory){
+//        self::$_TutorialDir = $directory;
+//    }
 }

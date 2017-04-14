@@ -46,7 +46,6 @@ class File extends \Iris\DB\Object {
     private $_dirField = 'Folder';
     private $_statusField = 'Statut';
 
-    
     /**
      * Fonction appelée par le constructeur:
      * -- création d'un compteur pour les liens temporaires
