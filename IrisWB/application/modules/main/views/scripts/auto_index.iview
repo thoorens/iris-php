@@ -1,0 +1,12 @@
+
+<div id="content" {wbBG()}>
+    {container->divMaster()}
+    <div {container->item("label1")}> 
+        Content 1
+    </div>
+    <div {container->item("label2")}> 
+        Content 2
+    </div>
+    {container->endMaster()}
+</div>
+

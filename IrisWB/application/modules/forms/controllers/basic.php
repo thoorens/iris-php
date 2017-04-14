@@ -10,7 +10,7 @@ namespace modules\forms\controllers;
  *  
  * This is part of the WorkBench fragment
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -20,52 +20,54 @@ class basic extends _forms {
 
 //    private $_SFF;
 //    private $_DFF;
-    
+
+    /**
+     * All actions display with the same view script
+     */
     protected function _init() {
         $this->setViewScriptName('common/all');
-        //$this->_SFF = new \Iris\Forms\StandardFormFactory();
     }
 
     /**
      * A simple form with def layout
      */
     public function htmlAction() {
-        $this->_form(new \Iris\Forms\StandardFormFactory(), 'Simple');
+        $this->__form = $this->SimpleForm([])->render();
     }
 
     /**
      * A simple form with def layout in Dojo mode
      */
     public function dojoAction() {
-        $this->_form(new \Dojo\Forms\FormFactory(new \Dojo\Forms\FormFactory()), 'Simple');
+        $this->__form = $this->SimpleForm(['factoryType' => \Iris\Forms\FormMaker::DOJO])->render();
     }
 
     /**
      * A simple form with no layout
      */
     public function htmlnoloAction() {
-        $this->_form(new \Iris\Forms\StandardFormFactory(), 'Simple', ['layout' => 'no']);
+        $this->__form = $this->SimpleForm(['layout' => 'no'])->render();
     }
 
     /**
      * A simple form with no layout in Dojo mode
      */
     public function dojonoloAction() {
-        $this->_form(new \Dojo\Forms\FormFactory(), 'Simple', ['layout' => 'no']);
+        $this->__form = $this->SimpleForm(['factoryType' => \Iris\Forms\FormMaker::DOJO, 'layout' => 'no'])->render();
     }
 
     /**
      * A simple form with tab layout
      */
     public function htmltabloAction() {
-        $this->_form(new \Iris\Forms\StandardFormFactory(), 'Simple', ['layout' => 'tab']);
+        $this->__form = $this->SimpleForm(['layout' => 'tab'])->render();
     }
 
     /**
      * A simple form with tab layout in Dojo Mode
      */
     public function dojotabloAction() {
-        $this->_form(new \Dojo\Forms\FormFactory(), 'Simple', ['layout' => 'tab']);
+        $this->__form = $this->SimpleForm(['factoryType' => \Iris\Forms\FormMaker::DOJO,'layout' => 'tab'])->render();
     }
 
     /**
@@ -73,7 +75,7 @@ class basic extends _forms {
      */
     public function perline2Action() {
         //$elements = FormConst::
-        $this->_form(new \Iris\Forms\StandardFormFactory(), 'MultiPerline', ['perline' => 2]);
+        $this->__form = $this->MultiPerlineForm(['perline' => 2])->render();
     }
 
     
@@ -81,27 +83,17 @@ class basic extends _forms {
      * Test of multi elements with only two elements per line in Dojo Mode
      */
     public function perline2DojoAction() {
-        $this->_form(new \Dojo\Forms\FormFactory(), 'MultiPerline', ['perline' => 2]);
+        $this->__form = $this->MultiPerlineForm(['factoryType' => \Iris\Forms\FormMaker::DOJO,'perline' => 2])->render();
     }
 
     public function requiredAction(){
-        $this->_form(new \Iris\Forms\StandardFormFactory(), 'Required');
+        $this->__form = $this->RequiredForm()->render();
     }
     
     public function requiredDojoAction(){
-        $this->_form(new \Dojo\Forms\FormFactory(), 'Required');
+        $this->__form = $this->RequiredForm(['factoryType' => \Iris\Forms\FormMaker::DOJO])->render();
     }
     
-    
-    
-    private function _form($formFactory, $formClass, $specials = []) {
-        $formClass .= 'Form';
-        /* @var $form \Iris\Forms\_Form */
-        $form = $this->$formClass($formFactory, $specials);
-        $this->__form = $form->render();
-        \Iris\Users\Session::GetInstance()->oldPost = $_POST;
-        //iris_debug($this->_view->form);
-    }
 
     public function groupsAction() {
         $form = $this->makeGroupForm(new \Iris\Forms\StandardFormFactory());

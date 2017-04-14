@@ -2,10 +2,13 @@
 <html>
     <!-- This layout is used only as an exemple of an application defined layout -->
     <head>
+        <title></title>
         {head()}
         {wbCSS()}
+        {styleLoader('/css/css2.css')}
     </head>
-    <body {wbColors('GREEN2')}>
+    <body {wbColors('BLUE')}>
+        {REM}A variant of the application layout to test script and style loader {/REM}
         <div id="main">
             {ILO_adminToolBar()}
             <div id="container">
@@ -13,23 +16,17 @@
                     <h1>{Title}</h1>
                 </div><!-- Title -->
                 <div class="column one">
-                    {if($specialScreen)}
-                        {partial('commons/column1', $this)}
-                    {else}
-                        {subView(1)}
-                    {/if}
-                    <div class="dblogo">
-                        {dbLogo()}
-                    </div>
+                    {partial('commons/column1', $this)}
                 </div><!-- 1 -->
                 <div class="column two2">
                     {mainView()}
                 </div><!-- 2 -->
-
+                
             </div><!-- container -->
             <div id="foot">
-                wbFooter()}
+                {wbFooter()}
             </div><!--foot-->
         </div><!--main-->
     </body>
 </html>
+{styleLoader('/css/css5.css')}

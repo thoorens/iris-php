@@ -8,7 +8,7 @@ namespace modules\db\controllers;
   * More details about the copyright may be found at
   * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
   *  
-  * @copyright 2011-2015 Jacques THOORENS
+  * @copyright 2011-2017 Jacques THOORENS
   */
 
 /**
@@ -24,7 +24,7 @@ namespace modules\db\controllers;
 class objects extends _db {
 
     protected function _init() {
-        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
+        $this->_entityManager = \models\TInvoices::DefaultEntityManager();
     }
 
     public function simpleAction() {

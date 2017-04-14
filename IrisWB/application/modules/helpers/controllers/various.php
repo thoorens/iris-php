@@ -8,24 +8,52 @@ namespace modules\helpers\controllers;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
-/**
- * Various helpers <ul>
- * <li>welcome
- * <li>table
- * </ul>
- * @author jacques
- * @license not defined
- */
 class various extends _helpers {
 
+    public function _init() {
+        $this->setDefaultScriptDir('various');
+    }
+
     /**
-     * Different uses of welcome view helper
+     * Will show how the controller helper are found
+     * in the librairies
      */
-    public function welcomeAction() {
-        
+    public function controllersAction() {
+        // this controller helper is in main module
+        $this->__computeVar = $this->compute(7, '+');
+        // this controller helper is in current module
+        $this->__localComputeVar = $this->localCompute(8, '*');
+        // this controller helper is in current module and mask the one in main module
+        $this->__localCompute2Var = $this->compute2(9, '-');
+        // this controller helper is in Iris library
+        $this->__systemComputeVar = $this->testCompute(10, '/');
+        // this controller helper is in Iris library
+        $this->__systemComputeVar2 = $this->iris_testCompute(11, '/');
+        // this controller helper is in Dojo library
+        $this->__libComputeVar = $this->dojo_compute(12, '-');
+    }
+
+    /**
+     * Will show how view helper are found in the librairies
+     */
+    public function viewsAction() {
+        // all stuff are in the view
+    }
+
+    public function multipleCSSAction() {
+        $this->_setLayout('specialCSS');
+        $arguments = [1 => 'body.class1:{backgroundcolor:blue}'];
+        \Iris\views\helpers\StyleLoader::FunctionCall($arguments);
+        \Iris\views\helpers\StyleLoader::FunctionCall(['css1.css']);
+    }
+
+    public function multipleJSAction() {
+        $this->_setLayout('specialJS');
+        \Iris\views\helpers\JavascriptLoader::FunctionCall('script1.js');
+        \Iris\views\helpers\JavascriptLoader::FunctionCall(['test1', "alert('Message 1 sur 5');"]);
     }
 
     /**
@@ -33,43 +61,58 @@ class various extends _helpers {
      * 
      * @todo Implement a simple example
      */
-    public function tableAction(){
-        $this->setViewScriptName('all');
-        $this->__table = '';
+    public function tableAction() {
+        $table1 = new \Iris\Subhelpers\Table();
+        $table1 = \Iris\views\helpers\Table::FunctionCall('demo');
+        $table1->setContent([
+            ['un', 'deux'],
+            ['one', 'two']
+        ]); 
+        $this->__table1 = $table1->render();
+        
+        $this->__vocabulary = [
+            ['manger', 'to eat'],
+            ['boire', 'to drink'],
+            ['dormir', 'to sleep'],
+            ['travailler', 'to work'],
+            ['vivre', 'to live'],
+        ];
+        $this->__titles = [['french', 'english']];
+        
+       
+        $this->__table2 = new \Iris\Subhelpers\Table();;
     }
-    
+
     /**
      * A complete display of the french personal pronoun
      */
     public function pronounsAction() {
         $this->setViewScriptName('all');
-        $table = new \Iris\Subhelpers\Table('Pronouns', 5, 10, 'show');
+        $table = new \Iris\Subhelpers\Table('democ');
+        //\Iris\views\helpers\Table::FunctionCall()->SetColMark('-');
+        //$table::SetRawMark('!');
+        //$table::SetStyleSeperator('&');
+        //$table::SetTableCSS('mytab.css');
         $table->head = \TRUE;
-        $table->cellTag = 'th';
-        $table->setHeadCells([
-                    ['', '1st pers ', '1st pers ', '2nd pers', '3rd pers'],
-                    ['Mal. & fem', 'Mal. & fem', 'Mal', 'Fem.', 'Refl.']
-                ])->setHeadSpan('C', 0, 0, 2)
-                ->setHeadSpan('R', 0, 0, 2)
-                ->setHeadSpan('C', 0, 0, 2)
-                ->setHeadSpan('C', 0, 4, 2)
-                ->setContent([
-                    ['Sing', 'Subject', '!je!', '!tu!', '!il!', '!elle!', ''],
-                    ['Dir. Object', '!me!', '!te!', '!le!', '!la!', '!se!'],
-                    ['Ind. object', '!me!', '!te!', '!lui!', '!se!'],
-                    ['Renf <br>Compl<br>Attr.', '!moi!', '!toi!', '!lui!', '!elle!', '!soi!'],
-                    ['Plur.', 'Subject', '!nous!', '!vous!', '!ils!', '!elles!', ''],
-                    ['Dir. Object', '!nous!', '!vous!', '!les!', '!soi!'],
-                    ['Ind. object', '!nous!', '!vous!', '!leur!', '!se!'],
-                    ['Renf <br>Compl<br>Attr.', '!nous!', '!vous!', '!eux!', '!elles!', '!soi!'],
+        //$table->cellTag = 'th';
+        $table->setTitles([
+                    [' ', '_', '1st pers', '2nd pers', '3rd pers', '_', '_'],
+                    ['|', '_|', 'Male. & female', 'Mal. & fem', 'Male', 'Female.', 'Refl.']
                 ])
-                ->setBodySpan('R', 0, 0, 4)
-                ->setBodySpan('R', 4, 0, 4)
-                ->setBodySpan('C', 2, 3, 2)
-                ->setBodySpan('C', 5, 3, 2)
-                ->setBodySpan('C', 6, 3, 2)
-                ->setCaption("French personal pronouns")
-                ->setFormated(\TRUE);
+                ->setContent([
+                    ['0µSing', '0µSubject', 'je', 'tu', '2µil', '3µelle', ''],
+                    ['|', '0µDir. Object', 'me', 'te', '2µle', '3µla', 'se'],
+                    ['|', '0µInd. object', 'me', 'te', 'lui', '_', 'se'],
+                    ['|', '0µRenf Compl. Attr.', 'moi', 'toi', '2µlui', '3µelle', 'soi'],
+                    ['0µPlur.', '0µSubject', 'nous', 'vous', '2µils', '3µelles', ''],
+                    ['|', '0µDir. Object', 'nous', 'vous', 'les', '_', 'soi'],
+                    ['|', '0µInd. object', 'nous', 'vous', 'leur', '_', 'se'],
+                    ['|', '0µRenf. Compl. Attr.', 'nous', 'vous', '2µeux', '3µelles', 'soi'],
+                ])
+                ->setCaption("French personal pronouns", \Iris\Subhelpers\Table::CAPTION_BOTTOM)
+                //->setFormated(\TRUE)
+                ->setClass('democ')
+                ->setHeadBody(\TRUE);
         $this->__table = $table->__toString();
     }
 

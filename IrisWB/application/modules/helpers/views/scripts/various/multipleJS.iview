@@ -1,0 +1,14 @@
+{wbHeader()}
+<div>
+    {javascriptLoader('/js/script3.js')}
+    {javascriptLoader('test3',"alert('Message 3 sur 5')")}
+    <div id="page">
+        {welcome(2)}
+        <p>
+            {_('Now you can begin to modify this page...',TRUE)}
+        </p>
+    </div>
+
+</div>
+     {javascriptLoader('/js/script4.js')}
+     {javascriptLoader('test4',"alert('Message 4 sur 5')")}       

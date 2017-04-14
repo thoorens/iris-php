@@ -13,4 +13,9 @@
     {button(['HTML','htmlFile','HTML 5 version with ini file'])}
     {button(['DOJO','dojoFile','Dojo version with ini file'])}
 </fieldset>
+<fieldset style="width: 200px;display: inline-block;">
+    <legend>Avec fichier</legend>
+    {button(['HTML','htmlFile','HTML 5 version with ini file'])}
+    {button(['DOJO','dojoFile','Dojo version with ini file'])}
+</fieldset>
 

@@ -1,0 +1,17 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <div>
+        <h3>Utilisation de GetEntity()</h3>
+        <ul>
+            {foreach(links, text,url)}
+                <li>
+                    {link($text,$url)}
+                </li>
+            {/foreach}
+
+        </ul>
+    </div>
+    {dbWarning()}
+</div>
+
+

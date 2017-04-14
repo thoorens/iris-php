@@ -1,10 +1,15 @@
 <h2>"Invoices" database</h2>
 {button('Show database diagram','/db/sample/structure','Show the five table structures and their relations')}<br />
-{button('Delete the data','/db/sample/deletedata','Clear all the data (tables and views)')}<br />
-{button('Create the database','/db/sample/init','Create the tables, views and data')}<br />
-{button('Verify the database','/db/sample/verify','Verify the existence of the tables and view')}<br />
-{if($sqlite)}
-    {button('Erase the database','/db/sample/deletefile','Deletes the file containing the database')}<br />
+{button('Manage database','/db/sample/manage','Create or delete the tables')}<br />
+{if(\FALSE)}
+    {button('Delete the data','/db/sample/deletedata','Clear all the data (tables and views)')}<br />
+    {button('Create the database','/db/sample/init','Create the tables, views and data')}<br />
+ {/if}   
+    {button('Verify the database','/db/sample/verify','Verify the existence of the tables and view')}<br />
+ {if(\FALSE)}   
+    {if($sqlite)}
+        {button('Erase the database','/db/sample/deletefile','Deletes the file containing the database')}<br />
+    {/if}
 {/if}
 <hr />
 {button('Show customers','/db/show/customers','Show all the customers of the example')}<br />
@@ -13,9 +18,9 @@
 {button('Show orders','/db/show/orders','Show all the orders of the example')}<br />
 {button('Show events','/db/show/events','Show all the events of the example')}<br />
 <hr />
-{button('Manage customers','/db/customers/show','')}<br />
-{button('Manage invoices','/db/invoices/show','')}<br />
-{button('Manage products','/db/products/show','')}<br />
-{button('Manage orders','/db/orders/show','')}<br />
-{button('Manage events','/db/events/show','')}<br />
+{button('Manage customers','/db/customers/manage','')}<br />
+{button('Manage invoices','/db/invoices/manage','')}<br />
+{button('Manage products','/db/products/manage','')}<br />
+{button('Manage orders','/db/orders/manage','')}<br />
+{button('Manage events','/db/events/manage','')}<br />
 

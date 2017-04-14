@@ -1,0 +1,6 @@
+{REM}A simple display of the table{/REM}
+
+{table1}
+<hr>
+
+{table('demo')->setTitles($titles)->setContent($vocabulary)}

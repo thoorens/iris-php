@@ -1,3 +1,4 @@
+{wbHeader($this)}
 <div>
     <p class="warningUnknown">
         {status}

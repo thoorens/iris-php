@@ -25,7 +25,7 @@ class RequiredForm extends \modules\forms\controllers\helpers\_MakeForm {
 
     protected function _collectComponent() {
         $this->_textInput()->addValidator('Required');
-        $this->_passwordInput()->addValidator('required');
+        $this->_passwordInput()->addValidator('Required');
         //$this->_hiddenInput()->addValidator('required');
         $this->_dateInput()->addValidator('Required');
         $this->_timeInput()->addValidator('Required');

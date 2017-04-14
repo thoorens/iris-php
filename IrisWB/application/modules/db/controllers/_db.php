@@ -1,4 +1,5 @@
 <?php
+
 namespace modules\db\controllers;
 
 /*
@@ -7,7 +8,7 @@ namespace modules\db\controllers;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2016 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -46,7 +47,7 @@ abstract class _db extends \modules\_application {
      * 
      * @param int $num
      */
-    public function errorAction($num=0) {
+    public function errorAction($num = 0) {
         $this->__Title = "Error in database";
         $this->setViewScriptName('/commons/error');
     }
@@ -54,23 +55,7 @@ abstract class _db extends \modules\_application {
     public static function GetSampleMetadata($mode) {
         switch ($mode) {
 
-            case self::FROM_STRING:
-                $metadata = <<<STRING
-TABLE@customers 
-FIELD@fieldName:id!type:INTEGER!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*TRUE*!primary:*TRUE*!foreignPointer:*NULL* 
-FIELD@fieldName:Name!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
-FIELD@fieldName:Address!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
-FIELD@fieldName:Email!type:TEXT!size:0!defaultValue:!notNull:*TRUE*!autoIncrement:*FALSE*!primary:*FALSE*!foreignPointer:*NULL* 
-PRIMARY@id
-STRING;
-                break;
-            case self::FROM_TABLE:
-                $EM = \models\_invoiceEntity::DefaultEntityManager();
-                $tCustomers = \models\TCustomers::GetEntity($EM);
-                $metadata = $tCustomers->getMetadata();
-                // it is necessary to unregister the entity if we want use a new class for the entity
-                $EM->unregisterEntity('customers');
-                break;
+
 
             case self::FROM_OBJECT:
                 $metadata = new \Iris\DB\Metadata('customers');
@@ -110,10 +95,6 @@ STRING;
                 break;
         }
         return $metadata;
-    }
-
-    protected function _getSampleMetadata($mode) {
-        return self::GetSampleMetadata($mode);
     }
 
     /**

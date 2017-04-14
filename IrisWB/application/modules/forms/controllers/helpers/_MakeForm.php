@@ -23,12 +23,13 @@ namespace modules\forms\controllers\helpers;
  */
 abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
 
-    private $_specialNames = [
-        'layout' => 'def',
-        'perline' => 4,
-    ];
+    private static $_DefaultValues;
+
+    
+
     protected $_layout;
     protected $_perline;
+    protected $_factoryType;
     protected $_formFactory;
     protected $_form;
     protected $_sampleData = [
@@ -38,14 +39,23 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
         8 => 'Android'
     ];
 
+    public static function __ClassInit() {
+        self::$_DefaultValues = [
+            'layout' => 'def',
+            'perline' => 4,
+            'factoryType' => 'standard',
+            //'factory' => \Iris\Forms\FormMaker::HTML
+        ];
+    }
+    
     /**
      * 
      * @param \Iris\Forms\_FormFactory $formFactory
-     * @param int $fields
+     * @param string[] $specials
      * @return \Iris\Forms\_Form
      */
-    public function help($formFactory = \NULL, $specials = []) {
-        foreach ($this->_specialNames as $name => $default) {
+    public function help($specials = []) {
+        foreach (self::$_DefaultValues as $name => $default) {
             $varName = "_$name";
             if (isset($specials[$name])) {
                 $this->$varName = $specials[$name];
@@ -54,12 +64,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
                 $this->$varName = $default;
             }
         }
-        if (is_null($formFactory)) {
-            $formFactory = \Iris\Forms\_FormFactory::GetDefaultFormFactory();
-        }
-        $this->_formFactory = $formFactory;
-
-        $this->_form = $formFactory->createForm('Test');
+        $this->_form = \Iris\Forms\FormMaker::HandMadeForm('Test',$this->_factoryType)->getForm();
         /* @var $layout string : defined in specials */
         switch ($this->_layout) {
             case 'def':
@@ -73,8 +78,14 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
                 break;
         }
         $this->_collectComponent();
+        \Iris\Users\Session::GetInstance()->oldPost = $_POST;
         return $this->_form;
     }
+
+    /* ---------------------------------------------------------------------------------
+     * List of fields
+     * ---------------------------------------------------------------------------------
+     */
 
     /**
      * A simple text
@@ -82,7 +93,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _textInput() {
-        return $this->_formFactory->createText('Name')
+        return $this->_form->createText('Name')
                         ->addTo($this->_form)
                         ->setTitle('If filled, this element will produce a «Name» field in POST.')
                         ->setLabel("The event name:");
@@ -93,7 +104,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _hiddenInput() {
-        return $this->_formFactory->createHidden('Hidden')
+        return $this->_form->createHidden('Hidden')
                         ->addTo($this->_form)
                         ->setValue('Not visible');
     }
@@ -103,7 +114,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _dateInput() {
-        return $this->_formFactory->createDate('EventDate')
+        return $this->_form->createDate('EventDate')
                         ->setLabel('The event date:')
                         ->setTitle('If filled, this element will produce an «EventDate» field in POST.')
                         ->addTo($this->_form);
@@ -114,7 +125,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _timeInput() {
-        return $this->_formFactory->createTime('EventHour')
+        return $this->_form->createTime('EventHour')
                         ->setLabel('Starting time:')
                         ->setTitle('If filled, this element will produce an «EventHour» field in POST.')
                         ->addTo($this->_form);
@@ -126,7 +137,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _passwordInput() {
-        return $this->_formFactory->createPassword('Password')
+        return $this->_form->createPassword('Password')
                         ->addTo($this->_form)
                         ->setTitle('If filled, this element will produce a «Password» field in POST.')
                         ->setLabel("Password:");
@@ -139,7 +150,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _radioIndex() {
         // The array index are used to set the names and select the
         // choosed value (see FALSE in addOptions)
-        return $this->_formFactory->createRadioGroup('Radio_index_notinited')
+        return $this->_form->createRadioGroup('Radio_index_notinited')
                         ->setPerLine($this->_perline)
                         ->addTo($this->_form)
                         ->setLabel('Radio group (by index) without initialization:')
@@ -156,7 +167,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _initedRadioIndex() {
         // The array index are used to set the names and select the
         // choosed value (see FALSE in addOptions)
-        return $this->_formFactory->createRadioGroup('Radio_index')
+        return $this->_form->createRadioGroup('Radio_index')
                         ->setPerLine($this->_perline)
                         ->addTo($this->_form)
                         ->setLabel('Radio group (by index):')
@@ -173,11 +184,11 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
     protected function _initedRadioLabel() {
         // The array values are used to set the names and select the
         // choosed value (see TRUE in addOptions)
-        return $this->_formFactory->createRadioGroup('Radio_name')
+        return $this->_form->createRadioGroup('Radio_name')
                         ->setPerLine($this->_perline)
                         ->addTo($this->_form)
                         ->setLabel('Radio group (by content):')
-                        ->setValue(\Iris\Engine\Superglobal::GetPost('Radio_name','Linux'))
+                        ->setValue(\Iris\Engine\Superglobal::GetPost('Radio_name', 'Linux'))
                         ->setTitle("Choose your prefered operating system")
                         ->addOptions($this->_sampleData, \TRUE);
     }
@@ -188,7 +199,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _checkInput() {
-        return $this->_formFactory->createCheckbox('Checkbox')
+        return $this->_form->createCheckbox('Checkbox')
                         ->addTo($this->_form)
                         ->setValue(\TRUE)
                         ->setTitle('If this checkbox is checked, a Checkbox field will appear in POST')
@@ -201,7 +212,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _select() {
-        return $this->_formFactory->createSelect('Select')
+        return $this->_form->createSelect('Select')
                         ->addTo($this->_form)
                         ->setLabel('Select option:')
                         ->addOptions($this->_sampleData)
@@ -215,7 +226,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _multiCheck() {
-        return $this->_formFactory->createMultiCheckbox('Multi')
+        return $this->_form->createMultiCheckbox('Multi')
                         ->addTo($this->_form)
                         ->setPerLine($this->_perline)
                         ->setLabel('Multicheck group:')
@@ -229,7 +240,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _buttons() {
-        return $this->_formFactory->createButtonGroup('ButtonGroup')
+        return $this->_form->createButtonGroup('ButtonGroup')
                         ->addTo($this->_form)
                         ->setPerLine($this->_perline)
                         ->setLabel('Button group:')
@@ -242,7 +253,7 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\_Element
      */
     protected function _submit() {
-        return $this->_formFactory->createSubmit('Submit')
+        return $this->_form->createSubmit('Submit')
                         ->setValue('Submit')
                         ->setLabel('Brol:')
                         ->setTitle('This button will produce a «Submit» field in POST')
@@ -254,4 +265,3 @@ abstract class _MakeForm extends \Iris\controllers\helpers\_ControllerHelper {
      */
     protected abstract function _collectComponent();
 }
-

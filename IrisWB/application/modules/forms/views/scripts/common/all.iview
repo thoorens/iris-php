@@ -2,3 +2,4 @@
 <div class="content" {wbBG()}>
     {form}
 </div>
+{partial('links')} 

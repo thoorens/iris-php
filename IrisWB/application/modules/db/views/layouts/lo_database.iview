@@ -18,7 +18,9 @@
                     {else}
                         {subView(1)}
                     {/if}
+                    <hr>
                     <div class="dblogo">
+                        Current database :
                         {dbLogo()}
                     </div>
                 </div><!-- 1 -->

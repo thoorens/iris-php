@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+    <head>
+        		    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="/images/favicon.ico" rel="shortcut icon" />
+		<title>Iris Work Bench - Ajax</title>
+		<meta name="keywords" content="" />
+<link  href="/!documents/file/css/wb.css" rel="stylesheet" type="text/css" />
+<link  href="/!documents/file/css/admintoolbar.css" rel="stylesheet" type="text/css" />
+<link  href="/!documents/file/css/dojo.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/dojo/1.11.2/dijit/themes/nihilo/nihilo.css">
+<script>
+    dojoConfig = {parseOnLoad: true, debug:true}
+</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js">
+</script><script type="text/javascript">
+
+/* Dojo code for ajax_get3c821bf6cb363658194a5a4b1a809051 */
+require(["dojo/request","dojo/dom","dojo/dom-construct","dojo/on","dojo/domReady!"],function(request,dom,domConst,on){ 
+        request("/!admin/ajax/toolbar/1",
+            {handleAs : "text"}).then(function(text){
+            domConst.place(text, 'iris_admintoolbar', 'replace')
+;
+        });
+  });
+
+/* Dojo code for myButton_click */
+require(["dojo/dom","dojo/on","dojo/dom-class","dojo/domReady!"],function(dom,on,domClass){ on(dijit.byId("myButton"), "click", {
+       domClass.add('zone2','yellowcolor');}
+  ); });
+</script>
+            </head>
+    <body class="nihilo"   style="background-color:#FA8">
+        <div id="main">
+            <div id="iris_admintoolbar" class="atb_white">
+    Admin toolbar should be here. If you don't see it, something is wrong with Ajax. 
+</div>
+            <div id="container">
+                <div id='Title'>
+                    <h1>Dojo EventManager : change the color of a text zone</h1>
+                </div><!-- Title -->
+                <div class="column one">
+                        <h2>Column 1</h2>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin porta nibh quis velit porta a venenatis lectus aliquet. Fusce sed magna id dolor pellentesque luctus. Pellentesque eleifend purus vitae quam tristique a fringilla quam faucibus.    
+                </div><!-- 1 -->
+                <div class="column two">
+                    <!-- Define 2 styles for coloring zone1 and zone2 -->
+<style>
+    .pinkcolor
+    {
+        background:lightpink;
+    }
+    .yellowcolor
+    {
+        background:lightyellow;
+    }
+    .greencolor
+    {
+        background-color: lightgreen;
+    }
+</style>
+<div id="wbexplain">
+<h2>Dojo EventManager: exemple simple</h2>
+Un bouton sert à commander le changement de couleur d'une zone. Beaucoup de javascript dans cet exemple.
+<p />
+</div>
+<div id="content"  style="background-color:#EEE">
+    <h3>This zone is pink (through a new class) added by javascript</h3>
+    <div id="zone1">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sodales velit vitae nibh euismod mollis. Duis semper orci et mauris mollis semper. Donec nec risus nisi, eget aliquam urna.    </div>
+    <h3>This zone is yellow (through a new class) added by javascript (and a button event)</h3>
+    <button  id="myButton"  title="Change the zone background color to yellow"  >Change color</button>
+    <div id="zone2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sodales velit vitae nibh euismod mollis. Duis semper orci et mauris mollis semper. Donec nec risus nisi, eget aliquam urna.    </div>
+</div>
+<!-- Change the color of zone1 to pink using Javascript (and Dojo) -->
+<script>
+    require(['dojo/dom-class'],function(domclass){
+    domclass.add('zone1','yellowcolor');
+    domclass.add('zone1','greencolor')
+});
+</script>
+
+<!-- EventManager receives a functionCode written in Dojo and so uses Dojo modules -->
+                 </div><!-- 2 -->
+                <div class="column three ">
+                    <h2>Column 3</h2>
+                    Integer quis arcu at libero rhoncus molestie a non odio. Sed at odio a odio cursus pellentesque. Vestibulum vel nisl vel magna euismod tempus. Aenean vel augue ac diam ultrices condimentum. Proin imperdiet turpis egestas nibh mollis quis malesuada ipsum auctor.                </div><!-- 3 -->
+            </div><!-- container -->
+            <div id="foot">
+                <b>Layout :</b> /application/modules/main/views/layouts/lo_main.iview - <b>MD5 finger print</b> : <span id="iris_md5"></span><br/>This page has not been translated into English<br><button    title="Accéder aux outils d'administration"  onclick="javascript:location.href='/!admin'">Administration</button>
+<button    title="Réinitialiser la session"  onclick="javascript:location.href='/!iris/reset'">RESET</button>
+<button  id="b_iris_md5"  title="Save the present MD5 signature"  onclick="javascript:location.href='Save MD5'">Save MD5</button>
+<button    title="See the code for Dojo EventManager : change the color of a text zone"  onclick="javascript:location.href='/show/code/ajax/javascript/index'">Show code</button>
+<button    title="Ajax reads after receiving a message with parameters"  onclick="javascript:location.href='/ajax/read/messages'">Previous</button>
+<button    title="Table of tests"  onclick="javascript:location.href='/index/toc'">TOC</button>
+<button    title="Dojo Synchro : send a message to a receiver"  onclick="javascript:location.href='/ajax/javascript/synchro'">Next</button>
+<button    title="The site in german"  onclick="javascript:location.href='/main/lang/de'"><img src="/!documents/file/images/locale/de.png"  alt="Image"    title="The site in german"  /></button>
+<button    title="Current language : English"  onclick="javascript:location.href='/ajax/javascript/index'"><img src="/!documents/file/images/locale/en_act.png"  alt="Image"    title="Current language : English"  /></button>
+<button    title="The site in spanish"  onclick="javascript:location.href='/main/lang/es'"><img src="/!documents/file/images/locale/es.png"  alt="Image"    title="The site in spanish"  /></button>
+<button    title="The site in french"  onclick="javascript:location.href='/main/lang/fr'"><img src="/!documents/file/images/locale/fr.png"  alt="Image"    title="The site in french"  /></button>
+<button    title="The site in italian"  onclick="javascript:location.href='/main/lang/it'"><img src="/!documents/file/images/locale/it.png"  alt="Image"    title="The site in italian"  /></button>
+<button    title="The site in dutch"  onclick="javascript:location.href='/main/lang/nl'"><img src="/!documents/file/images/locale/nl.png"  alt="Image"    title="The site in dutch"  /></button>
+            </div><!--foot-->
+        </div><!--main-->  
+    <script>
+//Generated by \Iris\views\helpers\Signature  
+require(["dojo/dom-class", "dojo/dom", "dojo/on", "dojo/domReady!"],
+function(domClass, dom, on){
+    dom.byId("iris_md5").innerHTML = "<i>not correct</i>";
+    domClass.add("iris_md5", "iris_md5_bad");    
+    on(dom.byId("b_iris_md5"), "click", function(){
+        javascript:location.href='/manager/md5/save/ajax/javascript/index/fbf199b75728bb2ab82e972158acd6cb';
+  });
+});
+</script>
+
+</body>
+</html>

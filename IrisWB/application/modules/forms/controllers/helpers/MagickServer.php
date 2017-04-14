@@ -19,6 +19,7 @@ namespace Iris\controllers\helpers;
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
+ * @deprecated replaced by FormMaker and its subclasses
  * @version :$Id:
  */
 class MagickServer extends \Iris\controllers\helpers\_ControllerHelper {
@@ -46,7 +47,7 @@ class MagickServer extends \Iris\controllers\helpers\_ControllerHelper {
      * @return type
      */
     public function magick_action() {
-        \models_internal\TAutoform::Create();
+        \models_internal\TAutoform::Verify();
         $em = \Iris\DB\_EntityManager::EMByNumber(1);
         $modelPath = "\\models_internal\\$this->model";
         $testEntity = $modelPath::GetEntity($em);

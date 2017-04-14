@@ -14,6 +14,11 @@ class links extends _helpers {
 
     const WARNING = 'Clic on one of the various links to go back to main page.';
 
+    protected function _init(){
+        $this->setDefaultScriptDir('links');
+    }
+
+
     /**
      * Some tests of links, image links and buttons
      */

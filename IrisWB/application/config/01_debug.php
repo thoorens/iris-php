@@ -4,7 +4,14 @@
  * Put a comment marker // before "return" to enable the debugging facilities,
  * otherwise the rest of this file will be ignored
  */
+Iris\SysConfig\Settings::$UserFields['id'] = 'UserId';
+Iris\SysConfig\Settings::$UserFields['UserName'] = 'NomUtilisateur';
+Iris\SysConfig\Settings::$UserFields['Role'] = 'Groupe';
+Iris\SysConfig\Settings::$UserFields['Email'] = 'Courriel';
+//Iris\Errors\Settings::ShowErrorOnProd('2017-03-01','18');
+//\Iris\SysConfig\Settings::SetDefaultUserName('inconnu');
 
+//i_d(Iris\SysConfig\Settings::$UserFields['id']);
 //$date = \DateTime();
 //iris_debug($date);
 //not_survivedate('t', strtotime('11/01/2015')));

@@ -24,7 +24,7 @@ class where extends _db {
      * Common part of the actions
      */
     protected function _init() {
-        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
+        $this->_entityManager = \Iris\DB\_Entity::DefaultEntityManager();
         $this->__action = "show";
         $this->dbState()->validateDB();
         $this->setDefaultScriptDir('where');

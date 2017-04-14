@@ -44,8 +44,8 @@ trait tOtherEM {
      * entity manager for this demo table.
      */
     public static function __ClassInit() {
-        die('Other');
         self::$_PrivateEntityManager = \Iris\DB\_EntityManager::EMFactory('sqlite:library/IrisWB/application/config/base/acl.sqlite');
+        //die('OK');
     }
 
     /*

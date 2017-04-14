@@ -1,0 +1,16 @@
+    {COMMENT} This view fragment has been generated with option dojo_tab{/COMMENT}
+    <h1>DEMO</h1>
+    {REM}Please put the following code in your view script{/REM}
+            
+<div id="content" {wbBG()}>
+    {container->setDim(250, 450)}    
+    {container->divMaster()}
+    <div {container->item("first")}> 
+        {loremIpsum([0,1,3,5,7,9,11])}
+    </div>
+    <div {container->item("second")}> 
+        {loremIpsum([2,4,6,8,10,12,14])}
+    </div>
+    {container->endMaster()}
+</div>
+        

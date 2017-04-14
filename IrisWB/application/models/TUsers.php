@@ -17,7 +17,7 @@ namespace models;
  * @see http://irisphp.thoorens.net
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class TUsers extends \Iris\Users\TUsers {
+class TUsers extends \Iris\Users\_TUsers {
 
     /**
      * This small trait permits to hide the magic of using a table from

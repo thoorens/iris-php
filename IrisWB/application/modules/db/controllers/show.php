@@ -20,7 +20,9 @@ namespace modules\db\controllers;
 class show extends _db {
 
     protected function _init() { 
-        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
+        $this->_entityManager = \Iris\DB\_EntityManager::GetAlternativeEM();
+        // Equivalent definition
+        //$this->_entityManager = \Iris\DB\_EntityManager::EMByNumber(-2);
         $this->__action = "show";
         //$this->dbState()->validateDB();
         $this->setDefaultScriptDir('show');

@@ -1,0 +1,12 @@
+<div>
+    <p class="warningUnknown">
+        {status}
+    </p>
+    {table('demo')->setTitles($titles)->setContent($users)}
+</div>
+<div>
+    <hr/>
+    {button('Login','/acl/login/login','Connect a user by its name and pasword')->acl()}
+    {button('Force Login','/acl/login/force','Connect a user by program')->acl()}
+    {button('Logout','/acl/login/logout','Disconnect the current user')->acl()}
+</div>

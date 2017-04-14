@@ -2,24 +2,13 @@
 
 namespace models_internal;
 
-
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -35,13 +24,20 @@ class TAutoform extends \Iris\DB\_Entity {
 
     protected $_idNames = ['id'];
 
-    public static function Create() {
+    /**
+     * Verifies an entity Autoform exists or creates it
+     * 
+     * @return \Iris\DB\_EntityManager
+     */
+    public static function Verify() {
         $sql = 'CREATE TABLE autoform (id INTEGER PRIMARY KEY  NOT NULL, Name TEXT, Hidden TEXT, EventDate DATETIME, EventHour DATETIME, Password TEXT, Checkbox BOOL)';
-        $em = \Iris\DB\_EntityManager::EMByNumber(1); //GetInstance();
+        //$em = \Iris\DB\_EntityManager::EMByNumber(1); //GetInstance();
+        $em = \models\TInvoices::GetEM();
         $list = $em->listTables();
         if (!in_array('autoform', $list)) {
             $em->directSQLExec($sql);
         }
+        return $em;
     }
 
 }

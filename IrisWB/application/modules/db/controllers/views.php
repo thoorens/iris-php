@@ -26,7 +26,7 @@ class views extends _db {
      */
     protected function _init() {
         $this->setViewScriptName('/customers');
-        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
+        $this->_entityManager = \models\TInvoices::DefaultEntityManager();
         $this->dbState()->validateDB();
     }
 
@@ -49,7 +49,7 @@ class views extends _db {
      * A view management with a view entity name and a metadata
      */
     public function metadataAction() {
-        $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
+        $metadata = $this->_getObjectMetadata();        ////$this->_getSampleMetadata(self::FROM_OBJECT);
         // see _init for entity manager definition
         $eCustomer = \Iris\DB\ViewEntity::GetEntity('vcustomers2', $metadata, $this->_entityManager);
         $this->__Command = "\Iris\DB\ViewEntity::GetEntity('vcustomers2', &#36;metadata, &#36;EM)";
@@ -106,7 +106,7 @@ class views extends _db {
     public function testViewEntityAction() {
         $this->setViewScriptName('/tests');
         $EM = $this->_entityManager;
-        $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
+        $metadata = $this->_getObjectMetadata(); //$this->_getSampleMetadata(self::FROM_OBJECT);
 
         /* @var $results \Iris\controllers\helpers\StoreResults */
         $results = $this->storeResults();
@@ -147,7 +147,7 @@ class views extends _db {
     public function testViewModelAction() {
         $this->setViewScriptName('/tests');
         $EM = $this->_entityManager;
-        $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
+        $metadata = $this->_getObjectMetadata(); //$this->_getSampleMetadata(self::FROM_OBJECT);
 
         /* @var $results \Iris\controllers\helpers\StoreResults */
         $results = $this->storeResults();

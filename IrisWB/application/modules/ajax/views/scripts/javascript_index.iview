@@ -29,5 +29,5 @@
 </script>
 
 <!-- EventManager receives a functionCode written in Dojo and so uses Dojo modules -->
-eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('myButton', $functionCode)}
+{eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('myButton', $functionCode)}
  

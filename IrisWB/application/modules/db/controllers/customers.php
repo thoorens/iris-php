@@ -16,7 +16,7 @@ class customers extends _db {
         $this->__Title = "Customers manager";
     }
 
-    public function showAction() {
+    public function manageAction() {
         $icons = \models\crud\CrudIconManager::getInstance();
         $icons
                 // controller serving as a manager
@@ -31,7 +31,7 @@ class customers extends _db {
                 ->setIdField('id')
                 ->forceLanguage('en');
         // Get all the data in Customers
-        $EM = \models\_invoiceEntity::GetEM();
+        $EM = \models\TInvoices::GetEM();
         $tEntity = \models\TCustomers::GetEntity($EM);
         $this->__customers = $tEntity->fetchAll();
     }

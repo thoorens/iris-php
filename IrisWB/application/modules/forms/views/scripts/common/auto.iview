@@ -1,0 +1,5 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    {form}
+</div>
+{partial('autolinks',$this)} 

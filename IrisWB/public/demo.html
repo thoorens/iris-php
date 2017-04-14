@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>W3.CSS</title>
+        <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/nihilo/nihilo.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+        <script>
+            dojoConfig = {parseOnLoad: true, debug: true}
+        </script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js">
+        </script>
+        <link  href = "/!documents/file/css/dojo.css" rel = "stylesheet" type = "text/css" / >
+        <script>
+            /* Dojo code for AccordionContainer */
+            require(["dijit/layout/AccordionContainer", "dojo/parser", "dijit/layout/ContentPane", "dijit/layout/LinkPane"]);
+        </script>
+    </head>
+    <body>
+        <h2>Accordions</h2>
+        <p>An accordion is used to show (and hide) content that is broken into sections:</p>
+
+        <div class="w3-accordion w3-light-grey">
+            <button onclick="myFunction('Demo1')" class="w3-btn-block w3-left-align">Open Section 1</button>
+            <div id="Demo1" class="w3-accordion-content w3-container">
+                <h4>Section 1</h4>
+                <p>Some text..</p>
+            </div>
+            <button onclick="myFunction('Demo2')" class="w3-btn-block w3-left-align">Open Section 2</button>
+            <div id="Demo2" class="w3-accordion-content w3-container">
+                <h4>Section 2</h4>
+                <p>Some other text..</p>
+            </div>
+        </div>
+
+        <script>
+            function myFunction(id) {
+                var x = document.getElementById(id);
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show";
+                } else {
+                    x.className = x.className.replace(" w3-show", "");
+                }
+            }
+        </script>
+
+        <div id="content"  style="background-color:#FCC">
+            <div id="container" style="height:250px;width:450px" data-dojo-type="dijit.layout.AccordionContainer" data-dojo-id="container" >
+                <div  id="first" title="First tab" data-dojo-type="dijit.layout.ContentPane"  data-dojo-selected = "true" data-dojo-props=""> 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi volutpat risus a arcu mollis rhoncus. Duis eu elit nec urna iaculis consequat. 
+                    Proin porta nibh quis velit porta a venenatis lectus aliquet. Quisque consequat mattis orci, sed aliquet justo luctus id. 
+                    Sed consectetur sapien commodo eros aliquet iaculis. Proin ac sem bibendum dolor dignissim facilisis.    
+                </div>
+                <div  id="second" title="Second tab" data-dojo-type="dijit.layout.ContentPane"  data-dojo-props=""> 
+                    Quisque interdum lorem vel orci fermentum pretium. Integer quis arcu at libero rhoncus molestie a non odio. 
+                    Aenean rutrum tristique lectus, at dignissim justo hendrerit ut. Sed at odio a odio cursus pellentesque. 
+                    Fusce sed magna id dolor pellentesque luctus. Vestibulum vel nisl vel magna euismod tempus. 
+                    Fusce tincidunt massa non mauris imperdiet eget dapibus neque euismod.    
+                </div>
+
+            </div><!-- end container-->
+        </div>
+    </body>
+</html>
+
+
+

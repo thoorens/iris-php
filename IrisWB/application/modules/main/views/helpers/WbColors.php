@@ -1,39 +1,15 @@
 <?php
 
-
-//define('P_RED', '#FCC');
-//define('P_BLUE', '#CCF');
-//define('P_GREEN', '#CFC');
-//define('P_WHITE', '#FFF');
-//define('P_MAGENTA', '#FCF');
-//define('P_CYAN', '#CFF');
-//define('P_GRAY', '#CCC');
-
 namespace Iris\views\helpers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
- *
- * 
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2016 Jacques THOORENS
+ */
 
 /**
  * Management of colors in workbench
@@ -84,22 +60,22 @@ class WbColors extends \Iris\views\helpers\_ViewHelper {
             case 'WHITE':
                 return '#FFFF';
             case 'GRAY':
-                $color = array('#EEE', '#999', '777');
+                $color = ['#EEE', '#999', '777'];
                 return $color[$level - 1];
             case 'YELLOW':
-                $color = array('#FFC', '#FFA', 'FF8');
+                $color = ['#FFC', '#FFA', 'FF8'];
                 return $color[$level - 1];
             case 'BLUE':
-                $color = array('#CEF', '#ACF', '#8AF');
+                $color = ['#CEF', '#ACF', '#8AF'];
                 return $color[$level - 1];
             case 'GREEN':
-                $color = array('#CFC', '#AFA', '#8FA');
+                $color = ['#CFC', '#AFA', '#8FA'];
                 return $color[$level - 1];
             case 'RED':
-                $color = array('#FCC', '#FAA', '#F88');
+                $color = ['#FCC', '#FAA', '#F88'];
                 return $color[$level - 1];
             case 'ORANGE':
-                $color = array('#FEC','#FCA','#FA8','#F86');
+                $color = ['#FEC','#FCA','#FA8','#F86'];
                 return $color[$level - 1];
             default:
                 $length = strlen($name);

@@ -8,7 +8,7 @@ namespace modules\db\controllers;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
@@ -19,6 +19,26 @@ namespace modules\db\controllers;
  * @version $Id: $ */
 class sample extends _db {
 
+    /**
+     * The table exists and can be dropped
+     */
+    const DROP = 1;
+
+    /**
+     * The table does not exist and can be created
+     */
+    const CREATE = 2;
+
+    /**
+     * The table exists and cannot be droppred
+     */
+    const NODROP = 3;
+
+    /**
+     * The table does not exist and cannot be created
+     */
+    const NOCREATE = 4;
+
     protected function _init() {
         $this->setDefaultScriptDir('sample');
     }
@@ -27,7 +47,6 @@ class sample extends _db {
      * Show a picture of the example database structure
      */
     public function structureAction() {
-        //$this->dbOpen(); // a call to a helper
     }
 
     /**
@@ -53,9 +72,11 @@ class sample extends _db {
      * Deletes the example database
      * 
      * @param string $dbType the rdbms type
+     * @deprecated since version 2017
      */
     public function deletedataAction($unique = \FALSE) {
-        $this->dbOpen(); // a call to a helper
+        die('No more deletedata Action');
+        $em = \models\TCustomers::GetEM();
         $this->__Result = 'Database deleted';
         $this->setViewScriptName('status');
         \models\TCustomers::DropAll($unique);
@@ -64,10 +85,12 @@ class sample extends _db {
 
     /**
      * Deletes the database file (only in Sqlite context)
+     * @deprecated since version 2017
      */
     public function deletefileAction() {
+        die('No more deletefile Action');
         /* @var $em \Iris\DB\_EntityManager */
-        $em = $this->dbOpen(); // a call to a helper
+        $em = \models\TCustomers::GetEM();
         $this->__Result = 'The database file has been deleted';
         $type = $em->Type;
 //        \models\_invoiceEntity::DropAll();
@@ -79,12 +102,15 @@ class sample extends _db {
      * A way to qhickly verify that the database is working
      */
     public function verifyAction() {
-        $em = $this->dbOpen(\TRUE); // a call to a helper
+        $em = \models\TCustomers::GetEM();
         $expectedTables = \models\TInvoices::$InvoicesTable;
         $tables = $em->listTables();
+        //i_dnd($expectedTables);
+        //i_dnd($tables);
         $tNumber = $vNumber = 0;
         foreach ($expectedTables as $table) {
-            if (array_search($table, $tables)) {
+            //i_dnd($table. "_" .array_search($table, $tables));
+            if (array_search($table, $tables)!==\FALSE) {
                 if ($table[0] == 'v') {
                     $objects[] = [$table, 'view'];
                     $vNumber++;
@@ -107,6 +133,20 @@ class sample extends _db {
         else {
             $this->__Complete = \FALSE;
         }
+    }
+
+    public function manageAction() {
+        $em = \models\TCustomers::GetEM();
+        $expectedTables = \models\TInvoices::$InvoicesTable;
+        $tables = $em->listTables();
+    }
+
+    public function createAction($tableName) {
+        
+    }
+
+    public function deleteAction($tableName) {
+        
     }
 
     /**
@@ -145,6 +185,7 @@ class sample extends _db {
      */
     public function postgresqlAction() {
         //$this->deletedataAction();
+        $this->redirect('impossible/postgresql');
         $session = \Iris\Users\Session::GetInstance();
         $session->dbini = \Iris\DB\_EntityManager::POSTGRESQL;
         $this->reroute('/db/sample/structure');
@@ -167,11 +208,16 @@ class sample extends _db {
      */
     public function oracleAction() {
         //$this->deletedataAction();
+        $this->redirect('impossible/oracle');
         $session = \Iris\Users\Session::GetInstance();
         $session->dbini = \Iris\DB\_EntityManager::ORACLE;
         $this->reroute('/db/sample/structure');
     }
 
+    public function impossibleAction($type){
+        $this->__type = $type;
+    }
+    
     public function testAction() {
         $value = \Iris\Engine\Superglobal::GetSession('dbini', \Iris\DB\_EntityManager::DEFAULT_DBMS);
         $this->__data = $value;

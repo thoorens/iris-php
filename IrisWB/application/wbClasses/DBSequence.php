@@ -37,10 +37,10 @@ class DBSequence extends \Iris\Structure\DBSequence{
         $row = \models_internal\TSequences::GetItem($url);
         $currentLanguage = strtoupper(\Iris\Engine\Superglobal::GetSession('Language', 'en'));
         $message = $row->$currentLanguage;
-        $languages = ['EN','FR'];
+        $languages = ['EN','FR', 'SP'];
         $index = 0;
         $language = $currentLanguage;
-        while($index <2 and $message == \NULL or $message == ''){
+        while($index <2 and $message == \NULL and $message == ''){
             $language = $languages[$index++];
             $message = $row->$language;
         }

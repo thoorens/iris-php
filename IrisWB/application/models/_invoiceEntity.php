@@ -15,6 +15,8 @@ namespace models;
 /**
  * This abstract class has been replaced by the trait tInvoiceEntity
  * 
+ * This file has been moved to  BluePrint archives
+ * 
  * To access one of the static methods in the trait, use one of the model classes using the trait :<ul>
  * <li> TCustomers
  * <li> TEvents

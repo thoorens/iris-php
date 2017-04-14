@@ -1,0 +1,9 @@
+{wbHeader()}
+
+<div class="content" {wbBG()}>
+    <h2>System still not available</h2>
+    <div id="page">
+        {image("/!documents/file/logos/$type.png")}
+    </div>
+
+</div>

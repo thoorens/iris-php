@@ -3,24 +3,12 @@
 namespace modules\db\controllers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2011-2013 Jacques THOORENS
- *
- * 
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -31,15 +19,16 @@ namespace modules\db\controllers;
  * @license not defined
  */
 class tables extends _db {
+
+    use tMetadata;
     /**
      * Repeated from StoreResults
      */
-
     const TEXT = 1;
     const CODE = 2;
 
     protected function _init() {
-        $this->_entityManager = \models\_invoiceEntity::DefaultEntityManager();
+        $this->_entityManager = \Iris\DB\_EntityManager::EMByNumber(-2);
         $this->setViewScriptName('/customers');
         $this->dbState()->validateDB();
     }
@@ -54,9 +43,10 @@ class tables extends _db {
      * and metadata will be found in the table
      */
     public function nameAction() {
+        //i_d(\Iris\DB\_EntityManager::EMByNumber(-2));
         // see _init for entity manager definition
-        $eCustomer = \Iris\DB\TableEntity::GetEntity('customers2', $this->_entityManager);
-        $this->__Command = "\Iris\DB\TableEntity::GetEntity('customers2', &#36;EM)";
+        $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', $this->_entityManager);
+        $this->__Command = "\Iris\DB\TableEntity::GetEntity('customers', &#36;EM)";
         $this->_commonWorkOnCustomers($eCustomer);
     }
 
@@ -64,8 +54,8 @@ class tables extends _db {
      * Access to a table through its metadata. The name is found in the metadata.
      * The metadata are found in an object.
      */
-    public function metadataAction() {
-        $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
+    public function objectMDAction() {
+        $metadata = $this->_getObjectMetadata();
         // see _init for entity manager definition
         $eCustomer = \Iris\DB\TableEntity::GetEntity($metadata, $this->_entityManager);
         $this->__Command = "\Iris\DB\TableEntity::GetEntity(&#36;metadata, &#36;EM)";
@@ -76,8 +66,8 @@ class tables extends _db {
      * Access to a table through its metadata. The name is found in the metadata.
      * The metadata are serialized in a string
      */
-    public function metadata2Action() {
-        $metadata = $this->_getSampleMetadata(self::FROM_STRING);
+    public function serializedMDAction() {
+        $metadata = $this->_getSerializedMetadata();
         // see _init for entity manager definition
         $eCustomer = \Iris\DB\TableEntity::GetEntity($metadata, $this->_entityManager);
         $this->__Command = "\Iris\DB\TableEntity::GetEntity(&#36;metadata, &#36;EM)";
@@ -88,8 +78,8 @@ class tables extends _db {
      * Access to a table through its metadata. The name is found in the metadata.
      * The metadata are taken from another table
      */
-    public function metadata3Action() {
-        $metadata = $this->_getSampleMetadata(self::FROM_TABLE);
+    public function tableMDAction() {
+        $metadata = $this->_getTableMetadata($this->_entityManager);
         // see _init for entity manager definition
         $eCustomer = \Iris\DB\TableEntity::GetEntity($metadata, $this->_entityManager);
         $this->__Command = "\Iris\DB\TableEntity::GetEntity(&#36;metadata, &#36;EM)";
@@ -142,33 +132,34 @@ class tables extends _db {
     public function testTableEntityAction() {
         $this->setViewScriptName('/tests');
         $EM = $this->_entityManager;
-        $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
+        $metadata = $this->_getObjectMetadata();
+        ;
 
         /* @var $results \Iris\controllers\helpers\StoreResults */
         $results = $this->storeResults();
 
-        $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', $EM);
+        $eCustomer1 = \Iris\DB\TableEntity::GetEntity('customers', $EM);
         $results->addGoodResult("\Iris\DB\TableEntity::GetEntity('customers',&#36;EM)", 'OK', self::CODE);
 
-        $eCustomer = \Iris\DB\TableEntity::GetEntity($metadata, $EM);
+        $eCustomer2 = \Iris\DB\TableEntity::GetEntity($metadata, $EM);
         $results->addGoodResult("\Iris\DB\TableEntity::GetEntity(&#36;metadata,&#36;EM)", 'OK', self::CODE);
 
         try {
-            $eCustomer = \Iris\DB\TableEntity::GetEntity($EM);
+            $eCustomer3 = \Iris\DB\TableEntity::GetEntity($EM);
         }
         catch (\Exception $exception) {
             $results->addBadResult("\Iris\DB\TableEntity::GetEntity(&#36;EM)", $exception->getMessage(), self::CODE);
         }
 
         try {
-            $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', $metadata, $EM);
+            $eCustomer4 = \Iris\DB\TableEntity::GetEntity('customers', $metadata, $EM);
         }
         catch (\Exception $exception) {
             $results->addBadResult("\Iris\DB\TableEntity::GetEntity('customers', &#36;metadata, &#36;EM)", $exception->getMessage(), self::CODE);
         }
 
         try {
-            $eCustomer = \Iris\DB\TableEntity::GetEntity('customers', 'invoices', $EM);
+            $eCustomer5 = \Iris\DB\TableEntity::GetEntity('customers', 'invoices', $EM);
         }
         catch (\Exception $exception) {
             $results->addBadResult("\Iris\DB\TableEntity::GetEntity('customers', 'invoices',&#36;EM)", $exception->getMessage(), self::CODE);
@@ -183,35 +174,36 @@ class tables extends _db {
     public function testModelAction() {
         $this->setViewScriptName('/tests');
         $EM = $this->_entityManager;
-        $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
-        
+        $metadata = $this->_getObjectMetadata();
+        ;
+
         /* @var $results \Iris\controllers\helpers\StoreResults */
         $results = $this->storeResults();
 
-        $eCustomer = \models\TCustomers::GetEntity($EM);
+        $eCustomer1 = \models\TCustomers::GetEntity($EM);
         $results->addGoodResult("\models\TCustomers::GetEntity(&#36;EM)", 'OK', self::CODE);
 
         try {
-            $eCustomer = \models\TCustomers::GetEntity('customers', $EM);
+            $eCustomer2 = \models\TCustomers::GetEntity('customers', $EM);
         }
         catch (\Exception $exception) {
             $results->addBadResult("\models\TCustomers::GetEntity('customers',&#36;EM)", $exception->getMessage(), self::CODE);
         }
         try {
-            $eCustomer = \models\TCustomers::GetEntity($metadata, $EM);
+            $eCustomer3 = \models\TCustomers::GetEntity($metadata, $EM);
         }
         catch (\Exception $exception) {
             $results->addBadResult("\models\TCustomers::GetEntity(&#36;metadata,&#36;EM)", $exception->getMessage(), self::CODE);
         }
         try {
-            $eCustomer = \models\TCustomers::GetEntity('customers', $metadata, $EM);
+            $eCustomer3 = \models\TCustomers::GetEntity('customers', $metadata, $EM);
         }
         catch (\Exception $exception) {
             $results->addBadResult("\models\TCustomers::GetEntity('customers', &#36;metadata, &#36;EM)", $exception->getMessage(), self::CODE);
         }
 
         try {
-            $eCustomer = \models\TEmptyModel::GetEntity($EM);
+            $eCustomer5 = \models\TEmptyModel::GetEntity($EM);
         }
         catch (\Exception $exception) {
             $results->addBadResult("\models\TEmptyModel::GetEntity(&#36;EM)", $exception->getMessage(), self::CODE);
@@ -226,8 +218,9 @@ class tables extends _db {
     public function testEntityAction() {
         $this->setViewScriptName('/tests');
         $EM = $this->_entityManager;
-        $metadata = $this->_getSampleMetadata(self::FROM_OBJECT);
-        
+        $metadata = $this->_getObjectMetadata();
+        ;
+
         /* @var $results \Iris\controllers\helpers\StoreResults */
         $results = $this->storeResults();
 
@@ -252,5 +245,26 @@ class tables extends _db {
 
         $results->sendToView();
     }
+
+    public function tocAction() {
+        $this->setViewScriptName('toc');
+        // these parameters are only for demonstration purpose
+        $this->__links = [
+            'Entité axée sur le nom' => '/db/tables/name/',
+            'Entité axée sur des métadata définis à la main' => '/db/tables/objectMD/',
+            'Entité axée sur des métadata sérialisés' => '/db/tables/serializedMD/',
+            'Entité axée sur des métadata empruntés à une table' => '/db/tables/tableMD/',
+            'Entité axée sur le modèle' => '/db/tables/model/',
+            'Entité axée sur un modèle explicite' => '/db/tables/explicitModel/',
+            'Entité axée sur ' => '/db/tables/metadataModel/',
+            'Entité axée sur une table d\'entité' => '/db/tables/testTableEntity/',
+            'Entité axée sur un modèle de test' => '/db/tables/testModel/',
+            'Usage interdit avec _Entity' => '/db/tables/testEntity/'
+        ];
+    }
+
+    
+
+
 
 }

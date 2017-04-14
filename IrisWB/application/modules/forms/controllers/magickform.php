@@ -15,9 +15,23 @@ namespace modules\forms\controllers;
 
 /**
  * This is a test for Autoform class
+ * @deprecated a test project about AutoFormFactory
  */
 class magickform extends _forms {
 
+    protected function _init() {
+        $this->setViewScriptName('all');
+    }
+
+    
+    public function testAction($type = 0){
+        $realType = $type === 0 ? \NULL : $type;
+        $maker = \Iris\Forms\FormMaker::HandMadeForm('test', $realType);
+        $form = $maker->getForm();
+        $this->__form = $form->render();
+    }
+    
+    
     /**
      * A simple standard test for MagickForm (in html mode)
      * 

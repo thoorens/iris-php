@@ -2,18 +2,26 @@
 
 namespace modules\acl\controllers;
 
+/*
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2017 Jacques THOORENS
+ */
 /**
  * Project : srv_IrisWB
  * Created for IRIS-PHP 1.0 RC2
  * Description of login
- * 
- * @author 
- * @license 
+ *
+ * @author
+ * @license
  */
 class login extends _acl {
 
     /**
-     * Settings specific to IrisWB display and sequence integration 
+     * Settings specific to IrisWB display and sequence integration
      */
     protected function _init() {
         $this->_setLayout('main');
@@ -22,9 +30,9 @@ class login extends _acl {
     }
 
     /**
-     * Displays information about the loged user and offer action buttons 
+     * Displays information about the loged user and offer action buttons
      * to make a change
-     * 
+     *
      * @param int $status if status is not 0, a message insists if the
      * user is not connected
      */
@@ -38,11 +46,23 @@ class login extends _acl {
         }
     }
 
+    /**
+     * This page will be only accessible if the user has been identified
+     */
     public function welcomeAction() {
         $this->_whoami();
         $this->__status = '';
     }
 
+    /**
+     * Place user data in the view <ul>
+     * <li> id
+     * <li> name
+     * <li> role
+     * <li> email address
+     * </ul>
+     * @return type
+     */
     private function _whoami() {
         $identity = \Iris\Users\Identity::GetInstance();
         $id = $identity->getId();
@@ -53,21 +73,37 @@ class login extends _acl {
         return $id;
     }
 
+    /**
+     * Lists all the known user
+     */
+    public function listAction(){
+        $entity = \models\TUsers::GetEntity();
+        // we don't need the password field
+        $entity->select(['id','name','role','email']);
+        $users = $entity->fetchAllInArray();
+        $this->__titles = ['id','name','role','email'];
+        $this->__users = $users;
+        $this->__status = 'Liste des utilisateurs reconnus';
+    }
+
+    /**
+     * Permits to login
+     */
     public function loginAction() {
         $login = new \Iris\Users\Login();
-
+        $login
         // in case of good user/password pair
-        $login->setWelcomeUrl('/acl/login/welcome')
-                // in case of a bad password for an existing 
+                ->setWelcomeUrl('/acl/login/welcome')
+                // in case of a bad password for an existing user
                 ->setBadPairUrl('/acl/login/index/1')
                 // in case of a bad account, it is possible to
                 // switch to an alternative login screen (not frequent)
                 ->setContinuationURL('/acl/login/login2')
                 // default value in case of error
                 //->setErrorURL('/error')
-                ->setNameField('Name')
-                ->setEntity(\models\TUsers::GetEntity());
-        $login->getForm()->setLayout(new \Iris\Forms\TabLayout);
+                ->setNameField('Name');
+                //->setEntity(\models\TUsers::GetEntity());
+        $login->getForm()->setLayout('NoLayout');
         $next = $login->login('\.\,');
         if (is_string($next)) {
             $this->reroute($next, TRUE);
@@ -77,7 +113,7 @@ class login extends _acl {
     }
 
     /**
-     * Small change if second try
+     * Permits to login second try
      */
     public function login2Action() {
         $this->loginAction();
@@ -102,15 +138,15 @@ class login extends _acl {
 
 
         // Method 1 : using a serialized string
-        $identity->unserialize('14&smith&tester&test@irisphp.org&' . $now);
+        //$identity->unserialize('14&smith&tester&test@irisphp.org&' . $now);
 
         // Method 2 : creating a user and settings its attributes
         $identity->setId(14)
                 ->setName('smith')
                 ->setRole('tester')
                 ->setEmailAddress('smith@irisphp.org')
-                ->setTimer($now)
-                ->set;
+                ->setTimer($now);
+                //->set;
 
         $identity->sessionSave();
         $this->reroute('/acl/login/welcome');

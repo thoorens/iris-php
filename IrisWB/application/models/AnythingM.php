@@ -40,7 +40,7 @@ class AnythingM extends \Iris\DB\ViewEntity {
     protected $_entityName = 'vcustomers';
 
     protected function _readMetadata($metadata = \NULL){
-        return db::GetSampleMetadata(db::FROM_OBJECT);
+        //return $this->_//db::GetSampleMetadata(db::FROM_OBJECT);
     }
     
 }
