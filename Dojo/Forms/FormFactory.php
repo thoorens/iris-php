@@ -44,13 +44,16 @@ class FormFactory extends \Iris\Forms\_FormFactory {
      * @param type $options
      * @return Elements\Editor 
      */
-    public function createEditor($name, $options = NULL) {
+    public function createEditor($name, $options = []) {
         return new Elements\Editor($name, $options);
     }
 
-    public function createSubmit($name, $options = NULL) {
-        //print('dojo submit<br>');
-        return new Elements\Submit($name, $options);
+    public function createSubmit($name, $options = []) {
+        return new Elements\Submit($name, 'submit', $options);
+    }
+
+    public function createReset($name, $options = []) {
+        return new Elements\Submit($name, 'reset', $options);
     }
 
 //    public function createPassword($name,$subType,$options = array()){

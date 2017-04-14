@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Dojo\Forms\Elements;
 
 /*
@@ -10,7 +8,7 @@ namespace Dojo\Forms\Elements;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -44,7 +42,7 @@ class Submit extends \Iris\Forms\_Element {
         parent::__construct($name, 'button', $options);
         $this->_canDisable = FALSE;
         $this->_labelPosition = self::NONE;
-        $this->_subtype = 'submit';
+        $this->_subtype = $type;
         $this->setDijitType('dijit/form/Button');
         \Dojo\Engine\Bubble::GetBubble('formButton')
                 ->addModule("dijit/form/Button")

@@ -16,6 +16,8 @@ namespace Dojo\Forms\Elements;
  * Creates a form automatically
  *
  * Project IRIS-PHP
+ * 
+ * This file has been moved to BluePrint archives
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org

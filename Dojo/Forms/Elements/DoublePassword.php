@@ -1,10 +1,6 @@
 <?php
 
-
-
 namespace Dojo\Forms\Elements;
-
-use Iris\Forms as ifo;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -23,9 +19,9 @@ use Iris\Forms as ifo;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
-    
+
     use \Dojo\Forms\tDojoDijit;
-    
+
     /**
      * The constructor creates a group and loads all Dojo material needed
      * 
@@ -33,7 +29,7 @@ class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
      * @param \Iris\Forms\_FormFactory $formFactory the form used to create it
      * @param mixed $options special options
      */
-    public function __construct($name, $formFactory, $options = array()) {
+    public function __construct($name, $formFactory, $options = []) {
         \Iris\Forms\Elements\_ElementGroup::__construct($name, 'dl', $formFactory, $options);
         $type = "dojox.form.PasswordValidator";
         \Dojo\Engine\Bubble::GetBubble($type)
@@ -66,7 +62,7 @@ class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
     /**
      * You can't add options to a DoublePassword (subcomponents are internally managed)
      */
-    public function addOptions($dummy, $dummy2=FALSE) {
+    public function addOptions($dummy, $dummy2 = FALSE) {
         throw new \Iris\Exceptions\FormException('addOptions is reserved as an internal method');
     }
 
@@ -98,15 +94,12 @@ class DoublePassword extends \Iris\Forms\Elements\DoublePassword {
     public function validate() {
         $valid = parent::validate();
         if ($valid and $this->getValue() == NULL) {
-            $this->_pwd1->setError($this->_('The two passwords do not match',TRUE));
+            $this->_pwd1->setError($this->_('The two passwords do not match', TRUE));
             return FALSE;
         }
         else {
             return $valid;
         }
     }
-   
 
 }
-
-
