@@ -11,7 +11,24 @@ namespace Iris\Engine;
  */
 
 /**
- * A singleton has only on instance and must have a non public constructor
+ * A singleton has only on instance and must have a non public constructor.
+ * This trait is used by the following classes : <ul>
+ * <li> Dojo\Ajax\Code
+ * <li> Dojo\Manager
+ * <li> Dojo\Subhelpers\Animator
+
+ * <li> Iris\Engine\Log
+ * <li> Iris\Engine\_coreLoader
+ * <li> Iris\MVC\Layout
+ 
+ * <li> Iris\Subhelpers\Head
+ * <li> Iris\Subhelper\_SubHelper
+ * <li> Iris\SysConfig\_Settings
+
+ * <li> modules\system\classes\_Mother in IrisWB library
+ 
+ * <li> TextForma\_ConversionMD
+ * </ul>
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org

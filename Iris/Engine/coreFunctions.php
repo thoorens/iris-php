@@ -48,11 +48,11 @@ function __autoload($className) {
  * @param int $line
  * @param string $message
  */
-function iris_assert_callback($script, $line, $message) {
+function iris_assert_callback($script, $line, $code, $message) {
     $msg = "Error in <b>$script</b> at line <b>$line</b><br/>";
-    list($expression, $comment) = explode('//', $message . '//');
-    $msg .= "Tested expression: <b>$expression</b><br/>";
-    $msg .= "Message : $comment";
+    //list($expression, $comment) = explode('//', $message . '//');
+    $msg .= "Tested expression: <b>$code</b><br/>";
+    $msg .= "Message : $message";
     \Iris\Engine\Debug::Abort($msg);
 }
 
