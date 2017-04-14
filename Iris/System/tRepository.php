@@ -29,7 +29,7 @@ trait tRepository {
      *
      * @var static[]
      */
-    private static $_Repository = array();
+    private static $_Repository = [];
 
     /**
      * The name of the bubble

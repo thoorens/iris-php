@@ -31,7 +31,7 @@ namespace Iris\Users;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class Identity implements iUser, \Serializable {
+class Identity implements \Serializable {
 
     use tUser;
 
@@ -137,10 +137,10 @@ class Identity implements iUser, \Serializable {
     /**
      * Copies all data (except itmeout) from a user to the current identity object.
      * 
-     * @param iUser $user 
+     * @param User $user 
      * @return \Iris\Users\Identity for fluent interface
      */
-    public function userClone(iUser $user) {
+    public function userClone($user) {
         $this->_name = $user->getName();
         $this->_mailAddress = $user->getEmailAddress();
         $this->_role = $user->getRole();

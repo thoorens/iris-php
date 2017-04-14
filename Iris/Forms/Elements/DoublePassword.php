@@ -38,7 +38,7 @@ class DoublePassword extends \Iris\Forms\Elements\_ElementGroup {
     protected $_pwd1;
     protected $_pwd2;
 
-    public function __construct($name, $formFactory, $options = array()) {
+    public function __construct($name, $formFactory, $options = []) {
         parent::__construct($name, 'div', $formFactory, $options);
         $this->_labelPosition = self::NONE;
         
@@ -111,12 +111,7 @@ class DoublePassword extends \Iris\Forms\Elements\_ElementGroup {
     public function compileValue(&$data) {
         $value1 = $data[$this->_pwd1->getName()];
         $value2 = $data[$this->_pwd2->getName()];
-        if ($value1 == $value2) {
-            return $value1;
-        }
-        else {
-            return NULL;
-        }
+        return $value1 === $value2 ? $value1 : \NULL;
     }
 
     /**

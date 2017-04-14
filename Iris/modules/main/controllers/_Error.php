@@ -61,7 +61,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
      */
     public final function standardAction() {
         if ($this->_isProduction) {
-            if (\Iris\Errors\Settings::$ForceDevelopment) {
+            if (\Iris\Errors\Settings::ShowExplicitErrors()) {
                 $this->_standardDevelopment();
             }
             else {
@@ -90,7 +90,7 @@ abstract class _Error extends \Iris\MVC\_Controller {
      * to be defined in a subclass
      */
     public final function privilegeAction() {
-        if ($this->_isProduction or \Iris\Errors\Settings::$ForceDevelopment) {
+        if ($this->_isProduction or \Iris\Errors\Settings::ShowExplicitErrors()) {
             $this->_privilegeProduction();
         }
         else {

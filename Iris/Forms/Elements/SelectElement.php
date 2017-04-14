@@ -35,7 +35,7 @@ class SelectElement extends \Iris\Forms\Elements\_ElementGroup {
     protected static $_EndTag = TRUE;
     protected $_master = TRUE;
 
-    public function __construct($name, $type, $options = array()) {
+    public function __construct($name, $type, $options = []) {
         parent::__construct($name, 'select', $options);
     }
 

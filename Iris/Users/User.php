@@ -29,7 +29,7 @@ namespace Iris\Users;
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
-class User extends \Iris\DB\Object implements iUser {
+class User extends \Iris\DB\Object  {
 
     use tUser;
 
@@ -41,6 +41,7 @@ class User extends \Iris\DB\Object implements iUser {
     }
 
     public function getName() {
+        die('GN');
         $nameField = $this->_entity->getNameField();
         return $this->$nameField;
     }

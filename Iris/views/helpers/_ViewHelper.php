@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\views\helpers;
 
 /*
@@ -11,12 +12,12 @@ namespace Iris\views\helpers;
  * @copyright 2011-2015 Jacques THOORENS
  */
 
-
 /**
  * A view helper is a kind of method each view can use
  */
 abstract class _ViewHelper extends \Iris\MVC\_Helper {
-use tViewHelperCaller;
+
+    use tViewHelperCaller;
 // Par défaut les aides de vue ne sont pas des singletons
 // protected static $_Singleton = FALSE;
 
@@ -26,7 +27,7 @@ use tViewHelperCaller;
      * @var string
      */
     public $__cut = '';
-    
+
     /**
      * The private construct may be completed in subclasses through
      * additions made in init(). ViewHelper add a second level of
@@ -43,11 +44,12 @@ use tViewHelperCaller;
      * define an abstract method here
      */
     //public abstract function help($param);
-    
+
     /**
      * Permits to modify the constructor behavior in an abstract subclass
      */
     protected function _subclassInit() {
+        
     }
 
     /**
@@ -58,7 +60,7 @@ use tViewHelperCaller;
      * @param \Iris\View $view the current view (a new one is created if none exists)
      * @return mixed the value returned by the view helper "help" method
      */
-    public static function HelperCall($functionName, $arguments=array(), $view=\NULL) {
+    public static function HelperCall($functionName, $arguments = [], $view = \NULL) {
         try {
             if (is_null($view)) {
                 $view = new \Iris\MVC\View();
@@ -81,6 +83,12 @@ use tViewHelperCaller;
         return call_user_func_array(array($object, 'help'), $arguments);
     }
 
+    public static function FunctionCall($arguments = [], $view = \NULL) {
+        $nameSpace = explode("\\", get_called_class());
+        $last = count($nameSpace) - 1;
+        $functionName = lcfirst($nameSpace[$last]);
+        return static::HelperCall($functionName, $arguments, $view);
+    }
 
     /**
      * Each view helper has its view (which can be a view linked to a controller or 
@@ -111,7 +119,6 @@ use tViewHelperCaller;
         return $this->_view;
     }
 
-
     /**
      * Permits to cut the fluent interface in a script context
      *  
@@ -120,8 +127,5 @@ use tViewHelperCaller;
     public function __toString() {
         return '';
     }
-    
-    
+
 }
-
-

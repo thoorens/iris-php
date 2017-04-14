@@ -35,11 +35,12 @@ class StandardFormFactory extends _FormFactory {
                 $factory = $this;
                 break;
             case \Iris\SysConfig\Settings::HTMLAuto:
-                $factory = $this->_getFactory();
+                $factory = $this;
+                //$factory = $this->_getFactory();
                 break;
         }
         $form = new \Iris\Forms\Elements\Form($name);
-        $form->setFormFactory($this);
+        $form->setFormFactory($factory);
         return $form;
     }
 

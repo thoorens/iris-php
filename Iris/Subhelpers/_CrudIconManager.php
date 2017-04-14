@@ -159,6 +159,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      * @return string
      */
     public function getIconDir() {
+        die('lire dir');
         return $this->_iconDir;
     }
 
@@ -169,6 +170,7 @@ abstract class _CrudIconManager extends \Iris\Subhelpers\_Subhelper {
      * @return \Iris\Subhelpers\_CrudIconManager for fluent interface
      */
     public function setIconDir($iconDir) {
+        //die($iconDir);
         $this->_iconDir = $iconDir;
         return $this;
     }

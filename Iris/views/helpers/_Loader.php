@@ -55,6 +55,7 @@ abstract class _Loader extends _ViewHelper {
      * @param string $content content of the script or file name (ends in .js or .css)
      */
     protected function help($label = NULL, $content = NULL) {
+
         if (is_null($content)) {
             $content = $label;
         }
@@ -89,6 +90,7 @@ abstract class _Loader extends _ViewHelper {
 //                }
 //            }
             $this->_text[$label] = $content;
+                    //die('help in _Loader');
         }
     }
 

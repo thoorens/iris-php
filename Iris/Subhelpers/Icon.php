@@ -67,7 +67,8 @@ class Icon {
      * @return string
      */
     function render($active) {
-        $manager = \models\crud\CrudIconManager::GetInstance();
+        $ManagerClass = \Iris\SysConfig\Settings::$DefaultModelLibrary.'crud\CrudIconManager';
+        $manager = $ManagerClass::GetInstance();
         if ($this->_predefined) {
             $dir = $manager->getSystemIconDir();
         }

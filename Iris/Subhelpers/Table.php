@@ -201,6 +201,7 @@ class Table extends _FlexibleSubhelper {
      * @return \Iris\Subhelpers\Table for fluent interface
      */
     public function setTitles($array) {
+        $array = is_array($array[0]) ? $array : [$array];
         $this->_headCells = $this->_insertContent($array, TableElement::TH);
         return $this;
     }

@@ -35,7 +35,7 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
     const ERR_BADPWD = 22;
 
     /*
-     * These 5 field names may overridden in subclasses. They are
+     * These 5 field names may be overridden in subclasses. They are
      */
 
     /**
@@ -79,6 +79,12 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
     private $_badPairTreatment = '/';
     
     /**
+     * The name of the class serving as a layout for the form
+     * @var string
+     */
+    private $_layoutName = \NULL;
+    
+    /**
      * A form factory to create the form (may be specified to supercede
      * the default one
      * 
@@ -94,7 +100,7 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
         parent::__construct($param);
     }
 
-            /**
+    /**
      * A method to test a username and password against the database
      * 
      * @return string an URL to go to (or NULL in case of unknown user)
@@ -245,31 +251,66 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
         return $this;
     }
 
+    /**
+     * 
+     * @param type $idField
+     * @return \Iris\Users\Login for fluent interface
+     */
     public function setIdField($idField) {
         $this->_idField = $idField;
         return $this;
     }
 
+    /**
+     * 
+     * @param type $nameField
+     * @return  \Iris\Users\Login for fluent interface
+     */
     public function setNameField($nameField) {
         $this->_nameField = $nameField;
         return $this;
     }
 
+    /**
+     * 
+     * @param type $roleField
+     * @return \Iris\Users\Login for fluent interface
+     */
     public function setRoleField($roleField) {
         $this->_roleField = $roleField;
         return $this;
     }
 
+    /**
+     * 
+     * @param type $passwordField
+     * @return \Iris\Users\Login for fluent interface
+     */
     public function setPasswordField($passwordField) {
         $this->_passwordField = $passwordField;
         return $this;
     }
 
+    /**
+     * 
+     * @param type $emailField
+     * @return \Iris\Users\Login for fluent interface
+     */
     public function setEmailField($emailField) {
         $this->_emailField = $emailField;
         return $this;
     }
 
+    /**
+     * Setter for the form layout name
+     * 
+     * @param string $layoutName
+     */
+    function setLayoutName($layoutName) {
+        $this->_layoutName = $layoutName;
+    }
+
+        
     /**
      * A minimal form to login in
      * @return \Iris\Forms\_Form
@@ -277,16 +318,15 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
     protected function _makeDefaultForm() {
         $ff = $this->getFormFactory();
         $form = $ff->createForm('Login');
-
         $ff->createText($this->_nameField)
                 ->setLabel($this->_('User name:'))
-                ->setTitle('Use the name ')
+//                ->setTitle('Use the name ')
                 ->addValidator($ff->validatorForce(vf::ALPHA | vf::NUM | vf::LOWER | vf::FORCE, '_'))
                 ->addTo($form)
                 ->addValidator('Required');
         $ff->createPassword($this->_passwordField)
                 ->setLabel($this->_('Password:'))
-                ->setTitle('')
+//                ->setTitle('')
                 //->addValidator($ff->validatorRequired())
                 ->addTo($form)
                 ->addValidator('Required');
@@ -301,7 +341,7 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
      * Developper can set a alternative form factory
      * 
      * @param \Iris\Forms\_FormFactory $formFactory
-     * @return \Iris\Users\Login
+     * @return \Iris\Users\Login for fluent interface
      */
     public function setFormFactory($formFactory) {
         $this->_formFactory = $formFactory;

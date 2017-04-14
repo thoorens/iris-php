@@ -7,7 +7,8 @@ namespace Iris\Structure;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016
+ *  Jacques THOORENS
  */
 
 /**
@@ -35,7 +36,8 @@ abstract class _TSequence extends \Iris\DB\_Entity {
      */
     public static function GetItem($url) {
         //$tSequence = \Iris\DB\_EntityManager::GetEntity($entityName)
-        $tSequence = static::GetEntity();
+        //$tSequence = static::GetEntity(97);
+        $tSequence = static::GetEntity(97);
         $tSequence->where('URL=', $url);
         return $tSequence->fetchRow();
     }
