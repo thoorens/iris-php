@@ -1,0 +1,9 @@
+<h1>{ParamTitle}</h1>
+<table>
+    {foreach(props,name, prop)}
+        <tr>
+            <th>{name}</th>
+            <td>{prop}</td>
+        </tr>
+    {/foreach}
+</table>
