@@ -1,4 +1,5 @@
 <?php
+
 namespace IrisInternal\documents\controllers;
 
 use Iris\Documents\Manager;
@@ -9,7 +10,7 @@ use Iris\Documents\Manager;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -20,6 +21,8 @@ use Iris\Documents\Manager;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class file extends \IrisInternal\main\controllers\_SecureInternal {
+
+    protected $_magicNumber = 0;
 
     /**
      * no security required, 
@@ -52,7 +55,7 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         die('PUBLIC');
         $this->_manageFile(\TRUE, \TRUE);
     }
-    
+
     /**
      * Download a protected file
      */
@@ -61,12 +64,25 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
     }
 
     /**
+     * Download an "internal" file 
+     * whose path is defined with a number
+     * 
+     * @param int $number the number used to define the file path
+     */
+    public function internalAction($number = 0) {
+        if($number !== 0){
+            $this->_magicNumber = $number;
+        }
+        $this->_resource('internal');
+    }
+
+    /**
      * Download a private file
      */
     public function privateAction() {
         $this->_resource('private');
     }
-    
+
     public function bgAction() {
         $this->_resource('bg');
     }
@@ -94,15 +110,21 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
         $this->_resource('views');
     }
 
-    public function javascriptAction(){
+    public function javascriptAction() {
         $this->_resource('javascript');
     }
-    
+
     private function _resource($base) {
-        $manager = \Iris\Documents\Manager::GetInstance();
         $params = $this->_response->getParameters();
+        if ($base == 'internal') {
+            $session = \Iris\Users\Session::GetInstance();
+            $magicPath = $session->getValue('MagicPath', []);
+            $params[0] = self::$MagicPath[$params[$this->_magicNumber]];
+        }
+        $manager = \Iris\Documents\Manager::GetInstance();
         array_unshift($params, $base);
-        if (strpos('privateprotected', $base) == \FALSE) {
+        //i_d($params);
+        if (strpos('private_protected_public_internal', $base) === \FALSE) {
             $manager->getResource($params);
         }
         else {
@@ -122,11 +144,8 @@ class file extends \IrisInternal\main\controllers\_SecureInternal {
                 header('location:/error/document/oldlink');
             case Manager::NOTFOUND:
                 header('location:/Error/document/notfound');
-                //header('location:/Error/document/notfound');
+            //header('location:/Error/document/notfound');
         }
     }
 
-
 }
-
-

@@ -5,8 +5,6 @@
         {styleLoader("/!documents/file/css/iris.css")}
         {styleLoader("/!documents/file/css/iris31.css")}
         {styleLoader("/!documents/file/css/irisColor.css")}
-        {styleLoader("/!documents/file/css/iris_vnav.css")}
-        <!--link href="/iris_aspect/css/iris_admin.css" rel="stylesheet" type="text/css" /-->
     </head>
     <body>
         <div class="page_margins">

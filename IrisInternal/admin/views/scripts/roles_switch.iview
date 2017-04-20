@@ -4,7 +4,7 @@
     {if(!is_null($form1))}
         {form1}
     {else}
-        No ACL or session defined. 
+        No ACL or session found. Define an acl.ini file in application/config.
     {/if}
 </fieldset>
 <fieldset title="To relog a real user taken from the list of defined users">
@@ -12,6 +12,6 @@
     {if(!is_null($form2))}
         {form2}
     {else}
-        Define <tt>\Iris\Users\TUsers::$systemUserEntity</tt> to enable this feature.
+        Define <tt> \Iris\SysConfig\Settings::$SystemUserEntity</tt> to enable this feature.
     {/if}
 </fieldset>

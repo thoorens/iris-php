@@ -1,0 +1,6 @@
+<h1>List of roles</h1>
+<ul>
+{foreach(roles,name,role)}
+    <li>{name}</li>
+{/foreach}
+</ul>
