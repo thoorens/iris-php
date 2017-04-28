@@ -35,7 +35,7 @@ class index extends _main {
      * 
      * @param int $number the item number of the error
      */
-    public function errorAction($number=0) {
+    public function errorAction($number = 0) {
         switch ($number) {
             case 1:
                 $this->__message = 'Error in sequence';

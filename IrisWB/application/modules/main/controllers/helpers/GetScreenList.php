@@ -37,7 +37,7 @@ class GetScreenList extends _ControllerHelper {
      * @return type
      */
     public function help() {
-        $sequence = \Iris\Engine\Memory::Get('sequence', \wbClasses\DBSequence::GetInstance()); 
+        $sequence = \Iris\Engine\Memory::Get('sequence', \wbClasses\DBSequence::GetInstance());
         $list = $sequence->getStructuredSequence();
         foreach ($list as $key => $value) {
             if (is_array($value)) {
@@ -58,5 +58,3 @@ class GetScreenList extends _ControllerHelper {
     }
 
 }
-
-

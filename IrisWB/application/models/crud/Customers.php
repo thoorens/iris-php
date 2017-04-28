@@ -19,11 +19,32 @@ class Customers extends _localCrud {
         static::$_EntityManager = \models\TInvoices::GetEM();
         parent::__construct($param);
         // where to go after CRUD
-        $this->setEndUrl('show');
+        $this->setEndUrl('customers/manage');
         // where to in case of error
         $this->setErrorURL('error');
     }
 
+    protected function _makeDefaultForm() {
+        $ff = \Dojo\Forms\FormFactory::GetDefaultFormFactory();
+        $form = $ff->createForm('client');
+        $ff->createHidden('id')
+                ->addTo($form);
+        $ff->createText('Name')
+                ->setLabel('Nom du client:')
+                ->addTo($form);
+        $ff->createText('Address')
+                ->setLabel('Adresse:')
+                ->addTo($form);
+        $ff->createText('Email')
+                ->setLabel('Adresse éléctronique:')
+                ->addTo($form);
+        $ff->createSubmit('Submit')
+                ->setValue("Valider")
+                ->addTo($form);
+        $this->_form = $form;
+        return $this->_form;
+    }
+    
 
     
 }
