@@ -172,18 +172,6 @@ abstract class _Form implements iFormContainer {
     }
 
     /**
-     * Add an element before the last element (usually the submit button)
-     *
-     * @param _Element $element
-     * @deprecated (use PlaceHolder instead, it is more versatile)
-     */
-    public function appendElement(_Element $element) {
-        $last = array_pop($this->_components);
-        $this->addElement($element);
-        $this->_components[$last->getName()] = $last;
-    }
-
-    /**
      * Render the <form> tag and its complete attributes : to override with a specific
      * method for each form type
      *
