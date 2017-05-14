@@ -26,7 +26,7 @@ class Messages {
         'F' => 'Fr',
         'french' => 'Fr',
     ];
-    
+
     /**
      * an array containing all the error messages
      * 
@@ -63,16 +63,11 @@ class Messages {
         }
         else {
             $command = $option;
-            if (isset(CLI\Analyser::$Functions[$option])) {
-                $option = CLI\Analyser::$Functions[$option];
-            }
-            else {
-                $option = CLI\Analyser::$Functions[$option . ':'];
-            }
         }
+        $trueOption = strlen($option) == 1 ? "-".$option : "--".$option;
         $language = CLI\Analyser::GetLanguage();
         echoLine(CLI\Parameters::DBLINE);
-        echoLine('Iris-PHP --' . $option);
+        echoLine('Iris-PHP ' . $trueOption);
         //Messages::Display(self::$Help[$language]['more']);
         echoLine(CLI\Parameters::DBLINE);
         if (!isset(self::$Help[$language][$command])) {
@@ -87,14 +82,20 @@ class Messages {
                 $extension = self::$Help['Ext'][$extension];
             }
         }
-        echoLine(CLI\Parameters::DBLINE );
+        echoLine(CLI\Parameters::DBLINE);
+        // stop here
         die('');
     }
 
-    public static function MakeCode($codeName){
+    /**
+     * 
+     * @param type $codeName
+     * @deprecated since version 2017
+     */
+    public static function MakeCode($codeName) {
         
     }
-    
+
     /**
      * Display a var_dump between <pre> tags
      * 
@@ -178,23 +179,49 @@ class Messages {
         return $text;
     }
 
-} // end of class Messages
+}
+
+// end of class Messages
 
 /**
  * A debugging tool using Debug static methods
  * 
  * @param mixed $var
  * @param boolean $die By default the function ends the program
- * @param type $Message An optional message
+ * @param type $message An optional message
  */
-function iris_debug($var, $die = TRUE, $Message = \NULL) {
+function iris_debug($var, $die = TRUE, $message = \NULL) {
     if ($die) {
-        \Messages::DumpAndDie($var, $Message, 1);
+        \Messages::DumpAndDie($var, $message, 1);
     }
     else {
         \Messages::Dump($var);
     }
 }
+
+/**
+ * A small alias for iris_debug
+ * 
+ * @param mixed $var
+ * @param boolean $die By default the function ends the program
+ * @param type $message An optional message
+ */
+function i_d($var, $die = TRUE, $message = \NULL){
+    iris_debug($var, $die, $message);
+}
+
+/**
+ * A small alias for iris_debug without end of program
+ * 
+ * @param mixed $var
+ * @param boolean $die By default the function ends the program
+ * @param type $message An optional message
+ */
+function i_dnd($var, $message = \NULL){
+    iris_debug($var, \FALSE, $message);
+}
+
+
 
 /**
  * 

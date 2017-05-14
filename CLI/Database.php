@@ -44,22 +44,31 @@ class Database extends _Process {
     const TOOLTIP = 2;
 
     /**
+     * A path for the database file folder for use with printf
+     * 
+     * @var string
+     */
+    public static $DatabaseFileFolder = \IRIS_LIBRARY_DIR . '/CLI/%s/database/';
+
+    /**
      * Selects a database for the default project
      */
     protected function _selectbase() {
-        die('Select base');
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
         $baseId = $parameters->getDatabase();
         $dbConfigs = $this->_readDBConfigs();
-        if (!isset($dbConfigs[$baseId])) {
-            \Messages::Abort('ERR_DBiD', $baseId);
-            
+        if ($baseId !== Parameters::DB_NONE and ! isset($dbConfigs[$baseId])) {
+            \Messages::Abort('ERR_DBID', $baseId);
         }
-        Messages::Display('', $parameters->getDatabase(\TRUE),$baseId);
-        $config = $parameters->getDefaultProjectName();
-        $config->Database = $baseId;
-        $parameters->saveProject();
+        $parameters->setValue(Parameters::DATABASE, $baseId);
+        $parameters->saveProject(\TRUE);
+        if ($baseId !== Parameters::DB_NONE) {
+            \Messages::Display('MSG_NEWDB', $baseId);
+        }
+        else {
+            \Messages::Display('MSG_NODB');
+        }
     }
 
     /**
@@ -68,7 +77,10 @@ class Database extends _Process {
     protected function _makedbini() {
         $parameters = Parameters::GetInstance();
         $parameters->requireDefaultProject();
-        $source = IRIS_LIBRARY_DIR . '/CLI/Files/database/' . IRIS_DB_INIFILE;
+        $commandLine = $parameters->getCommandLine();
+        i_d($commandLine);
+        $source = self::$DatabaseFileFolder . self::IRIS_DB_INIFILE;
+        $source = '';
         $dbConfig = $this->_getDBConfig();
         //iris_debug($base->maindb);
         if ($dbConfig->maindb == 0) {
@@ -118,7 +130,7 @@ class Database extends _Process {
         $parameters->requireDefaultProject();
         $projectDir = $parameters->getProjectDir();
         $applicationDir = $parameters->getApplicationName();
-        $source = IRIS_LIBRARY_DIR . '/CLI/Files/database/';
+        $source = self::$DatabaseFileFolder;
         $destination = $projectDir . '/' . $applicationDir;
         $controller = Analyser::PromptUser(
                         "Choose the controller which will manage the CRUD operations", \TRUE, $parameters->getEntityName());
@@ -180,7 +192,7 @@ class Database extends _Process {
                 $this->_subShowIniFile();
                 break;
             default:
-                \Messages::Abort('ERR_BADDBFUNC',$function);
+                \Messages::Abort('ERR_BADDBFUNC', $function);
         }
     }
 
@@ -262,24 +274,24 @@ class Database extends _Process {
         $projectName = Parameters::GetInstance()->getProjectName();
         \Messages::Display('MSG_DBTIT');
         echoLine(Parameters::LINE);
-        \Messages::Display('MSG_DBPRJNM',$projectName);
-        \Messages::Display('MSG_DBAD',$base->adapter);
+        \Messages::Display('MSG_DBPRJNM', $projectName);
+        \Messages::Display('MSG_DBAD', $base->adapter);
         if ($base->adapter == 'sqlite') {
-            \Messages::Display('MSG_DBFN',$base->dbname);
+            \Messages::Display('MSG_DBFN', $base->dbname);
         }
         else {
-            \Messages::Display('MSG_DBHST',$base->hostname);
-            \Messages::Display('MSG_DBNAM',$base->dbname);
-            \Messages::Display('MSG_DBUSRNAM',$base->username);
+            \Messages::Display('MSG_DBHST', $base->hostname);
+            \Messages::Display('MSG_DBNAM', $base->dbname);
+            \Messages::Display('MSG_DBUSRNAM', $base->username);
             if ($base->password != '') {
                 \Messages::Display('MSG_PW');
             }
             else {
-                 \Messages::Display('MSG_PW2');
+                \Messages::Display('MSG_PW2');
             }
         }
-        $management = $base->maindb == 1 ? \Messages::ReadMessage('MSG_BOOL1') :  \Messages::ReadMessage('MSG_BOOL0') ;
-        \Messages::Display('MSG_DBINI',$management);
+        $management = $base->maindb == 1 ? \Messages::ReadMessage('MSG_BOOL1') : \Messages::ReadMessage('MSG_BOOL0');
+        \Messages::Display('MSG_DBINI', $management);
     }
 
     /**

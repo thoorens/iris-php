@@ -249,14 +249,14 @@ STOP;
             $analyser->analyseCmdLine();
         }
         catch (Exception $ex) {
-            $this->_displayException($ex, 1);
+            $this->displayException($ex, 1);
         }
 // process commands
         try {
             $analyser->processLine();
         }
         catch (Exception $ex) {
-            $this->_displayException($ex, 2);
+            $this->displayException($ex, 2);
         }
     }
 
@@ -266,7 +266,7 @@ STOP;
      * @param \Exception $ex The thrown exception
      * @param int $type If is 1, specifies the exception occured while reading the parameters
      */
-    private function _displayException(\Exception $ex, $type) {
+    public function displayException(\Exception $ex, $type) {
         echoLine("IRIS-PHP " . \Iris\System\Functions::IrisVersion() . " CLI error:");
         if ($type == 1) {
             echoLine("Exception during parameters reading");

@@ -94,122 +94,79 @@ class Analyser {
      */
     public static $Functions = [
         // Help is not considered a normal option
-        'h::' => 'help::',
-        'H::'  => 'helplist::',
-        's:' => 'show:',
-        't' => 'test',
+        'h::' => 'help::',  //to test
+        'H::' => 'helplist::',  //to test
+        's:' => 'show:',  //to test
+        't' => 'test',  //to test
+ //       '' => 'debug',  //to test
         // projects
-        'c:' => 'createproject:',
-        'r:' => 'removeproject:',
-        'i'  => 'interactive',
-        'D'  => 'docproject',
-        'L:' => 'lockproject:',
-        'U:' => 'unlockproject:',
-        'd:' => 'setdefaultproject',
-        'm:' => 'projectmetadata:',
-        'a:' => 'applicationdir:',
-        'p:' => 'publicdir:',
-        'l:' => 'librarydir:',
-        'u:' => 'url:',
+        'c:' => 'createproject:',  //to test
+        'r:' => 'removeproject:',  //to test
+        'i' => 'interactive',  //to test
+        'D' => 'docproject',  //to test
+        'L:' => 'lockproject:',  //to test
+        'U:' => 'unlockproject:',  //to test
+        'd:' => 'setdefaultproject',  //to test
+        'm:' => 'projectmetadata:',  //to test
+        'a:' => 'applicationdir:',  //to test
+        'p:' => 'publicdir:',  //to test
+        'l:' => 'librarydir:',  //to test
+        'u:' => 'url:',  //to test
         // piece of code
-        'g' => 'generate',
-        'C:' => 'controller:',
-        'A:' => 'action:',
-        'M:' => 'module:',
-        'W' => 'workbench',
-        'P:' => 'preparecode:',
+        'g' => 'generate',  //to test
+        'C:' => 'controller:',  //to test
+        'A:' => 'action:',  //to test
+        'M:' => 'module:',  //to test
+        'W' => 'workbench',  //to test
+        'P:' => 'preparecode:',  //to test
         // menus
-        'N:' => 'menuname',
-        'n:' => 'makemenu',
+        'N:' => 'menuname',  //to test
+        'n:' => 'makemenu',  //to test
         // extensions
-        'k:' => 'makecore:',
-        'K'  => 'searchcore',
+        'k:' => 'makecore:',  //to test
+        'K' => 'searchcore',  //to test
         // watermaking
-        'o:' => 'copyright:',
-        'G:' => 'genericparameter',
-        'w:' => 'password:',
+        'o:' => 'copyright:',  //to test
+        'G:' => 'genericparameter',  //to test
+        'w:' => 'password:',  //to test
         // database
-        'B:' => 'database:',
-        'b:' => 'selectbase:',
-        'I' => 'makedbini',
-        'O:' => 'otherdb:',
-        'e:' => 'entitygenerate:',
+        'B:' => 'database:',  //to test
+        'b:' => 'selectbase:',  //to test
+        'I' => 'makedbini',  //to test
+        'O:' => 'otherdb:',  //to test
+        'e:' => 'entitygenerate:',  //to test
         // special
-        'v' => 'verbose',
-        '1:' => 'language:', //supposed to be used as a long form option
-        '2' => 'context', //supposed to be used as a long form option
+        'v' => 'verbose',  //to test
+        '2' => 'context', //supposed to be used as a long form option  //to test
         // languages
-        'E' => 'english',
-        'F' => 'french',
-//        '2' => 'german', // future extension
-//        '5' => 'spanish',// future extension
-//        '3' => 'dutch',// future extension
-//        '4' => 'italian',// future extension
-    ];
-
-    /**
-     * A copy  of Functions to mark all tested options
-     * 
-     * @var string[]
-     */
-    public static $Functions_Test = [
-        'A:' => 'action:',
-//        'a:' => 'applicationdir:',
-        'B:' => 'database:',
-        'b:' => 'selectbase:',
-        'C:' => 'controller:',
-        'c:' => 'createproject:',
-//      'D' => 'docproject',
-        'd:' => 'setdefaultproject',
-//        'E' => 'english',  PROBLEM
-        'e:' => 'entitygenerate:',
-//        'F' => 'french',   PROBLEM
-//        'f'        <<FREE>>        
-//        'G:' => 'genericparameter',
-        'g' => 'generate',
-        'h::' => 'help::',
-        'H::'  => 'helplist::',
-        'I' => 'makedbini',
-//        'i' => 'interactive',
-//        'j'        <<FREE>>
-//        'J'        <<FREE>> 
-        'K' => 'searchcore',
-        'k:' => 'makecore:',
-        'L:' => 'lockproject:',
-//        'l:' => 'librarydir:',
-        'M:' => 'module:',
-//        'm:' => 'projectmetadata:',
-//        'N:' => 'menuname',
-//        'n:' => 'makemenu',
-//        'O:' => 'otherdb:',
-//        'o:' => 'copyright:',
-//      'p:' => 'publicdir:', 
-        'P' => 'preparecode',
-//        'q'        <<FREE>>        
-//        'Q'        <<FREE>>        
-        'r:' => 'removeproject:',
-//        'R'        <<FREE>>        
-        's:' => 'show:',
-//        'S'        <<FREE>>        
-//        't' => 'test',
-//        'T'        <<FREE>>        
-        'U:' => 'unlockproject:',
-        'u:' => 'url:',
-        'v' => 'verbose',
-//        'V'        <<FREE>>        
-//        'w:' => 'password:',
-//        'W' => 'workbench',
-//        'x'        <<FREE>>        
-//        'X'        <<FREE>>        
-//        'y'        <<FREE>>        
-//        'Y'        <<FREE>>        
-//        'z'        <<FREE>>        
-//        'Z'        <<FREE>>        
-        '1:' => 'language:', //supposed to be used as a long form option
-//        '2' => 'german', // future extension
-//        '3' => 'dutch',// future extension
-//        '4' => 'italian',// future extension
-//        '5' => 'spanish',// future extension
+        '1:' => 'language:', //supposed to be used as a long form option  //to test
+        'E' => 'english',  //to test
+        'F' => 'french',  //to test
+        // projects
+        '3' => 'dutch',
+        '4' => 'italian',
+        '5' => 'spanish',
+        // free
+        '6' => 'project_6',
+        '7' => 'project_7',
+        '8' => 'project_8',
+        '9' => 'project_9',
+        '0' => 'project_0',
+        'f' => 'project_f',
+        'j' => 'project_j',
+        'J' => 'project_J',
+        'q' => 'project_q',
+        'Q' => 'project_Q',
+        'R' => 'project_R',
+        'S' => 'project_S',
+        'T' => 'project_T',
+        'V' => 'project_V',
+        'x' => 'project_x',
+        'X' => 'project_X',
+        'y' => 'project_y',
+        'Y' => 'project_Y',
+        'z' => 'project_z',
+        'Z' => 'project_Z',
     ];
 
     /**
@@ -218,6 +175,12 @@ class Analyser {
      * @var Parameters
      */
     private $_parameters;
+
+    /**
+     * If true, some messages will be displayed durung execution
+     * @var boolean 
+     */
+    protected $_verbose = \FALSE;
 
     /**
      * The constructor initializes some defaults vars and then
@@ -242,53 +205,34 @@ class Analyser {
         $this->_processor = self::INITIAL;
         // Read options
         $options = $this->cliOptions();
-        $verbose = \FALSE;
+        $exitMainLoop = \FALSE;
         foreach ($options as $option => $value) {
             switch ($option) {
                 // -------------------
                 // Project functions
                 // -------------------
                 case 'v' : case 'verbose':
-                    $verbose = \TRUE;
+                    $this->_verbose = \TRUE;
                     Parameters::GetInstance()->setVerbose(\TRUE);
                     break;
+                case 'debug':
+                    i_dnd($options);
+                    i_d($GLOBALS['argv']);
                 // ------------------------------------------------------------------------------------------------------------
-                // create a project
+                // creates a project
                 case 'c': case 'createproject':
-                    if ($this->_processor != self::INITIAL) {
-                        \Messages::Abort("ERR_PROJECT", 'createproject');
-                    }
-                    // special requirement for createproject
-                    if (($this->_linux and $value[0] != '/') or ( $this->_windows and $value[1] != ':')) {
-                        \Messages::Abort("ERR_ABSOLUTEPATH");
-                    }
-                    verboseEchoLine("Creating a new project $value", $verbose);
-                    list($projectName, $projectDir) = $this->manageProjectName($value);
-                    $projects = $this->_parameters->getProjects();
-                    if (isset($projects[$projectName])) {
-                        \Messages::Abort("ERR_NAMEEXISTS", $projectName);
-                    }
-                    if (file_exists($projectDir)) {
-                        \Messages::Abort('ERR_EXISTINGFOLDER', $projectDir);
-                    }
-                    $this->_parameters->addNewProject($projectName, $projectDir);
-                    $this->_processor = self::NEWPROJECT;
-                    $this->_processingOption = "$option!$projectName";
+                    $this->_createProject($option, $value);
                     break;
 
+                // ------------------------------------------------------------------------------------------------------------
+                // modifies a project
                 case 'd': case 'setdefaultproject':
                 case 'L': case 'lockproject':
                 case 'U': case 'unlockproject':
                 case 'r': case 'removeproject':
-                    if ($this->_processor != self::INITIAL) {
-                        $longOption = $this->_longOption($option);
-                        \Messages::Abort("ERR_PROJECT", $longOption);
-                    }
-                    list($projectName, $projectDir) = $this->manageProjectName($value);
-                    $this->_processor = self::PROJECT;
-                    $this->_processingOption = "$option" . "!$projectName";
-                    $this->_parameters->setCurrentProjectName($projectName);
+                    $this->_modifyProject($option, $value);
                     break;
+
                 // generates portions of project
                 case 'g': case 'generate':
                     if ($this->_processor != self::INITIAL and $this->_processor != self::PARAMPROJECT) {
@@ -335,7 +279,7 @@ class Analyser {
                         \Messages::Abort("ERR_PUBLIC");
                     }
                     $this->_parameters->addParameter(Parameters::PUBLICDIR, $value);
-                    verboseEchoLine('Public dir name : ' . $value, $verbose);
+                    verboseEchoLine('Public dir name : ' . $value, $this->_verbose);
                     break;
 
                 // set application dir (default is application)
@@ -344,7 +288,7 @@ class Analyser {
                         \Messages::Abort("ERR_APPLICATION");
                     }
                     $this->_parameters->addParameter(Parameters::APPLICATIONDIR, $value);
-                    verboseEchoLine('Application dir name : ' . $value, $verbose);
+                    verboseEchoLine('Application dir name : ' . $value, $this->_verbose);
                     break;
 
                 // Set library folder name  (default is library)
@@ -353,7 +297,7 @@ class Analyser {
                         \Messages::Abort("ERR_LIBRARY");
                     }
                     $this->_parameters->addParameter(Parameters::LIBRARYDIR, $value);
-                    verboseEchoLine('Library dir name : ' . $value, $verbose);
+                    verboseEchoLine('Library dir name : ' . $value, $this->_verbose);
                     break;
 
                 // set url (default is mysite.local)
@@ -362,58 +306,41 @@ class Analyser {
                         \Messages::Abort("ERR_URL");
                     }
                     $this->_parameters->addParameter(Parameters::URL, $value);
-                    verboseEchoLine('Module name : ' . $value, $verbose);
+                    verboseEchoLine('Module name : ' . $value, $this->_verbose);
                     break;
 
                 // project metadata management
 //                case 'm': case 'projectmetadata':
 //                    $this->_treatMetadata($value);
 //                    break;
+                // ==================================================================================================
                 // define module/controller/action
                 case 'M':case 'module':
-                    if ($this->_processor != self::INITIAL and $this->_processor != self::PARAMPROJECT) {
-                        \Messages::Abort("ERR_BADMODULE");
-                    }
-                    $this->_parameters->addParameter(Parameters::MODULENAME, $value);
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAMPROJECT;
-                    $this->_parameters->useDefault();
-                    $this->_parameters->addParameter(Parameters::MODULENAME, $value);
-                    verboseEchoLine('Module name : ' . $value, $verbose);
+                    $this->_treatMCA($option, $value, Parameters::MODULENAME, 'ERR_BADMODULE');
                     break;
                 case 'C': case 'controller':
-                    if ($this->_processor != self::INITIAL and $this->_processor != self::PARAMPROJECT) {
-                        \Messages::Abort("ERR_BADCOONTROLLER");
-                    }
-                    $this->_parameters->addParameter(Parameters::CONTROLLERNAME, $value);
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAMPROJECT;
-                    verboseEchoLine('Controller name : ' . $value, $verbose);
+                    $this->_treatMCA($option, $value, Parameters::CONTROLLERNAME, 'ERR_BADCONTROLLER');
                     break;
                 case 'A': case 'action':
-                    if ($this->_processor != self::INITIAL and $this->_processor != self::PARAMPROJECT) {
-                        \Messages::Abort("ERR_BADACTION");
-                    }
-                    $this->_parameters->addParameter(Parameters::ACTIONNAME, $value);
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAMPROJECT;
-                    verboseEchoLine('Action name : ' . $value, $verbose);
+                    $this->_treatMCA($option, $value, Parameters::ACTIONNAME, 'ERR_BADACTION');
                     break;
-                    
+
+                // ==================================================================================================
+                // define menu (PROJECT
                 case 'N': case 'menuname':
                     \Messages::Abort("ERR_NOTDEV");
-                    $this->_parameters->addParameter(Parameters::MENUNAME, $value);
-                    $this->_processingOption = $option;
-                    $this->_processor = self::PARAM;
-                    break;
+//                    $this->_parameters->addParameter(Parameters::MENUNAME, $value);
+//                    $this->_processingOption = $option;
+//                    $this->_processor = self::PARAM;
+//                    break;
 
                 case 'n': case 'makemenu':
                     \Messages::Abort("ERR_NOTDEV");
-                    $this->_processor = self::PROJECT;
-                    $this->_processingOption = $option;
-                    $this->_parameters->addParameter(Parameters::ITEMS, $value);
-                    break;
-
+//                    $this->_processor = self::PROJECT;
+//                    $this->_processingOption = $option;
+//                    $this->_parameters->addParameter(Parameters::ITEMS, $value);
+//                    break;
+                // ==================================================================================================
                 // database
                 case 'B': case 'database':
                     if (strpos('list List Show show create Create ini', $value) === \FALSE) {
@@ -426,7 +353,6 @@ class Analyser {
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_BADSELECTDB");
                     }
-                    \Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
                     $this->_parameters->addParameter(Parameters::DATABASE, $value);
@@ -435,9 +361,10 @@ class Analyser {
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_BADDBINI");
                     }
-                    \Messages::Abort("ERR_NOTDEV");
+                    //\Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
+                    i_d($GLOBALS['argv']);
                     break;
 //                case 'O': case 'otherdb':
 //                    if ($this->_processor != self::NOOPTION) {
@@ -448,11 +375,11 @@ class Analyser {
 //                    $this->_processingOption = $option;
 //                    break;
                 case 'e': case 'entitygenerate':
-                    \Messages::Abort("ERR_NOTDEV");
+                    //\Messages::Abort("ERR_NOTDEV");
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_BADENTITY");
                     }
-                    \Messages::Abort("ERR_NOTDEV");
+                    //\Messages::Abort("ERR_NOTDEV");
                     $this->_processor = self::BASE;
                     $this->_processingOption = $option;
                     $this->_parameters->addParameter(Parameters::ENTITYNAME, $value);
@@ -494,26 +421,29 @@ class Analyser {
                     $this->_processor = self::PASSWORD;
                     $this->_processingOption = $value;
                     break;
-                // help screen : will exit in Help
+                // -h and --help can use $value to display a precise help
+                // will exit in Help
                 case'h': case 'help':
                     \Messages::Help($value);
                     break;
+                // help screen : will exit in Help
                 case 'H': case 'helplist':
                     \Messages::Help('H');
                     break;
                 case 'context': case '2':
                     $this->_context();
                     break;
-                
+
                 // show projects
                 case 's': case 'show':
                     if ($this->_processor != self::INITIAL) {
                         \Messages::Abort("ERR_SHOW");
                     }
-                    verboseEchoLine('Show the internal state', $verbose);
+                    verboseEchoLine('Show the internal state', $this->_verbose);
                     $this->_processor = self::SHOW;
                     $this->_processingOption = $option . '!' . $value;
-                    break 2;
+                    $exitMainLoop = \TRUE;
+                    break;
 
                 // modify language in iris.ini
                 case 'language': case '1':
@@ -547,11 +477,27 @@ class Analyser {
                     $this->_processor = self::SHOW;
                     $this->_processingOption = $option;
                     break;
+                // Projets
+                case '3': case 'dutch': case '4': case 'italian': case '5': case 'spanish':
+                    \Messages::Abort("ERR_PROJECT", $option);
+                    break;
+                // Free f j J q Q R S T V x X y Y z Z 6 7 8 9 0      
+                default :
+                    \Messages::Abort("ERR_FREE", $option);
+                    break;
             }
+            if($exitMainLoop) break;
         }
         if ($this->_processor == self::INITIAL) {
             \Messages::Help('help');
         }
+//        try {
+//            $this->processLine();
+//        }
+//        catch (Exception $ex) {
+//            $frontEnd = FrontEnd::GetInstance();
+//            $frontEnd->displayException($ex, 2);
+//        }
     }
 
     /**
@@ -696,7 +642,7 @@ class Analyser {
     public function cliOptions() {
         $shorts = $longs = '';
         foreach (self::$Functions as $short => $long) {
-            $shorts.=$short;
+            $shorts .= $short;
             $longs[] = $long;
         }
         $optionsArray = \getopt($shorts, $longs);
@@ -717,31 +663,29 @@ class Analyser {
         // 
         // - add the long options with --longO  syntax
         // - add the -o=value or --longO=value added in PHP 5.3 after François Hill publication of its code    
-        /*
-          function shift($options_array)
-          {
-          foreach( $options_array as $o => $a )
-          {
-          // Look for all occurrences of option in argv and remove if found :
-          // ----------------------------------------------------------------
-          // Look for occurrences of -o (simple option with no value) or -o<val> (no space in between):
-          while($k=array_search("-".$o.$a,$GLOBALS['argv']))
-          {    // If found remove from argv:
-          if($k)
-          unset($GLOBALS['argv'][$k]);
-          }
-          // Look for remaining occurrences of -o <val> (space in between):
-          while($k=array_search("-".$o,$GLOBALS['argv']))
-          {    // If found remove both option and value from argv:
-          if($k)
-          {    unset($GLOBALS['argv'][$k]);
-          unset($GLOBALS['argv'][$k+1]);
-          }
-          }
-          }
-          // Reindex :
-          $GLOBALS['argv']=array_merge($GLOBALS['argv']);
-          }
+    /*
+    function shift($options_array){
+        foreach( $options_array as $o => $a ){
+            // Look for all occurrences of option in argv and remove if found :
+            // ----------------------------------------------------------------
+            // Look for occurrences of -o (simple option with no value) or -o<val> (no space in between):
+            while($k=array_search("-".$o.$a,$GLOBALS['argv'])){
+                // If found remove from argv:
+                if($k)
+                    unset($GLOBALS['argv'][$k]);
+                }
+              // Look for remaining occurrences of -o <val> (space in between):
+                while($k=array_search("-".$o,$GLOBALS['argv'])){
+                    // If found remove both option and value from argv:
+                    if($k){
+                        unset($GLOBALS['argv'][$k]);
+                        unset($GLOBALS['argv'][$k+1]);
+                    }
+                }
+            }
+            // Reindex :
+            $GLOBALS['argv']=array_merge($GLOBALS['argv']);
+      }
 
          * 
          */
@@ -879,6 +823,71 @@ class Analyser {
         echoLine('Project file :' . FrontEnd::GetFilePath('project', 'notest'));
         echoLine('Database file :' . FrontEnd::GetFilePath('db', 'notest'));
         \Messages::Abort(Parameters::DBLINE);
+    }
+
+    // ==================================================================================================
+    // PROJECT FUNCTIONS   
+    // ==================================================================================================
+
+    /**
+     * Create a new project 
+     * 
+     * @param type $value
+     */
+    public function _createProject($option, $value) {
+        if ($this->_processor != self::INITIAL) {
+            \Messages::Abort("ERR_PROJECT", 'createproject');
+        }
+        // special requirement for createproject
+        if (($this->_linux and $value[0] != '/') or ( $this->_windows and $value[1] != ':')) {
+            \Messages::Abort("ERR_ABSOLUTEPATH");
+        }
+        verboseEchoLine("Creating a new project $value", $this->_verbose);
+        list($projectName, $projectDir) = $this->manageProjectName($value);
+        $projects = $this->_parameters->getProjects();
+        if (isset($projects[$projectName])) {
+            \Messages::Abort("ERR_NAMEEXISTS", $projectName);
+        }
+        if (file_exists($projectDir)) {
+            \Messages::Abort('ERR_EXISTINGFOLDER', $projectDir);
+        }
+        $this->_parameters->addNewProject($projectName, $projectDir);
+        $this->_processor = self::NEWPROJECT;
+        $this->_processingOption = "$option!$projectName";
+    }
+
+    /**
+     * Modify a project <ul>
+     * <li>sets a project as the default</li>
+     * <li>removes the project</li>
+     * <li>locks the project</li>
+     * <li>unlocks the project </li>
+     * </ul>
+     * 
+     * @param string $option
+     * @param string $value
+     */
+    public function _modifyProject($option, $value) {
+        if ($this->_processor != self::INITIAL) {
+            $longOption = $this->_longOption($option);
+            \Messages::Abort("ERR_PROJECT", $longOption);
+        }
+        list($projectName, $projectDir) = $this->manageProjectName($value);
+        $this->_processor = self::PROJECT;
+        $this->_processingOption = "$option" . "!$projectName";
+        $this->_parameters->setCurrentProjectName($projectName);
+    }
+
+    public function _treatMCA($option, $value, $parameterName, $fatalErrorLabel) {
+        if ($this->_processor != self::INITIAL and $this->_processor != self::PARAMPROJECT) {
+            \Messages::Abort($fatalErrorLabel);
+        }
+        $this->_parameters->addParameter($parameterName, $value);
+        $this->_processingOption = $option;
+        $this->_processor = self::PARAMPROJECT;
+        $this->_parameters->useDefault();
+        $this->_parameters->addParameter($parameterName, $value);
+        verboseEchoLine("$parameterName : " . $value, $this->_verbose);
     }
 
 }

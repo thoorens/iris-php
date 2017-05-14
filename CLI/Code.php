@@ -25,6 +25,9 @@ class Code extends _Process {
     const CONTROLLER = 2;
     const ACTION = 4;
 
+    public static $PublicSource = \IRIS_LIBRARY_DIR . '/CLI/%s/public';
+    public static $ApplicationSource = \IRIS_LIBRARY_DIR . '/CLI/%s/application';
+
     /**
      * Creates the "projetName".virtual file containing the parameters
      * for a virtual host in Apache server (only for development purpose)
@@ -119,7 +122,7 @@ APACHE;
         $this->_os->mkDir("$projectDir/$publicDir/css", $permissions);
         $this->_os->mkDir("$projectDir/$publicDir/js", $permissions);
         // copy and adapt index.php
-        $source = IRIS_LIBRARY_DIR . '/CLI/Files/public';
+        $source = self::$PublicSource;
         $destination = "$projectDir/$publicDir";
         $this->_createFile("$source/index.php", "$destination/index.php", ['{APPLICATION}' => $parameters->getApplicationName()]);
         // other files are simply copied
@@ -155,7 +158,7 @@ APACHE;
         $parameters = Parameters::GetInstance();
         //$parameters->getNewProject()['program'].' - '.$parameters->getApplicationName();
         $programName = $parameters->getApplicationName();
-        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
+        $source = self::$ApplicationSource;
         $destination = "$projectDir/$programName";
         \Messages::Display('MSG_APPLICATION', $programName);
         $this->_createDir($programdir, $destination);
@@ -220,7 +223,7 @@ APACHE;
      * @param string $actionName The action name
      */
     private function _newModule($destination, $moduleName, $controllerName = 'index', $actionName = 'index') {
-        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
+        $source = self::$ApplicationSource;
         $directories = [
             "modules/$moduleName/controllers/helpers",
             "modules/$moduleName/views/layouts",
@@ -250,7 +253,7 @@ APACHE;
      * @param string $actionName The action name
      */
     private function _newController($destination, $moduleName, $controllerName, $actionName = 'index') {
-        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
+        $source = self::$ApplicationSource;
         $destinationMod = "$destination/modules/$moduleName";
         if ($moduleName == 'main' and $controllerName == 'index') {
             $title = '$this->callViewHelper("welcome",1)';
@@ -295,7 +298,7 @@ APACHE;
      * @param string $actionName The action name
      */
     private function _newAction($destination, $moduleName, $controllerName, $actionName) {
-        $source = IRIS_LIBRARY_DIR . '/CLI/Files/application';
+        $source = self::$ApplicationSource;
         $destinationMod = "$destination/modules/$moduleName";
         $scriptName = "$destinationMod/views/scripts/{$controllerName}_$actionName.iview";
         if (file_exists($scriptName)) {

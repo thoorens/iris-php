@@ -140,6 +140,11 @@ Use
       'iris.php --createproject' to create a new project";
 
 
+Messages::$Error['Fr']['ERR_NEEDPURGE'] = "Le dossier %s n'existe pas sur le disque dur. Le project n'existe pas ou n'existe plus. 
+Pour effacer le projet de la liste, ajoutez le mot purge à la fin de la commande de destruction";
+Messages::$Error['En']['ERR_NEEDPURGE'] = "No %s directory exists on the hard disk. The project does not exist or does exist anymore.
+To erase the project from the list, add the word purge at the end of the remove command";
+
 Messages::$Error['Fr']['ERR_CANNOTFIND'] = "Le dossier %s n'existe pas sur le disque dur. Le project n'existe pas ou n'existe plus. 
 La meilleure solution est d'effacer la section [%s] dans /home/user/.iris/projects.ini";
 Messages::$Error['En']['ERR_CANNOTFIND'] = "No %s directory exists on the hard disk. The project does not exist or does exist anymore.
@@ -237,7 +242,6 @@ Messages::$Error['En']['ERR_NODBINI'] = "No database has been defined by the cur
 Messages::$Error['Fr']['ERR_DBID'] = "Aucune base de données avec l'identifiant %s n'a été trouvée dans le système.
 Choisissez un autre nom ('iris.php -B list' pour voir les identifiants connus)
 ou créez-en un à l'aide de 'iris.php -B create %s'.";
-
 Messages::$Error['En']['ERR_DBID'] = "No database with id %s has been found in the system.
 Choose another name ('iris.php -B list' to see the existing names)
 or create it before whith 'iris.php -B create %s'.";
@@ -250,6 +254,12 @@ Messages::$Error['En']['ERR_UNDEFDB'] = "The database '%s' is not defined";
 
 Messages::$Error['Fr']['ERR_DBNONE'] = "Pas de base de données associées au projet";
 Messages::$Error['En']['ERR_DBNONE'] = "No database associated to the project";
+
+Messages::$Error['Fr']['MSG_NEWDB'] = "Le projet courant est maintenant lié à la base %s";
+Messages::$Error['En']['MSG_NEWDB'] = "The current project is now linked to the database %s";
+
+Messages::$Error['Fr']['MSG_NODB'] = "Le projet courant n'est plus lié à une base de donnée";
+Messages::$Error['En']['MSG_NODB'] = "The current project is now linked to no database";
 
 Messages::$Error['Fr']['ERR_DBINI'] = "Un fichier '%s' existe déjà.
 Voulez-vous le modifier pour concorder avec les praramètres de votres base de données?
@@ -305,3 +315,9 @@ Messages::$Error['En']['MSG_BOOL0'] = "NO";
 
 Messages::$Error['Fr']['MSG_BOOL1'] = "OUI";
 Messages::$Error['En']['MSG_BOOL1'] = "YES";
+
+Messages::$Error['Fr']['ERR_FREE'] = "L'option %s n'est pas utilisée";
+Messages::$Error['En']['ERR_FREE'] = "The option %s is not in use";
+
+Messages::$Error['Fr']['ERR_PROJECT'] = "L'option %s est en projet";
+Messages::$Error['En']['ERR_PROJECT'] = "The option %s is in project";

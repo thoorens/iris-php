@@ -166,13 +166,13 @@ class Parameters {
             $config0->language = \Messages::DEFAULT_LANGUAGE;
             $this->setCurrentProjectName('');
             $this->_projects = [Parameters::IRISDEF => $config0];
-            $this->_dirty = \TRUE;
+            $this->markDirty();
         }
         else {
             $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
             $this->_projects = $parser->processFile($paramFile);
             $this->setCurrentProjectName($this->_projects[Parameters::IRISDEF]->DefaultProject);
-            $this->_dirty = \FALSE;
+            $this->markDirty(\FALSE);
         }
     }
 
@@ -192,8 +192,8 @@ class Parameters {
     /**
      * Each time a parameter is modified, a dirty mark becomes true
      */
-    public function markDirty() {
-        $this->_dirty = \TRUE;
+    public function markDirty($value = \TRUE) {
+        $this->_dirty = $value;
     }
 
     /**
@@ -423,14 +423,13 @@ class Parameters {
      * Accessor get for parameters in command line
      * @return string
      */
-    public function getCommandLine() {
-        $last = count($GLOBALS['argv']) - 1;
-        if (isset($GLOBALS['argv'][$last])) {
-            return $GLOBALS['argv'][$last];
+    public function getCommandLine($itemNumber = -1, $value = '') {
+        if($itemNumber == -1)
+            $itemNumber = count($GLOBALS['argv']) - 1;
+        if (isset($GLOBALS['argv'][$itemNumber])) {
+            $value = $GLOBALS['argv'][$itemNumber];
         }
-        else {
-            return '';
-        }
+        return $value;
     }
 
     /**
@@ -466,7 +465,7 @@ class Parameters {
     public function setValue($paramName, $value) {
         $defaultProject = $this->getProject();
         $defaultProject->$paramName = $value;
-        $this->_dirty = \TRUE;
+        $this->markDirty();
     }
 
     /**
@@ -659,21 +658,23 @@ class Parameters {
 //        return $this->_projects[Parameters::IRISDEF]->DefaultProject;
 //    }
     /**
-     * Save all projects
+     * Save all projects (if some parameter has been changed)
      */
     public function saveProject($force = \FALSE) {
         if ($this->_dirty or $force) {
+            //i_d($this->_projects);
             $fileName = FrontEnd::GetFilePath('projects');
             $parser = \Iris\SysConfig\_Parser::ParserBuilder('ini');
             $parser->exportFile($fileName, $this->_projects);
-            $this->_dirty = \FALSE;
+            $this->markDirty(\FALSE);
         }
     }
 
-//    public static function Add($index, $value) {
-//        self::$_Parameters[$index] = $value;
-//    }
-
+    /**
+     * Sets the verbose parameter (comments and informations are displayed during operation
+     * 
+     * @param boolean $value
+     */
     public function setVerbose($value) {
         $this->_verbose = $value;
     }
@@ -682,14 +683,16 @@ class Parameters {
         $this->_currentProjectName = $this->_projects[self::IRISDEF]->DefaultProject;
     }
 
-    public function removeProject($projectName) {
+    public function deleteProject($projectName) {
+        if(!isset($this->_projects[$projectName])){
+            \Messages::Abort('ERR_CANNOTDELETE');
+        }
         unset($this->_projects[$projectName]);
         if ($this->_projects[self::IRISDEF]->ProjectName == $projectName) {
             $this->_projects[self::IRISDEF]->ProjectName = '';
             \Messages::Display("MSG_NODEF");
         }
-        $this->_dirty = \TRUE;
-        $this->saveProject();
+        $this->saveProject(\TRUE);
     }
 
     public function debugProject() {
