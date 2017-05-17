@@ -10,7 +10,7 @@ namespace modules\{MODULE}\controllers;
  * @author {AUTHOR}
  * @license {LICENSE}
  */
-class {MODULECONTROLLER} extends \modules\_application {
+abstract class {MODULECONTROLLER} extends \modules\_application {
 
     
     /**

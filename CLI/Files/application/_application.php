@@ -10,7 +10,9 @@ namespace modules;
  * @author {AUTHOR}
  * @license {LICENSE}
  */
-class _application extends \Iris\MVC\_Controller {
+
+
+abstract class _application extends \Iris\MVC\_Controller {
 
     /**
      * This method can contain application level
