@@ -61,7 +61,7 @@ function iris_assert_callback($script, $line, $code, $message) {
  * @param mixed $var A printable message or variable
  * @param boolean $die If true, program dies
  * @param string $message The message to display in die instruction
- * @param int $traceLevel The trace level for DumpAndDie call will be 2 from i_d() 
+ * @param int $traceLevel The trace level for DumpAndDie call will be 2 from i_d() and 3 from i_n()
  */
 function iris_debug($var, $die = \TRUE, $message = \NULL, $traceLevel = 1) {
     if ($die) {
@@ -90,6 +90,55 @@ function i_d($var, $die = \TRUE, $message = \NULL){
  */
 function i_dnd($var, $message = \NULL){
     iris_debug($var, \FALSE, $message, 2);
+}
+
+function i_n($number, $var){
+    iris_nDebug($number, $var, \FALSE);
+}
+
+function i_nnd($number, $var){
+    iris_nDebug($number, $var, \TRUE);
+}
+
+/**
+ * A alias of iris_nDebug used to init its static var
+ * 
+ * @param int $number the number stopping the process
+ * @param boolean $display order to display the preceding call
+ */
+function i_ninit($number, $display = \FALSE){
+    iris_nDebug(-$number,'',$display);
+}
+
+/**
+ * A progressive 
+ * @staticvar int $stop will contains the stop value
+ * @staticvar boolean $display if \TRUE each step will display information
+ * @param int $number the step number
+ * @param mixed $var the variable to display
+ * @param mixed $message
+ */
+function iris_nDebug($number, $var, $message = \NULL){
+    static $stop = 0;
+    static $display = \FALSE;
+    // when awaited value is passed as a parameter : displays the due var, the message, the file and the line number containing the call 
+    if($number === $stop){
+        \Iris\Engine\Debug::Dump($var,"STEP $number : " );
+        $trace = debug_backtrace();
+        \Iris\Engine\Debug::Abort(sprintf('Debugging interrupt in file <b> %s </b> line %s', $trace[1]['file'], $trace[1]['line']));
+    }
+    // if necessary, the preceding tests are also displayed
+    else if($number < $stop and $display){
+        \Iris\Engine\Debug::Dump($var,"STEP $number : " );
+    }
+    // if number is negative, used as  
+    elseif($number<0){
+        $start =abs($number); 
+        $stop = $start;
+        if (is_bool($message)) {
+            $display = $message;
+        }
+    }
 }
 
 /**

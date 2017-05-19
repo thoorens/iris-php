@@ -37,8 +37,9 @@ abstract class Debug {
      * Display a var_dump between &lt;pre> tags
      * @param mixed $var : a var or text to dump
      */
-    public static function Dump($var) {
+    public static function Dump($var, $message = '') {
         echo "<pre>\n";
+        echo $message;
         \var_dump($var);
         echo "</pre>\n";
     }
@@ -48,7 +49,9 @@ abstract class Debug {
      *
      * @param mixed $var A printable message or variable
      * @param string $dieMessage
-     * @param int $traceLevel If called from iris_debug, trace level is 1 instead of 0
+     * @param int $traceLevel permits to find the file and line containing the call
+     * if called from iris_debug, trace level is 1 instead of 0
+     * if called from i_d() or its alias, trace level is 2 from i_d()
      */
     public static function DumpAndDie($var, $dieMessage = NULL, $traceLevel = 0) {
         if (is_null($dieMessage)) {
