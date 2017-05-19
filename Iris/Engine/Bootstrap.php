@@ -87,7 +87,6 @@ abstract class core_Bootstrap {
         define('IRIS_PROGRAM_PATH', IRIS_ROOT_PATH . '/' . $programName);
         $program = new Program($programName);
         Program::$ProgramPath = IRIS_ROOT_PATH . '/' . $programName;
-        // normal case : no configToRead defined, create it
         $configFiles = $this->_takeAllConfig($programName);
         // _preConfig normally do nothing and return TRUE
         if ($this->_preConfig($programName, $configFiles)) {
@@ -160,7 +159,7 @@ abstract class core_Bootstrap {
      *
      * @param string $applicationName
      */
-    private function _takeAllConfig($applicationName, $configFiles) {
+    private function _takeAllConfig($applicationName) {
         $dir = new \DirectoryIterator(IRIS_ROOT_PATH . '/' . $applicationName . '/config/');
         foreach ($dir as $file) {
             if ($file->isFile()) {
@@ -171,15 +170,6 @@ abstract class core_Bootstrap {
         }
         return $configFiles;
     }
-
-    /**
-     * Add a file to the list of files to process at start time.
-     * @param string $fileName
-     */
-//    public function addConfigFile($fileName) {
-//        $index = basename($fileName);
-//        $this->_configToRead[$index] = $fileName;
-//    }
 
     /**
      *
