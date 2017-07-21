@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\Admin\models;
 
 /*
@@ -21,6 +22,7 @@ class TControllers extends _IrisObject {
 
     protected static $_InsertionKeys = ['Name', 'module_id'];
     
+    protected static $_MainField = "controller #";
 
     public static function DDLText() {
         return <<<SQL

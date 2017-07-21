@@ -1,37 +1,28 @@
 {wbHeader()}
 <div class="content" {wbBG()}>
     <h3>find()</h3>
-    <p>
-        Invoice #2
-    </p>
+    Factures n°2 et 45
     <ul>
         <li>
-            #<b>{(invoice2->id)}</b> :  <i>{simpleDate($invoice2->InvoiceDate)}</i> - <b>{(invoice2->_at_customer_id->Name)} </b>
+            {invoice($invoice2,2)}
+        </li>
+        <li>
+            {invoice($invoice45,45)}
         </li>
     </ul>
-    <hr />
-    <h3>fetchRow() and fetchAll() with where()</h3>
-    <p>
-        Invoice with date > 2012-02-13 
-    </p>
+    <h3>fetchRow()</h3>
+    Première facture après le 13 février 2012
     <ul>
-        <li>fetchRow() takes the firt (if any):
-            <ul><li>
-                    # <b>{(invoice1->id)}</b> - <i>{simpleDate($invoice1->InvoiceDate)}</i> - <b>{(invoice1->_at_customer_id->Name)}</b>
-                </li>
-            </ul>
-        </li>
-        <li>
-            fetchall() takes them all
-            <ul>
-                {foreach(invoices,invoice)}
-                    <li>
-                        #<b>{(invoice->id)}</b> - <i>{simpleDate($invoice->InvoiceDate)}</i> - 
-                        <b>{(invoice->_at_customer_id->Name)}</b>
-                    </li>
-                {/foreach}
-            </ul>
-        </li>
+        <li>{invoice($invoice1,'')}</li>
+    </ul>    
+    <h3>fetchAll()</h3>
+    Les factures postérieures au 13 février 2012
+    <ul>
+        {foreach(invoices,invoice)}
+            <li>
+                {invoice($invoice,'')}
+            </li>
+        {/foreach}
     </ul>
     <p>
         {dbWarning()}

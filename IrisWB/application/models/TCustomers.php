@@ -83,6 +83,8 @@ class TCustomers extends \Iris\DB\_Entity {
         ]
     ];
 
+    protected static $_MainField = "Name";
+    
     /**
      * A series of commands to realise a copy
      */

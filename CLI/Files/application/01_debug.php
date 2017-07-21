@@ -60,3 +60,5 @@ return;
 /* All messages (they are many) */
 //\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ALL);
 
+/* HTML 5 detection messages */
+//Iris\Engine\Log::AddDebugFlag(Iris\Engine\Debug::HTML5);

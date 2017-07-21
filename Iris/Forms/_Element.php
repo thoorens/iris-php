@@ -24,6 +24,7 @@ use Iris\Forms\Validators as iv;
 abstract class _Element { //implements \Iris\Translation\iTranslatable {
 
     use \Iris\Translation\tSystemTranslatable;
+    use tElement;
 
     const NONE = 0;
     const BEFORE = 1;
@@ -38,11 +39,7 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
      */
     protected static $_EndTag = \FALSE;
 
-    /**
-     *
-     * @var string
-     */
-    protected $_type;
+    
 
     /**
      *
@@ -55,94 +52,6 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
      * @var int
      */
     protected $_labelPosition = 0;
-
-    /**
-     *
-     * @var string
-     */
-    protected $_attributes = [];
-
-    /**
-     *
-     * @var mixed
-     */
-    protected $_label = \NULL;
-
-    /**
-     *
-     * @var string
-     */
-    protected $_name = \NULL;
-
-    /**
-     *
-     * @var string
-     */
-    protected $_title = \NULL;
-    /**
-     *
-     * @var mixed
-     */
-    protected $_value = '';
-
-    /**
-     *
-     * @var string
-     */
-    protected $_errorMessage = '';
-
-    /**
-     *
-     * @var boolean 
-     */
-    protected $_canDisable;
-
-    /**
-     *
-     * @var _Form 
-     */
-    protected $_container = \NULL;
-
-    /**
-     *
-     * @var iv\_Validator 
-     */
-    protected $_validator = \NULL;
-
-    /**
-     * TRUE if the element can be checked
-     * 
-     * @var boolean 
-     */
-    protected $_checkable = \FALSE;
-
-    /**
-     * Value can be rendered as an attribute (by default NOT)
-     * 
-     * @var boolean
-     */
-    protected $_valueAsAttribute = \FALSE;
-
-    /**
-     * For input file, indicate max file size
-     * @var int
-     */
-    protected $_fileSize = 0;
-
-    /**
-     * In mother class, options are a simple text to be inserted
-     * in the main tag (special attributes)
-     * 
-     * @var string
-     */
-    protected $_options = [];
-
-    /**
-     * A class to put on each part of the render code
-     * 
-     * @var string
-     */
-    protected $_globalClass = \NULL;
 
     /**
      *
@@ -192,12 +101,11 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
      */
     public function __get($name) {
         $name = lcfirst($name);
+        $value = '';
         if (isset($this->_attributes[$name])) {
-            return $this->_attributes[$name];
+            $value = $this->_attributes[$name];
         }
-        else {
-            return '';
-        }
+        return $value;
     }
 
     /**
@@ -246,6 +154,13 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
         }
     }
 
+    /**
+     * This method will be rewritten in _ElementGroup and its subclasses
+     */
+    public function addOptions($pairs, $valuesAsKeys = \FALSE){
+        
+    }
+    
     /* ----------------------------------------------------------------------
      * Rendering 
      */
@@ -291,6 +206,7 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
             $text .= " type=\"$this->_subtype\" ";
         }
         $text .= $this->_renderName();
+        $text .= $this->_renderTitle();
         $text .= $this->_renderAttributes();
         $text .= $this->_renderOptions();
         if (static::$_EndTag) {
@@ -399,18 +315,28 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
         // Treating inner labels
         if ($this->_labelPosition & self::INNER) {
             if ($inner and $position & $this->_labelPosition) {
-                return $this->_prepareLabel($position);
+                $value = $this->_prepareLabel($position);
             }
             else {
-                return '';
+                $value = '';
             }
         }
-        if ($inner) {
-            return '';
+        elseif ($inner) {
+            $value = '';
         }
         else {
-            return $this->_prepareLabel($position);
+            $value = $this->_prepareLabel($position);
         }
+        return $value;
+    }
+
+    protected function _renderTitle() {
+        $value = '';
+        $titleText = $this->_title;
+        if ($titleText !== '' and $titleText != \NULL) {
+            $value = " title=\"$titleText\" ";
+        }
+        return $value;
     }
 
     /**
@@ -433,7 +359,7 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
                 $text .= ">";
             }
             else {
-                $text .=" for=\"$name\">";
+                $text .= " for=\"$name\">";
             }
             $text .= "$label</label>\n";
         }
@@ -497,7 +423,7 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
         }
         return $this;
     }
-    
+
     /**
      * Validate, in necessary, according to the validator
      * 
@@ -575,7 +501,7 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
      */
     public function getLabel($num = 0) {
         if (is_array($this->_label)) {
-            $label =  $this->_label[$num];
+            $label = $this->_label[$num];
         }
         else {
             $label = $this->_label;
@@ -626,12 +552,12 @@ abstract class _Element { //implements \Iris\Translation\iTranslatable {
      * @return $this
      */
     public function setTitle($title) {
-        $this->_title = $title;
+        if ($title !== \NULL) {
+            $this->_title = $title;
+        }
         return $this;
     }
 
-        
-    
     /**
      * 
      * @return type

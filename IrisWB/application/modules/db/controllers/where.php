@@ -1,4 +1,5 @@
 <?php
+
 namespace modules\db\controllers;
 
 use Iris\DB\Query;
@@ -11,6 +12,7 @@ use Iris\DB\Query;
  *  
  * @copyright 2011-2016 Jacques THOORENS
  */
+
 /**
  * 
  * Test of all WHERE variants
@@ -24,7 +26,7 @@ class where extends _db {
      * Common part of the actions
      */
     protected function _init() {
-        $this->_entityManager = \Iris\DB\_Entity::DefaultEntityManager();
+        $this->_entityManager = $entityManager = \models\TInvoices::GetEM();
         $this->__action = "show";
         $this->dbState()->validateDB();
         $this->setDefaultScriptDir('where');
@@ -36,6 +38,7 @@ class where extends _db {
     public function whereAction() {
         $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
         $this->__invoice2 = $eInvoices->find(2);
+        $this->__invoice45 = $eInvoices->find(45);
         $eInvoices->where('InvoiceDate >', '2012-02-13');
         $this->__invoice1 = $eInvoices->fetchRow();
         // must repeat condition after fetch
@@ -67,6 +70,68 @@ class where extends _db {
         // Customers with email
         $eCustomers->whereNotNull('Email');
         $this->__withMail = $eCustomers->fetchAll();
+    }
+
+    public function findAction() {
+        $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
+        $this->__invoice2 = $eInvoices->find(2);
+        $this->__invoice45 = $eInvoices->find(45);
+        $eOrders = \models\TOrders::GetEntity($this->_entityManager);
+        $this->__order12 = $eOrders->find([1, 2]);
+        $this->__order10145 = $eOrders->find([101, 45]);
+        $this->__order51 =  $eOrders->find(['invoice_id' => 5, 'product_id' => 1]);
+        $this->__order5_1 = $eOrders->find(['product_id' => 1, 'invoice_id' => 5]);// not displayed
+    }
+
+        /*  +----+-------------+-------------+--------+
+            | id | InvoiceDate | customer_id | Amount |
+            +----+-------------+-------------+--------+
+            |  1 | 2012-01-05  |           1 |   NULL |
+            |  2 | 2012-01-05  |           2 |   NULL |
+            |  3 | 2012-01-05  |           3 |   NULL |
+            |  4 | 2012-02-13  |           1 |   NULL |
+            |  5 | 2012-02-21  |           1 |   NULL |
+            |  6 | 2012-03-05  |           3 |   NULL |
+            +----+-------------+-------------+--------+  */
+    
+    
+    public function fetchrowAction() {
+        $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
+        /* @var $i1 \Iris\DB\Object */
+        $this->__inv1 = $i1 = $eInvoices->fetchRow("InvoiceDate>",'2012-02-13');  // invoices 5 (next ones is 6
+        $this->__inv2 = $i2 =  $eInvoices->fetchRow("InvoiceDate>",'2017-01-01');  // NULL
+        /* @var $i3 \Iris\DB\Object */
+        $this->__inv3 = $i3 =  $eInvoices->where("InvoiceDate>",'2012-02-13')->fetchRow();
+        $this->__inv4 = $i4 =  $eInvoices->where("InvoiceDate>",'2017-01-01')->fetchrow();
+        if (count(array_diff($i1->asArray(), $i3->asArray()))) {
+            print('Error in comparing the results');
+        }
+        if (!empty($i2) or (!empty($i4))) {
+            print('Error in \NULL results');
+        }
+    }
+
+    public function fetchallAction() {
+        $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
+        $this->__inv1 = $i1 = $eInvoices->fetchAll();  // invoices 5 and 6
+        /* @var $i3 \Iris\DB\Object */
+        $this->__inv2 = $i2 =  $eInvoices->where("InvoiceDate>",'2017-01-01')->fetchAll();
+//        if (count(array_diff($i1->asArray(), $i3->asArray()))) {
+//            print('Error in comparing the results');
+//        }
+//        if (!empty($i2) or (!empty($i4))) {
+//            print('Error in \NULL results');
+//        }
+    }
+
+    public function fetchallinarrayAction() {
+        $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
+        $this->__inv1 = $i1 = $eInvoices->where('InvoiceDate==','2012-01-05')->fetchAllInArray();
+        //i_d($i1);
+    }
+
+    public function fetchallindexedAction() {
+        
     }
 
     /**
@@ -150,21 +215,22 @@ class where extends _db {
      * Demo for Limit
      * @param init $offset
      */
-    public function limitAction(){
+    public function limitAction() {
         $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
         $eInvoices->order('id')
-                ->limit(2,0);
+                ->limit(2, 0);
         $this->__invoices = $eInvoices->fetchall();
         $this->__clause = "ORDER BY Address";
     }
-    
-    public function nextAction($offset = 0){
-        $this->_specialScreen(['Press next to see the rest of the invoices','Press resume to go back to the normal sequence']);
+
+    public function nextAction($offset = 0) {
+        $this->_specialScreen(['Press next to see the rest of the invoices', 'Press resume to go back to the normal sequence']);
         $eInvoices = \models\TInvoices::GetEntity($this->_entityManager);
         $eInvoices->order('id')
-                ->limit(2,$offset);
+                ->limit(2, $offset);
         $this->__invoices = $eInvoices->fetchall();
         $this->__clause = "ORDER BY Address";
         $this->setViewScriptName('limit');
     }
+
 }

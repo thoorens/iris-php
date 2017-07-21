@@ -54,7 +54,7 @@ abstract class _Sequence {
      * Gives an array of all sequence with sections 
      * and possibly subsections.
      */
-    public abstract function getStructuredSequence();
+    public abstract function getStructuredSequence($page);
 
     /**
      * Returns the URL of the first element 
@@ -143,6 +143,8 @@ abstract class _Sequence {
      * Internally gets url the url of the next element in sequence
      */
     protected abstract function _getNext();
+    
+    public abstract function getCodeDescription();
 
     /**
      * Gets the current value 
@@ -188,5 +190,13 @@ abstract class _Sequence {
      * @return \Iris\Structure\iExplanationProvider
      */
     protected abstract function _getExplanationProvider();
+    
+    
+    /**
+     * Return a message adapted to the current displayed view.
+     * 
+     * @param \Iris\MVC\View $view
+     */
+    public abstract function getMessage($view);
 }
 

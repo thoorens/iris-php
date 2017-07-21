@@ -20,7 +20,7 @@ class forms extends _dojo {
 
     protected function _init() {
         $this->_setLayout('application');
-        $this->_form = \Dojo\Forms\FormFactory::GetDefaultFormFactory()->createForm('test');
+        $this->_form = \Dojo\Forms\FormFactory::GetFormFactory()->createForm('test');
     }
 
 

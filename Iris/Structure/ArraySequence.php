@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\Structure;
 
 /*
@@ -22,8 +23,7 @@ namespace Iris\Structure;
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 class ArraySequence extends _Sequence {
 
     /**
@@ -33,7 +33,7 @@ class ArraySequence extends _Sequence {
      * @var string
      */
     protected $_explanationProvider = \NULL;
-    
+
     /**
      * The sequence to be followed
      * 
@@ -108,10 +108,13 @@ class ArraySequence extends _Sequence {
      */
     protected function _getURL3($url, $defaultLabel) {
         if (is_null($url)) {
-            return $this->_noLink();
+            $returnValue = $this->_noLink();
         }
-        list($description, $label) = explode('|', $this->_sequence[$url] . "|$defaultLabel");
-        return array($label, $url, $description);
+        else {
+            list($description, $label) = explode('|', $this->_sequence[$url] . "|$defaultLabel");
+            $returnValue = [$label, $url, $description];
+        }
+        return $returnValue;
     }
 
     protected function _getNext() {
@@ -140,8 +143,6 @@ class ArraySequence extends _Sequence {
         return $maptable[$this->_currentURL];
     }
 
-    
-
     /**
      * Sets the current index
      * 
@@ -162,8 +163,9 @@ class ArraySequence extends _Sequence {
     public function setExplanationProvider($explanationProvider) {
         $this->_explanationProvider = $explanationProvider;
     }
-    
+
+    public function getMessage($view) {
+        
+    }
 
 }
-
-

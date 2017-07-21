@@ -216,7 +216,7 @@ class Analyser {
                     Parameters::GetInstance()->setVerbose(\TRUE);
                     break;
                 case 'debug':
-                    i_dnd($options);
+                    //show_nd($options);
                     i_d($GLOBALS['argv']);
                 // ------------------------------------------------------------------------------------------------------------
                 // creates a project

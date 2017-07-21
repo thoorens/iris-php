@@ -11,8 +11,8 @@ function winShellVar($var) {
 }
 
 /**
- * Borrowed from http://php.net/manual/fr/function.rcopy.php
- * https://secure.php.net/manual/fr/function.copy.php
+ * Borrowed from http://secure.php.net/manual/fr/function.copy.php
+ * Posted by promaty@gmail.com
  */
 // removes files and non-empty directories
 function rrmdir($dir) {
@@ -62,7 +62,32 @@ function rcopy($src, $dst, $windows) {
 
 // end of borrowing
 
-
+/**
+ * 
+ * @param type $windows
+ * @param type $target
+ */
+function systemLinks($windows, $target) {
+    if ($windows) {
+        $system32 = winShellVar("systemroot");
+        $system32 .= "\\system32";
+        $wtarget = str_replace('/', '\\', $target);
+        $cmd = "mklink $system32\\iris.php $wtarget\\CLI\\iris.php";
+        shell_exec($cmd);
+    }
+    else {
+        echo "Creating a symbolic link from $target/CLI/iris.php to /usr/local/bin\n";
+        if (file_exists("/usr/local/bin/iris.php")) {
+            unlink("/usr/local/bin/iris.php");
+        }
+        symlink("$target/CLI/iris.php", "/usr/local/bin/iris.php");
+        echo "Creating irishelp in /usr/local/bin\n";
+        if (file_exists("/usr/local/bin/irishelp")) {
+            unlink("/usr/local/bin/irishelp");
+        }
+        symlink("$target/CLI/irishelp", "/usr/local/bin/irishelp");
+    }
+}
 
 /* Only root may install Iris-PHP */
 
@@ -73,7 +98,7 @@ elseif (PHP_OS == 'WINNT') {
     $windows = \TRUE;
 }
 else {
-    echo "IRIS-PHP install works only in Windows 7 and Linux, sorry!";
+    echo "IRIS-PHP install works only in Windows 7,/8.x/10  and Linux, sorry!";
     exit(100);
 }
 $dirName = "";
@@ -101,18 +126,20 @@ else {
     endif;
 }
 
-if ($dirName == ""):
+if ($dirName == "") {
     echo ("You must provide a directory name in which install your framework library.\n");
     exit(2);
-else:
-    if (file_exists("$dirName/iris")):
-        echo "The directory $dirName/iris seems to exist. Run again the install program with another target base directory\n";
+}
+else {
+    $target = "$dirName/iris";
+    if (file_exists($target)) {
+            echo "The directory $dirName/iris seems to exist. Run again the install program with another target base directory\n";
         if (!$windows) {
             echo "Do no forget to specify you are using MS Windows by adding '-w' to the command, if it is the case.\n";
         }
         exit(3);
-    else:
-        $target = "$dirName/iris";
+    }
+    else {
         echo "Creating directory $target\n";
         mkdir($target, 0777, \TRUE);
         echo "Copying library folders...\n";
@@ -133,34 +160,16 @@ else:
             "Vendors" => "composed of libraries written by other programmers",
         ];
         foreach ($folders as $name => $description) {
-            echo $description."\n";
+            echo $description . "\n";
             rcopy($name, "$target/$name", $windows);
         }
         $files = [
             'gpl-3.0.txt' => "A copy of the GNU general Licence",
         ];
         foreach ($files as $name => $description) {
-            echo $description."\n";
+            echo $description . "\n";
             copy($name, "$target/$name");
         }
-        if ($windows) {
-            $system32 = winShellVar("systemroot");
-            $system32 .= "\\system32";
-            $wtarget = str_replace('/', '\\', $target);
-            $cmd = "mklink $system32\\iris.php $wtarget\\CLI\\iris.php";
-            shell_exec($cmd);
-        }
-        else {
-            echo "Creating a symbolic link from $target/CLI/iris.php to /usr/local/bin\n";
-            if (file_exists("/usr/local/bin/iris.php")) {
-                unlink("/usr/local/bin/iris.php");
-            }
-            symlink("$target/CLI/iris.php", "/usr/local/bin/iris.php");
-            echo "Creating irishelp in /usr/local/bin\n";
-            if (file_exists("/usr/local/bin/irishelp")) {
-                unlink("/usr/local/bin/irishelp");
-            }
-            symlink("$target/CLI/irishelp", "/usr/local/bin/irishelp");
-        }
-    endif;
-endif;
+        systemLinks($windows, $target);
+    }
+}

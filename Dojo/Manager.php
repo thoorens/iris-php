@@ -8,7 +8,7 @@ namespace Dojo;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2016 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -17,16 +17,14 @@ namespace Dojo;
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 class Manager implements \Iris\Design\iSingleton {
 
     use \Iris\Engine\tSingleton;
 
     const LOCAL = 0;
     const GOOGLE = 1;
-    const AOL = 2; //disappeared
-    const YANDEX = 3; //disappeared
+
     /**
      * Part of the singleton mechanism
      * @var Manager
@@ -37,14 +35,14 @@ class Manager implements \Iris\Design\iSingleton {
      * The JS init code for the dojo witgets used in the program
      * @var string[]
      */
-    protected $_initCode = array();
+    protected $_initCode = [];
 
     /**
      * The style file used by Dojo
      *
      * @var string[]
      */
-    protected $_styleFiles = array();
+    protected $_styleFiles = [];
 
     /**
      * when _dojoActive is false, no dojo tags nor attributes

@@ -1,0 +1,22 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>fetchRow()</h3>
+    <h5>Returns the first of various objects (invoices after 2012-02-13)</h5>
+    <ul>
+        <li>
+           {invoice($inv1,'after 2012-02-13')} 
+        </li>
+    </ul>
+    <h5>Returns no objects (invoices after 2017-01-01)</h5>
+    
+    <ul>
+        <li>
+           {invoice($inv2,'after 2017-01-01')}  
+        </li>
+    </ul>
+    <hr />
+    
+    <p>
+        {dbWarning()}
+    </p>
+</div>

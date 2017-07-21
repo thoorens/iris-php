@@ -10,15 +10,14 @@ use Dojo\Manager;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
- * This class 
+ * This class contains all the Dojo settings
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  */
 class Settings {
 
@@ -31,15 +30,9 @@ class Settings {
      * 
      * @var string 
      */
-    //const VERSION = '1.12.4';
-    const VERSION = '1.11.2'; //Last version on Google (2017/01/29)
-    //const VERSION = '1.10.4';
-    //const VERSION = '1.9.0';
+    const VERSION = '1.12.2'; //Last version on Google (2017/05/04)
     const URL_DOJO_GOOGLE = "https://ajax.googleapis.com/ajax/libs/dojo/";
 
-//  const URL_DOJO_AOL = "http://o.aolcdn.com/dojo/"; //disappeared
-    
-//  const URL_DOJO_YANDEX = "http://yandex.st/dojo"; //disappeared
     /**
      * A Dojo theme : claro
      */

@@ -1,0 +1,15 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>fetchAllInArray()</h3>
+    
+    <ul>
+        <li>
+            {inv1[0]['InvoiceDate']}
+        </li>
+    </ul>
+    <hr />
+
+    <p>
+        {dbWarning()}
+    </p>
+</div>   

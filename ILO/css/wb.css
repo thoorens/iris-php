@@ -27,6 +27,9 @@ div#main {
   margin: 0 auto;
   background-color: white; }
 
+div.center {
+  text-align: center; }
+
 .column {
   min-height: 520px;
   float: left;

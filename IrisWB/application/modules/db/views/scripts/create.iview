@@ -1,0 +1,6 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>To be created</h3>
+    {button('Retour sur la liste des tests','/db/tables/toc')}
+    {dbWarning()}
+</div>

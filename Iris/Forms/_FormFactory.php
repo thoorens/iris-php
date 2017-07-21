@@ -1,7 +1,7 @@
 <?php
 
 namespace Iris\Forms;
-
+use Iris\Forms\Validators\Force as VForce;
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
  * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
@@ -22,6 +22,52 @@ namespace Iris\Forms;
 abstract class _FormFactory {
 
     /**
+     * 
+     */
+    const AUTO = 'auto';
+
+    /**
+     * 
+     */
+    const HTML = 'html';
+
+    /**
+     * 
+     */
+    const DOJO = 'dojo';
+
+    /**
+     * 
+     */
+    const AUTOFORMNAME = 'form';
+
+    /**
+     * Gecko – for Firefox, Camino, K-Meleon, SeaMonkey, Netscape, and other Gecko-based browsers
+     */
+    const GECKO_ENGINE = "Gecko";
+
+    /**
+     * WebKit for 
+     * iOS (including both mobile Safari, WebViews 
+     * within third-party apps, and web clips), 
+     * Safari, Arora, Midori, OmniWeb (since version 5), 
+     * Shiira, iCab since version 4, 
+     * Web, SRWare Iron, Rekonq, 
+     * Sleipnir, in Maxthon 3, and 
+     * Google Chrome up to version 27
+     */
+    const WEBKIT_ENGINE = "WebKit";
+
+    /**
+     * EdgeHTML – for Microsoft Edge
+     */
+    const EDGEHTML_ENGINE = "EdgeHTML";
+
+    /**
+     * See \Iris\System\WebEngine for other engine details
+     */
+
+    /**
      * The library in which find the elements
      *
      * @var string
@@ -35,6 +81,27 @@ abstract class _FormFactory {
     protected $_serverValidation = \FALSE;
 
     /**
+     *
+     * @var string
+     */
+    protected $_webEngine;
+
+    /**
+     *
+     * @var string[] 
+     */
+    protected $_engineNames;
+
+    /**
+     *
+     * @var string 
+     */
+    protected $_weVersion;
+
+    
+    protected static $_FactoryType;
+    
+    /**
      * At class loading, stores the class name in $_Library
      */
     public static function __ClassInit() {
@@ -45,14 +112,23 @@ abstract class _FormFactory {
     }
 
     /**
-     *
+     * 
      * @return _FormFactory
      */
-    public static function GetDefaultFormFactory() {
-        $defaultClassName = \Iris\SysConfig\Settings::$DefaultFormClass;
-        /* @var $ff _FormFactory */
-        $ff = new $defaultClassName();
-        return new $defaultClassName();
+    public static function GetFormFactory($factoryType = self::AUTO) {
+        switch ($factoryType) {
+            case _FormFactory::AUTO:
+                $defaultClassName = \Iris\SysConfig\Settings::$DefaultFormClass;
+                $factory = new $defaultClassName();
+                break;
+            case self::HTML:
+                $factory = new \Iris\Forms\StandardFormFactory();
+                break;
+            case self::DOJO:
+                $factory = new \Dojo\Forms\FormFactory();
+                break;
+        }
+        return $factory;
     }
 
     /**
@@ -118,6 +194,7 @@ abstract class _FormFactory {
      * @return \Iris\Forms\Elements\InputElement
      */
     public function createSubmit($name, $options = []) {
+        print "Submit";
         return $this->_createInput($name, 'submit', $options);
     }
 
@@ -263,6 +340,19 @@ abstract class _FormFactory {
     }
 
     /**
+     * Creates an element of type Text
+     * 
+     * @param string $name The name of the element
+     * @param array $options The optional options
+     * @return \Iris\Forms\Elements\InputElement
+     */
+    public function createInteger($name, $options = []) {
+        $text = $this->createText($name, $options);
+        $text->addValidator(new VForce(VForce::NUM));
+        return $text;
+    }
+
+    /**
      * Creates an element of type Multicheckbox
      * 
      * @param string $name The name of the group
@@ -347,6 +437,15 @@ abstract class _FormFactory {
         return $class;
     }
 
+    /**
+     * Gets the type of factory of the subclass
+     * 
+     * @return string
+     */
+    public function getType(){
+        return static::$_FactoryType;
+    }
+    
     /*
      * 
      * SPECIAL ELEMENTS FOR HTML5
@@ -363,20 +462,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createDateTime($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'datetime', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('datetime');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\DateTime());
         }
@@ -391,20 +478,8 @@ abstract class _FormFactory {
      * @return _Element
      */
     public function createDate($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'date', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('date');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Date());
         }
@@ -420,20 +495,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createDateTimeLocal($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'datetime-local', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('datetime-local');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\DateTime());
         }
@@ -449,21 +512,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createWeek($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'week', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('week');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Week());
         }
@@ -479,21 +529,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createUrl($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'url', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('url');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\URL());
         }
@@ -509,21 +546,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createTel($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'tel', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('tel');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Tel());
         }
@@ -539,21 +563,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createSearch($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'search', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('search');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Search());
         }
@@ -569,21 +580,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createRange($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'range', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('range');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Search());
         }
@@ -598,21 +596,8 @@ abstract class _FormFactory {
      * @return \Iris\Forms\Elements\InputElement
      */
     public function createNumber($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'number', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('number');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Number());
         }
@@ -627,21 +612,8 @@ abstract class _FormFactory {
      * @return \Iris\Forms\Elements\InputElement
      */
     public function createMonth($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'month', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('month');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Number());
         }
@@ -657,21 +629,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createEmail($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'email', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('email');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Email());
         }
@@ -687,21 +646,8 @@ abstract class _FormFactory {
      * @throws Iris\Exceptions\FormException
      */
     public function createColor($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'color', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('color');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Color());
         }
@@ -716,41 +662,40 @@ abstract class _FormFactory {
      * @return _Element
      */
     public function createTime($name, $options = []) {
-        $rules = [
-            'Trident' => '',
-            'Edge' => '',
-            'Gecko' => '',
-            'WebKit' => '',
-            'Presto' => '',
-                // 'Blink' => '',
-        ];
-        if ($this->_inHTML5([])) {
-            $element = $this->_createInput($name, 'time', $options);
-        }
-        else {
-            $element = $this->_createInput($name, 'text', $options);
-        }
+        $type = $this->_browserAbility('time');
+        $element = $this->_createInput($name, $type, $options);
         if ($this->_serverValidation) {
             $element->addValidator(new Validators\Color());
         }
         return $element;
     }
 
-    public function _inHTML5($rules) {
-        list($engine, $version) = \Iris\System\Browser::GetBrowser();
-        $engineNames = [
-            'Presto', // In old Opera
-            // 'Blink' in Chrome (no information)
-            'Edge',
-            'WebKit',
-            'Gecko',
-            'Trident',
-        ];
-        while (count($rules) < count($engineNames)) {
-            $rules[] = -1;
+    protected function _browserAbility($type) {
+        if ($this->_webEngine === \NULL) {
+            $webEngine = \Iris\System\WebEngine::GetInstance();
+            $this->_webEngine = $webEngine->getEngineName();
+            $this->_weVersion = $webEngine->getVersion();
+            $this->_engineNames = [
+                self::GECKO_ENGINE,
+                self::EDGEHTML_ENGINE,
+                self::WEBKIT_ENGINE
+            ];
         }
-        $namedRules = array_combine($engineNames, $rules);
-        return $namedRules[$engine] >= $version ? \FALSE : \TRUE;
+        $rules = \Iris\System\WebEngine::$TypeRules;
+        foreach ($this->_engineNames as $engineName) {
+            if (!isset($rules[$engineName])) {
+                $rules[$engineName] = -1;
+            }
+        }
+        if ($rules[$this->_webEngine] > $this->_weVersion) {
+            \Iris\Engine\Log::Debug("Type $type :' . N<br/>", \Iris\Engine\Debug::HTML5);
+            $value =  'text';
+        }
+        else {
+            \Iris\Engine\Log::Debug("Type $type : Y<br/>", \Iris\Engine\Debug::HTML5);
+            $value =  $type;
+        }
+        return $value;
     }
 
 }

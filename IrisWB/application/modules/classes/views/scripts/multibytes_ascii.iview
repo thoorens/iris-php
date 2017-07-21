@@ -1,0 +1,11 @@
+{wbHeader()}
+<pre>
+    {scale} <br>
+    {text} <br>
+    {upper}<br>
+    {mbupper}<br>
+    Size : <b>{size}</b>><br>
+    {low} <br>
+    {scale}<br>
+    Size : <b>{size2}</b>
+</pre>

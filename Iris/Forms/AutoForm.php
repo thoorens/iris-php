@@ -67,7 +67,7 @@ class AutoForm {
     public function __construct(db\_Entity $entity) {
         $this->_entity = $entity;
         $this->_metadata = $entity->getMetadata();
-        $this->_formFactory = _FormFactory::GetDefaultFormFactory();
+        $this->_formFactory = _FormFactory::GetFormFactory();
     }
 
     /**
@@ -77,14 +77,15 @@ class AutoForm {
      * @return \Iris\Forms\Elements\Form
      */
     public function prepare() {
-        $this->_scanConfigFile(); // may overidde $this->_formFactory
+        //$this->_scanConfigFile(); // may overidde $this->_formFactory
         die('Prepare');
         $this->_form = $this->_formFactory->createForm("iris_autoform_" . $this->_metadata->getTablename());
         foreach ($this->_metadata->getFields() as $name => $field) {
             print $name . '<br>';
-            //$this->_createElement($name, $field);
+            $element = $this->_createElement($name, $field); //->addTo($this->_form);
+            i_d($element);
         }
-        die('End of form');
+        //die('End of form');
         $this->_addSubmit();
         return $this->_form;
     }
@@ -145,10 +146,10 @@ class AutoForm {
      * @param type $data
      */
     private function _addSpecs($spec, $data) {
-        //i_dnd($spec);
+        ////show_nd($spec);
         foreach ($data as $item) {
             $command = strtoupper($item[0]);
-            i_dnd($command);
+            //show_nd($command);
             $text = substr($item, 2);
             switch ($command) {
                 case 'L ':
@@ -175,7 +176,7 @@ class AutoForm {
                     break;
             }
         }
-        i_dnd($spec);
+        //show_nd($spec);
     }
 
     /**
@@ -187,6 +188,7 @@ class AutoForm {
     private function _createElement($name, $field) {
         $formFactory = $this->_formFactory;
         if (isset($this->_fieldSpecs[$name])) {
+            die('Spec');
             $element = $this->_fromConfig($name, $formFactory);
         }
         else {
@@ -194,9 +196,10 @@ class AutoForm {
                 $element = $this->_fromMetadata($field, $formFactory);
             }
             else {
-                
+                $element = $this->_fromMetadata($field, $formFactory);
             }
         }
+        i_d($element);
     }
 
     /**
@@ -219,22 +222,24 @@ class AutoForm {
      * @param \Iris\Forms\_FormFactory $formFactory
      */
     private function _fromMetadata($fields, $formFactory) {
+                        //i_d($fields);
+
         foreach ($fields as $field) {
             $name = $field->getFieldName();
             switch ($field->getType()) {
                 case 'BOOL':
                     print("Checkbox" . $name . '<br>');
-//                    $element = $formFactory->createCheckbox($name);
+                    $element = $formFactory->createCheckbox($name);
                     break;
                 case 'DATETIME':
                     print("Checkbox" . $name . '<br>');
-                    //                  $element = $formFactory->createDate($name);
+                  $element = $formFactory->createDate($name);
                     break;
                 default:
                     print("Checkbox" . $name . '<br>');
-                //                $element = $formFactory->createText($name);
+                    $element = $formFactory->createText($name);
             }
-//            $element->addTo($this->_form);
+            $element->addTo($this->_form);
         }
     }
 

@@ -1,0 +1,17 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h3>fetchAllIndexed()</h3>
+    <p>
+        Invoice #2
+    </p>
+    <ul>
+        <li>
+            
+        </li>
+    </ul>
+    <hr />
+    
+    <p>
+        {dbWarning()}
+    </p>
+</div>    

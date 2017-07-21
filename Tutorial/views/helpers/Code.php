@@ -225,7 +225,7 @@ class Code extends \Dojo\views\helpers\_Sequence {
      */
     private function _open($id, $startTime) {
         $this->_computeStartTime($startTime);
-        if ($this->_mode == self::AUTOMODE) {
+        if ($this->_mode == _FormFactory::AUTOMODE) {
             $this->_animateSynchro();
             $html = $this->callViewHelper('dojo_animation')->waitIn($id, $startTime, $this->_delay);
         }

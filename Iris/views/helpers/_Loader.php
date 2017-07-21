@@ -18,6 +18,7 @@ namespace Iris\views\helpers;
  * <li> ->styleLoader('mystyle.css');
  * <li> ->styleLoader('test',"#test {background-color:white}");
  * </ul>
+ * @todo Régler problème des doubles chargements
  */
 abstract class _Loader extends _ViewHelper {
 
@@ -67,7 +68,7 @@ abstract class _Loader extends _ViewHelper {
                     throw new \Iris\Exceptions\ViewException("Doublons in javascript files under index $label");
                 }
                 else {
-                    throw new \Iris\Exceptions\ViewException("Doublons in css files under index $label");
+                    //throw new \Iris\Exceptions\ViewException("Doublons in css files under index $label");
                 }
             }
             $this->_files[$label] = $content;

@@ -50,10 +50,8 @@ abstract class _Entity {
      * @var String 
      */
     protected $_entityName = \NULL;
-
-    
     protected static $_TableName = \NULL;
-    
+
     /**
      * The number of the entity manager linked to the database
      * If it is 0 the database defined in config/xxdatabase.ini will be used
@@ -75,8 +73,7 @@ abstract class _Entity {
      * @var String[]
      */
     public static $_Bridges = [];
-    
-    
+
     /**
      * For extension purpose
      * @var _EntityManager
@@ -96,7 +93,6 @@ abstract class _Entity {
      */
     protected $_reflectionEntity = \NULL;
 
-    
     /**
      * By default, the row are of type Object
      * @var string 
@@ -131,8 +127,7 @@ abstract class _Entity {
      * 
      * @var string 
      */
-    protected $_descriptionField = '';
-    protected static $_DescriptionField2 = '';
+    protected static $_MainField = 'Element #';
 
     /**
      * Metadata are stored for performance reasons
@@ -160,10 +155,8 @@ abstract class _Entity {
      * @var boolean
      */
     protected $_register = \TRUE;
-    
-    
     protected $_parents = [];
-        
+
     /* =======================================================================================================
      * C O N S T R U C T O R    A N D  F A C T O R Y   M E T H O D S
      * =======================================================================================================
@@ -255,7 +248,6 @@ abstract class _Entity {
         self::$_TableName = $TableName;
     }
 
-            
     /**
      * Analyses parameters to find an entityManager if possible, a plausible
      * entityName and a className and the gets the corresponding entity.
@@ -377,6 +369,7 @@ abstract class _Entity {
      */
     public function retrieveObject($idValues) {
         $id = implode('|', $idValues);
+        //show_nd($idValues);
         if (isset($this->_objectRepository[$id])) {
             return $this->_objectRepository[$id];
         }
@@ -452,8 +445,8 @@ abstract class _Entity {
      * 
      * @return string 
      */
-    public function getDescriptionField() {
-        return $this->_descriptionField;
+    public static function GetMainField() {
+        return static::$_MainField;
     }
 
     /**
@@ -1070,7 +1063,16 @@ abstract class _Entity {
                 }
                 $metadata->addForeign($foreignKey);
             }
- //if necessary adds bridges
+
+            $desc = static::GetMainField();
+            if (!empty($desc)) {
+//                //show_nd($this->_entityName);
+//                //show_nd(get_called_class());
+//                //show_nd(static::GetMainField());
+//                //show_nd('=========================');
+                $metadata->addDescription($desc);
+            }
+            //if necessary adds bridges
 //            $class = get_called_class();
 //            foreach(static::$_Bridges as $bridge){
 //                $metadata->addBridge($bridge);
@@ -1117,12 +1119,12 @@ abstract class _Entity {
         return $this;
     }
 
-    public function GetParentList($key){
+    public function GetParentList($key) {
         return $this->_parents;
-        
     }
-    
-    public function SetParentList($values){
+
+    public function SetParentList($values) {
         $this->_parents = $values;
     }
+
 }

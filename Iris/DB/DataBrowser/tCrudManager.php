@@ -43,7 +43,7 @@ trait tCrudManager {
      * @param string $actionName
      * @param type $parameters
      */
-    public final function __callAction($actionName, $parameters) {
+    public final function __callAction($actionName, $parameters){
         $shortAction = preg_replace('/(.*)\_.*Action/', '$1', $actionName);
         $this->_changeViewScript($shortAction);
         $this->_preCustomize($shortAction);

@@ -7,7 +7,7 @@ namespace Dojo\Engine;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2016 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -17,8 +17,7 @@ namespace Dojo\Engine;
  *
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 class Bubble {
     use \Iris\System\tRepository;
 

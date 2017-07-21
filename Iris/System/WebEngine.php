@@ -190,7 +190,7 @@ class WebEngine {
           $this->_testServo() ||
           $this->_testTlHtml() */
         ;
-        print($this->_engine . ' - ' . $this->_version);
+        \Iris\Engine\Log::Debug($this->_engine . ' - ' . $this->_version."<br/>", \Iris\Engine\Debug::HTML5);
     }
 
     /**

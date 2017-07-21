@@ -12,6 +12,7 @@ namespace modules\classes\controllers;
  */
 class time extends _classes {
 
+    
     /**
      * All the symbols used day formating. 
      * The key is the symbol
@@ -69,6 +70,7 @@ class time extends _classes {
      */
     protected function _init() {
         \Iris\SysConfig\Settings::$DefaultLanguage = 'fr';
+        $this->setDefaultScriptDir('time');
     }
 
     public function constructAction() {

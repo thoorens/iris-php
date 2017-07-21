@@ -26,6 +26,9 @@ class TInvoices extends \Iris\DB\_Entity {
      * @var string[]
      */
     protected $_externalEntities = ['customers' => 'TCustomers2'];
+    
+    
+    protected static $_MainField = "Invoice #";
 
     /*
      * W A R N I N G:

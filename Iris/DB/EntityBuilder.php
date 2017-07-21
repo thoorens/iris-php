@@ -199,6 +199,10 @@ class EntityBuilder {
             $className = $this->_initialClassName;
             try {
                 $entity = $this->_createInstance($className, $this->_proposedEntityName);
+//                $array = explode('\\', $this->_initialClassName);
+//                array_pop($array);
+//                $base = implode('\\', $array);
+                $entity->getEntityManager()->SetEntityPath($this->_initialClassName);
             }
             catch (\Exception $ex) {
                 \Iris\Engine\Debug::Abort('Table inconnue');

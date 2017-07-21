@@ -17,10 +17,8 @@ namespace Iris\Structure;
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $
  */
-class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvider {
+class DBSequence extends \Iris\Structure\_Sequence{
 
     /**
      *
@@ -44,20 +42,23 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
      */
     protected function _getURL3($url, $defaultLabel) {
         if (is_null($url)) {
-            return $this->_noLink();
-        }
-        $item = \models_internal\TSequences::GetItem($url);
-        if (is_null($item)) {
-            $label = $defaultLabel;
-            $description = 'No description';
-            return \NULL;
+            $returnValue = $this->_noLink();
         }
         else {
-            $description = $item->Description;
-            $label0 = $item->Label;
-            $label = is_null($label0) ? $defaultLabel : $label0;
+            $item = \models_internal\TSequences::GetItem($url);
+            if (is_null($item)) {
+                $label = $defaultLabel;
+                $description = 'No description';
+                $returnValue = \NULL;
+            }
+            else {
+                $description = $item->Description;
+                $label0 = $item->Label;
+                $label = is_null($label0) ? $defaultLabel : $label0;
+                $returnValue = [$label, $url, $description];
+            }
         }
-        return array($label, $url, $description);
+        return $returnValue;
     }
 
     /**
@@ -108,8 +109,14 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
         $this->_currentURL = $url;
     }
 
-    public function getStructuredSequence() {
-        return \models_internal\TSequences::GetStructuredSequence();
+    /**
+     * Retrieves all sequences and stores them in groups of arrays indexed by the group name
+     * 
+     * @param type $page
+     * @return type
+     */
+    public function getStructuredSequence($page) {
+        return \models_internal\TSequences::GetStructuredSequence($page);
     }
 
     /**
@@ -144,12 +151,18 @@ class DBSequence extends \Iris\Structure\_Sequence implements iExplanationProvid
     public function getMessage($view) {
         $url = $this->getCurrent()[1];
         if (is_null($url)) {
-            return '';
+            $message = '';
         }
-        $row = \models_internal\TSequences::GetItem($url);
-        return $row->FR;
+        else {
+            $row = \models_internal\TSequences::GetItem($url);
+            $message = $row->FR;
+        }
+        return $message;
     }
 
+    public function getCodeDescription() {
+        
+    }
+
+    
 }
-
-

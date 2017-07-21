@@ -21,7 +21,9 @@ class TOrders extends \Iris\DB\_Entity {
     
     use tInvoiceEntity;
     
-    
+    protected static $_MainField = "Order #";
+
+
     /*
      * W A R N I N G:
      * 

@@ -74,8 +74,13 @@ class Metadata implements \Serializable, \Countable {
      */
     private $_autoIncrementPrimary = \FALSE;
     private $_parentRows = [];
+    private $_descriptionField;
+    
+    public function getDescriptionField() {
+        return $this->_descriptionField;
+    }
 
-    /**
+        /**
      * 
      * @param string $tableName
      */
@@ -285,6 +290,7 @@ class Metadata implements \Serializable, \Countable {
         foreach ($this->_foreigns as $foreign) {
             $strings[] = $foreign->serialize();
         }
+        $strings[] = 'DESC@' . $this->_descriptionField;
 //        $strings[] = 'BRIDGES@' . implode('!', $this->_bridges);
         $strings[] = 'AUTOPK@' . ($this->_autoIncrementPrimary ? MetaItem::S_TRUE : MetaItem::S_FALSE);
         return implode("\n", $strings);
@@ -318,6 +324,9 @@ class Metadata implements \Serializable, \Countable {
                 case 'AUTOPK':
                     $this->_autoIncrementPrimary = $value === MetaItem::S_TRUE;
                     $this->_primary->setAutoIncrement($this->_autoIncrementPrimary);
+                    break;
+                case 'DESC':
+                    $this->_descriptionField = $value;
                     break;
 //                case 'BRIDGES':
 //                    $this->_bridges = explode('!', $value);
@@ -371,6 +380,10 @@ class Metadata implements \Serializable, \Countable {
             $result[] = [$pivot->getParent($this->_targetId), $pivot];
         }
         return $result;
+    }
+
+    public function addDescription($descriptionField) {
+        $this->_descriptionField = $descriptionField;
     }
 
 }

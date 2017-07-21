@@ -3,28 +3,15 @@
 namespace Iris\controllers\helpers;
 
 /*
- * This file is part of IRIS-PHP.
- *
- * IRIS-PHP is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * IRIS-PHP is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with IRIS-PHP.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * @copyright 2012 Jacques THOORENS
- *
- * 
- * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ * This file is part of IRIS-PHP, distributed under the General Public License version 3.
+ * A copy of the GNU General Public Version 3 is readable in /library/gpl-3.0.txt.
+ * More details about the copyright may be found at
+ * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
+ *  
+ * @copyright 2011-2017 Jacques THOORENS
+ */
+
+
 
 /**
  * A helper making some come calculation to fill part of the page
@@ -36,9 +23,10 @@ class GetScreenList extends _ControllerHelper {
      * 
      * @return type
      */
-    public function help() {
+    public function help($page=\NULL) {
+        /* @var $sequence \wbClasses\DBSequence */
         $sequence = \Iris\Engine\Memory::Get('sequence', \wbClasses\DBSequence::GetInstance());
-        $list = $sequence->getStructuredSequence();
+        $list = $sequence->getStructuredSequence($page);
         foreach ($list as $key => $value) {
             if (is_array($value)) {
                 array_walk($value, array($this, '_keepDescription'));

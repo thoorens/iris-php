@@ -2,4 +2,4 @@
 <div class="content" {wbBG()}>
     {form}
 </div>
-{partial('autolinks',$this)} 
+{partial('links',$this)} 

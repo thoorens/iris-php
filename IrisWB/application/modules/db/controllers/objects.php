@@ -24,7 +24,7 @@ namespace modules\db\controllers;
 class objects extends _db {
 
     protected function _init() {
-        $this->_entityManager = \models\TInvoices::DefaultEntityManager();
+        $this->_entityManager = \models\TInvoices::GetEM();
     }
 
     public function simpleAction() {

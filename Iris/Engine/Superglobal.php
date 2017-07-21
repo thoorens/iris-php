@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\Engine;
 
 /*
@@ -7,7 +8,7 @@ namespace Iris\Engine;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -28,8 +29,8 @@ abstract class Superglobal {
      * @param mixed $default
      * @return mixed
      */
-    public static function GetPost($key = NULL, $default = NULL) {
-        return self::_GetData('POST', $key, $default);
+    public static function GetPost($key = \NULL, $default = \NULL, $filter = \NULL) {
+        return self::_GetData(\INPUT_POST, $key, $default, $filter);
     }
 
     /**
@@ -40,8 +41,8 @@ abstract class Superglobal {
      * @param mixed $default
      * @return mixed
      */
-    public static function GetGet($key = NULL, $default = NULL) {
-        return self::_GetData('GET', $key, $default);
+    public static function GetGet($key = \NULL, $default = \NULL, $filter = \NULL) {
+        return self::_GetData(\INPUT_GET, $key, $default, $filter);
     }
 
     /**
@@ -50,10 +51,11 @@ abstract class Superglobal {
      * 
      * @param string $key
      * @param mixed $default
+     * @param int $filter Special filter to treat content for security
      * @return mixed
      */
-    public static function GetServer($key = NULL, $default = NULL) {
-        return self::_GetData('SERVER', $key, $default);
+    public static function GetServer($key = \NULL, $default = \NULL, $filter = \NULL) {
+        return self::_GetData(\INPUT_SERVER, $key, $default, $filter);
     }
 
     /**
@@ -62,11 +64,12 @@ abstract class Superglobal {
      * 
      * @param string $key
      * @param mixed $default
+     * @param int $filter Special filter to treat content for security
      * @return mixed
      */
-    public static function GetSession($key = NULL, $default = NULL) {
+    public static function GetSession($key = \NULL, $default = \NULL, $filter = \NULL) {
         \Iris\Users\Session::GetInstance();
-        return self::_GetData('SESSION', $key, $default);
+        return self::_GetData(\INPUT_SESSION, $key, $default, $filter);
     }
 
     /**
@@ -75,10 +78,11 @@ abstract class Superglobal {
      * 
      * @param string $key
      * @param mixed $default
+     * @param int $filter Special filter to treat content for security
      * @return mixed
      */
-    public static function GetEnv($key = NULL, $default = NULL) {
-        return self::_GetData('ENV', $key, $default);
+    public static function GetEnv($key = \NULL, $default = \NULL, $filter = \NULL) {
+        return self::_GetData(\INPUT_ENV, $key, $default, $filter);
     }
 
     /**
@@ -89,8 +93,19 @@ abstract class Superglobal {
      * @param mixed $default
      * @return mixed
      */
-    public static function GetCookie($key = NULL, $default = NULL) {
-        return self::_GetData('COOKIE', $key, $default);
+    public static function GetCookie($key = \NULL, $default = \NULL, $filter = \NULL) {
+        return self::_GetData(\INPUT_COOKIE, $key, $default, $filter);
+    }
+
+    /**
+     * 
+     * @param type $key
+     * @param type $default
+     * @param int $filter Special filter to treat content for security
+     * @throws \Iris\Exceptions\InternalException
+     */
+    public static function GetRequest($key = \NULL, $default = \NULL, $filter = \NULL) {
+        throw new \Iris\Exceptions\InternalException('GetRequest is not implemented and many developpers say $_REQUEST should never be used instead of $_FET, $_POST and $_COOKIES');
     }
 
     /**
@@ -101,27 +116,37 @@ abstract class Superglobal {
      * @param mixed $default
      * @return mixed 
      */
-    private static function _GetData($name, $key, $default) {
-        switch ($name) {
-            case 'SERVER':
-                $var = $_SERVER;
-                break;
-            case 'SESSION':
-                \Iris\Users\Session::GetInstance();
-                $var = $_SESSION;
-                break;
-            case 'POST':
-                $var = $_POST;
-                break;
-            case 'GET':
-                $var = $_GET;
-                break;
-            case 'ENV':
-                $var = $_ENV;
-                break;
-            case 'COOKIE':
-                $var = $_COOKIE;
-                break;
+    private static function _GetData($type, $key, $default, $filter = \NULL) {
+        if ($filter === \NULL) {
+            $filter = \FILTER_DEFAULT;
+        }
+        if ($type === \INPUT_SESSION) {
+            \Iris\Users\Session::GetInstance();
+                    $var = $_SESSION;
+        }
+        else {
+            $test = \filter_input(\INPUT_GET, $key, $filter);
+            switch ($type) {
+                case \INPUT_SERVER:
+                    $var = $_SERVER;
+                    break;
+                case \INPUT_SESSION:
+                    \Iris\Users\Session::GetInstance();
+                    $var = $_SESSION;
+                    break;
+                case \INPUT_POST:
+                    $var = $_POST;
+                    break;
+                case \INPUT_GET:
+                    $var = $_GET;
+                    break;
+                case \INPUT_ENV:
+                    $var = $_ENV;
+                    break;
+                case \INPUT_COOKIE:
+                    $var = $_COOKIE;
+                    break;
+            }
         }
         if (is_null($key)) {
             return $var;

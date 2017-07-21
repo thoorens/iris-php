@@ -29,6 +29,8 @@ class TProducts extends \Iris\DB\_Entity {
      * 
      */
 
+     protected static $_MainField = "Description";
+    
     /**
      * SQL command to construct the table
      * 

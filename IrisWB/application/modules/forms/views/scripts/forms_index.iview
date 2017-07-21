@@ -1,9 +1,52 @@
 <div>
+    <h3>List of all form examples</h3>
     <div id="page">
-        {welcome(2)}
-        <p>
-            {_('Now you can begin to modify this page...',TRUE)}
-        </p>
+        <fieldset style="width: 300px;display: inline-block;">
+            <legend>Forms made with lists</legend>
+            <fieldset style="width: 280px;display: inline-block;">
+                <legend>HTML</legend>
+                {button('List alone','/forms/autohand/HTML','A HTML form made from a list')}
+                {button('List + ini','/forms/autohand/HTML_ini','A HTML form made from a list and modified by an ini file')}
+                {button('List + Entity','/forms/autohand/HTML_Model','A HTML form made from a list and modified by an entity')}
+            </fieldset>
+            <fieldset style="width: 280px;display: inline-block;">
+                <legend>Dojo</legend>
+                {button('List alone','/forms/autohand/Dojo','A Dojo form made from a list')}
+                {button('List + ini','/forms/autohand/Dojo_ini','A Dojo form made from a list and modified by an ini file')}
+                {button('List + Entity','/forms/autohand/Dojo_Model','A Dojo form made from a list and modified by an entity')}
+            </fieldset>
+        </fieldset>
+        <fieldset style="width: 300px;display: inline-block;">
+            <legend>Forms from ini file</legend>
+            <fieldset style="width: 280px;display: inline-block;">
+                <legend>HTML</legend>
+                {button('Ini alone','/forms/autoini/HTML','A HTML form made from an ini file')}
+                {button('Ini + list','/forms/autoini/HTML_Hand','A HTML form made from an ini file and modified by a list')}
+                {button('Ini + entity','/forms/autoini/HTML_Model','A HTML form made from an ini file and modified by an entity')}
+            </fieldset>
+            <fieldset style="width: 280x;display: inline-block;">
+                <legend>Dojo</legend>
+                {button('Ini alone','/forms/autoini/Dojo','A Dojo form made from an ini file')}
+                {button('Ini + list','/forms/autoini/Dojo_Hand','A Dojo form made from an ini file and modified by a list')}
+                {button('Ini + entity','/forms/autoini/Dojo_Model','A Dojo form made from an ini file and modified by an entity')}
+            </fieldset>
+        </fieldset>
+            <br/><br/>
+        <fieldset style="width: 300px;display: inline-block;">
+            <legend>Forms from entities</legend>
+            <fieldset style="width: 280px;display: inline-block;">
+                <legend>HTML</legend>
+                {button('Entity alone','/forms/automodel/HTML','A HTML form made from an entity')}
+                {button('Entity + ini','/forms/automodel/HTML_ini','A HTML form made from an entity and modified by an ini file')}
+                {button('Entity + list','/forms/automodel/HTML_Hand','A HTML form made from an entity and modified by a list')}
+            </fieldset>
+            <fieldset style="width: 280px;display: inline-block;">
+                <legend>Dojo</legend>
+                {button('Entity alone','/forms/automodel/Dojo','A Dojo form made from an entity')}
+                {button('Entity + ini','/forms/automodel/Dojo_ini','A Dojo form made from an entity and modified by an ini file')}
+                {button('Entity + list','/forms/automodel/Dojo_Hand','A Dojo form made from an entity and modified by a list')}
+            </fieldset>
+        </fieldset>
     </div>
 
 </div>

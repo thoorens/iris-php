@@ -18,10 +18,10 @@ class post extends \Iris\MVC\_AjaxController {
         $post = \Iris\Engine\Superglobal::GetSession('oldPost',[]);
         $this->__post = $post;
         if($submit>1){
-            $message = "Press one of the $submit submit buttons to see the result";
+            $message = "Press one of the $submit submit buttons in the form to see the result";
         }
         else{
-             $message = "Press the submit button to see the result";
+             $message = "Press the submit button in the form to see the result";
         }
         $this->__message = count($post) ? '' :$message;
         $this->_renderScript('post');

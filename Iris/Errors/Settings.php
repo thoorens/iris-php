@@ -128,7 +128,7 @@ class Settings  {
 //    }
 
     public static function __ClassInit() {
-        self::$LogFile = IRIS_ROOT_PATH . '/' . $application . '/log/error.log';
+        self::$LogFile = IRIS_ROOT_PATH . '/' . '/log/error.log';
     }
     
     /**

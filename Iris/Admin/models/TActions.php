@@ -22,6 +22,8 @@ namespace Iris\Admin\models;
 class TActions extends _IrisObject {
 
     protected static $_InsertionKeys = ['Name', 'controller_id'];
+    
+    protected static $_MainField = "action #";
 
     public static function DDLText() {
         return <<<SQL2

@@ -25,7 +25,8 @@ class Customers extends _localCrud {
     }
 
     protected function _makeDefaultForm() {
-        $ff = \Dojo\Forms\FormFactory::GetDefaultFormFactory();
+        print "Customers form";
+        $ff = \Dojo\Forms\FormFactory::GetFormFactory();
         $form = $ff->createForm('client');
         $ff->createHidden('id')
                 ->addTo($form);

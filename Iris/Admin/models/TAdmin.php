@@ -18,6 +18,9 @@ namespace Iris\Admin\models;
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
  * @version $Id: $ */
 class TAdmin extends _IrisObject {
+ 
+    protected static $_MainField = "admin #";
+
 
 
     public static function DDLText() {

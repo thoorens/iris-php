@@ -63,18 +63,38 @@ class index extends _main {
      * The table of content of the project
      */
     public function tocAction() {
-        $this->_setLayout('color');
-        $this->callViewHelper('dojo_Mask');
-        $this->__sequence = $this->getScreenList();
-        $this->__bodyColor = 'BLUE3';
-        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
+        $this->_tocDetails(0, 290000);
+//        $this->_setLayout('color');
+//        $this->callViewHelper('dojo_Mask');
+//        $this->__sequence = $test = $this->getScreenList();
+//        $this->__bodyColor = 'BLUE3';
+//        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
     }
 
     /**
      * A somple page to show a controller defined layout
      */
     public function controllerAction() {
+//        \models_internal\TSequences::SetInterval(200000);
+//        $this->__sequence = $seq = $test = $this->getScreenList(1);
+//        
+//        $this->__bodyColor = 'BLUE3';
+//        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
+    }
+
+    public function toc2Action($page = \NULL) {
+        $this->_tocDetails(0, 190000);
         
     }
 
+    protected function _tocDetails($page, $interval){
+        \models_internal\TSequences::SetInterval($interval);
+        $this->_setLayout('color');
+        $this->callViewHelper('dojo_Mask');
+        $this->__sequence = $test = $this->getScreenList($page);
+        $this->__bodyColor = 'BLUE3';
+        \Iris\SysConfig\Settings::$MD5Signature = \FALSE;
+        $this->setViewScriptName('toc');
+    }
+    
 }

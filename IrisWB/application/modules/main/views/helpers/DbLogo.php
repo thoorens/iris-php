@@ -26,9 +26,9 @@ class DbLogo extends \Iris\views\helpers\_ViewHelper {
      * 
      * @return string
      */
-    public function help() {
+    public function help($changeURL) {
         $file = \Iris\Engine\Superglobal::GetSession('dbini', \Iris\DB\_EntityManager::DEFAULT_DBMS).'.png';
-        return $this->callViewHelper('link','Link to other database','/db/sample/change','Link to other database','Logo')->image('/!documents/file/logos/'.$file);
+        return $this->callViewHelper('link','Link to other database',$changeURL,'Link to other databases','Logo')->image('/!documents/file/logos/'.$file);
     }
 
 }

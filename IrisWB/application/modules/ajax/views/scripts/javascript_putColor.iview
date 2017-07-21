@@ -6,7 +6,8 @@
         background:lightyellow;
     }
 </style>
-{ajax()->setDebugDisplayObject('output')->onClick('startButton',$ajaxFile, \NULL , $type)}
+{REM}{ajax()->setDebugDisplayObject('output')->onClick('startButton',$ajaxFile, \NULL , $type)}{/REM}
+{ajax()->onClick('startButton',$ajaxFile, \NULL , $type)}
 <h1>Output:</h1>
 <div id="output"></div>
 <button type="button" id="startButton">{label}</button>

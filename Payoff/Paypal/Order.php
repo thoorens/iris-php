@@ -68,7 +68,7 @@ class Order extends \Payoff\_Order {
     }
 
     public function render() {
-        $formFactory = \Iris\Forms\_FormFactory::GetDefaultFormFactory();
+        $formFactory = \Iris\Forms\_FormFactory::GetFormFactory();
         $form = $formFactory->createForm('formOrder');
         $this->_form = $form;
         $site = $this->_getSite();

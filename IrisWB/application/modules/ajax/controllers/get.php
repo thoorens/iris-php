@@ -17,6 +17,13 @@ class get extends \Iris\MVC\_AjaxController {
 
     protected $_hasACL = \FALSE;
 
+    protected $_contentMessage = 'This text #%d has been sent to the page by clicking on button "Fill content %d"';
+
+//    protected function _init() {
+//        $this->setDefaultScriptDir('ajax');
+//    }
+
+    
     /**
      * This message action are meant to be read by Ajax requests 
      */
@@ -103,6 +110,23 @@ class get extends \Iris\MVC\_AjaxController {
         $this->_renderScript('tabProg');
     }
 
+    public function content1Action(){
+        $this->__message = sprintf($this->_contentMessage,1,1);
+         $this->_renderScript('content');
+    }
+    public function content2Action(){
+        $this->__message = sprintf($this->_contentMessage,2,2);
+         $this->_renderScript('content');
+    }
+    public function content3Action(){
+        $this->__message = sprintf($this->_contentMessage,3,3);
+         $this->_renderScript('content');
+    }
+    public function content4Action(){
+        $this->__message = sprintf($this->_contentMessage,4,4);
+         $this->_renderScript('content');
+    }
+    
     public function colorAction($target, $script = \TRUE) {
         $this->setAjaxType('text/js');
         if ($script) {

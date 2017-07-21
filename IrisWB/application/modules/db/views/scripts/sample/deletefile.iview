@@ -1,0 +1,8 @@
+{wbHeader()}
+<div>
+    <div id="page">
+        Cette page a été neutralisée.
+    </div>
+
+</div>
+ {dbWarning()}   

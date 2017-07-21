@@ -40,6 +40,7 @@ abstract class _db extends \modules\_application {
         $this->_setLayout('database');
         $this->registerSubcontroller(1, 'menu');
         $this->callViewHelper('subtitle', 'Databases');
+        $this->__changeURL='/db/sample/change';
     }
 
     /**

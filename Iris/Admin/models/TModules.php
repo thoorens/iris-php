@@ -22,6 +22,10 @@ class TModules extends _IrisObject {
     protected static $_InsertionKeys = ['Name'];
     
     
+    protected static $_MainField = "module #";
+
+   
+    
     public static function DDLText() {
         return <<<SQL
 CREATE  TABLE "main"."modules" (

@@ -8,6 +8,8 @@ namespace modules;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
+ * This is part of the WorkBench fragment
+ *  
  * @copyright 2011-2015 Jacques THOORENS
  */
 
@@ -18,7 +20,7 @@ namespace modules;
  * 
  * @author Jacque THOORENS
  */
-class _application extends \Iris\MVC\_Controller {
+abstract class _application extends \Iris\MVC\_Controller {
 
     /**
      * To reactivate ACL control, simply override the value in the

@@ -25,7 +25,7 @@ namespace Iris\DB;
 abstract class _EntityManager {
 
     use \Iris\System\tRepository;
-    
+
     const FK_TABLE = 0;
     const FK_FROM = 1;
     const FK_TO = 2;
@@ -51,17 +51,15 @@ abstract class _EntityManager {
         self::POSTGRESQL => 'Em_PDOPostgresql',
         self::ORACLE => 'EmPDO_Oracle'
     ];
-
-    
     //protected static $_DBtype;
 
     protected static $_DBNameToNumber = [
-            self::MYSQL => 1,
-            self::SQLITE => 2,
-            self::POSTGRESQL => 3,
-            self::ORACLE => 4,
-        ];
-    
+        self::MYSQL => 1,
+        self::SQLITE => 2,
+        self::POSTGRESQL => 3,
+        self::ORACLE => 4,
+    ];
+
     /**
      *
      * @var type 
@@ -96,7 +94,7 @@ abstract class _EntityManager {
      * Mainly for test purpose (permits to place models in other places)
      * @var string 
      */
-    protected static $_EntityPath;
+    protected static $_EntityPath = \NULL;
 
     /**
      * Instance privilégiée
@@ -140,7 +138,7 @@ abstract class _EntityManager {
     }
 
     //public static function 
-    
+
     /**
      * Only first instance is registred. Another instance
      * will be replaced
@@ -296,7 +294,15 @@ abstract class _EntityManager {
     }
 
     public static function SetEntityPath($entityPath) {
-        self::$_EntityPath = $entityPath;
+        if (empty(self::$_EntityPath)) {
+            $array = explode('\\', $entityPath);
+            if (count($array)) {
+                array_pop($array);
+                $entityPath = implode('\\', $array);
+            }
+            self::$_EntityPath = "\\$entityPath\\";
+            ////show_nd(self::$_EntityPath);
+        }
     }
 
     /**
@@ -370,10 +376,10 @@ abstract class _EntityManager {
      * 
      * @return _EntityManager
      */
-    public static function GetAlternativeEM(){
+    public static function GetAlternativeEM() {
         return self::EMByNumber(-2);
     }
-    
+
     /**
      * Creates or retrieves an entity manager by it number
      * 

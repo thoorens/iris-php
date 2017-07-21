@@ -76,4 +76,20 @@ class read extends _ajax {
         
     }
 
+    
+    public function zonesAction(){
+        $this->__functionCode1 = <<<JS1
+                alert('YES');
+   domClass.add('zone1','yellowcolor');
+JS1;
+        $this->__functionCode2 = <<<JS2
+   domClass.add('zone2','bluecolor');
+JS2;
+        $this->__functionCode3 = <<<JS3
+   domClass.add('zone3','greencolor');
+JS3;
+        $this->__functionCode4 = <<<JS4
+   domClass.add('zone4','pinkcolor');
+JS4;
+    }
 }

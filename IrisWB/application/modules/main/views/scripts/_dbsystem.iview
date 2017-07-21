@@ -1,0 +1,14 @@
+<h2>Change database system</h2>
+    <div id="page">
+        <p>
+            Choose your database system:
+        </p>
+        <ul>
+            {foreach(buttons,label,system)}
+                <li>{link($label,"/$controller/$system","Change to the $label system")->image("/!documents/file/logos/$system.png")}</li>
+            {/foreach}
+        </ul>
+            {link('/db/sample/structure','')}<br>
+            {link('/forms/forms','')}
+        <br/>
+    </div>

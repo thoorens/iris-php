@@ -32,6 +32,7 @@ abstract class Debug {
     const ACL = 32;
     const FILE = 64;
     const SETTINGS = 128;
+    const HTML5 = 256;
 
     /**
      * Display a var_dump between &lt;pre> tags

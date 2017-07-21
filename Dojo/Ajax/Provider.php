@@ -17,9 +17,7 @@ namespace Dojo\Ajax;
  * Project IRIS-PHP
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.thoorens.net
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version :$Id:
+ * @see http://irisphp.org
  */
 class Provider extends \Iris\Ajax\_AjaxProvider {
 
@@ -198,11 +196,11 @@ JS;
     
     
     protected function _debug($param) {
-        
         if (is_null($this->_debugDisplayObject)) {
             return '';
         }
-        else {\Iris\Engine\Debug::Abort('DEBUG');
+        else {
+            \Iris\Engine\Debug::Abort('DEBUG');
             $output = $this->_debugDisplayObject;
             $param->addModule('dojo/request/notify', 'notify');
             return <<< JS1

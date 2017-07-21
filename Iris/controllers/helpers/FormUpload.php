@@ -36,7 +36,7 @@ class FormUpload extends _ControllerHelper{
      * @return \Iris\Form\Form 
      */
     public function help() {
-        $ff = \Iris\Forms\_FormFactory::GetDefaultFormFactory();
+        $ff = \Iris\Forms\_FormFactory::GetFormFactory();
         $form = $ff->createForm('Loader');
         // NO UPLOAD WITHOUT THIS ATTRIBUTE !!
         $form->addAttribute('enctype',"multipart/form-data");

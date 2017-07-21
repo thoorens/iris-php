@@ -1,0 +1,6 @@
+{REM}Copy of /db/views/scripts/sample/change{/REM}
+{wbHeader()}
+
+<div class="content" {wbBG()}>
+    {partial('dbsystem', $this)}
+</div>

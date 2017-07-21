@@ -126,7 +126,6 @@ abstract class core_Bootstrap {
      * @param string[] $filess
      */
     private function _readConfig($configFiles) {
-        sort($configFiles); 
         foreach ($configFiles as $filePath) {
             \Iris\Engine\Log::Debug("<b>Reading setting file: $filePath</b>", \Iris\Engine\Debug::SETTINGS);
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -168,6 +167,7 @@ abstract class core_Bootstrap {
                 $configFiles[$index] = $fileName;
             }
         }
+        sort($configFiles); 
         return $configFiles;
     }
 
@@ -175,10 +175,9 @@ abstract class core_Bootstrap {
      *
      */
     protected function _configureErrors() {
-        /* @var $errorHandler \Iris\Errors\Handler */
-        $errorHandler = \Iris\Errors\Handler::GetInstance();
-        $errorHandler->setIniParameters();
-        $errorHandler->allException();
+        \Iris\Errors\Handler::GetInstance()
+                ->setIniParameters()
+                ->allException();
     }
 
     /**

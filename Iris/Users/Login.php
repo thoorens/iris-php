@@ -355,7 +355,7 @@ class Login extends \Iris\DB\DataBrowser\_Crud {
      */
     public function getFormFactory() {
         if (is_null($this->_formFactory)) {
-            $factory = \Iris\Forms\_FormFactory::GetDefaultFormFactory();
+            $factory = \Iris\Forms\_FormFactory::GetFormFactory();
         }
         else {
             $factory = $this->_formFactory;

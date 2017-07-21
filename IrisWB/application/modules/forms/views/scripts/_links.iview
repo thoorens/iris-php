@@ -1,21 +1,38 @@
+{COMMENT}
+{foreach(autolinks,title,links)}
+    <fieldset style="width: 200px;display: inline-block;">
+        <legend>Hand made</legend>
+        {foreach(links, link)}
+            {button($link)}
+        {/foreach}
+    </fieldset>   
+{/foreach}
 <fieldset style="width: 200px;display: inline-block;">
-    <legend>Sans fichier</legend>
-    {button(['HTML','html','HTML 5 version without ini file'])}
-    {button(['DOJO','dojo','Dojo version without ini file'])}
+    <legend>Hand made</legend>
+    HTML + type of layout<br>
+    {button(['No','htmlnolo','HTML 5 hand made form with no layout'])}
+    {button(['Def','htmldeflo','HTML 5 hand made form with deflayout'])}
+    {button(['Tab','htmltablo','HTML 5 hand made form with table ayout'])}
+    {button(['CSS','htmlcsslo','HTML 5 hand made form with css layout'])}
+    <br>Dojo + type of layout<br>
+    {button(['No','dojonolo','Dojo hand made form with no layout'])}
+    {button(['Def','dojodeflo','Dojo hand made form with deflayout'])}
+    {button(['Tab','dojotablo','Dojo hand made form with table ayout'])}
+    {button(['CSS','dojotabcss','Dojo hand made form with css layout'])}
 </fieldset>
 <fieldset style="width: 200px;display: inline-block;">
-    <legend>Avec annotations</legend>
-    {button(['HTML','htmlAnnotations','HTML 5 version with annotations'])}
-    {button(['DOJO','dojoAnnotations','Dojo version with annotations'])}
+    <legend>With entity/metadata</legend>
+    HTML + type of layout<br>
+    {button(['No','htmlnolo','HTML 5 hand made form with no layout'])}
+    {button(['Def','htmldeflo','HTML 5 hand made form with deflayout'])}
+    {button(['Tab','htmltablo','HTML 5 hand made form with table ayout'])}
+    {button(['CSS','htmltabcss','HTML 5 hand made form with css layout'])}
+    <br>Dojo + type of layouto<br>
 </fieldset>
 <fieldset style="width: 200px;display: inline-block;">
-    <legend>Avec fichier</legend>
-    {button(['HTML','htmlFile','HTML 5 version with ini file'])}
-    {button(['DOJO','dojoFile','Dojo version with ini file'])}
+    <legend>With init file</legend>
+    HTM + type of layoutL<br>
+    <br>Dojo + type of layout<br>
 </fieldset>
-<fieldset style="width: 200px;display: inline-block;">
-    <legend>Avec fichier</legend>
-    {button(['HTML','htmlFile','HTML 5 version with ini file'])}
-    {button(['DOJO','dojoFile','Dojo version with ini file'])}
-</fieldset>
+{/COMMENT}
 

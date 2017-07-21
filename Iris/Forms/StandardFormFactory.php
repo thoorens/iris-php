@@ -22,12 +22,19 @@ namespace Iris\Forms;
 class StandardFormFactory extends _FormFactory {
 
     /**
+     * The factory type name (here 'html')
+     * 
+     * @var string
+     */
+    protected static $_FactoryType = self::HTML;
+
+    /**
      *
      * @param type $name
      * @return Form 
      */
     public function createForm($name) {
-        switch(\Iris\SysConfig\Settings::$HTMLType){
+        switch (\Iris\SysConfig\Settings::$HTMLType) {
             case \Iris\SysConfig\Settings::HTML4:
                 $factory = $this;
                 break;
@@ -44,7 +51,7 @@ class StandardFormFactory extends _FormFactory {
         return $form;
     }
 
-    protected  function _getFactory() {
+    protected function _getFactory() {
         $HTTP_USER_AGENT = $_SERVER;
         i_d($HTTP_USER_AGENT['HTTP_USER_AGENT']);
         $browser = get_browser($HTTP_USER_AGENT);

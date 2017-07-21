@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\SysConfig;
 
 /*
@@ -38,22 +39,27 @@ class Settings {
 
     const MODE_PHP54 = 4;
     const MODE_PHP55 = 5;
-    
+
     /**
      * Taditional HTML
      */
     const HTML4 = 4;
-    
+
     /**
      * Current HTML
      */
     const HTML5 = 5;
-    
+
     /**
      * Try to guess HTML version from browser
      */
     const HTMLAuto = 0;
-
+    
+    /**
+     * Will use Dojo
+     */
+    const DOJO = -1;
+    
     /**
      * Management of special values
      */
@@ -64,7 +70,7 @@ class Settings {
         self::$DefaultHashType = self::MODE_PHP55;
         // By default the development RunTimeDuration is display by internal code, not Ajax
         self::$RuntimeDisplayMode = \Iris\Time\RuntimeDuration::INNERCODE;
-        // The default date format is JAPAN (e.g. 2015-12-31
+        // The default date format is JAPAN (e.g. 2015-12-31). It provides an easy way to order (compare American|French 12-31-2015|31/12/2015 to next day 01-01-2016)
         self::$DateMode = \Iris\Time\TimeDate::JAPAN;
         // By default the view script templates are not cached
         self::$CacheTemplate = \Iris\MVC\Template::CACHE_NEVER;
@@ -148,7 +154,7 @@ class Settings {
         'Role' => 'Role',
         'Email' => 'Email'
     ];
-    
+
     /**
      * Type of Password conversion (PHP 5.5 internal conversion)
      * @var int
@@ -193,8 +199,8 @@ class Settings {
      *
      * @var string
      */
-    public static $InternalDBClass =  '\Iris\SysConfig\Settings';
-    
+    public static $InternalDBClass = '\Iris\SysConfig\Settings';
+
     /**
      *
      * @var int
@@ -229,20 +235,30 @@ class Settings {
      * Folder containing the autoform definition files
      * @var string
      */
-    public static $FormFolder = '\\forms';
-    
+    public static $FormFolder = 'forms';
+
     /**
      * By default, the HTML version will connected to brwoser type and version
      * 
      * @var int
      */
     public static $HTMLType = self::HTMLAuto;
-    
+
     /**
      * By default the default form layout is DefLayout
      * @var string
      */
     public static $DefaultFormLayout = "DefLayout";
+
+    /**
+     * By default, the new elements of HTML5 are only displayed if the browser can manage them <ul>
+     * <li> 0: managed according to browser ability
+     * <li>-0: always managed as HTML 4 elements
+     * <li> 1: always managed as HTML 5 elements
+     * 
+     * @var int
+     */
+    public static $ForceHTMLCompatibility = 0;
 
     /* -------------------------------------------------------------------------
      * Parameters related to date and time
@@ -357,8 +373,11 @@ class Settings {
      * @var string
      */
     public static $DataFolder;
-
     
+    public static function GetCompleteFormFolder() {
+        return IRIS_PROGRAM_PATH . '/config/' . self::$FormFolder;
+    }
+
     /**
      * Adds entity manager settings corresponding to numbers 99 and 98
      * 

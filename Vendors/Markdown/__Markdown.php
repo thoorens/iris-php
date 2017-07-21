@@ -37,4 +37,4 @@
 /*
  * The orginal namespace defined by Michel Fortin has been renamed
  */
-namespace Markdown;
+namespace Vendors\Markdown;

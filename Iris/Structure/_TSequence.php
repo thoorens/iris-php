@@ -1,4 +1,5 @@
 <?php
+
 namespace Iris\Structure;
 
 /*
@@ -7,7 +8,7 @@ namespace Iris\Structure;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2016
+ * @copyright 2011-2017
  *  Jacques THOORENS
  */
 
@@ -19,15 +20,26 @@ namespace Iris\Structure;
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.thoorens.net
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 abstract class _TSequence extends \Iris\DB\_Entity {
 
-    const FIRST = 1;
-    const PREVIOUS = 2;
-    const NEXT = 3;
-    const LAST = 4;
+    // a dummy value for the sequence length 
     const MAX = 1000000;
+
+    /**
+     *
+     * @var int the interval to distinguish the page limit
+     */
+    protected static $Interval = 100000;
+
+    /**
+     * 
+     * @param int $Interval
+     * @return _TSequence
+     */
+    public static function SetInterval($Interval) {
+        self::$Interval = $Interval;
+    }
 
     /**
      * Gets an object from the sequence corresponding to the URL
@@ -35,99 +47,114 @@ abstract class _TSequence extends \Iris\DB\_Entity {
      * @return \Iris\DB\Object 
      */
     public static function GetItem($url) {
-        //$tSequence = \Iris\DB\_EntityManager::GetEntity($entityName)
-        //$tSequence = static::GetEntity(97);
         $tSequence = static::GetEntity(97);
         $tSequence->where('URL=', $url);
         return $tSequence->fetchRow();
     }
 
     /**
-     * Returns the first
+     * Returns the url of the first element of the sequence
      * 
+     * @param boolean $inArray specifies if the result must be an array
      * @return string/array the URL or an array for a Button helper 
      */
     public static function GetFirst($array) {
-        return self::_GetURL(self::FIRST, \NULL, $array);
+        return self::_GetURL('<<', \NULL, $array);
     }
 
     /**
+     * Returns the url of the previous element of the sequence
      * 
+     * @param boolean $inArray specifies if the result must be an array
      * @return string/array the URL or an array for a Button helper 
      */
     public static function GetPrevious($url, $array) {
-        return self::_GetURL(self::PREVIOUS, $url, $array);
+        return self::_GetURL('<', $url, $array);
     }
 
     /**
+     * Returns the url of the next element of the sequence
      *
+     * @param boolean $inArray specifies if the result must be an array
      * @return string/array the URL or an array for a Button helper 
      */
     public static function GetNext($url, $array) {
-        return self::_GetURL(self::NEXT, $url, $array);
+        return self::_GetURL('>', $url, $array);
     }
 
     /**
-     * Returns the last
+     * Returns the url of the last element of the sequence
      * 
+     * @param boolean $inArray specifies if the result must be an array
      * @return string/array the URL or an array for a Button helper 
      */
     public static function GetLast($array) {
-        return self::_GetURL(self::LAST, \NULL, $array);
+        return self::_GetURL('>>', \NULL, $array);
     }
 
     /**
-     *
-     * @param int $position
-     * @param string $url
-     * @param boolean $array
+     * Seeks an URL curresponding to the beginning or end or to a refering URL
+     * 
+     * @param int $position may be FIRST, LAST, NEXT or PREVIOUS
+     * @param string $url The refering URL for NEXT or PREVIOUS
+     * @param boolean $inArray specifies if the result must be an array
      * @return string/array the URL or an array for a Button helper 
      */
-    private static function _GetURL($position, $url = NULL, $array = \FALSE) {
+    private static function _GetURL($position, $url = NULL, $inArray = \FALSE) {
         $tSequence = static::GetEntity();
         switch ($position) {
-            case self::FIRST:
+            // not used in IrisWB
+            case '<<':
                 $tSequence->order('id');
+                $sequence = $tSequence->fetchRow();
                 break;
-            case self::PREVIOUS;
+            case '<';
                 $current = $tSequence->fetchRow('URL=', $url);
                 if (is_null($current)) {
-                    return \Iris\Subhelpers\Link::GetNoLinkLabel();
-                }
-                $tSequence->order('id DESC');
-                $tSequence->where('id<', $current->id);
-                if ($current->id > static::MAX) {
-                    $tSequence->where('id>', self::MAX);
+                    $sequence = \NULL;
                 }
                 else {
-                    $tSequence->where('id<', self::MAX);
+                    $tSequence->order('id DESC');
+                    $tSequence->where('id<', $current->id);
+                    if ($current->id > static::MAX) {
+                        $tSequence->where('id>', self::MAX);
+                    }
+                    else {
+                        $tSequence->where('id<', self::MAX);
+                    }
+                    $tSequence->_AND_();
+                    $label = 'Previous';
+                    $sequence = $tSequence->fetchRow();
                 }
-                $tSequence->_AND_();
-                $label = 'Previous';
                 break;
-            case self::NEXT:
+            case '>':
                 $current = $tSequence->fetchRow('URL=', $url);
                 if (is_null($current)) {
-                    return \Iris\Subhelpers\Link::GetNoLinkLabel();
-                }
-                $tSequence->order('id');
-                $tSequence->where('id>', $current->id);
-                if ($current->id > static::MAX) {
-                    $tSequence->where('id>', self::MAX);
+                    $sequence = \NULL;
                 }
                 else {
-                    $tSequence->where('id<', self::MAX);
+                    $tSequence->order('id');
+                    $tSequence->where('id>', $current->id);
+                    if ($current->id > static::MAX) {
+                        $tSequence->where('id>', self::MAX);
+                    }
+                    else {
+                        $tSequence->where('id<', self::MAX);
+                    }
+                    $tSequence->_AND_();
+                    $label = 'Next';
+                    $sequence = $tSequence->fetchRow();
                 }
-                $tSequence->_AND_();
-                $label = 'Next';
                 break;
-            case self::LAST:
+            // not used in IrisWB
+            case '>>':
                 $tSequence->order('id DESC');
+                $sequence = $tSequence->fetchRow();
                 break;
         }
 
-        $sequence = $tSequence->fetchRow();
-        if ($array) {
+        //$sequence = $tSequence->fetchRow();
+        if ($inArray) {
             if (is_null($sequence)) {
                 $value = \Iris\Subhelpers\Link::GetNoLinkLabel();
             }
@@ -141,13 +168,63 @@ abstract class _TSequence extends \Iris\DB\_Entity {
         return $value;
     }
 
-    public static function GetStructuredSequence($limit = self::MAX, $exclude = \TRUE) {
-        $level1 = array();
-        $level2 = array();
-        $oldSection = -1;
-        //$tSections = \Iris\DB\DataBrowser\AutoEntity::EntityBuilder('sections');
+    /**
+     * Retrieves all sequences and stores them in groups of arrays indexed by the group name
+     * 
+     * @param mixed $page indicates the page number (null if all pages)
+     * 
+     * @return array[]
+     */
+    public static function GetStructuredSequence($page) {
+        $sectionList = [];
+        $sectionDetails = [];
+        $oldSectionId = -1;
         $tSequence = static::GetEntity();
-        // Does not treat
+        if ($page !== \NULL) {
+            $interval = static::$Interval;
+            $initialId = $page * $interval;
+            $finalId = ($page + 1) * $interval;
+            $tSequence->where('id>=', $initialId);
+            $tSequence->where('id<', $finalId);
+        }
+        $tSequence->order('id');
+        $sequence = $tSequence->fetchAll();
+        foreach ($sequence as $item) {
+            $section_id = $item->section_id;
+            if ($oldSectionId != $section_id) {
+                if (count($sectionDetails)) {
+                    $sectionList[$groupName] = $sectionDetails;
+                }
+                $sectionDetails = [];
+                $oldSectionId = $section_id;
+                $section = $item->_at_section_id;
+                if ($section_id != 0) {
+                    $groupName = $section->GroupName;
+                }
+            }
+            if ($section_id == 0) {
+                $sectionList[$item->URL] = $item->Description;
+            }
+            else {
+                $sectionDetails[$item->URL] = $item->Description;
+            }
+        }
+        return $sectionList;
+    }
+
+    /**
+     * Retrieves all sequences and stores them in groups of arrays indexed by the group name
+     * 
+     * @param type $limit
+     * @param type $exclude
+     * @deprecated since version number
+     * @return type
+     */
+    public static function GetStructuredSequence_old($limit = self::MAX, $exclude = \TRUE) {
+        $sectionList = [];
+        $sectionDetails = [];
+        $oldSectionId = -1;
+        $tSequence = static::GetEntity();
         if ($exclude) {
             $tSequence->where('id<', $limit);
         }
@@ -158,25 +235,25 @@ abstract class _TSequence extends \Iris\DB\_Entity {
         $sequence = $tSequence->fetchAll();
         foreach ($sequence as $item) {
             $section_id = $item->section_id;
-            if ($oldSection != $section_id) {
-                if (count($level2)) {
-                    $level1[$groupName] = $level2;
+            if ($oldSectionId != $section_id) {
+                if (count($sectionDetails)) {
+                    $sectionList[$groupName] = $sectionDetails;
                 }
-                $level2 = array();
-                $oldSection = $section_id;
+                $sectionDetails = [];
+                $oldSectionId = $section_id;
                 $section = $item->_at_section_id;
                 if ($section_id != 0) {
                     $groupName = $section->GroupName;
                 }
             }
             if ($section_id == 0) {
-                $level1[$item->URL] = $item->Description;
+                $sectionList[$item->URL] = $item->Description;
             }
             else {
-                $level2[$item->URL] = $item->Description;
+                $sectionDetails[$item->URL] = $item->Description;
             }
         }
-        return $level1;
+        return $sectionList;
     }
 
 }

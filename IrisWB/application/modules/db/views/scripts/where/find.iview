@@ -1,0 +1,21 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <h4>Clé simple : invoices #2  and #45 (does not exist)</h4>
+    <ul>
+        <li>{invoice($invoice2,2)}</li>
+        <li>{invoice($invoice45,45)}</li>
+    </ul>
+    <h4>Clé multiple en tableau : order [invoice 1, product 2] and order [invoice 101, product 45](does not exist)</h4>
+    <ul>
+        <li>{order($order12,1,2)}</li>
+        <li>{order($order10145,101,45)}</li>
+    </ul>
+    <h4>Clé multiple en tableau indexé : order [invoice 5, product 1]</h4>
+    <ul>
+        <li>{order($order51,5,1)}</li>
+    </ul>
+    <hr />
+    <p>
+        {dbWarning()}
+    </p>
+</div>

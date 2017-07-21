@@ -3,7 +3,7 @@
 // NOTHING IS GOOD HERE
 
 
-switch (0) {
+switch (1) {
     // Entity tests
     case 1:
         //\Iris\DB\_EntityManager::SetInstance(

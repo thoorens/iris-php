@@ -8,7 +8,7 @@ namespace Dojo\Forms;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2017 Jacques THOORENS
  */
 
 /**
@@ -16,9 +16,16 @@ namespace Dojo\Forms;
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 class FormFactory extends \Iris\Forms\_FormFactory {
+
+    /**
+     * The factory type name (here 'dojo')
+     * 
+     * @var string
+     */
+    protected static $_FactoryType = self::DOJO;
+
 
     public function __construct() {
         //\Dojo\views\helpers\Loader::HelperCall('dojo_Loader', array(TRUE));

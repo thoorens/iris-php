@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Put a comment marker // before "return" to enable the debugging facilities,
  * otherwise the rest of this file will be ignored
@@ -15,6 +14,15 @@ Iris\SysConfig\Settings::$UserFields['Email'] = 'Courriel';
 //$date = \DateTime();
 //iris_debug($date);
 //not_survivedate('t', strtotime('11/01/2015')));
+//$session = \Iris\Users\Identity::CreateInstance($identity);
+//$identity = filter_input(INPUT_SESSION, 'identity');
+//$identity = filter_var($_SESSION['identity']);
+//i_d($identity);
+//Iris\Engine\Security::VerifyEmail('jacques@thoorens.net');
+//i_dnd(\Iris\Engine\Security::GetInt(128));
+//i_d(\Iris\Engine\Security::GetInt('Abcppp'));
+die('Debug');
+
 return;
 
 /*
@@ -29,7 +37,16 @@ define('IRIS_DEBUG', TRUE);
  * \Iris\Engine\Log::POS_AUTO : where it occurs (may spoil the layout)
  * \Iris\Engine\Log::POS_NONE : no message
 */
+
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_FILE);
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_PAGE);
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_AUTO);
+//\Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_NONE);
+
+
 \Iris\Engine\Log::GetInstance()->setPosition(\Iris\Engine\Log::POS_AUTO);
+
+
 
 /*
  * Choose the type of message you want to see
@@ -37,21 +54,34 @@ define('IRIS_DEBUG', TRUE);
  */
 
 /* loader messages (general classes) */
-\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::LOADER);
-/*                 (view classes) */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
-/*                 (helper classes) */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
-/* You can precise here what class to trace when \Debug::LOADER is set */
-//\Iris\Engine\Loader::AddTrace(array('test'));
+//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::LOADER);
+
+/* You can precise here what classes to trace when \Debug::LOADER is set */
+//\Iris\Engine\Loader::AddTrace(['test']);
 
 /* router messages */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
-//
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ROUTE);
+
 /* database (SQL queries) messages */
-//\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::DB);
+
+/*                 (view classes) */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::VIEW);
+
+/*                 (helper classes) */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::HELPER);
+
+/* ACL management */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ACL);
+
+/* FILE is presently not used */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::FILE);
+
+/* changes in settings */
+//\\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::SETTINGS);
 
 /* All messages (they are many) */
 //\Iris\Engine\Log::AddDebugFlag(\Iris\Engine\Debug::ALL);
 
-
+/* HTML 5 detection messages */
+//Iris\Engine\Log::AddDebugFlag(Iris\Engine\Debug::HTML5);

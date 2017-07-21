@@ -1,5 +1,6 @@
 <?php
-namespace Iris\Structure;
+
+namespace Iris\Forms;
 
 /*
  * This file is part of IRIS-PHP, distributed under the General Public License version 3.
@@ -7,26 +8,25 @@ namespace Iris\Structure;
  * More details about the copyright may be found at
  * <http://irisphp.org/copyright> or <http://www.gnu.org/licenses/>
  *  
- * @copyright 2011-2015 Jacques THOORENS
+ * @copyright 2011-2016 Jacques THOORENS
  */
 
 /**
- * An interface for an explanation provider
+ * Defines the five methods a form container must implement.
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ 
- */
-interface iExplanationProvider {
-    
+ * @version $Id: $ */
+interface iFormContainer {
 
-    /**
-     * Return a message adapted to the current displayed view.
-     * 
-     * @param \Iris\MVC\View $view
-     */
-    public function getMessage($view);
+    public function addElement(_Element $element);
+
+    public function render();
+
+    public function makeReadOnly();
+
+    public function registerElement(_Element $element);
+
+    public function getLayout();
 }
-
-

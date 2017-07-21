@@ -90,7 +90,7 @@ class todo extends _admin {
     }
 
     public function newAction() {
-        $formFactory = \Iris\Forms\StandardFormFactory::GetDefaultFormFactory();
+        $formFactory = \Iris\Forms\StandardFormFactory::GetFormFactory();
         $form = $formFactory->createForm('todo');
         $form->setAction('/!admin/todo/create');
         /* @var $priority \Iris\Forms\Elements\Option */

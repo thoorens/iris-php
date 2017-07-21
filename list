@@ -1,0 +1,202 @@
+.
+├── CLI
+│   └── cli.sqlite (a sqlite implementation of help and error - not usable in NetBeans
+├── Dojo
+│   ├── Forms
+│   └── views
+│       ├── Body.php (no trace in git -- see in helpers)
+│       ├── helpers
+│       │   └── scripts
+│       │       └── slideshow_direct.iview (no trace in git)
+│       └── scripts
+│           └── slideshow_direct.iview (no trace in git)
+├── ILO
+│   ├── bg
+│   │   ├── content.jpg (no trace in git)
+│   │   ├── foot.jpg (no trace in git)
+│   │   ├── shadow.png (no trace in git)
+│   │   ├── title_2.jpg (no trace in git)
+│   │   └── title.jpg (no trace in git)
+│   ├── css
+│   │   └── images
+│   │       ├── bg.jpg (no trace in git)
+│   │       ├── blue_h.png (no trace in git)
+│   │       ├── red_h.png (no trace in git)
+│   │       └── yellow_v.png (no trace in git)
+│   └── scss
+│       ├── alt_layout.scss (no trace in git)
+│       ├── basemod.scss (no trace in git)
+│       └── irisShadow_1.scss (no trace in git)
+├── Iris
+│   ├── errordemo
+│   │   ├── controllers
+│   │   │   └── Error.php (no trace in git)
+│   │   └── views
+│   │       └── scripts
+│   │           ├── Error_fatal.iview(no trace in git)
+│   │           ├── Error_indexDev.iview (no trace in git)
+│   │           ├── Error_index.iview (no trace in git)
+│   │           └── Error_privilege.iview (no trace in git)
+│   ├── Errors
+│   │   └── ErrorInformation.php
+│   ├── Forms
+│   │   ├── Anciens (old versions of AutoForm)
+│   │   │   ├── AutoForm
+│   │   │   │   ├── AF__130915.php
+│   │   │   │   ├── AF__130924.php
+│   │   │   │   ├── AF__150329.php
+│   │   │   │   ├── AF__150416.php
+│   │   │   │   └── AF__151005.php
+│   │   │   ├── _AutoForm
+│   │   │   │   ├── _AF__140730.php
+│   │   │   │   └── _AF_151005.php
+│   │   │   ├── AutoForm0
+│   │   │   │   ├── AF0_151005.php
+│   │   │   │   └── AF0_160609.php
+│   │   │   └── AutoForm2
+│   │   │       ├── AF2_150329.php
+│   │   │       ├── AF2_151005.php
+│   │   │       ├── AF2_160427.php
+│   │   │       └── AF2_160609.php
+│   │   ├── Auto (old versions of AutoForm)
+│   │   │   ├── A0_151005.php
+│   │   │   ├── A0_160609.php
+│   │   │   ├── A2_150329.php
+│   │   │   ├── A2_151009.php
+│   │   │   ├── A2_160427.php
+│   │   │   ├── A2_160609.php
+│   │   │   ├── A3_151005.php
+│   │   │   ├── AF_120906_19.php
+│   │   │   ├── AF_130509.php
+│   │   │   ├── AF_130916.php
+│   │   │   ├── AF_130924.php
+│   │   │   ├── AF_140730.php
+│   │   │   ├── AF_150329.php
+│   │   │   ├── AF_150416.php
+│   │   │   ├── _AF151005.php
+│   │   │   ├── AF_151005.php
+│   │   │   ├── EE_140730.php
+│   │   │   ├── EE_150329.php
+│   │   │   ├── EE_160427.php
+│   │   │   └── _File_id.diz
+│   │   └── AutoFormFactory.php (no valid content in git)
+│   ├── modifications.txt (no trace in git)
+│   ├── modules
+│   │   └── main
+│   │       ├── controllers
+│   │       │   └── test.php (no trace in git)
+│   │       └── views
+│   │           ├── layouts
+│   │           │   └── lo_errorprod.iview (no trace in git)
+│   │           └── scripts
+│   │               └── ERROR_index.iview (no trace in git)
+│   ├── Subhelpers
+│   │   └── OldLink.php (no trace in git)
+│   └── views
+│       └── helpers
+│           └── BodyOnload.php (no trace in git)
+├── IrisInternal
+│   ├── admin
+│   │   └── controllers
+│   │       ├── facture.php (no trace in git)
+│   │       └── test.php (no trace in git)
+│   ├── help
+│   │   ├── controllers
+│   │   │   └── index.php (no valid content in git)
+│   │   └── views
+│   │       └── scripts
+│   │           └── index
+│   │               └── _index_.iview (no trace in git)
+│   ├── main
+│   │   └── views
+│   │       ├── helpers
+│   │       │   └── AdminButtons.php
+│   │       └── layouts
+│   │           └── lo_irisLayout.iview
+│   └── models
+│       ├── __models.php (no valid content in git)
+│       ├── TArticles.php (no valid content in git)
+│       ├── TClients.php (no valid content in git)
+│       ├── TFactures.php (no valid content in git)
+│       └── TLignes.php (no valid content in git)
+├── IrisTest
+│   ├── Engine
+│   │   └── Loader.php (no valid content in git)
+│   ├── Parsers
+│   │   ├── ConfigIterator.php (no valid content in git)
+│   │   └── testme
+│   │       └── 00_debug.php (no valid content in git)
+│   └── Structure
+│       └── Sequence.php (no valid content in git)
+├── IrisWB
+│   ├── application
+│   │   ├── config
+│   │   │   └── base_copy
+│   │   │       ├── acl.sqlite (no trace in git)
+│   │   │       ├── adminparams.sqlite (no trace in git)
+│   │   │       ├── config.sqlite (no trace in git)
+│   │   │       ├── config.sqlite.bak (no trace in git)
+│   │   │       ├── config.sqlite.bak.1608 (no trace in git)
+│   │   │       ├── invoice.sqlite (no trace in git)
+│   │   │       ├── test.ini (no trace in git)
+│   │   │       └── textformat.sqlite (no trace in git)
+│   │   └─── modules
+│   │       ├── main
+│   │       │   ├── controllers
+│   │       │   │   └── helpers
+│   │       │   │       └── DbOpen.php (no trace in git)
+│   │       │   └── views
+│   │       │       └── scripts
+│   │       │           ├── ERROR_inaccessible.iview (no trace in git)
+│   │       │           ├── ERROR_privilege.iview (no trace in git)
+│   │       │           └── ERROR_prod.iview (no trace in git)
+│   │       ├── test
+│   │       │   ├── __acl.php (no valid content in git)
+│   │       │   ├── controllers
+│   │       │   │   ├── index.php (no valid content in git)
+│   │       │   │   └── _test.php (no valid content in git)
+│   │       │   └── views
+│   │       │       └── scripts
+│   │       │           ├── index_index2.iview (no valid content in git)
+│   │       │           └── index_index.iview (no valid content in git)
+│   │       └── tutorial
+│   │           ├── controllers
+│   │           │   ├── index.php (no trace in git)
+│   │           │   └── _tutorial.php (no trace in git)
+│   │           ├── __tutorial.php (no valid content in git)
+│   │           └── views
+│   │               └── scripts
+│   │                   └── index_index.iview (no valid content in git)
+│   ├── Trans
+│   │   └── modules
+│   │       └── main
+│   │           ├── controllers
+│   │           │   └── transTest.php (no valid content in git)
+│   │           └── views
+│   │               └── scripts
+│   │                   └── transTest_index.iview (no valid content in git)
+│   └── workbench
+│       ├── Context.php (no trace in git)
+│       ├── messages
+│       │   ├── English.php (no trace in git)
+│       │   └── French.php (no trace in git)
+│       └── TextSequence.php (no trace in git)
+├── modules
+│   └── main
+│       └── controllers
+│           └── Error_1.php (no trace in git)
+├── Paypal
+│   └── SystemTranslator.php (no trace in git)
+├── public
+│   ├── c05-menus02.html (no trace in git)
+│   ├── css
+│   │   ├── c03.css (no trace in git)
+│   │   └── c03.orig.css (no trace in git)
+│   ├── menu.html (no trace in git)
+│   └── m.html (no trace in git)
+└── Tests
+    ├── 01_test.php (no trace in git)
+    ├── 15_Test.php (no trace in git)
+    └── 55_tests.php (no trace in git)
+
+120 directories, 181 files

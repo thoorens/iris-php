@@ -6,7 +6,7 @@
 </fieldset>
 
 <fieldset style="width: 100px;display: inline-block;">
-    <legend>Model</legend>
+    <legend title="Metadata">Model</legend>
     {button(['HTML',$base.'HTMLModel','Model centric form with HTML5'])}
     {button(['DOJO',$base.'DojoModel','Model centric form with Dojo'])}
 </fieldset>
@@ -16,19 +16,19 @@
     {button(['HTML',$base.'HTMLFile','File defined form with HTML5'])}
     {button(['DOJO',$base.'DojoFile','File defined form with Dojo'])}
 </fieldset>
+{if(0)}
+    <fieldset style="width: 100px;display: inline-block;">
+        <legend>Params</legend>
+        {button(['HTML',$base.'HTMLParams','Parametric form with HTML5'])}
+        {button(['DOJO',$base.'DojoParams','Parametric form with Dojo'])}
+    </fieldset>
 
-<fieldset style="width: 100px;display: inline-block;">
-    <legend>Params</legend>
-    {button(['HTML',$base.'HTMLParams','Parametric form with HTML5'])}
-    {button(['DOJO',$base.'DojoParams','Parametric form with Dojo'])}
-</fieldset>
-
-<fieldset style="width: 100px;display: inline-block;">
-    <legend>Comments</legend>
-    {button(['HTML',$base.'HTMLComments','Comment based form with HTML5'])}
-    {button(['DOJO',$base.'DojoComments','Comment based form with Dojo'])}
-</fieldset>
-
+    <fieldset style="width: 100px;display: inline-block;">
+        <legend>Comments</legend>
+        {button(['HTML',$base.'HTMLComments','Comment based form with HTML5'])}
+        {button(['DOJO',$base.'DojoComments','Comment based form with Dojo'])}
+    </fieldset>
+{/if}
 <p>
     Add <i>/mysql</i>, <i>/sqlite</i>, <i>/postgresql</i> or <i>/oracle</i> in URL to change entity manager type
 </p>

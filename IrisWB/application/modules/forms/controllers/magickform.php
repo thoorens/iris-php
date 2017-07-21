@@ -26,7 +26,7 @@ class magickform extends _forms {
     
     public function testAction($type = 0){
         $realType = $type === 0 ? \NULL : $type;
-        $maker = \Iris\Forms\FormMaker::HandMadeForm('test', $realType);
+        $maker = \Iris\Forms\_FormMaker::HandMadeForm('test', $realType);
         $form = $maker->getForm();
         $this->__form = $form->render();
     }

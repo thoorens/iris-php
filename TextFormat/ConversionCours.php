@@ -217,4 +217,8 @@ FIN;
         
     }
 
+    protected function _table($params) {
+        
+    }
+
 }

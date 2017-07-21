@@ -42,7 +42,7 @@ class login extends _acl {
             $this->__status = 'Your are not connected...';
         }
         else {
-            $this->__status = '';
+            $this->__status = 'You are connected...';
         }
     }
 

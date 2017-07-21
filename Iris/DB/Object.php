@@ -253,7 +253,10 @@ class Object {
         if(!isset($parents[$keyFields][$localId])){
             $entityManager = $this->_entity->getEntityManager();
             list($parentEntityName, $foreignKeyPairs) = $this->_entity->getMetadata()->getParentRowParams($keyFields);
+            $path = $entityManager::GetEntityPath();
+            ////show_nd($path);
             $parentEntity = \Iris\DB\TableEntity::GetEntity($entityManager, $parentEntityName);
+            //i_d($path.$parentEntityName);
             foreach ($foreignKeyPairs as $foreignName => $primaryName) {
                 $primaryKeys[$primaryName] = $this->$foreignName;
             }

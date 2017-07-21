@@ -18,7 +18,7 @@ namespace Iris\DB;
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: $ */
+ */
 class MetaItem implements \Serializable {
 
     const S_NULL = '*NULL*';
@@ -259,22 +259,14 @@ class MetaItem implements \Serializable {
     public function serialize() {
 //      -- example of MetaItem
 //      object(Iris\DB\MetaItem)#26 (8) {
-//      ["_fieldName":"Iris\DB\MetaItem":private]=>
-//      string(2) "id"
-//      ["_type":"Iris\DB\MetaItem":private]=>
-//      string(7) "INTEGER"
-//      ["_size":"Iris\DB\MetaItem":private]=>
-//      int(0)
-//      ["_defaultValue":"Iris\DB\MetaItem":private]=>
-//      NULL
-//      ["_notNull":"Iris\DB\MetaItem":private]=>
-//      bool(true)
-//      ["_autoIncrement":"Iris\DB\MetaItem":private]=>
-//      bool(false)
-//      ["_primary":"Iris\DB\MetaItem":private]=>
-//      bool(true)
-//      ["_foreignPointer":"Iris\DB\MetaItem":private]=>
-//      NULL
+//      ["_fieldName"]=> string(2) "id"
+//      ["_type"]=> string(7) "INTEGER"
+//      ["_size"]=> int(0)
+//      ["_defaultValue"]=> NULL
+//      ["_notNull"]=> bool(true)
+//      ["_autoIncrement"]=> bool(false)
+//      ["_primary"]=> bool(true)
+//      ["_foreignPointer"]=> NULL
 //    }
         $string[] = "fieldName:" . $this->_fieldName;
         $string[] = "type:" . $this->_type;

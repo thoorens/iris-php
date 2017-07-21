@@ -100,7 +100,16 @@ class PrimaryKey implements \Serializable {
         return count($this->_fields) > 1;
     }
 
+    /**
+     * 
+     * @param type $idValues
+     * @return type
+     * @throws \Iris\Exceptions\DBException
+     */
     public function getNamedValues($idValues) {
+        //show_nd('getNamedValues');
+        //show_nd($idValues);
+        ////show_nd($idValues);
         // a single value becomes an array
         if (!\is_array($idValues)) {
             $namedValues[$this->_fields[0]] = $idValues;
@@ -123,6 +132,7 @@ class PrimaryKey implements \Serializable {
                 }
             }
         }
+        ////show_nd($namedValues);
         return $namedValues;
     }
 

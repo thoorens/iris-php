@@ -20,6 +20,7 @@ namespace Iris\Admin\models;
  * @version $Id: $ */
 class TTodo extends _IrisObject {
 
+    protected static $_MainField = "todo #";
 
     public static function DDLText() {
         return <<<SQL2

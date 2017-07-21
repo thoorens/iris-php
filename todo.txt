@@ -1,0 +1,56 @@
+00-00-00    Reinsert a blank copy of renamed or deleted files from Blueprint directory
+00-00-00    Test the CLI crud database options
+17-03-06    Correct the CLI --selectbase option
+17-03-06    Create a new todo file
+17-09-06    Write a bash script to sort and display the todo file
+
+
+Big 2017 Commit
+---------------
+00-00-00    CLI
+17-04-13    Calendar            Checked
+17-04-13    Core                Not necessary
+17-04-13    Dojo\Ajax           Checked
+17-04-13    Dojo\Engine         Checked
+17-04-14    Dojo\Forms          Done
+17-04-13    Dojo\Subhelpers     Checked
+17-04-13    Dojo\Translation    Checked
+17-04-14    Dojo\controllers    Done
+17-04-13    Dojo\views          Checked
+17-04-13    Dojo\               Checked           
+17-04-13    Extensions          Not necessary
+17-04-13    ILO                 Done
+17-04-14    Iris\Admin          Done
+17-04-13    Iris\Ajax           Checked
+17-04-14    Iris\DB             Done
+17-04-13    Iris\Design         Checked
+17-04-14    Iris\Documents      Done
+17-04-14    Iris\Engine         Done
+17-04-13    Iris\Errors         Checked
+17-04-13    Iris\Exceptions     Checked
+17-04-13    Iris\FileSystem     Checked
+17-04-14    Iris\Forms          Done
+17-04-13    Iris\MVC            Checked                  
+17-04-14    Iris\OS             Done
+17-04-14    Iris\Structure      Done 
+17-04-14    Iris\Subhelpers     Done
+17-04-14    Iris\SysConfig      Done 
+17-04-14    Iris\System         Done    
+17-04-13    Iris\Time           Checked     
+17-04-14    Iris\Translation    Done
+17-04-14    Iris\Users          Done               
+17-04-13    Iris\config         Checked          
+17-04-14    Iris\controllers    Done
+17-04-14    Iris\models         Done   
+17-04-14    Iris\modules        Done          
+17-04-14    Iris\views          Done
+17-04-14    Iris\               Done
+00-00-00    IrisInternal        TODO  
+17-04-14    IrisWB              Done 
+17-04-13    JQuery              Checked
+17-04-13    PayOff              Checked
+00-00-00    TextFormat          Needs module deletion
+17-04-13    Tutorial            Checked
+00-00-00    Vendors             TODO
+
+

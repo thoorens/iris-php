@@ -1,3 +1,4 @@
+{REM}This view displays a message and if necessary displays the content of $_POST{/REM} 
 {message}
 <div>
     {foreach(post, key, value)}

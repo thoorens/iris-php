@@ -56,6 +56,7 @@ abstract class _Em_PDO extends \Iris\DB\_EntityManager {
             
         }
         catch (\PDOException $exp) {
+            i_d($exp);
             $message = "DB error : " . $exp->getMessage() . " dsn: $dsn ";
             /**
              * @todo Explain this gap between the two type of exception

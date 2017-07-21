@@ -1,0 +1,53 @@
+<style>
+    .pinkcolor{
+        background:lightpink;
+    }
+    .yellowcolor{
+        background:lightyellow;
+    }
+    .bluecolor{
+        background:lightblue;
+    }
+    .greencolor{
+        background:lightgreen;
+    }
+</style>
+
+{wbHeader()}
+<button id="color1">Color zone 1</button> <button id="fill1">Fill content 1</button>
+{ajax()->onClick('fill1','/ajax/get/content1','zone1')}
+{eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('color1', $functionCode1)}
+
+<div id="zone1">
+    <p>
+        Contenu de la zone 1
+    </p>
+</div>
+<button id="color2">Color zone 2</button> <button id="fill2">Fill content 2</button>
+{ajax()->onClick('fill2','/ajax/get/content2','zone2')}
+{eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('color2', $functionCode2)}
+
+<div id="zone2">
+    <p>
+        Contenu de la zone 2
+    </p>
+</div>
+<button id="color3">Color zone 3</button> <button id="fill3">Fill content 3</button>
+{ajax()->onClick('fill3','/ajax/get/content3','zone3')}
+{eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('color3', $functionCode3)}
+
+
+<div id="zone3">
+    <p>
+        Contenu de la zone 3
+    </p>
+</div>
+<button id="color3">Color zone 4</button> <button id="fill4">Fill content 4</button>
+{ajax()->onClick('fill4','/ajax/get/content4','zone4')}
+{eventManager()->addModules(['domClass'=>'dojo/dom-class'])->onClick('color4', $functionCode4)}
+
+<div id="zone4">
+    <p>
+        Contenu de la zone 4
+    </p>
+</div>

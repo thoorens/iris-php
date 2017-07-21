@@ -45,8 +45,9 @@ class various extends _helpers {
 
     public function multipleCSSAction() {
         $this->_setLayout('specialCSS');
-        $arguments = [1 => 'body.class1:{backgroundcolor:blue}'];
-        \Iris\views\helpers\StyleLoader::FunctionCall($arguments);
+        $arguments = "body{background-color:lightgreen}";
+        $this->__styl = "li#ndis{display:none;}";
+        \Iris\views\helpers\StyleLoader::FunctionCall(["st"=>$arguments]);
         \Iris\views\helpers\StyleLoader::FunctionCall(['css1.css']);
     }
 

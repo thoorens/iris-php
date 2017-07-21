@@ -1,0 +1,25 @@
+{wbHeader()}
+<div class="content" {wbBG()}>
+    <div class="content" {wbBG()}>
+        <h3>fetchAll()</h3>
+        <h5>Returns all the objects</h5>
+        <ul>
+            {foreach(inv1,inv)}
+                <li>
+                    {invoice($inv,'')} 
+                </li>
+            {/foreach}
+        </ul>
+        <h5>Returns no objects (condition invoices after 2017-01-01)</h5>
+
+        <ul>
+            <li>
+                {invoice($inv2,'after 2017-01-01')}  
+            </li>
+        </ul>
+        <hr />
+
+        <p>
+            {dbWarning()}
+        </p>
+    </div>    

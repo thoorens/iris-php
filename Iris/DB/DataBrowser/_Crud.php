@@ -526,9 +526,10 @@ abstract class _Crud { //implements \Iris\Translation\iTranslatable {
      */
     public function forceAutoForm($submitValue) {
         if (is_null($this->_form)) {
-            $autoForm = new \Iris\Forms\AutoForm($this->getCrudEntity());
-            $this->_form = $autoForm->prepare();
+            $this->_form = $this->getForm();
+            //$autoForm = new \Iris\Forms\AutoForm($this->getCrudEntity());
         }
+        //$this->_formPrepare();
         $message = self::$_SubmitButtonText[$submitValue];
         $localizedMessage = $this->_($message, TRUE);
         $this->_form->setSubmitMessage($localizedMessage);
@@ -591,7 +592,7 @@ abstract class _Crud { //implements \Iris\Translation\iTranslatable {
             $id = implode('/', $id);
         }
         $form->setAction($this->getContinuationURL() . "/$id");
-        $this->_formPrepare();
+        $this->_formPrepare($id);
     }
 
     /*
@@ -604,7 +605,7 @@ abstract class _Crud { //implements \Iris\Translation\iTranslatable {
     /**
      * The form has to be modified before display
      */
-    protected function _formPrepare() {
+    protected function _formPrepare($id) {
         
     }
 
@@ -767,17 +768,18 @@ abstract class _Crud { //implements \Iris\Translation\iTranslatable {
     public static function DispatchAction($controller, $actionName, $parameters, $scriptName = \NULL, $crudDirectory = self::CRUD_DIRECTORY) {
         $id = count($parameters) > 0 ? $parameters : \NULL;
         // the action name is for instance update_BookAction => update, BookAction
+      //  //show_nd(explode('_', $actionName));
         list($action, $crudName) = explode('_', $actionName);
         //iris_debug($crudDirectory);
         //@todo add navigation operator
+        //i_d($action);
         if (strpos('create.update.delete.read', $action) === \FALSE) {
-            throw new \Iris\Exceptions\ControllerException("Unrecognized action");
+            throw new \Iris\Exceptions\ControllerException("Unrecognized action : $actionName");
         }
         // BookAction => \models\crud\Book
         $crudName = $crudDirectory .  ucFirst(str_replace('Action', '', $crudName));
-        //iris_debug($crudName);
-        $crud = new $crudName([$controller]);
-
+        $crud = new $crudName();
+        $form = $crud->getForm();
         $crud->_preProcess($controller, $action);
         $next = $crud->$action($id);
         // if no unique scriptName, each action has its proper script.

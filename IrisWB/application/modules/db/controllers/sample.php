@@ -18,7 +18,7 @@ namespace modules\db\controllers;
  * @license GPL 3.0 http://www.gnu.org/licenses/gpl.html
  * @version $Id: $ */
 class sample extends _db {
-
+use tChangeEM;
     /**
      * The table exists and can be dropped
      */
@@ -38,9 +38,12 @@ class sample extends _db {
      * The table does not exist and cannot be created
      */
     const NOCREATE = 4;
+    
 
     protected function _init() {
         $this->setDefaultScriptDir('sample');
+        $this->_returnURL = '/db/sample/structure';
+        $this->_changeURL = 'db/sample';
     }
 
     /**
@@ -75,6 +78,7 @@ class sample extends _db {
      * @deprecated since version 2017
      */
     public function deletedataAction($unique = \FALSE) {
+        return;
         die('No more deletedata Action');
         $em = \models\TCustomers::GetEM();
         $this->__Result = 'Database deleted';
@@ -88,6 +92,7 @@ class sample extends _db {
      * @deprecated since version 2017
      */
     public function deletefileAction() {
+        return;
         die('No more deletefile Action');
         /* @var $em \Iris\DB\_EntityManager */
         $em = \models\TCustomers::GetEM();
@@ -105,11 +110,11 @@ class sample extends _db {
         $em = \models\TCustomers::GetEM();
         $expectedTables = \models\TInvoices::$InvoicesTable;
         $tables = $em->listTables();
-        //i_dnd($expectedTables);
-        //i_dnd($tables);
+        ////show_nd($expectedTables);
+        ////show_nd($tables);
         $tNumber = $vNumber = 0;
         foreach ($expectedTables as $table) {
-            //i_dnd($table. "_" .array_search($table, $tables));
+            ////show_nd($table. "_" .array_search($table, $tables));
             if (array_search($table, $tables)!==\FALSE) {
                 if ($table[0] == 'v') {
                     $objects[] = [$table, 'view'];
@@ -156,67 +161,10 @@ class sample extends _db {
         $this->redirect('verify');
     }
 
-    /**
-     * This action only display 4 links to permit the change tof
-     * a new database management system
-     */
-    public function changeAction() {
-        $buttons['mySQL'] = \Iris\DB\_EntityManager::MYSQL;
-        $buttons['SQLite'] = \Iris\DB\_EntityManager::SQLITE;
-        $buttons['PostgreSQL'] = \Iris\DB\_EntityManager::POSTGRESQL;
-        $buttons['Oracle'] = \Iris\DB\_EntityManager::ORACLE;
-        $this->__buttons = $buttons;
-    }
+    
 
-    /**
-     * Puts the database name for sqlite
-     * in the session variable
-     */
-    public function sqliteAction() {
-        //$this->deletefileAction();
-        $session = \Iris\Users\Session::GetInstance();
-        $session->dbini = \Iris\DB\_EntityManager::SQLITE;
-        $this->reroute('/db/sample/structure');
-    }
-
-    /**
-     * Puts the database name for postgresql
-     * in the session variable
-     */
-    public function postgresqlAction() {
-        //$this->deletedataAction();
-        $this->redirect('impossible/postgresql');
-        $session = \Iris\Users\Session::GetInstance();
-        $session->dbini = \Iris\DB\_EntityManager::POSTGRESQL;
-        $this->reroute('/db/sample/structure');
-    }
-
-    /**
-     * Puts the database name for mySQL (or MariaDB)
-     * in the session variable
-     */
-    public function mysqlAction() {
-        //$this->deletedataAction();
-        $session = \Iris\Users\Session::GetInstance();
-        $session->dbini = \Iris\DB\_EntityManager::MYSQL;
-        $this->reroute('/db/sample/structure');
-    }
-
-    /**
-     * Puts the database name for Oracle
-     * in the session variable
-     */
-    public function oracleAction() {
-        //$this->deletedataAction();
-        $this->redirect('impossible/oracle');
-        $session = \Iris\Users\Session::GetInstance();
-        $session->dbini = \Iris\DB\_EntityManager::ORACLE;
-        $this->reroute('/db/sample/structure');
-    }
-
-    public function impossibleAction($type){
-        $this->__type = $type;
-    }
+    
+    
     
     public function testAction() {
         $value = \Iris\Engine\Superglobal::GetSession('dbini', \Iris\DB\_EntityManager::DEFAULT_DBMS);

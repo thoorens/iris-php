@@ -208,7 +208,6 @@ class Handler implements \Iris\Design\iSingleton {
      * @return Handler (fluent interface)
      */
     public function setIniParameters() {
-        $application = \Iris\Engine\Program::$ProgramName;
         $errorLogStatus = \Iris\Errors\Settings::$Log ? 'on' : 'off';
         if (\Iris\Engine\Mode::IsProduction()) {
             error_reporting(E_ALL);

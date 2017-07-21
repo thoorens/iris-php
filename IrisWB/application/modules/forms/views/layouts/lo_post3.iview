@@ -19,6 +19,10 @@
                     <h2>POST content</h2>
                     <div id="postcontent">
                     </div>
+                    <div class="center">
+                        {button('Form TOC','/forms/forms','List of all forms')} <br/>
+                        {dbLogo($changeURL)}
+                    </div>
                 </div><!-- 3 -->
             </div><!-- container -->
             <div id="foot">

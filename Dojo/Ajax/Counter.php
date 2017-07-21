@@ -16,9 +16,7 @@ defined('CRLF') or define('CRLF', "\n");
  * A counter written in Dojo
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.thoorens.net
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version :$Id:
+ * @see http://irisphp.org
  */
 class Counter extends \Iris\Ajax\_Counter {
 

@@ -1,14 +1,47 @@
-<div>
-    {styleLoader('Teste:display none;')}
+ <style>
+        li#ndis {
+            display:none;
+        }
+    </style>
+    <div>
+    {styleLoader('s1',$styl)}
+   
     {styleLoader('css3.css')}
 
     <div id="page">
-        {welcome(2)}
-        <p>
-            {_('Now you can begin to modify this page...',TRUE)}
-        </p>
+        <ul>
+            <li><b>style in css1.css (called in action)</b>
+                <p class="test1">
+                    {loremIpsum([0,5,10])}
+                </p>
+            </li>
+            <li><b>style in css2.css (called in the beginning of the layout)</b>
+                <p class="test2">
+                    {loremIpsum([0,5,10])}
+                </p>
+            </li>
+            <li><b>style in css3.css (called in the beginning of the view)</b>
+                <p class="test3">
+                    {loremIpsum([0,5,10])}
+                </p>
+            </li>
+            <li><b>style in css4.css (called in the end of the view)</b>
+                <p class="test4">
+                    {loremIpsum([0,5,10])}
+                </p>
+            </li>
+            <li><b>style in css5.css (called in the end of the layout)</b>
+                <p class="test5">
+                    {loremIpsum([0,5,10])}
+                </p>
+            </li>
+            <li id="ndis"><b>No display</b>
+                <p class="test1">
+                    {loremIpsum([0,5,10])}
+                </p>
+            </li>
+        </ul>
     </div>
 
 </div>
-{styleLoader('Teste:display none;')}
 {styleLoader('css4.css')}

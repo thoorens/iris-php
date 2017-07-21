@@ -68,7 +68,7 @@ class ConversionAnimation extends _ConversionMD {
         \Iris\Subhelpers\Table::SetSpecial(self::NEXTANIM);
         $table = new \Iris\Subhelpers\Table('Groupe', 3, 10, 'simple');
         $titres = [explode('_', \models\TAnimations::TITRE)];
-        $table->setHeadCells($titres)
+        $table->setTitles($titres)
                 ->setHead(\TRUE)
                 ->setFormated()
                 ->setContent($data);

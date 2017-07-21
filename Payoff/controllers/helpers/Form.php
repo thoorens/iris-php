@@ -47,7 +47,7 @@ class Form extends \Iris\controllers\helpers\_ControllerHelper {
      * @return \Iris\Forms\Elements\Form
      */
     public function compose() {
-        $ff = \Iris\Forms\_FormFactory::GetDefaultFormFactory();
+        $ff = \Iris\Forms\_FormFactory::GetFormFactory();
         $form = $ff->createForm('Client');
         $form->createText('Name')
                 ->setLabel('Name:')

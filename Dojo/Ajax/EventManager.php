@@ -18,9 +18,7 @@ namespace Dojo\Ajax;
  * Project IRIS-PHP
  * 
  * @author Jacques THOORENS (irisphp@thoorens.net)
- * @see http://irisphp.thoorens.net
- * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
- * @version :$Id:
+ * @see http://irisphp.org
  */
 class EventManager extends \Iris\Ajax\_EventManager {
 

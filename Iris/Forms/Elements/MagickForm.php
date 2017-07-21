@@ -20,6 +20,7 @@ namespace Iris\Forms\Elements;
  * @author Jacques THOORENS (irisphp@thoorens.net)
  * @see http://irisphp.org
  * @license GPL version 3.0 (http://www.gnu.org/licenses/gpl.html)
+ * @deprecated since version 1.0 RC
  */
 class MagickForm extends Form {
 
@@ -43,6 +44,10 @@ class MagickForm extends Form {
      * @var string[] the submit label and name
      */
     protected $_submitLabel = ['Validate', 'send'];
+    /**
+     *
+     * @var 
+     */
     protected $_fileParams;
 
     /**
@@ -62,6 +67,11 @@ class MagickForm extends Form {
         $this->_mode .= $mode;
     }
 
+    /**
+     * Sets the description file name of the form
+     *  
+     * @param string $fileName
+     */
     public function setFileName($fileName) {
         $this->_fileName = $fileName;
     }
@@ -236,7 +246,10 @@ class MagickForm extends Form {
         }
         return $value;
     }
-
+    
+    /**
+     * Parses the parameter file if it is defined and exists
+     */
     protected function _readFile() {
         $filePath = $this->_fileName;
         if (file_exists($filePath) or $filePath != \NULL) {
